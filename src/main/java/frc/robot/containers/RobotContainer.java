@@ -47,6 +47,8 @@ abstract public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     protected void configureButtonBindings() {
+        driverController = new CommandXboxController(0);
+
         // Default command, normal field-relative drive
         drive.setDefaultCommand(
                 DriveCommands.joystickDrive(
