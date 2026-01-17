@@ -52,6 +52,7 @@ public class RebuiltRobotContainer extends RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RebuiltRobotContainer() {
+    super();
         // Real robot, instantiate hardware IO implementations
         drive =
             new Drive(

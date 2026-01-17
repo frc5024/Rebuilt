@@ -57,6 +57,7 @@ public class MapleSimRobotContainer extends RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public MapleSimRobotContainer() {
+        super();
         // Sim robot, instantiate physics sim IO implementations
         driveSimulation =
             new SwerveDriveSimulation(Drive.mapleSimConfig, new Pose2d(3, 3, new Rotation2d()));
