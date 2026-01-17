@@ -20,6 +20,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.containers.MapleSimRobotContainer;
+import frc.robot.containers.RebuiltRobotContainer;
+import frc.robot.containers.RobotContainer;
 import frc.robot.generated.TunerConstants;
 import java.util.NoSuchElementException;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -106,7 +109,12 @@ public class Robot extends LoggedRobot {
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
-    robotContainer = new RobotContainer();
+    if (isReal()) {
+      robotContainer = new RebuiltRobotContainer();
+    } else {
+      robotContainer = new MapleSimRobotContainer();
+    }
+    
   }
 
   /** This function is called periodically during all modes. */
@@ -137,7 +145,7 @@ public class Robot extends LoggedRobot {
     checkDriverStationUpdate();
   }
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  /** This autonomous runs the autonomous command selected by your {@link MapleSimRobotContainer} class. */
   @Override
   public void autonomousInit() {
     checkDriverStationUpdate();
