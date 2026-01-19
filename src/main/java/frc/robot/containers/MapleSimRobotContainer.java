@@ -1,14 +1,13 @@
 package frc.robot.containers;
 
-import static frc.robot.subsystems.vision.VisionConstants.*;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.GyroIOSim;
-import frc.robot.subsystems.drive.ModuleIOSim;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.swervedrive.GyroIOSim;
+import frc.robot.subsystems.swervedrive.ModuleIOSim;
+import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.util.MapleSimUtil;
 
@@ -33,17 +32,17 @@ public class MapleSimRobotContainer extends RobotContainer {
         SwerveDriveSimulation swerveDriveSimulation = MapleSimUtil.getSwerveDriveSimulation();
         SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
 
-        drive = new Drive(
+        swerveDriveSubsystem = new SwerveDriveSubsystem(
                 new GyroIOSim(swerveDriveSimulation.getGyroSimulation()),
                 new ModuleIOSim(swerveDriveSimulation.getModules()[0]),
                 new ModuleIOSim(swerveDriveSimulation.getModules()[1]),
                 new ModuleIOSim(swerveDriveSimulation.getModules()[2]),
                 new ModuleIOSim(swerveDriveSimulation.getModules()[3]),
                 swerveDriveSimulation::setSimulationWorldPose);
-        vision = new Vision(
-                drive::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(camera0Name, robotToCamera0, drive::getPose),
-                new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose));
+        visionSubsystem = new VisionSubsystem(
+                swerveDriveSubsystem::addVisionMeasurement,
+                new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, swerveDriveSubsystem::getPose),
+                new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, swerveDriveSubsystem::getPose));
 
         configureAutoChooser();
         configureButtonBindings();
@@ -60,7 +59,7 @@ public class MapleSimRobotContainer extends RobotContainer {
         location -= 1;
 
         Pose2d pose2d = Constants.STATION_POSES[index][location];
-        drive.setPose(pose2d);
+        swerveDriveSubsystem.setPose(pose2d);
         resetSimulationField(pose2d);
     }
 
