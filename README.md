@@ -1,6 +1,9 @@
 # Rebuilt
-LDM ball cube ball big cube ball next Rest In Peace niflheim vismuth slow wave fast robot keep 
-going! slow ship go! slow ball Auto? fast dual ship slow fast ufo slow How? fast ship slow cube 
-fast ball lol slow robot in out slow ufo take a break ????? !!!!! ?? ?! ??! !! ?! !! ?!!? ??! !! ?
-!!? ??! ?! ?? !! ?? !! ?? ?! ??! ?!!? ?? ??! ?! !! ?!!? slow ufo go! go! Yeah! fast cube dual wave 
-watch out! faster! OMG! mini next next great! verified by NIFLHEIM koreaqwer
+Team 5024 Robot Code
+## ToDo
+* set camera positions for 2 or 3 cameras
+* refactor DriveCommands
+* create seperate file for controller bindings
+* think about tuning mode
+* choose robot starting positions for simulation
+* think of possible auto paths
