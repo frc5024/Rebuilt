@@ -1,7 +1,5 @@
 package frc.robot.containers;
 
-import static frc.robot.subsystems.vision.VisionConstants.*;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,14 +10,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.GyroIOPigeon2;
-import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.swervedrive.GyroIOPigeon2;
+import frc.robot.subsystems.swervedrive.ModuleIOTalonFX;
+import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -36,8 +35,9 @@ public class RebuiltRobotContainer extends RobotContainer {
      */
     public RebuiltRobotContainer() {
         super();
+
         // Real robot, instantiate hardware IO implementations
-        drive = new Drive(
+        swerveDriveSubsystem = new SwerveDriveSubsystem(
                 new GyroIOPigeon2(),
                 new ModuleIOTalonFX(TunerConstants.FrontLeft),
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
@@ -45,10 +45,10 @@ public class RebuiltRobotContainer extends RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackRight),
                 (robotPose) -> {
                 });
-        vision = new Vision(
-                drive::addVisionMeasurement,
-                new VisionIOLimelight(camera0Name, drive::getRotation),
-                new VisionIOLimelight(camera1Name, drive::getRotation));
+        visionSubsystem = new VisionSubsystem(
+                swerveDriveSubsystem::addVisionMeasurement,
+                new VisionIOLimelight(VisionConstants.camera0Name, swerveDriveSubsystem::getRotation),
+                new VisionIOLimelight(VisionConstants.camera1Name, swerveDriveSubsystem::getRotation));
         configureAutoChooser();
         // Configure the button bindings
         configureButtonBindings();
@@ -60,19 +60,19 @@ public class RebuiltRobotContainer extends RobotContainer {
 
         // Set up SysId routines
         autoChooser.addOption(
-                "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+                "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(swerveDriveSubsystem));
         autoChooser.addOption(
-                "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+                "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(swerveDriveSubsystem));
         autoChooser.addOption(
                 "Drive SysId (Quasistatic Forward)",
-                drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+                swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption(
                 "Drive SysId (Quasistatic Reverse)",
-                drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+                swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
         autoChooser.addOption(
-                "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+                "Drive SysId (Dynamic Forward)", swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption(
-                "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+                "Drive SysId (Dynamic Reverse)", swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     }
 
@@ -86,9 +86,9 @@ public class RebuiltRobotContainer extends RobotContainer {
      */
     protected void configureButtonBindings() {
         // Default command, normal field-relative drive
-        drive.setDefaultCommand(
+        swerveDriveSubsystem.setDefaultCommand(
                 DriveCommands.joystickDrive(
-                        drive,
+                        swerveDriveSubsystem,
                         () -> -controller.getLeftY(),
                         () -> -controller.getLeftX(),
                         () -> -controller.getRightX()));
@@ -98,24 +98,24 @@ public class RebuiltRobotContainer extends RobotContainer {
                 .a()
                 .whileTrue(
                         DriveCommands.joystickDriveAtAngle(
-                                drive,
+                                swerveDriveSubsystem,
                                 () -> -controller.getLeftY(),
                                 () -> -controller.getLeftX(),
                                 () -> new Rotation2d()));
 
         // Switch to X pattern when X button is pressed
-        controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+        controller.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
 
         // Reset gyro to 0° when B button is pressed
         controller
                 .b()
                 .onTrue(
                         Commands.runOnce(
-                                () -> drive.setPose(
-                                        new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                                drive)
+                                () -> swerveDriveSubsystem.setPose(
+                                        new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
+                                swerveDriveSubsystem)
                                 .ignoringDisable(true));
-        controller.y().whileTrue(new PathFinderAndFollowCommand(drive, "Example Path"));
+        controller.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
     }
 
     /**

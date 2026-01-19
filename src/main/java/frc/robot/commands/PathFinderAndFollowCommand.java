@@ -4,12 +4,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
+
 import org.littletonrobotics.junction.Logger;
 
 /** A command that runs pathfindThenFollowPath based on the current drive mode. */
 public class PathFinderAndFollowCommand extends Command {
-  private final Drive swerveDrive;
+  private final SwerveDriveSubsystem swerveDrive;
   private final String pathName;
 
   private Command commandGroup;
@@ -20,7 +21,7 @@ public class PathFinderAndFollowCommand extends Command {
    *
    * @param stationModeSupplier a supplier for the drive mode type
    */
-  public PathFinderAndFollowCommand(Drive swerveDrive, String pathName) {
+  public PathFinderAndFollowCommand(SwerveDriveSubsystem swerveDrive, String pathName) {
     this.swerveDrive = swerveDrive;
     this.pathName = pathName;
   }
