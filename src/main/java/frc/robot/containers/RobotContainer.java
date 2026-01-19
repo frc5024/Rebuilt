@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Robot;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -20,8 +20,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 abstract public class RobotContainer {
     /* Subsystems */
-    protected Drive drive;
-    protected Vision vision;
+    protected SwerveDriveSubsystem swerveDriveSubsystem;
+    protected VisionSubsystem visionSubsystem;
 
     /* Autonomous */
     protected LoggedDashboardChooser<Command> autoChooser;
@@ -50,9 +50,9 @@ abstract public class RobotContainer {
         driverController = new CommandXboxController(0);
 
         // Default command, normal field-relative drive
-        drive.setDefaultCommand(
+        swerveDriveSubsystem.setDefaultCommand(
                 DriveCommands.joystickDrive(
-                        drive,
+                        swerveDriveSubsystem,
                         () -> -driverController.getLeftY(),
                         () -> -driverController.getLeftX(),
                         () -> -driverController.getRightX()));
@@ -62,24 +62,24 @@ abstract public class RobotContainer {
                 .a()
                 .whileTrue(
                         DriveCommands.joystickDriveAtAngle(
-                                drive,
+                                swerveDriveSubsystem,
                                 () -> -driverController.getLeftY(),
                                 () -> -driverController.getLeftX(),
                                 () -> new Rotation2d()));
 
         // Switch to X pattern when X button is pressed
-        driverController.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+        driverController.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
 
         // Reset gyro to 0° when B button is pressed
         driverController
                 .b()
                 .onTrue(
                         Commands.runOnce(
-                                () -> drive.setPose(
-                                        new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                                drive)
+                                () -> swerveDriveSubsystem.setPose(
+                                        new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
+                                swerveDriveSubsystem)
                                 .ignoringDisable(true));
-        driverController.y().whileTrue(new PathFinderAndFollowCommand(drive, "Example Path"));
+        driverController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
     }
 
     /**
