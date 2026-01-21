@@ -2,9 +2,9 @@
   "name": "2026 IndieBot",
   "isFTC": false,
   "position": [
-    0.0,
-    0.0,
-    0.045
+    -0.3,
+    -1.25,
+    -0.498
   ],
   "rotations": [
     {
@@ -12,8 +12,12 @@
       "degrees": 90
     },
     {
+      "axis": "y",
+      "degrees": 0
+    },
+    {
       "axis": "z",
-      "degrees": 90
+      "degrees": 57
     }
   ],
   "cameras": [
@@ -73,43 +77,5 @@
         }
   ],
   "components": [
-    {
-      "zeroedRotations": [
-        {
-          "axis": "x",
-          "degrees": 90
-        },
-        {
-          "axis": "z",
-          "degrees": 90
-        }
-      ],
-      "zeroedPosition": [
-        0.197,
-        0.0,
-        -0.395
-      ]
-    },
-    {
-      "zeroedRotations": [
-        {
-          "axis": "x",
-          "degrees": 90
-        },
-        {
-          "axis": "z",
-          "degrees": -90
-        },
-        {
-          "axis": "y",
-          "degrees": 20
-        }
-      ],
-      "zeroedPosition": [
-        -0.255,
-        0.0,
-        -0.427
-      ]
-    }
-  ]
+   ]
 }
