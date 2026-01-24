@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Robot;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -22,6 +23,7 @@ abstract public class RobotContainer {
     /* Subsystems */
     protected SwerveDriveSubsystem swerveDriveSubsystem;
     protected VisionSubsystem visionSubsystem;
+    protected ShooterSubsystem shooterSubsystem;
 
     /* Autonomous */
     protected LoggedDashboardChooser<Command> autoChooser;
@@ -33,8 +35,10 @@ abstract public class RobotContainer {
     /**
      * 
      */
-    public RobotContainer() {
-    }
+
+     
+    public RobotContainer() {}
+    
 
     abstract protected void configureAutoChooser();
 
@@ -69,6 +73,9 @@ abstract public class RobotContainer {
 
         // Switch to X pattern when X button is pressed
         driverController.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
+        
+        // Turn on the motor when A button is pressed
+        driverController.a().onTrue(Commands.runOnce(shooterSubsystem::toggleFeeder, shooterSubsystem));
 
         // Reset gyro to 0° when B button is pressed
         driverController

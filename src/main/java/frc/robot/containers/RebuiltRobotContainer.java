@@ -106,6 +106,7 @@ public class RebuiltRobotContainer extends RobotContainer {
         // Switch to X pattern when X button is pressed
         controller.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
 
+        driverController.a().onTrue(Commands.runOnce(shooterSubsystem::toggleFeeder, shooterSubsystem));
         // Reset gyro to 0° when B button is pressed
         controller
                 .b()

@@ -2,9 +2,12 @@ package frc.robot.containers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.shooter_2.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOSim;
 import frc.robot.subsystems.swervedrive.ModuleIOSim;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
@@ -32,6 +35,8 @@ public class MapleSimRobotContainer extends RobotContainer {
         SwerveDriveSimulation swerveDriveSimulation = MapleSimUtil.getSwerveDriveSimulation();
         SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
 
+        shooterSubsystem = new ShooterSubsystem();
+        
         swerveDriveSubsystem = new SwerveDriveSubsystem(
                 new GyroIOSim(swerveDriveSimulation.getGyroSimulation()),
                 new ModuleIOSim(swerveDriveSimulation.getModules()[0]),
@@ -46,6 +51,7 @@ public class MapleSimRobotContainer extends RobotContainer {
 
         configureAutoChooser();
         configureButtonBindings();
+        
     }
     
     @Override
@@ -62,7 +68,12 @@ public class MapleSimRobotContainer extends RobotContainer {
         swerveDriveSubsystem.setPose(pose2d);
         resetSimulationField(pose2d);
     }
-
+    
+    protected void configureButtonBindings() {
+        driverController = new CommandXboxController(0);
+        driverController.a().onTrue(Commands.runOnce(shooterSubsystem::toggleFeeder, shooterSubsystem));
+        
+    }
     /**
      * 
      */
