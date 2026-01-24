@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class Intake extends SubsystemBase {
     SparkMax intakeMotor;
-    int motorID = 5;
+    int motorID = 16; // ID on prototype board, subject to change
      private static Intake mInstance;
      public static Intake getInstance() {
         if (mInstance == null) {
@@ -22,9 +22,8 @@ public class Intake extends SubsystemBase {
         intakeMotor = new SparkMax(motorID, SparkMax.MotorType.kBrushless);
     }
         
-    public void setSpeed(double Speed) {
-        intakeMotor.set(Speed);
-
+    public void setSpeed(double speed) {
+        intakeMotor.set(speed);
     }
 
     public Command IntakeSpin() {

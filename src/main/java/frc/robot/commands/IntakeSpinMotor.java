@@ -16,4 +16,9 @@ public class IntakeSpinMotor extends Command {
     public void initialize() {
         s_Intake.setSpeed(speed);
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        s_Intake.setSpeed(0.0);
+    }
 }

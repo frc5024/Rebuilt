@@ -40,7 +40,8 @@ import frc.robot.generated.TunerConstants;
  */
 public final class Constants {
     public static final Mode simMode = Mode.SIM;
-    public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+    //public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+    public static final Mode currentMode = Mode.REAL;
 
     public static final double maxLinearSpeed = 4.69;
     public static final double maxLinearAcceleration = 4.0;

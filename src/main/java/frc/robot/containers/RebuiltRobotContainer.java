@@ -16,9 +16,13 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.swervedrive.GyroIOPigeon2;
 import frc.robot.subsystems.swervedrive.ModuleIOTalonFX;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
+import frc.robot.subsystems.Intake;
+import frc.robot.commands.IntakeSpinMotor;
+import frc.robot.commands.OuttakeSpinMotor;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -29,6 +33,7 @@ public class RebuiltRobotContainer extends RobotContainer {
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
+    private final CommandXboxController operaController = new CommandXboxController(1);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -84,6 +89,7 @@ public class RebuiltRobotContainer extends RobotContainer {
      * it to a {@link
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
+    @Override
     protected void configureButtonBindings() {
         // Default command, normal field-relative drive
         swerveDriveSubsystem.setDefaultCommand(
@@ -116,6 +122,9 @@ public class RebuiltRobotContainer extends RobotContainer {
                                 swerveDriveSubsystem)
                                 .ignoringDisable(true));
         controller.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
+
+        operaController.a().whileTrue(Intake.getInstance().IntakeSpin());
+        operaController.b().whileTrue(Intake.getInstance().OuttakeSpin());
     }
 
     /**
