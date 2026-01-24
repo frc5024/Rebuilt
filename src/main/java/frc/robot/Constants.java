@@ -221,4 +221,8 @@ public static class shooterConstants {
         public static double angularStdDevMegatag2Factor = Double.POSITIVE_INFINITY; // No rotation data available
     }
 
+    public static class HopperConstants {
+        public static double speed = 0.0;
+        public static int HopperMotorID = 1;
+    }
 }
