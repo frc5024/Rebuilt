@@ -47,6 +47,12 @@ public final class Constants {
     public static final double maxAngularAcceleration = 20.0;
     public static final double maxAngularSpeed = 8.0; // 4.69 / driveBaseRadius;
 
+public static class shooterConstants {
+    public static final double speed = 0.1;
+    public static final double feederspeed = 0.1;
+
+  }
+
     public static final PathConstraints CONSTRAINTS = new PathConstraints(4.5, 4.0, Units.degreesToRadians(540),
             Units.degreesToRadians(720));
 
