@@ -12,25 +12,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.Hopper.Spin;
 import frc.robot.Constants;
 
-public class Hopper extends SubsystemBase{
+public class HopperSubsystem extends SubsystemBase{
     public SparkMax hopperMotor;
 
-    public static Hopper mInstance = null;
+    public static HopperSubsystem mInstance = null;
     public double speed;
     public boolean direction;
 
     ShuffleboardTab tab = Shuffleboard.getTab("Hopper");
     GenericEntry speedEntry = tab.add("SET SPEED", Constants.HopperConstants.speed).getEntry();
 
-    public static Hopper getInstance() {
+    public static HopperSubsystem getInstance() {
         if (mInstance == null) {
-            mInstance = new Hopper();
+            mInstance = new HopperSubsystem();
         }
         return mInstance;
     }
 
-    public Hopper() {
-        hopperMotor = new SparkMax(Constants.HopperConstants.HopperCADID, SparkLowLevel.MotorType.kBrushless);
+    public HopperSubsystem() {
+        hopperMotor = new SparkMax(Constants.HopperConstants.HopperMotorID, SparkLowLevel.MotorType.kBrushless);
 
         speedEntry.setDouble(Constants.HopperConstants.speed);
     }
