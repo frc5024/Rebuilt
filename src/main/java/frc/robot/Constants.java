@@ -62,15 +62,15 @@ public final class Constants {
     public static final Pose2d[][] STATION_POSES = new Pose2d[][] {
             {
                     // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
-                    new Pose2d(7.153, 7.272, Rotation2d.fromDegrees(180.0)),
-                    new Pose2d(7.153, 6.169, Rotation2d.fromDegrees(180.0)),
-                    new Pose2d(7.127, 1.905, Rotation2d.fromDegrees(180.0))
+                    new Pose2d(3.500, 5.900, Rotation2d.fromDegrees(180.0)),
+                    new Pose2d(3.500, 4.000, Rotation2d.fromDegrees(180.0)),
+                    new Pose2d(3.500, 0.600, Rotation2d.fromDegrees(180.0))
             },
             {
                     // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
-                    new Pose2d(10.447, 0.805, Rotation2d.fromDegrees(0.0)),
-                    new Pose2d(10.447, 1.991, Rotation2d.fromDegrees(0.0)),
-                    new Pose2d(10.447, 3.003, Rotation2d.fromDegrees(0.0))
+                    new Pose2d(13.000, 2.100, Rotation2d.fromDegrees(0.0)),
+                    new Pose2d(13.000, 4.000, Rotation2d.fromDegrees(0.0)),
+                    new Pose2d(13.000, 7.400, Rotation2d.fromDegrees(0.0))
             }
     };
 

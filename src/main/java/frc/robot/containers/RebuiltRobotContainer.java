@@ -14,6 +14,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
+import frc.robot.commands.TuningCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOPigeon2;
@@ -60,9 +61,9 @@ public class RebuiltRobotContainer extends RobotContainer {
 
         // Set up SysId routines
         autoChooser.addOption(
-                "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(swerveDriveSubsystem));
+                "Drive Wheel Radius Characterization", TuningCommands.wheelRadiusCharacterization(swerveDriveSubsystem));
         autoChooser.addOption(
-                "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(swerveDriveSubsystem));
+                "Drive Simple FF Characterization", TuningCommands.feedforwardCharacterization(swerveDriveSubsystem));
         autoChooser.addOption(
                 "Drive SysId (Quasistatic Forward)",
                 swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
