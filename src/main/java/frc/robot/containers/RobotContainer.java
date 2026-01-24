@@ -13,6 +13,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.turret.TurretSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -22,12 +23,13 @@ abstract public class RobotContainer {
     /* Subsystems */
     protected SwerveDriveSubsystem swerveDriveSubsystem;
     protected VisionSubsystem visionSubsystem;
+    protected TurretSubsystem turretSubsystem;
 
     /* Autonomous */
     protected LoggedDashboardChooser<Command> autoChooser;
 
     /* Controllers */
-    CommandXboxController driverController;
+    public static CommandXboxController driverController;
     CommandXboxController operatorController;
 
     /**
@@ -58,28 +60,30 @@ abstract public class RobotContainer {
                         () -> -driverController.getRightX()));
 
         // Lock to 0° when A button is held
-        driverController
-                .a()
-                .whileTrue(
-                        DriveCommands.joystickDriveAtAngle(
-                                swerveDriveSubsystem,
-                                () -> -driverController.getLeftY(),
-                                () -> -driverController.getLeftX(),
-                                () -> new Rotation2d()));
+        driverController.a().onTrue(turretSubsystem.setAngleCommand(20));
+        driverController.povCenter().whileTrue(turretSubsystem.stickRotation());
+        // driverController
+        //         .a()
+        //         .whileTrue(
+        //                 DriveCommands.joystickDriveAtAngle(
+        //                         swerveDriveSubsystem,
+        //                         () -> -driverController.getLeftY(),
+        //                         () -> -driverController.getLeftX(),
+        //                         () -> new Rotation2d()));
 
-        // Switch to X pattern when X button is pressed
-        driverController.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
+        // // Switch to X pattern when X button is pressed
+        // driverController.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
 
-        // Reset gyro to 0° when B button is pressed
-        driverController
-                .b()
-                .onTrue(
-                        Commands.runOnce(
-                                () -> swerveDriveSubsystem.setPose(
-                                        new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
-                                swerveDriveSubsystem)
-                                .ignoringDisable(true));
-        driverController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
+        // // Reset gyro to 0° when B button is pressed
+        // driverController
+        //         .b()
+        //         .onTrue(
+        //                 Commands.runOnce(
+        //                         () -> swerveDriveSubsystem.setPose(
+        //                                 new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
+        //                         swerveDriveSubsystem)
+        //                         .ignoringDisable(true));
+        // driverController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
     }
 
     /**
