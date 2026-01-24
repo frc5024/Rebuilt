@@ -3,11 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
-public class IntakeSpinMotor extends Command {
+public class OuttakeSpinMotor extends Command {
     private Intake s_Intake;
     double speed = 0.6;
 
-    public IntakeSpinMotor(Intake s_Intake) {
+    public OuttakeSpinMotor(Intake s_Intake) {
         this.s_Intake = s_Intake;
         addRequirements (s_Intake);
     }
@@ -17,3 +17,4 @@ public class IntakeSpinMotor extends Command {
         s_Intake.setSpeed(speed);
     }
 }
+

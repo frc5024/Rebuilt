@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.IntakeSpinMotor;
+import frc.robot.commands.OuttakeSpinMotor;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class Intake extends SubsystemBase {
     SparkMax intakeMotor;
@@ -15,13 +18,22 @@ public class Intake extends SubsystemBase {
         return mInstance;
      }
 
-private Intake() {
-    intakeMotor = new SparkMax(motorID, SparkMax.MotorType.kBrushless);
-}
-     
-public void setSpeed(double Speed) {
-    intakeMotor.set(Speed);}
+    private Intake() {
+        intakeMotor = new SparkMax(motorID, SparkMax.MotorType.kBrushless);
+    }
+        
+    public void setSpeed(double Speed) {
+        intakeMotor.set(Speed);
 
+    }
+
+    public Command IntakeSpin() {
+        return new IntakeSpinMotor(this);
+    }
+
+    public Command OuttakeSpin() {
+        return new OuttakeSpinMotor(this);
+    }
 }
 
 
