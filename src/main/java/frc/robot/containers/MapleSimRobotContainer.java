@@ -2,7 +2,7 @@ package frc.robot.containers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOSim;
@@ -58,7 +58,7 @@ public class MapleSimRobotContainer extends RobotContainer {
         int index = alliance == Alliance.Blue ? 0 : 1;
         location -= 1;
 
-        Pose2d pose2d = Constants.STATION_POSES[index][location];
+        Pose2d pose2d = FieldConstants.STATION_POSES[index][location];
         swerveDriveSubsystem.setPose(pose2d);
         resetSimulationField(pose2d);
     }
