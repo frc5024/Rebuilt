@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.containers.MapleSimRobotContainer;
 import frc.robot.containers.RebuiltRobotContainer;
 import frc.robot.containers.RobotContainer;
@@ -60,7 +61,7 @@ public class Robot extends LoggedRobot {
         }
 
         // Set up data receivers & replay source
-        switch (Constants.currentMode) {
+        switch (RobotConstants.currentMode) {
             case REAL:
                 // Running on a real robot, log to a USB stick ("/U/logs")
                 Logger.addDataReceiver(new WPILOGWriter());
@@ -91,8 +92,8 @@ public class Robot extends LoggedRobot {
         // Setup Limelight port forwarding - be sure to match against camera constants
         // https://docs.limelightvision.io/docs/docs-limelight/getting-started/FRC/best-practices
         for (int port = 5800; port <= 5809; port++) {
-            PortForwarder.add(port, "limelight.local", port);
-            // PortForwarder.add(port + 10, "limelight-two.local", port);
+            PortForwarder.add(port, "limelight-four.local", port);
+            PortForwarder.add(port + 10, "limelight-threeg.local", port);
         }
 
         // Check for valid swerve config
