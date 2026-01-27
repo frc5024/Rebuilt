@@ -3,7 +3,7 @@ package frc.robot.commands;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.Constants.TeleopConstants;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 
 import org.littletonrobotics.junction.Logger;
@@ -64,7 +64,7 @@ public class PathFinderAndFollowCommand extends Command {
 
       PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile("Example Path");
 
-      return AutoBuilder.pathfindThenFollowPath(pathPlannerPath, Constants.CONSTRAINTS);
+      return AutoBuilder.pathfindThenFollowPath(pathPlannerPath, TeleopConstants.CONSTRAINTS);
 
     } catch (Exception e) {
       return null;

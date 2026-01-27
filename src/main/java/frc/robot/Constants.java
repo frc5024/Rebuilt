@@ -32,59 +32,9 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.generated.TunerConstants;
 
 /**
- * This class defines the runtime mode used by AdvantageKit. The mode is always
- * "real" when running
- * on a roboRIO. Change the value of "simMode" to switch between "sim" (physics
- * sim) and "replay"
- * (log replay from a file).
+ * 
  */
 public final class Constants {
-    public static final Mode simMode = Mode.SIM;
-    public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
-
-    public static final double maxLinearSpeed = 4.69;
-    public static final double maxLinearAcceleration = 4.0;
-    public static final double maxAngularAcceleration = 20.0;
-    public static final double maxAngularSpeed = 8.0; // 4.69 / driveBaseRadius;
-
-    public static final PathConstraints CONSTRAINTS = new PathConstraints(4.5, 4.0, Units.degreesToRadians(540),
-            Units.degreesToRadians(720));
-
-    public static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(
-            maxLinearSpeed,
-            maxLinearAcceleration);
-    public static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(
-            maxLinearSpeed,
-            maxLinearAcceleration);
-    public static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(
-            maxAngularSpeed, maxLinearAcceleration);
-
-    public static final Pose2d[][] STATION_POSES = new Pose2d[][] {
-            {
-                    // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
-                    new Pose2d(7.153, 7.272, Rotation2d.fromDegrees(180.0)),
-                    new Pose2d(7.153, 6.169, Rotation2d.fromDegrees(180.0)),
-                    new Pose2d(7.127, 1.905, Rotation2d.fromDegrees(180.0))
-            },
-            {
-                    // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
-                    new Pose2d(10.447, 0.805, Rotation2d.fromDegrees(0.0)),
-                    new Pose2d(10.447, 1.991, Rotation2d.fromDegrees(0.0)),
-                    new Pose2d(10.447, 3.003, Rotation2d.fromDegrees(0.0))
-            }
-    };
-
-    public static enum Mode {
-        /** Running on a real robot. */
-        REAL,
-
-        /** Running a physics simulator. */
-        SIM,
-
-        /** Replaying from a log file. */
-        REPLAY
-    }
-
     /*
      * 
      */
@@ -105,11 +55,36 @@ public final class Constants {
                         TunerConstants.FrontLeft.SlipCurrent,
                         1),
                 SwerveDriveConstants.getModuleTranslations());
+
+        // AdvantageKit simulation
+        public static enum Mode {
+            REAL, // Running on a real robot
+            SIM, // Running a physics simulator
+            REPLAY // Replaying from a log file
+        }
+
+        public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;;
     }
 
     /**
      * Field Constants
      */
+    public static class FieldConstants {
+        public static final Pose2d[][] STATION_POSES = new Pose2d[][] {
+                {
+                        // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(3.500, 5.900, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(3.500, 4.000, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(3.500, 0.600, Rotation2d.fromDegrees(180.0))
+                },
+                {
+                        // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(13.000, 2.100, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(13.000, 4.000, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(13.000, 7.400, Rotation2d.fromDegrees(0.0))
+                }
+        };
+    }
 
     /**
      * Maple Sim Constants
@@ -150,6 +125,11 @@ public final class Constants {
      * 
      */
     public static class SwerveDriveConstants {
+        public static final double maxLinearSpeed = 4.69;
+        public static final double maxLinearAcceleration = 4.0;
+        public static final double maxAngularAcceleration = 20.0;
+        public static final double maxAngularSpeed = 8.0; // 4.69 / driveBaseRadius;
+
         public static final double ODOMETRY_FREQUENCY = new CANBus(
                 TunerConstants.DrivetrainConstants.CANBusName).isNetworkFD() ? 250.0 : 100.0;
         public static final double DRIVE_BASE_RADIUS = Math.max(
@@ -181,6 +161,26 @@ public final class Constants {
         }
     }
 
+    /**
+     * 
+     */
+    public static class TeleopConstants {
+        public static final PathConstraints CONSTRAINTS = new PathConstraints(4.5, 4.0, Units.degreesToRadians(540),
+                Units.degreesToRadians(720));
+
+        public static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(
+                SwerveDriveConstants.maxLinearSpeed,
+                SwerveDriveConstants.maxLinearAcceleration);
+        public static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(
+                SwerveDriveConstants.maxLinearSpeed,
+                SwerveDriveConstants.maxLinearAcceleration);
+        public static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(
+                SwerveDriveConstants.maxAngularSpeed, SwerveDriveConstants.maxLinearAcceleration);
+    }
+
+    /**
+     * 
+     */
     public static class VisionConstants {
         // AprilTag layout
         public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
@@ -214,5 +214,4 @@ public final class Constants {
         public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
         public static double angularStdDevMegatag2Factor = Double.POSITIVE_INFINITY; // No rotation data available
     }
-
 }
