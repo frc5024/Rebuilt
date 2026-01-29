@@ -27,8 +27,8 @@ abstract public class RobotContainer {
     protected LoggedDashboardChooser<Command> autoChooser;
 
     /* Controllers */
-    CommandXboxController driverController;
-    CommandXboxController operatorController;
+    public final static CommandXboxController driver = new CommandXboxController(0);
+    public final static CommandXboxController operator = new CommandXboxController(1);
 
     /**
      * 
@@ -47,31 +47,31 @@ abstract public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     protected void configureButtonBindings() {
-        driverController = new CommandXboxController(0);
+        //driverController = new CommandXboxController(0);
 
         // Default command, normal field-relative drive
         swerveDriveSubsystem.setDefaultCommand(
                 DriveCommands.joystickDrive(
                         swerveDriveSubsystem,
-                        () -> -driverController.getLeftY(),
-                        () -> -driverController.getLeftX(),
-                        () -> -driverController.getRightX()));
+                        () -> -driver.getLeftY(),
+                        () -> -driver.getLeftX(),
+                        () -> -driver.getRightX()));
 
         // Lock to 0° when A button is held
-        driverController
+        driver
                 .a()
                 .whileTrue(
                         DriveCommands.joystickDriveAtAngle(
                                 swerveDriveSubsystem,
-                                () -> -driverController.getLeftY(),
-                                () -> -driverController.getLeftX(),
+                                () -> -driver.getLeftY(),
+                                () -> -driver.getLeftX(),
                                 () -> new Rotation2d()));
 
         // Switch to X pattern when X button is pressed
-        driverController.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
+        driver.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
 
-        // Reset gyro to 0° when B button is pressed
-        driverController
+        // Reset gyro to 0° when B button is pressed
+        driver
                 .b()
                 .onTrue(
                         Commands.runOnce(
@@ -79,7 +79,7 @@ abstract public class RobotContainer {
                                         new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
                                 swerveDriveSubsystem)
                                 .ignoringDisable(true));
-        driverController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
+        driver.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
     }
 
     /**

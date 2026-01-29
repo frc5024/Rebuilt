@@ -107,6 +107,26 @@ public final class Constants {
                 SwerveDriveConstants.getModuleTranslations());
     }
 
+    public static final class turretConstants {
+                public static final double speed = 0.01;
+                public static final int turretMotorChannel = 4;
+                public static final double turretTolerance = 0.5;
+                public static final double kP = 0.0;
+                public static final double kI = 0;
+                public static final double kD = 0.0;
+                public static final double kS = 0;
+                public static final double kV = 0.0001;
+                public static final double kA = 0.0;
+
+                public static final double turretMaxSpeed = 10; //make note of units
+                public static final double turretMaxAccel = 10;
+
+                public static final double targetAngle = 25;
+                
+        }
+
+
+
     /**
      * Field Constants
      */
