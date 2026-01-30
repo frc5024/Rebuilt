@@ -13,7 +13,6 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
-import frc.robot.subsystems.Hopper;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -23,7 +22,6 @@ abstract public class RobotContainer {
     /* Subsystems */
     protected SwerveDriveSubsystem swerveDriveSubsystem;
     protected VisionSubsystem visionSubsystem;
-    protected Hopper hopperSubsystem;
 
     /* Autonomous */
     protected LoggedDashboardChooser<Command> autoChooser;
@@ -82,8 +80,6 @@ abstract public class RobotContainer {
         //                         swerveDriveSubsystem)
         //                         .ignoringDisable(true));
         // driverController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
-        driverController.a().whileTrue(hopperSubsystem.SpinCommand());
-        driverController.b().whileTrue(hopperSubsystem.SpinEntryCommand());
     }
 
     /**
