@@ -39,6 +39,17 @@ import frc.robot.generated.TunerConstants;
  * (log replay from a file).
  */
 public final class Constants {
+
+public static class shooterConstants {
+        public static final double kP = 0.1;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+        public static final double kS = 0.2; // Static friction voltage
+        public static final double kV = 0.1; // Velocity constant
+        public static final double kA = 0.01; // Acceleration constant
+}
+
     public static final Mode simMode = Mode.SIM;
     public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
