@@ -36,6 +36,63 @@ import frc.robot.generated.TunerConstants;
  * 
  */
 public final class Constants {
+
+public static class shooterConstants {
+        public static final double kP = 0.1;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+        public static final double kS = 0.2; // Static friction voltage
+        public static final double kV = 0.1; // Velocity constant
+        public static final double kA = 0.01; // Acceleration constant
+}
+
+    public static final Mode simMode = Mode.SIM;
+    public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+
+    public static final double maxLinearSpeed = 4.69;
+    public static final double maxLinearAcceleration = 4.0;
+    public static final double maxAngularAcceleration = 20.0;
+    public static final double maxAngularSpeed = 8.0; // 4.69 / driveBaseRadius;
+
+    public static final PathConstraints CONSTRAINTS = new PathConstraints(4.5, 4.0, Units.degreesToRadians(540),
+            Units.degreesToRadians(720));
+
+    public static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(
+            maxLinearSpeed,
+            maxLinearAcceleration);
+    public static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(
+            maxLinearSpeed,
+            maxLinearAcceleration);
+    public static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(
+            maxAngularSpeed, maxLinearAcceleration);
+
+    public static final Pose2d[][] STATION_POSES = new Pose2d[][] {
+            {
+                    // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
+                    new Pose2d(7.153, 7.272, Rotation2d.fromDegrees(180.0)),
+                    new Pose2d(7.153, 6.169, Rotation2d.fromDegrees(180.0)),
+                    new Pose2d(7.127, 1.905, Rotation2d.fromDegrees(180.0))
+            },
+            {
+                    // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
+                    new Pose2d(10.447, 0.805, Rotation2d.fromDegrees(0.0)),
+                    new Pose2d(10.447, 1.991, Rotation2d.fromDegrees(0.0)),
+                    new Pose2d(10.447, 3.003, Rotation2d.fromDegrees(0.0))
+            }
+    };
+
+    public static enum Mode {
+        /** Running on a real robot. */
+        REAL,
+
+        /** Running a physics simulator. */
+        SIM,
+
+        /** Replaying from a log file. */
+        REPLAY
+    }
+
     /*
      * 
      */
