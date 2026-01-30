@@ -186,7 +186,7 @@ public final class Constants {
         public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
         // Camera names, must match names configured on coprocessor
-        public static String camera0Name = "camera_0";
+        public static String camera0Name = "four";
         public static String camera1Name = "camera_1";
 
         // Robot to camera transforms
