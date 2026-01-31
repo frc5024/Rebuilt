@@ -2,6 +2,7 @@
 Team 5024 Robot Code
 ## ToDo
 * create seperate file for controller bindings
+* create a way to determine the current speed of the robot
 * think about tuning mode
 * use example code in MapleSimUtil.java and AdvantageScope Game Piece Objects help section to visualize shoot fuel into hub
 * set camera name constants to actual limelight names
