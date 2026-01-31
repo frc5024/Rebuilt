@@ -27,6 +27,7 @@ public class shooter extends SubsystemBase{
     private SparkFlex flywheel2;
 
     private boolean enabled;
+    private double setVelocity;
 
    private final SparkBaseConfig flywheel1MotorConfig = new SparkFlexConfig()
             .idleMode(IdleMode.kCoast); // sets the motors to coast mode
@@ -63,11 +64,16 @@ public class shooter extends SubsystemBase{
     @Override
     public void periodic() {
          if (enabled) {
-            feedPIDMotor();
+            setPIDMotor();
         } else {
             flywheel1.set(0);
         }
 
+    }
+
+    public void setPIDMotor() {
+        setVelocity = PID.calculate(flywheel1.getEncoder().getVelocity()) + feedForward.calculate(PID.getSetpoint());
+        flywheel1.set(setVelocity);
     }
 
    
