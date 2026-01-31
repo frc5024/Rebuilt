@@ -28,4 +28,9 @@ public class IntakeRetractArm extends Command {
     public void end(boolean interrupted) {
         s_Intake.setSpeed(0.0);
     }
+
+    @Override
+    public boolean isFinished() {
+    return s_Intake.isIntakeRetracted();
+  }
 }
