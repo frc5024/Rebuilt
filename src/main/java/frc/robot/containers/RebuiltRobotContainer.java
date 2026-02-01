@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
@@ -17,6 +18,8 @@ import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.commands.TuningCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.blower.BlowerModuleIOTalonFX;
+import frc.robot.subsystems.blower.BlowerSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOPigeon2;
 import frc.robot.subsystems.swervedrive.ModuleIOTalonFX;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
@@ -50,8 +53,10 @@ public class RebuiltRobotContainer extends RobotContainer {
                 swerveDriveSubsystem::addVisionMeasurement,
                 new VisionIOLimelight(VisionConstants.camera0Name, swerveDriveSubsystem::getRotation),
                 new VisionIOLimelight(VisionConstants.camera1Name, swerveDriveSubsystem::getRotation));
+
+        blowerSubsystem = new BlowerSubsystem(new BlowerModuleIOTalonFX());
+
         configureAutoChooser();
-        // Configure the button bindings
         configureButtonBindings();
     }
 
@@ -61,9 +66,11 @@ public class RebuiltRobotContainer extends RobotContainer {
 
         // Set up SysId routines
         autoChooser.addOption(
-                "Drive Wheel Radius Characterization", TuningCommands.wheelRadiusCharacterization(swerveDriveSubsystem));
+                "Drive Wheel Radius Characterization",
+                TuningCommands.wheelRadiusCharacterization(swerveDriveSubsystem));
         autoChooser.addOption(
-                "Drive Simple FF Characterization", TuningCommands.feedforwardCharacterization(swerveDriveSubsystem));
+                "Drive Simple FF Characterization",
+                TuningCommands.feedforwardCharacterization(swerveDriveSubsystem));
         autoChooser.addOption(
                 "Drive SysId (Quasistatic Forward)",
                 swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
@@ -71,53 +78,65 @@ public class RebuiltRobotContainer extends RobotContainer {
                 "Drive SysId (Quasistatic Reverse)",
                 swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
         autoChooser.addOption(
-                "Drive SysId (Dynamic Forward)", swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+                "Drive SysId (Dynamic Forward)",
+                swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption(
-                "Drive SysId (Dynamic Reverse)", swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+                "Drive SysId (Dynamic Reverse)",
+                swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     }
 
-    /**
-     * Use this method to define your button->command mappings. Buttons can be
-     * created by
-     * instantiating a {@link GenericHID} or one of its subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-     * it to a {@link
-     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-     */
-    protected void configureButtonBindings() {
-        // Default command, normal field-relative drive
-        swerveDriveSubsystem.setDefaultCommand(
-                DriveCommands.joystickDrive(
-                        swerveDriveSubsystem,
-                        () -> -controller.getLeftY(),
-                        () -> -controller.getLeftX(),
-                        () -> -controller.getRightX()));
+    // @Override
+    // protected void configureButtonBindings() {
+    // // Default command, normal field-relative drive
+    // swerveDriveSubsystem.setDefaultCommand(
+    // DriveCommands.joystickDrive(
+    // swerveDriveSubsystem,
+    // () -> -controller.getLeftY(),
+    // () -> -controller.getLeftX(),
+    // () -> -controller.getRightX()));
 
-        // Lock to 0° when A button is held
-        controller
-                .a()
-                .whileTrue(
-                        DriveCommands.joystickDriveAtAngle(
-                                swerveDriveSubsystem,
-                                () -> -controller.getLeftY(),
-                                () -> -controller.getLeftX(),
-                                () -> new Rotation2d()));
+    // // Lock to 0° when A button is held
+    // controller
+    // .a()
+    // .whileTrue(
+    // DriveCommands.joystickDriveAtAngle(
+    // swerveDriveSubsystem,
+    // () -> -controller.getLeftY(),
+    // () -> -controller.getLeftX(),
+    // () -> new Rotation2d()));
 
-        // Switch to X pattern when X button is pressed
-        controller.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
+    // // Switch to X pattern when X button is pressed
+    // controller.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX,
+    // swerveDriveSubsystem));
 
-        // Reset gyro to 0° when B button is pressed
-        controller
-                .b()
-                .onTrue(
-                        Commands.runOnce(
-                                () -> swerveDriveSubsystem.setPose(
-                                        new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
-                                swerveDriveSubsystem)
-                                .ignoringDisable(true));
-        controller.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
-    }
+    // // Reset gyro to 0° when B button is pressed
+    // controller
+    // .b()
+    // .onTrue(
+    // Commands.runOnce(
+    // () -> swerveDriveSubsystem.setPose(
+    // new Pose2d(swerveDriveSubsystem
+    // .getPose()
+    // .getTranslation(),
+    // new Rotation2d())),
+    // swerveDriveSubsystem)
+    // .ignoringDisable(true));
+    // controller.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem,
+    // "Example Path"));
+
+    // controller.rightTrigger().whileTrue(
+    // new InstantCommand(() -> System.out.println("Right Trigger: " +
+    // controller.getRightTriggerAxis())));
+    // // Commands.runOnce(() -> blowerSubsystem.start(
+    // // controller.getRightTriggerAxis())));
+
+    // controller.leftTrigger().whileTrue(
+    // new InstantCommand(() -> System.out.println("Left Trigger: " +
+    // controller.getLeftTriggerAxis())));
+    // // Commands.runOnce(() -> blowerSubsystem.start(
+    // // controller.getLeftTriggerAxis() * -1)));
+    // }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

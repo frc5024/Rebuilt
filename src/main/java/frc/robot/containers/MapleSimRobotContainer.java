@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.blower.BlowerModuleIOSim;
+import frc.robot.subsystems.blower.BlowerSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOSim;
 import frc.robot.subsystems.swervedrive.ModuleIOSim;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
@@ -41,13 +43,17 @@ public class MapleSimRobotContainer extends RobotContainer {
                 swerveDriveSimulation::setSimulationWorldPose);
         visionSubsystem = new VisionSubsystem(
                 swerveDriveSubsystem::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, swerveDriveSubsystem::getPose),
-                new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, swerveDriveSubsystem::getPose));
+                new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0,
+                        swerveDriveSubsystem::getPose),
+                new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1,
+                        swerveDriveSubsystem::getPose));
+
+        blowerSubsystem = new BlowerSubsystem(new BlowerModuleIOSim());
 
         configureAutoChooser();
         configureButtonBindings();
     }
-    
+
     @Override
     protected void configureAutoChooser() {
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());

@@ -7,10 +7,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Robot;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
+import frc.robot.subsystems.blower.BlowerSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -22,6 +24,7 @@ abstract public class RobotContainer {
     /* Subsystems */
     protected SwerveDriveSubsystem swerveDriveSubsystem;
     protected VisionSubsystem visionSubsystem;
+    protected BlowerSubsystem blowerSubsystem;
 
     /* Autonomous */
     protected LoggedDashboardChooser<Command> autoChooser;
@@ -76,10 +79,27 @@ abstract public class RobotContainer {
                 .onTrue(
                         Commands.runOnce(
                                 () -> swerveDriveSubsystem.setPose(
-                                        new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
+                                        new Pose2d(swerveDriveSubsystem
+                                                .getPose()
+                                                .getTranslation(),
+                                                new Rotation2d())),
                                 swerveDriveSubsystem)
                                 .ignoringDisable(true));
         driverController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
+
+        driverController.rightTrigger()
+                .whileTrue(
+                        Commands.runOnce(() -> blowerSubsystem.start(
+                                driverController.getRightTriggerAxis())))
+                .whileFalse(
+                        Commands.runOnce(() -> blowerSubsystem.stop()));
+
+        driverController.leftTrigger()
+                .whileTrue(
+                        Commands.runOnce(() -> blowerSubsystem.start(
+                                driverController.getLeftTriggerAxis() * -1)))
+                .whileFalse(
+                        Commands.runOnce(() -> blowerSubsystem.stop()));
     }
 
     /**
