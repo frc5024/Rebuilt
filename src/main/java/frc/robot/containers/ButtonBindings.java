@@ -45,7 +45,7 @@ public class ButtonBindings {
      */
     private CommandXboxController setDriverBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(DRIVER_PORT);
-         // Default command, normal field-relative drive
+        // Default command, normal field-relative drive
         swerveDriveSubsystem.setDefaultCommand(
                 DriveCommands.joystickDrive(
                         swerveDriveSubsystem,
@@ -76,7 +76,7 @@ public class ButtonBindings {
                                 swerveDriveSubsystem)
                                 .ignoringDisable(true));
         commandXboxController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
-        
+
         return commandXboxController;
     }
 
@@ -86,7 +86,6 @@ public class ButtonBindings {
     private CommandXboxController setOperatorBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(OPERATOR_PORT);
 
-        
         return commandXboxController;
     }
 
@@ -115,10 +114,16 @@ public class ButtonBindings {
         return this.driverController;
     }
 
+    /**
+     * 
+     */
     public CommandXboxController getOperatorController() {
         return this.operatorController;
     }
 
+    /**
+     * 
+     */
     public CommandXboxController getTestController() {
         return this.testController;
     }
