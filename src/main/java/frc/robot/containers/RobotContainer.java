@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Robot;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
+import frc.robot.subsystems.shooter;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -30,6 +31,8 @@ abstract public class RobotContainer {
     CommandXboxController driverController;
     CommandXboxController operatorController;
 
+    private final shooter shooterSubsystem = new shooter();
+    
     /**
      * 
      */
@@ -80,6 +83,8 @@ abstract public class RobotContainer {
                                 swerveDriveSubsystem)
                                 .ignoringDisable(true));
         driverController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
+
+        driverController.x().whileTrue(shooterSubsystem.shooterCommand());
         
     }
 

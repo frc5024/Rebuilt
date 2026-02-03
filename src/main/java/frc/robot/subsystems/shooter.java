@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.swerve.utility.WheelForceCalculator.Feedforwards;
+import com.google.flatbuffers.Constants;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -11,8 +12,10 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkFlex;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.shooterConstants;
+import frc.robot.commands.shooterCommand;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkFlex;
@@ -56,9 +59,9 @@ public class shooter extends SubsystemBase{
 
         
 
-        PID = new PIDController(0, 0, 0);
+        PID = new PIDController(shooterConstants.kP, shooterConstants.kI, shooterConstants.kD);
 
-        feedForward = new SimpleMotorFeedforward(0, 0, 0);
+        feedForward = new SimpleMotorFeedforward(shooterConstants.kS, shooterConstants.kV, shooterConstants.kA);
     }
 
     @Override
@@ -71,9 +74,17 @@ public class shooter extends SubsystemBase{
 
     }
 
+    
+
     public void setPIDMotor() {
         setVelocity = PID.calculate(flywheel1.getEncoder().getVelocity()) + feedForward.calculate(PID.getSetpoint());
         flywheel1.set(setVelocity);
+    }
+
+
+    public Command shooterCommand() {
+
+        return new shooterCommand(this, shooterConstants.setVelocity);
     }
 
    

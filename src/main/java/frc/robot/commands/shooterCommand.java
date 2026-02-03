@@ -21,7 +21,9 @@ public class shooterCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    
+  }
 
   @Override
   public void execute() {}
