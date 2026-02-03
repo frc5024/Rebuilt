@@ -45,6 +45,8 @@ public static class shooterConstants {
         public static final double kS = 0.2; // Static friction voltage
         public static final double kV = 0.1; // Velocity constant
         public static final double kA = 0.01; // Acceleration constant
+
+        public static final double setVelocity = 1500.0; // Example set velocity in RPM
 }
 
     public static final Mode simMode = Mode.SIM;
