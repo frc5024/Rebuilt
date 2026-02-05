@@ -21,12 +21,12 @@ public class IntakeRetractArm extends Command {
 
     @Override
     public void initialize() {
-        s_Intake.setSpeed(pEntry.getDouble(-0.1));
+        s_Intake.setArmSpeed(pEntry.getDouble(-0.1));
     }
 
     @Override
     public void end(boolean interrupted) {
-        s_Intake.setSpeed(0.0);
+        s_Intake.setArmSpeed(0.0);
     }
 
     @Override

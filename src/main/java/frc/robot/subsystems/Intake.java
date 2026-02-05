@@ -12,7 +12,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Intake extends SubsystemBase {
     SparkMax intakeMotor;
-    int motorID = 4; // ID on prototype board, subject to change
+    SparkMax armMotor;
+    int intakeMotorID = 4; // ID on prototype board, subject to change
+    int armMotorID = 1; // this is a placeholder ID
     
 private static DigitalInput retractingLimitSwitch = new DigitalInput(7);
 private static DigitalInput extendingLimitSwitch = new DigitalInput(3);
@@ -25,14 +27,18 @@ private static DigitalInput extendingLimitSwitch = new DigitalInput(3);
         return mInstance;
      }
     
-    
 
     private Intake() {
-        intakeMotor = new SparkMax(motorID, SparkMax.MotorType.kBrushless);
+        intakeMotor = new SparkMax(intakeMotorID, SparkMax.MotorType.kBrushless);
+        armMotor = new SparkMax(armMotorID, SparkMax.MotorType.kBrushless);
     }
         
-    public void setSpeed(double speed) {
+    public void setIntakeSpeed(double speed) {
         intakeMotor.set(speed);
+    }
+
+    public void setArmSpeed(double speed) {
+        armMotor.set(speed);
     }
 
     public Command IntakeSpin() {
