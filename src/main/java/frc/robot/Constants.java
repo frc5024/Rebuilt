@@ -186,8 +186,8 @@ public final class Constants {
         public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
         // Camera names, must match names configured on coprocessor
-        public static String camera0Name = "four";
-        public static String camera1Name = "camera_1";
+        public static String camera0Name = "limelight-four";
+        public static String camera1Name = "limelight-three";
 
         // Robot to camera transforms
         // (Not used by Limelight, configure in web UI instead)
