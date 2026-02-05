@@ -74,7 +74,9 @@ public class shooter extends SubsystemBase{
 
     }
 
-    
+    public double setShooterPID(double setVelocity) {
+        PID.setSetpoint(setVelocity);
+    }
 
     public void setPIDMotor() {
         setVelocity = PID.calculate(flywheel1.getEncoder().getVelocity()) + feedForward.calculate(PID.getSetpoint());
