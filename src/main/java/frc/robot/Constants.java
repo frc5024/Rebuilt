@@ -38,6 +38,25 @@ public final class Constants {
     /*
      * 
      */
+public static class HopperConstants {
+        public static double hopperSpeed = 0.05;
+        public static int HopperMotorID = 60;
+    }
+
+public static class shooterConstants {
+    public static final double speed = 0.1;
+    public static final double feederspeed = 0.1;
+
+  }
+
+  public static class intakeConstants {
+    public static final double intakeSpeed = 0.1;
+    public static final double outtakeSpeed = 0.1;
+    public static final double extendingSpeed = 0.1;
+    public static final double retractingSpeed = 0.1;
+  }
+
+
     public static class RobotConstants {
         // PathPlanner config constants
         private static final double ROBOT_MASS_KG = 74.088;

@@ -2,8 +2,18 @@ package frc.robot.containers;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Robot;
+import frc.robot.commands.feederCommand;
+import frc.robot.commands.runEverything;
+import frc.robot.commands.shooterCommand;
+import frc.robot.commands.Hopper.Spin;
+import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -15,6 +25,10 @@ abstract public class RobotContainer {
     /* Subsystems */
     protected SwerveDriveSubsystem swerveDriveSubsystem;
     protected VisionSubsystem visionSubsystem;
+
+    private final Hopper m_hopper = Hopper.getInstance();
+  protected Shooter m_shooter = Shooter.getInstance();
+  protected Feeder m_feeder = Feeder.getInstance();
 
     /* Autonomous */
     protected LoggedDashboardChooser<Command> autoChooser;
@@ -30,7 +44,17 @@ abstract public class RobotContainer {
         ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, visionSubsystem);
         driverController = buttonBindings.getDriverController();
         operatorController = buttonBindings.getOperatorController();
-    }
+
+        driverController.a().whileTrue(m_hopper.SpinCommand());
+    //driverController.b().whileTrue(m_hopper.SpinEntryCommand());
+    driverController.rightBumper().whileTrue(m_shooter.shooterCommand());
+    driverController.y().whileTrue(m_feeder.feederCommand());
+    driverController.x().whileTrue(new runEverything(m_feeder, m_shooter, m_hopper));
+     
+    driverController.leftBumper().whileTrue(m_feeder.jammedCommand());
+  }
+
+    
 
     abstract protected void configureAutoChooser();
 
