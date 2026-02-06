@@ -7,6 +7,7 @@ import frc.robot.commands.IntakeSpinMotor;
 import frc.robot.commands.OuttakeSpinMotor;
 import frc.robot.commands.IntakeExtendArm;
 import frc.robot.commands.IntakeRetractArm;
+import frc.robot.commands.IntakeStopArm;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.DigitalInput;
 
@@ -14,7 +15,7 @@ public class Intake extends SubsystemBase {
     SparkMax intakeMotor;
     SparkMax armMotor;
     int intakeMotorID = 4; // ID on prototype board, subject to change
-    int armMotorID = 1; // this is a placeholder ID
+    int armMotorID = 8; // ID on prototype board, subject to change
     
 private static DigitalInput retractingLimitSwitch = new DigitalInput(7);
 private static DigitalInput extendingLimitSwitch = new DigitalInput(3);
@@ -57,12 +58,18 @@ private static DigitalInput extendingLimitSwitch = new DigitalInput(3);
         return new IntakeRetractArm(this);
     }
 
+    public Command StopArm() {
+        return new IntakeStopArm(this);
+    }
+
      public boolean isIntakeRetracted() {
-        return !retractingLimitSwitch.get();
+        return false;
+       // return !retractingLimitSwitch.get();
     }
 
     public boolean isIntakeExtended() {
-        return !extendingLimitSwitch.get();
+        return false;
+        // return !extendingLimitSwitch.get();
     }
 }
 

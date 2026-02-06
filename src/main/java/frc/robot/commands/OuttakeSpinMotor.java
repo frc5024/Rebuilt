@@ -21,12 +21,12 @@ public class OuttakeSpinMotor extends Command {
 
     @Override
     public void initialize() {
-        s_Intake.setSpeed(pEntry.getDouble(0.1));
+        s_Intake.setIntakeSpeed(pEntry.getDouble(0.1));
     }
 
     @Override
     public void end(boolean interrupted) {
-        s_Intake.setSpeed(0.0);
+        s_Intake.setIntakeSpeed(0.0);
     }
 
      @Override

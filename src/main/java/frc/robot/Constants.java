@@ -19,6 +19,7 @@ public final class Constants {
     public static final double outtakeSpeed = 0.1;
     public static final double extendingSpeed = 0.1;
     public static final double retractingSpeed = 0.1;
+    public static final double stopArm = 0.0;
   }
 
   public static class OperatorConstants {
