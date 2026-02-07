@@ -16,10 +16,13 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.HopperConstants;
+import frc.robot.Constants.intakeConstants;
 import frc.robot.Constants.shooterConstants;
 import frc.robot.commands.Hopper.Spin;
+import frc.robot.commands.Intake.IntakeSpinMotor;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -30,6 +33,7 @@ public class runEverything extends SequentialCommandGroup {
   private final Feeder feederSubsystem;
   private final Shooter shooterSubsystem;
   private final Hopper hopperSubsystem;
+  //private final Intake intakeSubsystem;
 
   static ShuffleboardTab tab1 = Shuffleboard.getTab("feederallMotor");
   static GenericEntry feederEntry = tab1.add("SET allFEEDSPEED", shooterConstants.feederspeed).getEntry();
@@ -37,13 +41,16 @@ public class runEverything extends SequentialCommandGroup {
   static GenericEntry shooterEntry = tab2.add("SET allSPEED", shooterConstants.speed).getEntry();
   static ShuffleboardTab tab3 = Shuffleboard.getTab("HopperallMotor");
   static GenericEntry hopperEntry = tab3.add("SET allHOPPERSPEED", HopperConstants.hopperSpeed).getEntry();
+  static ShuffleboardTab tab4 = Shuffleboard.getTab("intakeallMotor");
+  static GenericEntry intakeEntry = tab4.add("SET allINTAKESPEED", intakeConstants.intakeSpeed).getEntry();
 
     
   /** Creates a new runEverything. */
-  public runEverything(Feeder feederSubsystem, Shooter shooterSubsystem, Hopper hopperSubsystem) {
+  public runEverything(Feeder feederSubsystem, Shooter shooterSubsystem, Hopper hopperSubsystem) {  //Intake intakeSubsystem
       this.feederSubsystem = feederSubsystem;
       this.shooterSubsystem = shooterSubsystem;
       this.hopperSubsystem = hopperSubsystem;
+      //this.intakeSubsystem = intakeSubsystem;
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
@@ -57,19 +64,19 @@ public class runEverything extends SequentialCommandGroup {
           hopperSubsystem.setIdle();
         }
       },
+      //new InstantCommand(() -> intakeSubsystem.setIntakeSpeed(intakeEntry.getDouble(-0.1))),
+      //new WaitCommand(1),
       new InstantCommand(() -> shooterSubsystem.setMotorSpeed(shooterEntry.getDouble(0.1))), 
-      //new shooterCommand(shooterSubsystem), 
-      new InstantCommand(() -> System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBB")), 
+      //new shooterCommand(shooterSubsystem),
       new WaitCommand(2),
       new InstantCommand(() -> feederSubsystem.setFeederSpeed(feederEntry.getDouble(0.1))),
-      new InstantCommand(() -> System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCC")),
       new InstantCommand(() -> hopperSubsystem.setSpeed(hopperEntry.getDouble(0.1))),
-      new InstantCommand(() -> System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDD")),
 
       
       new StartEndCommand(() -> {}, () -> {feederSubsystem.setIdle();
         shooterSubsystem.setIdle();
         hopperSubsystem.setIdle();
+        feederSubsystem.setIdle();
         System.out.println("All commands stopped");
       })
    

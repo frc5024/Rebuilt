@@ -23,7 +23,7 @@ public class Shooter extends SubsystemBase {
     private SparkFlex shooterMotor1;
     private SparkFlex shooterMotor2;
 
-    public static Shooter mInstance = null;
+    private static Shooter mInstance = null;
 
     public static Shooter getInstance() {
         if (mInstance == null) {
@@ -32,7 +32,7 @@ public class Shooter extends SubsystemBase {
         return mInstance;
     }
 
-    public Shooter() {
+    private Shooter() {
 
         shooterMotor1 = new SparkFlex(51, MotorType.kBrushless);
         shooterMotor2 = new SparkFlex(52, MotorType.kBrushless);
