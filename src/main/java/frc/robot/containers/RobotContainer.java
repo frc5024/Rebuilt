@@ -33,8 +33,8 @@ abstract public class RobotContainer {
     private final Hopper m_hopper = Hopper.getInstance();
   private final Shooter m_shooter = Shooter.getInstance();
   private final Feeder m_feeder = Feeder.getInstance();
-  private final Intake m_intake = Intake.getInstance();
-  private final Turret m_turret = Turret.getInstance();
+  //private final Intake m_intake = Intake.getInstance();
+  //private final Turret m_turret = Turret.getInstance();
   
 
     /* Autonomous */

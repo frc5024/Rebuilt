@@ -46,7 +46,7 @@ public class runEverything extends SequentialCommandGroup {
 
     
   /** Creates a new runEverything. */
-  public runEverything(Feeder feederSubsystem, Shooter shooterSubsystem, Hopper hopperSubsystem) {  //Intake intakeSubsystem
+  public runEverything(Feeder feederSubsystem, Shooter shooterSubsystem, Hopper hopperSubsystem) { //Intake intakeSubsystem{ 
       this.feederSubsystem = feederSubsystem;
       this.shooterSubsystem = shooterSubsystem;
       this.hopperSubsystem = hopperSubsystem;
@@ -68,8 +68,9 @@ public class runEverything extends SequentialCommandGroup {
       //new WaitCommand(1),
       new InstantCommand(() -> shooterSubsystem.setMotorSpeed(shooterEntry.getDouble(0.1))), 
       //new shooterCommand(shooterSubsystem),
-      new WaitCommand(2),
+      new WaitCommand(1),
       new InstantCommand(() -> feederSubsystem.setFeederSpeed(feederEntry.getDouble(0.1))),
+      new WaitCommand(1),
       new InstantCommand(() -> hopperSubsystem.setSpeed(hopperEntry.getDouble(0.1))),
 
       

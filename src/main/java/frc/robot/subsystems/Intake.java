@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class Intake extends SubsystemBase {
     SparkMax intakeMotor;
     SparkMax armMotor;
-    int intakeMotorID = 4; // ID on prototype board, subject to change
+    int intakeMotorID = 5; // ID on prototype board, subject to change
     int armMotorID = 1; // this is a placeholder ID
     
 private static DigitalInput retractingLimitSwitch = new DigitalInput(7);
