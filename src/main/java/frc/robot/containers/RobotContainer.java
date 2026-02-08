@@ -61,8 +61,7 @@ abstract public class RobotContainer {
                         () -> -driverController.getRightX()));
 
         // Lock to 0° when A button is held
-        driverController
-                .a()
+        driverController.a()
                 .whileTrue(
                         DriveCommands.joystickDriveAtAngle(
                                 swerveDriveSubsystem,
@@ -71,11 +70,11 @@ abstract public class RobotContainer {
                                 () -> new Rotation2d()));
 
         // Switch to X pattern when X button is pressed
-        driverController.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
+        driverController.x()
+                .onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
 
         // Reset gyro to 0° when B button is pressed
-        driverController
-                .b()
+        driverController.b()
                 .onTrue(
                         Commands.runOnce(
                                 () -> swerveDriveSubsystem.setPose(
@@ -85,21 +84,18 @@ abstract public class RobotContainer {
                                                 new Rotation2d())),
                                 swerveDriveSubsystem)
                                 .ignoringDisable(true));
-        driverController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
 
-        driverController.rightTrigger()
-                .whileTrue(
-                        Commands.runOnce(() -> blowerSubsystem.start(
-                                driverController.getRightTriggerAxis())))
-                .whileFalse(
-                        Commands.runOnce(() -> blowerSubsystem.stop()));
-
-        driverController.leftTrigger()
-                .whileTrue(
-                        Commands.runOnce(() -> blowerSubsystem.start(
-                                driverController.getLeftTriggerAxis() * -1)))
-                .whileFalse(
-                        Commands.runOnce(() -> blowerSubsystem.stop()));
+        // driverController.y().whileTrue(new
+        // PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
+        driverController.y()
+                .onTrue(
+                        Commands.runOnce(() -> {
+                            if (blowerSubsystem.isRunning()) {
+                                blowerSubsystem.addAction(BlowerSubsystem.Action.STOP);
+                            } else {
+                                blowerSubsystem.addAction(BlowerSubsystem.Action.START);
+                            }
+                        }, blowerSubsystem));
     }
 
     /**

@@ -7,8 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class BlowerModuleIOSim implements BlowerModuleIO {
-    private final double MOTOR_INTAKE_SPEED = 0.8;
-    private final double MOTOR_EJECT_SPEED = -0.6;
+    private final double MOTOR_SPEED = 1;
 
     private final DCMotor motor = DCMotor.getKrakenX60Foc(1);
     private final double reduction = (18.0 / 12.0);
@@ -45,8 +44,13 @@ public class BlowerModuleIOSim implements BlowerModuleIO {
     }
 
     @Override
-    public void start(double speed) {
-        this.appliedVoltage = MathUtil.clamp(MOTOR_EJECT_SPEED * 12, -12.0, 12.0);
+    public boolean isRunning() {
+        return this.dcMotorSim.getInputVoltage() != 0.0;
+    }
+
+    @Override
+    public void start() {
+        this.appliedVoltage = MathUtil.clamp(MOTOR_SPEED * 12, -12.0, 12.0);
         this.dcMotorSim.setInputVoltage(this.appliedVoltage);
     }
 

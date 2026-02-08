@@ -21,7 +21,7 @@ public class BlowerSubsystem extends SubsystemBase {
     private final Alert disconnected = new Alert(NAME + " motor disconnected!", Alert.AlertType.kWarning);
 
     public static enum Action {
-        STOP, EJECT, INTAKE
+        IDLE, START, STOP
     }
 
     private final BlowerModuleIO blowerModuleIO;
@@ -40,7 +40,9 @@ public class BlowerSubsystem extends SubsystemBase {
 
         // Sets states for the arm, and what methods.
         this.stateMachine = new StateMachine<>(NAME);
-        this.stateMachine.setDefaultState(Action.STOP, this::handleStop);
+        this.stateMachine.setDefaultState(Action.IDLE, this::handleIdle);
+        this.stateMachine.addState(Action.START, this::handleStart);
+        this.stateMachine.addState(Action.STOP, this::handleStop);
 
         this.actionQueue = new LinkedList<Action>();
 
@@ -64,11 +66,21 @@ public class BlowerSubsystem extends SubsystemBase {
     /**
      * 
      */
+    protected void handleIdle(StateMetadata<Action> stateMetadata) {
+        if (stateMetadata.isFirstRun()) {
+            this.stateTimer.reset();
+            this.stateTimer.start();
+        }
+    }
+
+    /**
+     * 
+     */
     protected void handleStart(StateMetadata<Action> stateMetadata) {
         if (stateMetadata.isFirstRun()) {
             this.stateTimer.reset();
             this.stateTimer.start();
-            this.blowerModuleIO.start(0.1);
+            this.blowerModuleIO.start();
         }
     }
 
@@ -79,7 +91,8 @@ public class BlowerSubsystem extends SubsystemBase {
         if (stateMetadata.isFirstRun()) {
             this.blowerModuleIO.stop();
             this.stateTimer.stop();
-        }
+            this.blowerModuleIO.stop();
+       }
     }
 
     /**
@@ -90,6 +103,13 @@ public class BlowerSubsystem extends SubsystemBase {
             default:
                 return !this.stateTimer.isRunning();
         }
+    }
+    
+    /**
+     * 
+     */
+    public boolean isRunning() {
+        return this.blowerModuleIO.isRunning();
     }
 
     /**
@@ -109,11 +129,11 @@ public class BlowerSubsystem extends SubsystemBase {
         }
 
         if (isActionComplete()) {
-            this.stateMachine.setState(Action.STOP);
+            this.stateMachine.setState(Action.IDLE);
         }
 
         // Run any action in the queue
-        if (this.stateMachine.getCurrentState() == Action.STOP && this.actionQueue.size() > 0) {
+        if (this.stateMachine.getCurrentState() == Action.IDLE && this.actionQueue.size() > 0) {
             try {
                 Action nextAction = this.actionQueue.removeFirst();
                 this.stateMachine.setState(nextAction);
@@ -122,19 +142,5 @@ public class BlowerSubsystem extends SubsystemBase {
         }
 
         Logger.recordOutput("Subsystems/" + this.NAME + "/Current State", this.stateMachine.getCurrentState());
-    }
-
-    /*
-     * 
-     */
-    public void start(double speed) {
-        this.blowerModuleIO.start(speed);
-    }
-
-    /*
-     * 
-     */
-    public void stop() {
-        this.blowerModuleIO.stop();
     }
 }

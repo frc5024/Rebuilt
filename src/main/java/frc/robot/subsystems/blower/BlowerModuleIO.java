@@ -21,12 +21,16 @@ public interface BlowerModuleIO {
             double tempCelsius) {
     }
 
-    default void updateInputs(BlowerModuleIOInputs inputs) {
+    default boolean isRunning() {
+        return false;
     }
 
-    default void start(double speed) {
+    default void start() {
     }
 
     default void stop() {
+    }
+
+    default void updateInputs(BlowerModuleIOInputs inputs) {
     }
 }
