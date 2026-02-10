@@ -45,7 +45,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // TunerConstants doesn't include these constants, so they are declared locally
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
-    private final Module[] modules = new Module[4]; // FL, FR, BL, BR
+    private final SwerveModule[] modules = new SwerveModule[4]; // FL, FR, BL, BR
     private final SysIdRoutine sysId;
     private final Alert gyroDisconnectedAlert = new Alert("Disconnected gyro, using kinematics as fallback.",
             AlertType.kError);
@@ -66,14 +66,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     /**
      * 
      */
-    public SwerveDriveSubsystem(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO,
+    public SwerveDriveSubsystem(GyroIO gyroIO, SwerveModuleIO flModuleIO, SwerveModuleIO frModuleIO, SwerveModuleIO blModuleIO, SwerveModuleIO brModuleIO,
             Consumer<Pose2d> resetSimulationPoseCallBack) {
         this.gyroIO = gyroIO;
         this.resetSimulationPoseCallBack = resetSimulationPoseCallBack;
-        modules[0] = new Module(flModuleIO, 0, TunerConstants.FrontLeft);
-        modules[1] = new Module(frModuleIO, 1, TunerConstants.FrontRight);
-        modules[2] = new Module(blModuleIO, 2, TunerConstants.BackLeft);
-        modules[3] = new Module(brModuleIO, 3, TunerConstants.BackRight);
+        modules[0] = new SwerveModule(flModuleIO, 0, TunerConstants.FrontLeft);
+        modules[1] = new SwerveModule(frModuleIO, 1, TunerConstants.FrontRight);
+        modules[2] = new SwerveModule(blModuleIO, 2, TunerConstants.BackLeft);
+        modules[3] = new SwerveModule(brModuleIO, 3, TunerConstants.BackRight);
 
         // Usage reporting for swerve template
         HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);

@@ -3,6 +3,7 @@ package frc.robot.subsystems.swervedrive;
 import static frc.robot.util.PhoenixUtil.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -42,7 +43,7 @@ import java.util.Queue;
  * Device configuration and other behaviors not exposed by TunerConstants can be
  * customized here.
  */
-public class ModuleIOTalonFX implements ModuleIO {
+public class SwerveModuleIOTalonFX implements SwerveModuleIO {
     private final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants;
 
     // Hardware objects
@@ -83,12 +84,13 @@ public class ModuleIOTalonFX implements ModuleIO {
     private final Debouncer turnConnectedDebounce = new Debouncer(0.5);
     private final Debouncer turnEncoderConnectedDebounce = new Debouncer(0.5);
 
-    public ModuleIOTalonFX(
+    public SwerveModuleIOTalonFX(
             SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants) {
         this.constants = constants;
-        driveTalon = new TalonFX(constants.DriveMotorId, TunerConstants.DrivetrainConstants.CANBusName);
-        turnTalon = new TalonFX(constants.SteerMotorId, TunerConstants.DrivetrainConstants.CANBusName);
-        cancoder = new CANcoder(constants.EncoderId, TunerConstants.DrivetrainConstants.CANBusName);
+        CANBus canBus = new CANBus(TunerConstants.DrivetrainConstants.CANBusName);
+        driveTalon = new TalonFX(constants.DriveMotorId, canBus);
+        turnTalon = new TalonFX(constants.SteerMotorId, canBus);
+        cancoder = new CANcoder(constants.EncoderId, canBus);
 
         // Configure drive motor
         var driveConfig = constants.DriveMotorInitialConfigs;
@@ -170,7 +172,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     }
 
     @Override
-    public void updateInputs(ModuleIOInputs inputs) {
+    public void updateInputs(SwerveModuleIOInputs inputs) {
         // Refresh all signals
         var driveStatus = BaseStatusSignal.refreshAll(drivePosition, driveVelocity, driveAppliedVolts, driveCurrent);
         var turnStatus = BaseStatusSignal.refreshAll(turnPosition, turnVelocity, turnAppliedVolts, turnCurrent);

@@ -6,7 +6,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOSim;
-import frc.robot.subsystems.swervedrive.ModuleIOSim;
+import frc.robot.subsystems.swervedrive.SwerveModuleIOMapleSim;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.util.MapleSimUtil;
@@ -34,11 +34,12 @@ public class MapleSimRobotContainer extends RobotContainer {
 
         swerveDriveSubsystem = new SwerveDriveSubsystem(
                 new GyroIOSim(swerveDriveSimulation.getGyroSimulation()),
-                new ModuleIOSim(swerveDriveSimulation.getModules()[0]),
-                new ModuleIOSim(swerveDriveSimulation.getModules()[1]),
-                new ModuleIOSim(swerveDriveSimulation.getModules()[2]),
-                new ModuleIOSim(swerveDriveSimulation.getModules()[3]),
+                new SwerveModuleIOMapleSim(swerveDriveSimulation.getModules()[0]),
+                new SwerveModuleIOMapleSim(swerveDriveSimulation.getModules()[1]),
+                new SwerveModuleIOMapleSim(swerveDriveSimulation.getModules()[2]),
+                new SwerveModuleIOMapleSim(swerveDriveSimulation.getModules()[3]),
                 swerveDriveSimulation::setSimulationWorldPose);
+                
         visionSubsystem = new VisionSubsystem(
                 swerveDriveSubsystem::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, swerveDriveSubsystem::getPose),
@@ -74,11 +75,8 @@ public class MapleSimRobotContainer extends RobotContainer {
     @Override
     public void updateSimulation() {
         SimulatedArena.getInstance().simulationPeriodic();
-        Logger.recordOutput(
-                "FieldSimulation/RobotPosition", MapleSimUtil.getSwerveDriveSimulation().getSimulatedDriveTrainPose());
-        Logger.recordOutput(
-                "FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
-        Logger.recordOutput(
-                "FieldSimulation/Algae", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
+        Logger.recordOutput("FieldSimulation/RobotPosition", MapleSimUtil.getSwerveDriveSimulation().getSimulatedDriveTrainPose());
+        // Logger.recordOutput("FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
+        // Logger.recordOutput("FieldSimulation/Algae", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
     }
 }

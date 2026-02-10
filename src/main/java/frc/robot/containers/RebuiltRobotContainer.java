@@ -10,7 +10,7 @@ import frc.robot.commands.TuningCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOPigeon2;
-import frc.robot.subsystems.swervedrive.ModuleIOTalonFX;
+import frc.robot.subsystems.swervedrive.SwerveModuleIOTalonFX;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -29,10 +29,10 @@ public class RebuiltRobotContainer extends RobotContainer {
                 // Real robot, instantiate hardware IO implementations
                 swerveDriveSubsystem = new SwerveDriveSubsystem(
                                 new GyroIOPigeon2(),
-                                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                                new ModuleIOTalonFX(TunerConstants.BackRight),
+                                new SwerveModuleIOTalonFX(TunerConstants.FrontLeft),
+                                new SwerveModuleIOTalonFX(TunerConstants.FrontRight),
+                                new SwerveModuleIOTalonFX(TunerConstants.BackLeft),
+                                new SwerveModuleIOTalonFX(TunerConstants.BackRight),
                                 (robotPose) -> {
                                 });
                 visionSubsystem = new VisionSubsystem(

@@ -15,9 +15,9 @@ import org.littletonrobotics.junction.Logger;
 /**
  * 
  */
-public class Module {
-    private final ModuleIO io;
-    private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
+public class SwerveModule {
+    private final SwerveModuleIO io;
+    private final SwerveModuleIOInputsAutoLogged inputs = new SwerveModuleIOInputsAutoLogged();
     private final int index;
     private final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants;
 
@@ -29,8 +29,8 @@ public class Module {
     /**
      * 
      */
-    public Module(
-            ModuleIO io,
+    public SwerveModule(
+            SwerveModuleIO io,
             int index,
             SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants) {
         this.io = io;

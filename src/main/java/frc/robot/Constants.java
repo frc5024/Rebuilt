@@ -39,6 +39,8 @@ public final class Constants {
      * 
      */
     public static class RobotConstants {
+        public static final double LOOP_PERIOD_SECS = 0.02;
+        
         // PathPlanner config constants
         private static final double ROBOT_MASS_KG = 74.088;
         private static final double ROBOT_MOI = 6.883;

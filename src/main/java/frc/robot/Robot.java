@@ -13,6 +13,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.containers.MapleSimRobotContainer;
 import frc.robot.containers.RebuiltRobotContainer;
 import frc.robot.containers.RobotContainer;
+import frc.robot.containers.SimulatedRobotContainer;
 import frc.robot.generated.TunerConstants;
 import java.util.NoSuchElementException;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -74,7 +75,8 @@ public class Robot extends LoggedRobot {
                 // Running a physics simulator, log to NT
                 Logger.addDataReceiver(new NT4Publisher());
 
-                robotContainer = new MapleSimRobotContainer();
+                // robotContainer = new MapleSimRobotContainer();
+                robotContainer = new SimulatedRobotContainer();
                 break;
 
             case REPLAY:
@@ -154,7 +156,7 @@ public class Robot extends LoggedRobot {
 
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
-            autonomousCommand.schedule();
+            CommandScheduler.getInstance().schedule(autonomousCommand);
         }
     }
 
