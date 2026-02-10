@@ -1,20 +1,19 @@
 package frc.robot.containers;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Robot;
-import frc.robot.commands.DriveCommands;
-import frc.robot.commands.PathFinderAndFollowCommand;
+import frc.robot.commands.shooterCommand;
 import frc.robot.subsystems.shooter;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import frc.robot.containers.ButtonBindings;
 
 /**
  * 
@@ -24,6 +23,11 @@ abstract public class RobotContainer {
     protected SwerveDriveSubsystem swerveDriveSubsystem;
     protected VisionSubsystem visionSubsystem;
 
+  private final shooter m_shooter = shooter.getInstance();
+  //private final Intake m_intake = Intake.getInstance();
+  //private final Turret m_turret = Turret.getInstance();
+  
+
     /* Autonomous */
     protected LoggedDashboardChooser<Command> autoChooser;
 
@@ -31,62 +35,26 @@ abstract public class RobotContainer {
     CommandXboxController driverController;
     CommandXboxController operatorController;
 
-    private final shooter shooterSubsystem = new shooter();
-    
+private final int translationAxis = XboxController.Axis.kLeftY.value;
+  private final int strafeAxis = XboxController.Axis.kLeftX.value;
+  private final int rotationAxis = XboxController.Axis.kRightX.value;
+
+
     /**
      * 
      */
-    public RobotContainer() {
-    }
+    protected void configureButtonBindings() {
+        ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, visionSubsystem);
+        driverController = buttonBindings.getDriverController();
+        operatorController = buttonBindings.getOperatorController();
+
+    //driverController.b().whileTrue(m_hopper.SpinEntryCommand());
+    driverController.rightBumper().whileTrue(m_shooter.shooterCommand());
+  }
+
+    
 
     abstract protected void configureAutoChooser();
-
-    /**
-     * Use this method to define your button->command mappings. Buttons can be
-     * created by
-     * instantiating a {@link GenericHID} or one of its subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-     * it to a {@link
-     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-     */
-    protected void configureButtonBindings() {
-        driverController = new CommandXboxController(0);
-
-        // Default command, normal field-relative drive
-        swerveDriveSubsystem.setDefaultCommand(
-                DriveCommands.joystickDrive(
-                        swerveDriveSubsystem,
-                        () -> -driverController.getLeftY(),
-                        () -> -driverController.getLeftX(),
-                        () -> -driverController.getRightX()));
-
-        // Lock to 0° when A button is held
-        driverController
-                .a()
-                .whileTrue(
-                        DriveCommands.joystickDriveAtAngle(
-                                swerveDriveSubsystem,
-                                () -> -driverController.getLeftY(),
-                                () -> -driverController.getLeftX(),
-                                () -> new Rotation2d()));
-
-        // Switch to X pattern when X button is pressed
-        driverController.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
-
-        // Reset gyro to 0° when B button is pressed
-        driverController
-                .b()
-                .onTrue(
-                        Commands.runOnce(
-                                () -> swerveDriveSubsystem.setPose(
-                                        new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
-                                swerveDriveSubsystem)
-                                .ignoringDisable(true));
-        driverController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
-
-        driverController.x().whileTrue(shooterSubsystem.shooterCommand());
-        
-    }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -98,7 +66,13 @@ abstract public class RobotContainer {
     }
 
     // Methods used by simulation only
+
+    // Creates the abstract method updateSimulation, which is called periodically
+    // during simulation to update the state of the robot and its subsystems.
     public abstract void updateSimulation();
 
+    // Creates the abstract method onAllianceChanged, which is called when the
+    // alliance color or location changes, allowing the robot to adjust its behavior
+    // accordingly.
     public abstract void onAllianceChanged(Alliance currentAlliance, int currentLocation);
 }
