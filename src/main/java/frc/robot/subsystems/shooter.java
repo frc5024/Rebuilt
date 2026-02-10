@@ -34,12 +34,21 @@ public class shooter extends SubsystemBase{
 
     private boolean enabled;
 
+     private static shooter mInstance = null;
+
+    public static shooter getInstance() {
+        if (mInstance == null) {
+            mInstance = new shooter();
+        }
+        return mInstance;
+    }
+
    private final SparkBaseConfig flywheel1MotorConfig = new SparkFlexConfig()
-            .idleMode(IdleMode.kCoast); // sets the motors to coast mode
-            //.inverted(true);
+            .idleMode(IdleMode.kCoast) // sets the motors to coast mode
+            .inverted(true);
     private final SparkBaseConfig flywheel2MotorConfig = new SparkFlexConfig()
             .idleMode(IdleMode.kCoast)
-            .follow(51, true);
+            .follow(51, false);
     
     private PIDController PID;
     private SimpleMotorFeedforward feedForward; 
@@ -58,7 +67,7 @@ public class shooter extends SubsystemBase{
         flywheel2 = new SparkFlex(52, MotorType.kBrushless);
 
         flywheel1.configure(flywheel1MotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        //flywheel2.configure(flywheel2MotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        flywheel2.configure(flywheel2MotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         RelativeEncoder encoder = flywheel1.getEncoder();
 
@@ -72,6 +81,7 @@ public class shooter extends SubsystemBase{
     @Override
     public void periodic() { 
          if (enabled) {
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
             setPIDMotor();
 
         } else {
@@ -120,8 +130,8 @@ public class shooter extends SubsystemBase{
 
     public Command shooterCommand() {
 
-        return new shooterCommand(this, shooterConstants.setVelocity);
+        return new frc.robot.commands.shooterCommand(this, shooterConstants.setVelocity);
     }
 
-   
+        
 }
