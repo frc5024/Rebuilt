@@ -106,4 +106,28 @@ public class BlowerModuleIOTalonFX implements BlowerModuleIO {
     public void stop() {
         this.blowerTalon.setControl(voltageRequest.withPosition(0.0));
     }
+
+    @Override
+    public void setPID(double kP, double kD, double kS, double kV, double kG) {
+        TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
+        talonFXConfiguration.Slot0.kS = kS;
+        talonFXConfiguration.Slot0.kV = kV;
+        talonFXConfiguration.Slot0.kG = kG;
+        talonFXConfiguration.Slot0.kP = kP;
+        talonFXConfiguration.Slot0.kD = kD;
+
+        tryUntilOk(5, () -> this.blowerTalon.getConfigurator().apply(talonFXConfiguration, 0.25));
+        tryUntilOk(5, () -> this.blowerTalon.setPosition(0.0, 0.25));
+    }
+
+    @Override
+    public void setMM(double cv, double acc, double jerk) {
+        TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
+        talonFXConfiguration.MotionMagic.MotionMagicCruiseVelocity = cv;
+        talonFXConfiguration.MotionMagic.MotionMagicAcceleration = acc;
+        talonFXConfiguration.MotionMagic.MotionMagicJerk = jerk;
+
+        tryUntilOk(5, () -> this.blowerTalon.getConfigurator().apply(talonFXConfiguration, 0.25));
+        tryUntilOk(5, () -> this.blowerTalon.setPosition(0.0, 0.25));
+    }
 }

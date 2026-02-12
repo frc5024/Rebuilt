@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Robot;
+import frc.robot.commands.BlowerTuningCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.subsystems.blower.BlowerSubsystem;
@@ -87,6 +88,8 @@ abstract public class RobotContainer {
 
         // driverController.y().whileTrue(new
         // PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
+        blowerSubsystem.setDefaultCommand(new BlowerTuningCommand(blowerSubsystem));
+        
         driverController.y()
                 .onTrue(
                         Commands.runOnce(() -> {
