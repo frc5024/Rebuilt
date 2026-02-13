@@ -92,7 +92,7 @@ public class BlowerSubsystem extends SubsystemBase {
             this.blowerModuleIO.stop();
             this.stateTimer.stop();
             this.blowerModuleIO.stop();
-       }
+        }
     }
 
     /**
@@ -104,7 +104,7 @@ public class BlowerSubsystem extends SubsystemBase {
                 return !this.stateTimer.isRunning();
         }
     }
-    
+
     /**
      * 
      */
@@ -142,23 +142,5 @@ public class BlowerSubsystem extends SubsystemBase {
         }
 
         Logger.recordOutput("Subsystems/" + this.NAME + "/Current State", this.stateMachine.getCurrentState());
-    }
-
-    /**
-     * 
-     */
-    public void setPID(double kP, double kD, double kS, double kV, double kG) {
-        if (this.blowerModuleIO instanceof BlowerModuleIOSim) return;
-        
-        this.blowerModuleIO.setPID(kP, kD, kS, kV, kG);
-    }
-    
-    /**
-     * 
-     */
-    public void setMM(double cv, double acc, double jerk) {
-        if (this.blowerModuleIO instanceof BlowerModuleIOSim) return;
-
-        this.blowerModuleIO.setMM(cv, acc, jerk);
     }
 }

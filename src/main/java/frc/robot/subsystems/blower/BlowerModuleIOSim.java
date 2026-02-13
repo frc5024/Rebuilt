@@ -59,12 +59,4 @@ public class BlowerModuleIOSim implements BlowerModuleIO {
         this.appliedVoltage = 0.0;
         this.dcMotorSim.setInputVoltage(this.appliedVoltage);
     }
-    
-    @Override
-    public void setPID(double kP, double kD, double kS, double kV, double kG) {
-    }
-    
-    @Override
-    public void setMM(double cv, double acc, double jerk) {
-    }
 }

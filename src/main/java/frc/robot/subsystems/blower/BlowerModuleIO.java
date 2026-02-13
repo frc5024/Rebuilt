@@ -33,10 +33,4 @@ public interface BlowerModuleIO {
 
     default void updateInputs(BlowerModuleIOInputs inputs) {
     }
-
-    default void setPID(double kP, double kD, double kS, double kV, double kG) {
-    }
-    
-    default void setMM(double cv, double acc, double jerk) {
-    }
 }

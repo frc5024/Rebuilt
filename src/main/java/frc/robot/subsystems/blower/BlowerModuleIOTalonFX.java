@@ -1,14 +1,12 @@
 package frc.robot.subsystems.blower;
 
-import static frc.robot.util.PhoenixUtil.tryUntilOk;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -16,6 +14,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.generated.TunerConstants;
 
@@ -34,28 +33,16 @@ public class BlowerModuleIOTalonFX implements BlowerModuleIO {
     private final Debouncer driveConnectedDebounce = new Debouncer(0.5);
 
     // Create a control request object for Percent Output (Duty Cycle)
-    private final MotionMagicVoltage voltageRequest = new MotionMagicVoltage(0);
+    private final VoltageOut voltageRequest = new VoltageOut(0);
+    private final double TARGET_VOLTAGE = 12.0;
+    private double startTime = 0.0;
+    private boolean isRamping = false;
 
     /**
      * 
      */
     public BlowerModuleIOTalonFX() {
         this.blowerTalon = new TalonFX(MOTOR_ID, TunerConstants.DrivetrainConstants.CANBusName);
-        
-        TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
-        talonFXConfiguration.Slot0.kS = 0.25;
-        talonFXConfiguration.Slot0.kV = 0.12;
-        talonFXConfiguration.Slot0.kG = 0.01;
-        talonFXConfiguration.Slot0.kP = 4.8;
-        talonFXConfiguration.Slot0.kI = 0.0;
-        talonFXConfiguration.Slot0.kD = 0.1;
-
-        talonFXConfiguration.MotionMagic.MotionMagicCruiseVelocity = 80;
-        talonFXConfiguration.MotionMagic.MotionMagicAcceleration = 160;
-        talonFXConfiguration.MotionMagic.MotionMagicJerk = 1600;
-
-        tryUntilOk(5, () -> this.blowerTalon.getConfigurator().apply(talonFXConfiguration, 0.25));
-        tryUntilOk(5, () -> this.blowerTalon.setPosition(0.0, 0.25));
 
         // Create drive status signals
         this.drivePosition = this.blowerTalon.getPosition();
@@ -78,8 +65,18 @@ public class BlowerModuleIOTalonFX implements BlowerModuleIO {
         if (DriverStation.isDisabled()) {
             stop();
         }
+
+        if (this.isRamping) {
+            double elapsedTime = Timer.getFPGATimestamp() - this.startTime;
+            double targetVoltage = MathUtil.clamp((TARGET_VOLTAGE / 10.0) * elapsedTime, -TARGET_VOLTAGE,
+                    TARGET_VOLTAGE);
+
+            this.blowerTalon.setControl(voltageRequest.withOutput(targetVoltage));
+        }
+
         // Refresh all signals
-        var driveStatus = BaseStatusSignal.refreshAll(this.drivePosition, this.driveVelocity, this.driveAppliedVolts, this.driveCurrent);
+        var driveStatus = BaseStatusSignal.refreshAll(this.drivePosition, this.driveVelocity, this.driveAppliedVolts,
+                this.driveCurrent);
 
         // Update drive inputs
         inputs.data = new BlowerModuleIOData(
@@ -94,40 +91,18 @@ public class BlowerModuleIOTalonFX implements BlowerModuleIO {
 
     @Override
     public boolean isRunning() {
-        return this.blowerTalon.getVelocity().getValueAsDouble() != 0.0;
+        return this.isRamping;
     }
 
     @Override
     public void start() {
-        this.blowerTalon.setControl(voltageRequest.withPosition(100));
+        this.isRamping = true;
+        this.startTime = Timer.getFPGATimestamp();
     }
 
     @Override
     public void stop() {
-        this.blowerTalon.setControl(voltageRequest.withPosition(0.0));
-    }
-
-    @Override
-    public void setPID(double kP, double kD, double kS, double kV, double kG) {
-        TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
-        talonFXConfiguration.Slot0.kS = kS;
-        talonFXConfiguration.Slot0.kV = kV;
-        talonFXConfiguration.Slot0.kG = kG;
-        talonFXConfiguration.Slot0.kP = kP;
-        talonFXConfiguration.Slot0.kD = kD;
-
-        tryUntilOk(5, () -> this.blowerTalon.getConfigurator().apply(talonFXConfiguration, 0.25));
-        tryUntilOk(5, () -> this.blowerTalon.setPosition(0.0, 0.25));
-    }
-
-    @Override
-    public void setMM(double cv, double acc, double jerk) {
-        TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
-        talonFXConfiguration.MotionMagic.MotionMagicCruiseVelocity = cv;
-        talonFXConfiguration.MotionMagic.MotionMagicAcceleration = acc;
-        talonFXConfiguration.MotionMagic.MotionMagicJerk = jerk;
-
-        tryUntilOk(5, () -> this.blowerTalon.getConfigurator().apply(talonFXConfiguration, 0.25));
-        tryUntilOk(5, () -> this.blowerTalon.setPosition(0.0, 0.25));
+        this.isRamping = false;
+        this.blowerTalon.setControl(voltageRequest.withOutput(0.0));
     }
 }
