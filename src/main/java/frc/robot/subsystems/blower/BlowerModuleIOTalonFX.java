@@ -31,12 +31,11 @@ public class BlowerModuleIOTalonFX implements BlowerModuleIO {
 
     // Connection debouncers
     private final Debouncer driveConnectedDebounce = new Debouncer(0.5);
-
-    // Create a control request object for Percent Output (Duty Cycle)
-    private final VoltageOut voltageRequest = new VoltageOut(0);
-    private final double TARGET_VOLTAGE = 12.0;
-    private double startTime = 0.0;
-    private boolean isRamping = false;
+    
+    // Variables for ramping the motor
+    protected VoltageOut voltageRequest;
+    protected double startTime;
+    protected boolean isRamping;
 
     /**
      * 
@@ -58,6 +57,10 @@ public class BlowerModuleIOTalonFX implements BlowerModuleIO {
                 this.driveAppliedVolts,
                 this.driveCurrent);
         ParentDevice.optimizeBusUtilizationForAll(this.blowerTalon);
+                
+        this.voltageRequest = new VoltageOut(0);
+        this.startTime = 0.0;
+        this.isRamping = false;
     }
 
     @Override

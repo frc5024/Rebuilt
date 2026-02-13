@@ -35,6 +35,8 @@ import frc.robot.generated.TunerConstants;
  * 
  */
 public final class Constants {
+    public static final double LOOP_PERIOD_SECS = 0.02;
+
     /*
      * 
      */

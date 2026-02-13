@@ -7,6 +7,8 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.statemachine.StateMachine;
 import frc.lib.statemachine.StateMetadata;
@@ -120,6 +122,8 @@ public class BlowerSubsystem extends SubsystemBase {
 
         this.blowerModuleIO.updateInputs(this.inputs);
         Logger.processInputs(this.NAME, this.inputs);
+        double loadedVoltage = BatterySim.calculateDefaultBatteryLoadedVoltage(this.inputs.data.appliedVoltage());
+        RoboRioSim.setVInVoltage(loadedVoltage);
 
         this.disconnected.set(!this.inputs.data.connected());
 

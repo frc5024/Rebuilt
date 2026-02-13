@@ -6,6 +6,8 @@ import org.littletonrobotics.junction.AutoLog;
  * 
  */
 public interface BlowerModuleIO {
+    public static final double TARGET_VOLTAGE = 12.0;
+
     @AutoLog
     class BlowerModuleIOInputs {
         public BlowerModuleIOData data = new BlowerModuleIOData(false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
