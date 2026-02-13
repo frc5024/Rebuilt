@@ -48,7 +48,7 @@ public class shooter extends SubsystemBase{
             .inverted(true);
     private final SparkBaseConfig flywheel2MotorConfig = new SparkFlexConfig()
             .idleMode(IdleMode.kCoast)
-            .follow(51, false);
+            .follow(51, true);
     
     private PIDController PID;
     private SimpleMotorFeedforward feedForward; 
@@ -76,6 +76,7 @@ public class shooter extends SubsystemBase{
         feedForward = new SimpleMotorFeedforward(shooterConstants.kS, shooterConstants.kV, shooterConstants.kA);
 
         tab.addDouble("actual velocity", () -> flywheel1.getEncoder().getVelocity());
+        tab.addDouble("actualVoltage", () -> flywheel1.getBusVoltage());
     }
 
     @Override
@@ -132,6 +133,10 @@ public class shooter extends SubsystemBase{
 
         return new frc.robot.commands.shooterCommand(this, shooterConstants.setVelocity);
     }
+
+    //public Command runEverything() {
+        //return new frc.robot.commands.runEverything(this, shooterConstants.setVelocity);
+    //}
 
         
 }
