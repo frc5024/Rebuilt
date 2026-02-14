@@ -44,7 +44,7 @@ public static class HopperConstants {
 
 public static final class turretConstants {
                 public static final double speed = 0.01;
-                public static final int turretMotorChannel = 6;
+                public static final int turretMotorChannel = 3;
                 public static final double turretTolerance = 0.5;
                 public static final double kP = 0.0;
                 public static final double kI = 0;
