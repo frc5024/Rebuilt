@@ -7,6 +7,7 @@ import com.google.flatbuffers.Constants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkFlex;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.shooterConstants;
 import frc.robot.commands.shooterCommand;
+import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
@@ -128,8 +130,8 @@ public class shooter extends SubsystemBase{
 
     }
 
-    //public void getPosition() {
-    //frc.robot.subsystems.swervedrive.SwerveDriveSubsystem.getPose();
+    //public Pose2d getPosition() {
+        //return frc.robot.subsystems.swervedrive.SwerveDriveSubsystem.getPose();
     //}
 
 
