@@ -7,17 +7,20 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.shooterConstants;
 import frc.robot.subsystems.shooter;
+import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class shooterCommand extends Command {
 
   public final shooter shootersubsystem;
+  //public final SwerveDriveSubsystem swerveDriveSubsystem;
 
   public double setVelocity;
 
-  public shooterCommand (shooter shootersubsystem, double setVelocity) {
+  public shooterCommand (shooter shootersubsystem, double setVelocity) {  //SwerveDriveSubsystem swerveDriveSubsystem,
     this.shootersubsystem = shootersubsystem;
     this.setVelocity = setVelocity;
+    //this.swerveDriveSubsystem = swerveDriveSubsystem;
   }
 
   // Called when the command is initially scheduled.

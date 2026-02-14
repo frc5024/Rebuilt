@@ -49,8 +49,8 @@ public class ButtonBindings {
         swerveDriveSubsystem.setDefaultCommand(
                 DriveCommands.joystickDrive(
                         swerveDriveSubsystem,
-                        () -> -commandXboxController.getLeftY(),
-                        () -> -commandXboxController.getLeftX(),
+                        () -> commandXboxController.getLeftY(),
+                        () -> commandXboxController.getLeftX(),
                         () -> -commandXboxController.getRightX()));
 
         // Lock to 0° when A button is held
