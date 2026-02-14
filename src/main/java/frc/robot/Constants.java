@@ -42,7 +42,7 @@ public final class Constants {
 
 public static class HopperConstants {
         public static double hopperSpeed = 0.05;
-        public static int HopperMotorID = 60;
+        public static int HopperMotorID = 8;
     }
 
 public static final class turretConstants {

@@ -128,6 +128,10 @@ public class shooter extends SubsystemBase{
 
     }
 
+    //public void getPosition() {
+    //frc.robot.subsystems.swervedrive.SwerveDriveSubsystem.getPose();
+    //}
+
 
     public Command shooterCommand() {
 
