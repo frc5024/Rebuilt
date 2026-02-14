@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Robot;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.shooterCommand;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
@@ -34,6 +35,7 @@ abstract public class RobotContainer {
   private final Feeder m_feeder = Feeder.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final Intake m_intake = Intake.getInstance();
+  private final Climb m_climb = Climb.getInstance();
 
   /* Autonomous */
   protected LoggedDashboardChooser<Command> autoChooser;
@@ -64,6 +66,9 @@ abstract public class RobotContainer {
     driverController.rightTrigger().whileTrue(m_intake.ExtendSpin());
     driverController.leftTrigger().whileTrue(m_intake.RetractSpin());
     driverController.b().whileTrue(m_intake.IntakeSpin());
+    driverController.povUp().whileTrue(m_climb.climb());
+    driverController.povDown().whileTrue(m_climb.declimb());
+
 
   }
 
