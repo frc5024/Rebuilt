@@ -2,6 +2,7 @@ package frc.robot.containers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -19,6 +20,7 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 /**
  * 
@@ -34,29 +36,46 @@ public class MapleSimRobotContainer extends RobotContainer {
         SwerveDriveSimulation swerveDriveSimulation = MapleSimUtil.getSwerveDriveSimulation();
         SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
 
-        swerveDriveSubsystem = new SwerveDriveSubsystem(
+        this.swerveDriveSubsystem = new SwerveDriveSubsystem(
                 new GyroIOSim(swerveDriveSimulation.getGyroSimulation()),
                 new ModuleIOSim(swerveDriveSimulation.getModules()[0]),
                 new ModuleIOSim(swerveDriveSimulation.getModules()[1]),
                 new ModuleIOSim(swerveDriveSimulation.getModules()[2]),
                 new ModuleIOSim(swerveDriveSimulation.getModules()[3]),
                 swerveDriveSimulation::setSimulationWorldPose);
-        visionSubsystem = new VisionSubsystem(
-                swerveDriveSubsystem::addVisionMeasurement,
+
+        this.visionSubsystem = new VisionSubsystem(
+                this.swerveDriveSubsystem::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0,
-                        swerveDriveSubsystem::getPose),
+                        this.swerveDriveSubsystem::getPose),
                 new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1,
-                        swerveDriveSubsystem::getPose));
+                        this.swerveDriveSubsystem::getPose));
 
-        blowerSubsystem = new BlowerSubsystem(new BlowerModuleIOSim());
+        this.blowerSubsystem = new BlowerSubsystem(new BlowerModuleIOSim());
 
+        configureNamedCommands();
         configureAutoChooser();
         configureButtonBindings();
     }
 
     @Override
+    protected void configureNamedCommands() {
+        NamedCommands.registerCommand("StartBlower", new InstantCommand(() -> {
+            this.blowerSubsystem.addAction(BlowerSubsystem.Action.START);
+        }));
+        NamedCommands.registerCommand("StopBlower", new InstantCommand(() -> {
+            this.blowerSubsystem.addAction(BlowerSubsystem.Action.STOP);
+        }));
+    }
+
+    @Override
     protected void configureAutoChooser() {
-        autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+        this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    }
+
+    @Override
+    protected void configureButtonBindings() {
+        
     }
 
     @Override
@@ -65,7 +84,7 @@ public class MapleSimRobotContainer extends RobotContainer {
         location -= 1;
 
         Pose2d pose2d = FieldConstants.STATION_POSES[index][location];
-        swerveDriveSubsystem.setPose(pose2d);
+        this.swerveDriveSubsystem.setPose(pose2d);
         resetSimulationField(pose2d);
     }
 
@@ -83,8 +102,6 @@ public class MapleSimRobotContainer extends RobotContainer {
         Logger.recordOutput(
                 "FieldSimulation/RobotPosition", MapleSimUtil.getSwerveDriveSimulation().getSimulatedDriveTrainPose());
         Logger.recordOutput(
-                "FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
-        Logger.recordOutput(
-                "FieldSimulation/Algae", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
+                "FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
     }
 }

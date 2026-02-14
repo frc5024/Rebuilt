@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Robot;
+import frc.robot.subsystems.blower.BlowerSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -12,25 +13,29 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * 
  */
 abstract public class RobotContainer {
-        /* Subsystems */
-        protected SwerveDriveSubsystem swerveDriveSubsystem;
-        protected VisionSubsystem visionSubsystem;
-        protected BlowerSubsystem blowerSubsystem;
+    /* Subsystems */
+    protected SwerveDriveSubsystem swerveDriveSubsystem;
+    protected VisionSubsystem visionSubsystem;
+    protected BlowerSubsystem blowerSubsystem;
 
-        /* Autonomous */
-        protected LoggedDashboardChooser<Command> autoChooser;
+    /* Autonomous */
+    protected LoggedDashboardChooser<Command> autoChooser;
 
-        /* Controllers */
-        CommandXboxController driverController;
-        CommandXboxController operatorController;
+    /* Controllers */
+    CommandXboxController driverController;
+    CommandXboxController operatorController;
 
-        /**
-         * 
-         */
-        public RobotContainer() {
-        }
+    /**
+     * 
+     */
+    public RobotContainer() {
+    }
 
-        abstract protected void configureAutoChooser();
+    abstract protected void configureNamedCommands();
+
+    abstract protected void configureAutoChooser();
+
+    abstract protected void configureButtonBindings();
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
