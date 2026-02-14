@@ -35,10 +35,8 @@ public class SimulatedRobotContainer extends RobotContainer {
 
         this.visionSubsystem = new VisionSubsystem(
                 this.swerveDriveSubsystem::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0,
-                        this.swerveDriveSubsystem::getPose),
-                new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1,
-                        this.swerveDriveSubsystem::getPose));
+                new VisionIOPhotonVisionSim(VisionConstants.frontCamera, this.swerveDriveSubsystem::getPose),
+                new VisionIOPhotonVisionSim(VisionConstants.rearCamera, this.swerveDriveSubsystem::getPose));
 
         configureAutoChooser();
         configureButtonBindings();
