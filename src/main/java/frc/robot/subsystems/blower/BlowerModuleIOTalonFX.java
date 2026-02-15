@@ -71,7 +71,7 @@ public class BlowerModuleIOTalonFX implements BlowerModuleIO {
 
         if (this.isRamping) {
             double elapsedTime = Timer.getFPGATimestamp() - this.startTime;
-            double targetVoltage = MathUtil.clamp((TARGET_VOLTAGE / 10.0) * elapsedTime, -TARGET_VOLTAGE,
+            double targetVoltage = MathUtil.clamp((TARGET_VOLTAGE / RAMP_TIME_SEC) * elapsedTime, -TARGET_VOLTAGE,
                     TARGET_VOLTAGE);
 
             this.blowerTalon.setControl(voltageRequest.withOutput(targetVoltage));

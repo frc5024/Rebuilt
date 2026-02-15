@@ -7,6 +7,7 @@ import org.littletonrobotics.junction.AutoLog;
  */
 public interface BlowerModuleIO {
     public static final double TARGET_VOLTAGE = 12.0;
+    public static final double RAMP_TIME_SEC = 10.0;
 
     @AutoLog
     class BlowerModuleIOInputs {

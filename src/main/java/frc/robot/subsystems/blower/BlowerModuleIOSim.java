@@ -41,7 +41,7 @@ public class BlowerModuleIOSim implements BlowerModuleIO {
 
         if (this.isRamping) {
             double elapsedTime = Timer.getFPGATimestamp() - this.startTime;
-            this.voltageRequest = MathUtil.clamp((TARGET_VOLTAGE / 10.0) * elapsedTime, -TARGET_VOLTAGE, TARGET_VOLTAGE);
+            this.voltageRequest = MathUtil.clamp((TARGET_VOLTAGE / RAMP_TIME_SEC) * elapsedTime, -TARGET_VOLTAGE, TARGET_VOLTAGE);
 
             this.dcMotorSim.setInputVoltage(this.voltageRequest);
         }
