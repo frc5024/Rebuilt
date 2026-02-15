@@ -45,7 +45,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // TunerConstants doesn't include these constants, so they are declared locally
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
-    private final Module[] modules = new Module[4]; // FL, FR, BL, BR
+    private final SwerveModule[] modules = new SwerveModule[4]; // FL, FR, BL, BR
     private final SysIdRoutine sysId;
     private final Alert gyroDisconnectedAlert = new Alert("Disconnected gyro, using kinematics as fallback.",
             AlertType.kError);
@@ -66,14 +66,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     /**
      * 
      */
-    public SwerveDriveSubsystem(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO,
+    public SwerveDriveSubsystem(GyroIO gyroIO, SwerveModuleIO flModuleIO, SwerveModuleIO frModuleIO, SwerveModuleIO blModuleIO, SwerveModuleIO brModuleIO,
             Consumer<Pose2d> resetSimulationPoseCallBack) {
         this.gyroIO = gyroIO;
         this.resetSimulationPoseCallBack = resetSimulationPoseCallBack;
-        modules[0] = new Module(flModuleIO, 0, TunerConstants.FrontLeft);
-        modules[1] = new Module(frModuleIO, 1, TunerConstants.FrontRight);
-        modules[2] = new Module(blModuleIO, 2, TunerConstants.BackLeft);
-        modules[3] = new Module(brModuleIO, 3, TunerConstants.BackRight);
+        modules[0] = new SwerveModule(flModuleIO, 0, TunerConstants.FrontLeft);
+        modules[1] = new SwerveModule(frModuleIO, 1, TunerConstants.FrontRight);
+        modules[2] = new SwerveModule(blModuleIO, 2, TunerConstants.BackLeft);
+        modules[3] = new SwerveModule(brModuleIO, 3, TunerConstants.BackRight);
 
         // Usage reporting for swerve template
         HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
@@ -96,11 +96,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         PathPlannerLogging.setLogActivePathCallback(
                 (activePath) -> {
                     Logger.recordOutput(
-                            "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+                            "SwerveDrive/Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
                 });
         PathPlannerLogging.setLogTargetPoseCallback(
                 (targetPose) -> {
-                    Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+                    Logger.recordOutput("SwerveDrive/Odometry/TrajectorySetpoint", targetPose);
                 });
 
         // Configure SysId
@@ -109,7 +109,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                         null,
                         null,
                         null,
-                        (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
+                        (state) -> Logger.recordOutput("SwerveDrive/SysIdState", state.toString())),
                 new SysIdRoutine.Mechanism(
                         (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
     }
@@ -118,7 +118,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void periodic() {
         SwerveDriveConstants.odometryLock.lock(); // Prevents odometry updates while reading data
         gyroIO.updateInputs(gyroInputs);
-        Logger.processInputs("Drive/Gyro", gyroInputs);
+        Logger.processInputs("SwerveDrive/Gyro", gyroInputs);
         for (var module : modules) {
             module.periodic();
         }
@@ -133,8 +133,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         // Log empty setpoint states when disabled
         if (DriverStation.isDisabled()) {
-            Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
-            Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
+            Logger.recordOutput("SwerveDrive/SwerveStates/Setpoints", new SwerveModuleState[] {});
+            Logger.recordOutput("SwerveDrive/SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
         }
 
         // Update odometry
@@ -183,8 +183,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
 
         // Log unoptimized setpoints and setpoint speeds
-        Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
-        Logger.recordOutput("SwerveChassisSpeeds/Setpoints", discreteSpeeds);
+        Logger.recordOutput("SwerveDrive/SwerveStates/Setpoints", setpointStates);
+        Logger.recordOutput("SwerveDrive/SwerveChassisSpeeds/Setpoints", discreteSpeeds);
 
         // Send setpoints to modules
         for (int i = 0; i < 4; i++) {
@@ -192,7 +192,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         }
 
         // Log optimized setpoints (runSetpoint mutates each state)
-        Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
+        Logger.recordOutput("SwerveDrive/SwerveStates/SetpointsOptimized", setpointStates);
     }
 
     /** Runs the drive in a straight line with the specified drive output. */
@@ -238,7 +238,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * Returns the module states (turn angles and drive velocities) for all of the
      * modules.
      */
-    @AutoLogOutput(key = "SwerveStates/Measured")
+    @AutoLogOutput(key = "SwerveDrive/SwerveStates/Measured")
     private SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (int i = 0; i < 4; i++) {
@@ -260,7 +260,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     /** Returns the measured chassis speeds of the robot. */
-    @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
+    @AutoLogOutput(key = "SwerveDrive/SwerveChassisSpeeds/Measured")
     private ChassisSpeeds getChassisSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
     }
@@ -287,7 +287,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     /** Returns the current odometry pose. */
-    @AutoLogOutput(key = "Odometry/Robot")
+    @AutoLogOutput(key = "SwerveDrive/Odometry/Robot")
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
     }

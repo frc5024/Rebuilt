@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import frc.lib.camera.Camera;
 import frc.robot.Constants.VisionConstants;
 
 import java.util.HashSet;
@@ -15,7 +16,8 @@ import org.photonvision.PhotonCamera;
  * 
  */
 public class VisionIOPhotonVision implements VisionIO {
-    protected final PhotonCamera camera;
+    protected final Camera camera;
+    protected final PhotonCamera photonCamera;
     protected final Transform3d robotToCamera;
 
     /**
@@ -24,19 +26,20 @@ public class VisionIOPhotonVision implements VisionIO {
      * @param name             The configured name of the camera.
      * @param rotationSupplier The 3D position of the camera relative to the robot.
      */
-    public VisionIOPhotonVision(String name, Transform3d robotToCamera) {
-        camera = new PhotonCamera(name);
-        this.robotToCamera = robotToCamera;
+    public VisionIOPhotonVision(Camera camera) {
+        this.camera = camera;
+        this.photonCamera = new PhotonCamera(camera.getNtName());
+        this.robotToCamera = camera.getCameraToRobot();
     }
 
     @Override
     public void updateInputs(VisionIOInputs inputs) {
-        inputs.connected = camera.isConnected();
+        inputs.connected = this.photonCamera.isConnected();
 
         // Read new camera observations
         Set<Short> tagIds = new HashSet<>();
         List<PoseObservation> poseObservations = new LinkedList<>();
-        for (var result : camera.getAllUnreadResults()) {
+        for (var result : this.photonCamera.getAllUnreadResults()) {
             // Update latest target observation
             if (result.hasTargets()) {
                 inputs.latestTargetObservation = new TargetObservation(
@@ -115,5 +118,10 @@ public class VisionIOPhotonVision implements VisionIO {
         for (int id : tagIds) {
             inputs.tagIds[i++] = id;
         }
+    }
+
+    @Override
+    public String getName() {
+        return this.camera.getName();
     }
 }
