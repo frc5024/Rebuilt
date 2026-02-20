@@ -189,8 +189,8 @@ public final class Constants {
         public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
         // Camera names and positions, must match names configured on coprocessor
-        public static Camera frontCamera = new Camera("FrontCam", "limelight-four", new Transform3d(0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, 0.0)));
-        public static Camera rearCamera = new Camera("RearCam", "limelight-three", new Transform3d(-0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, Math.PI)));
+        public static Camera frontCamera = new Camera("FrontCam", "limelight-four", new Transform3d(0, 0, 0, new Rotation3d(0.0, -0.4, 0.0)));
+        public static Camera rearCamera = new Camera("RearCam", "limelight-three", new Transform3d(0, 0, 0, new Rotation3d(0.0, -0.4, Math.PI)));
 
         // Basic filtering thresholds
         public static double maxAmbiguity = 0.3;
