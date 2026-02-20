@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.containers.RobotContainer;
 import frc.robot.subsystems.Climb;
 
+import frc.robot.Constants;
+
+
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class PauseclimbCommand extends Command {
   private final Climb m_Climb;

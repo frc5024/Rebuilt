@@ -37,26 +37,31 @@ public class Climb extends SubsystemBase {
      climbMotor = new TalonFX(3);
   }
 
+  //Sets the speed of the climb motor to the inputted speel value
   public void setSpeed(Double speed) {
     climbMotor.set(speed);
+    System.out.println(speed);
   }
 
   
 
-  // This SequentialCommandGroup acts as a single Command
+  //Calls ClimbCommand to set climb motor speed to climb speed
   public Command climb(){
     return new ClimbCommand(this);
   }
+  //Calls DeclimbCommand to set climb motor speed to declimb speed
   public Command declimb() {
     return new DeclimbCommand(this);
   }
+  //Calls PauseclimbCommand to set climb motor speed to stopped
   public Command dontdeclimb() {
     return new PauseclimbCommand(this);
   }
 
 
-  
 
+  
+ 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
