@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.shooterConstants;
 import frc.robot.subsystems.shooter;
@@ -13,28 +15,33 @@ import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 public class shooterCommand extends Command {
 
   public final shooter shootersubsystem;
-  //public final SwerveDriveSubsystem swerveDriveSubsystem;
+  public final SwerveDriveSubsystem swerveDriveSubsystem;
 
   public double setVelocity;
 
-  public shooterCommand (shooter shootersubsystem, double setVelocity) {  //SwerveDriveSubsystem swerveDriveSubsystem,
+  public shooterCommand (shooter shootersubsystem, SwerveDriveSubsystem swerveDriveSubsystem, double setVelocity) {  
     this.shootersubsystem = shootersubsystem;
     this.setVelocity = setVelocity;
-    //this.swerveDriveSubsystem = swerveDriveSubsystem;
+    this.swerveDriveSubsystem = swerveDriveSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //setVelocity = shooterConstants.setVelocity;
-    shootersubsystem.setShooterPID(setVelocity);
     shootersubsystem.setEnabled(true);
+
 
   }
 
   @Override
   public void execute() {
-     
+    //get the position of the robot (with getpose), cords of the hub, calculate the dstance between the two
+    Pose2d hubPosition = (new Pose2d(0,0,Rotation2d.kZero));
+
+    double distance = (swerveDriveSubsystem.getPose().getTranslation().getDistance(hubPosition.getTranslation()));
+    System.out.println(distance);
+    
+    shootersubsystem.setShooterPID(setVelocity);
   }
 
   // Called once the command ends or is interrupted.

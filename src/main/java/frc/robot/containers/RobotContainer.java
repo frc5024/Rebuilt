@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.shooterConstants;
 import frc.robot.Robot;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.shooterCommand;
@@ -57,12 +58,12 @@ abstract public class RobotContainer {
     operatorController = buttonBindings.getOperatorController();
 
     // driverController.b().whileTrue(m_hopper.SpinEntryCommand());
-    driverController.rightBumper().whileTrue(m_shooter.shooterCommand());
+    driverController.rightBumper().whileTrue(new shooterCommand(m_shooter, swerveDriveSubsystem, shooterConstants.setVelocity));
     driverController.y().whileTrue(m_feeder.feederCommand());
     driverController.a().whileTrue(m_hopper.SpinCommand());
     driverController.x().onTrue(new runEverything(m_feeder, m_shooter, m_hopper));
-    driverController.povRight().whileTrue(m_turret.stickRotation(0.15));
-    driverController.povLeft().whileTrue(m_turret.stickRotation(-0.15));
+    driverController.povRight().whileTrue(m_turret.stickRotation(0.3));
+    driverController.povLeft().whileTrue(m_turret.stickRotation(-0.3));
     driverController.rightTrigger().whileTrue(m_intake.ExtendSpin());
     driverController.leftTrigger().whileTrue(m_intake.RetractSpin());
     driverController.b().whileTrue(m_intake.IntakeSpin());

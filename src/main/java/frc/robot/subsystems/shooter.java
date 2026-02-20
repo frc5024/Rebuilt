@@ -135,10 +135,10 @@ public class shooter extends SubsystemBase{
     //}
 
 
-    public Command shooterCommand() {
+   // public Command shooterCommand() {
 
-        return new frc.robot.commands.shooterCommand(this, shooterConstants.setVelocity);
-    }
+        //return new frc.robot.commands.shooterCommand(this, shooterConstants.setVelocity);
+    //}
 
     //public Command runEverything() {
         //return new frc.robot.commands.runEverything(this, shooterConstants.setVelocity);
