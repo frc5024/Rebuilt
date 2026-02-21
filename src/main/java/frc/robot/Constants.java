@@ -38,23 +38,23 @@ import frc.robot.generated.TunerConstants;
 public final class Constants {
 
     public static class HopperConstants {
-        public static double hopperSpeed = 0.05;
+        public static double hopperSpeed = 0.15;
         public static int HopperMotorID = 8;
     }
 
     public static final class turretConstants {
-        public static final double speed = 0.01;
+        public static final double speed = 0.3;
         public static final int turretMotorChannel = 3;
         public static final double turretTolerance = 0.5;
-        public static final double kP = 0.0;
+        public static final double kP = 0.2;
         public static final double kI = 0;
-        public static final double kD = 0.0;
+        public static final double kD = 0.01;
         public static final double kS = 0;
         public static final double kV = 0.0001;
         public static final double kA = 0.0;
 
-        public static final double turretMaxSpeed = 10; // make note of units
-        public static final double turretMaxAccel = 10;
+        public static final double turretMaxSpeed = 1000; // make note of units
+        public static final double turretMaxAccel = 1000;
 
         public static final double targetAngle = 25;
 
@@ -71,14 +71,14 @@ public final class Constants {
 
         public static final double setVelocity = 3766; // Example set velocity in RPM
         public static final double speed = 0.1;
-        public static final double feederspeed = 0.1;
+        public static final double feederspeed = 0.5;
     }
 
     public static class intakeConstants {
         public static final double INTAKE_SPEED = 0.5;
         public static final double OUTTAKE_SPEED = 0.4;
-        public static final double EXTENDING_SPEED = 0.2;
-        public static final double RETRACTING_SPEED = 0.3;
+        public static final double EXTENDING_SPEED = -0.1;
+        public static final double RETRACTING_SPEED = 0.2;
     }
 
     public static class climbConstants {

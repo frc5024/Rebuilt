@@ -37,7 +37,7 @@ public class FeederSubsystem extends SubsystemBase {
     }
 
     public void setFeederSpeed(double feederspeed) {
-        feederModuleIO.set(-feederspeed);
+        feederModuleIO.set(feederspeed);
     }
 
     public Command feederCommand() {
