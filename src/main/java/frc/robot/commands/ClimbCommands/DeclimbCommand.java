@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.containers.RobotContainer;
 import frc.robot.subsystems.Climb;
 
+import frc.robot.Constants.climbConstants;
+import frc.robot.Constants.intakeConstants;
+
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DeclimbCommand extends Command {
   private final Climb m_Climb;
@@ -37,7 +40,7 @@ public class DeclimbCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_Climb.setSpeed(0.10);
+    m_Climb.setSpeed(climbConstants.declimbSpeed);
   }
   // Called once the command ends or is interrupted.
   @Override

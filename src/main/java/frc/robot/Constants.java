@@ -84,6 +84,15 @@ public static class intakeConstants {
     public static final double retractingSpeed = 0.1;
   }
 
+public static class climbConstants{
+        //Speed for extending the farm
+        public static final double extendSpeed = 0.1;
+        //Speed for declimbing
+        public static final double declimbSpeed = 0.1;
+        //Speed for contracting the arm and climbing
+        public static final double contractSpeed = -0.75;
+}
+
     public static final Mode simMode = Mode.SIM;
     public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
