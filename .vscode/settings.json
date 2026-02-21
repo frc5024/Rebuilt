@@ -57,5 +57,17 @@
     "edu.wpi.first.math.**.proto.*",
     "edu.wpi.first.math.**.struct.*",
   ],
-  "java.dependency.enableDependencyCheckup": false
+  "java.dependency.enableDependencyCheckup": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "[java]": {
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+    },
+  },
+  "java.format.settings.url": ".vscode/java-formatter.xml",
+  "java.compile.nullAnalysis.mode": "disabled",
+  "editor.inlayHints.enabled": "offUnlessPressed"
 }
