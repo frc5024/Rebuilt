@@ -1,4 +1,5 @@
 package frc.robot.subsystems.shooter;
+
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.swerve.utility.WheelForceCalculator.Feedforwards;
@@ -39,7 +40,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private boolean enabled;
 
     private PIDController PID;
-    private SimpleMotorFeedforward feedForward; 
+    private SimpleMotorFeedforward feedForward;
 
     ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
     GenericEntry pEntry = tab.add("SET P", shooterConstants.kP).getEntry();
@@ -63,10 +64,10 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void periodic() { 
+    public void periodic() {
         shooterModuleIO.updateInputs(inputs);
 
-         if (enabled) {
+        if (enabled) {
             System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
             setPIDMotor();
 
@@ -79,11 +80,10 @@ public class ShooterSubsystem extends SubsystemBase {
     public void setShooterPID(double setVelocity) {
         PID.setSetpoint(setVelocity);
 
-
     }
 
     public void setEnabled(boolean enabled) {
-       this.enabled = enabled;
+        this.enabled = enabled;
     }
 
     public void setPIDMotor() {
@@ -99,33 +99,29 @@ public class ShooterSubsystem extends SubsystemBase {
         feedForward.setKv(vEntry.getDouble(shooterConstants.kV));
         feedForward.setKa(aEntry.getDouble(shooterConstants.kA));
 
-
         double PIDoutput = PID.calculate(shooterModuleIO.getVelocity());
         double feedForwardOutput = feedForward.calculate(PID.getSetpoint());
         double totalOutput = PIDoutput + feedForwardOutput;
 
         shooterModuleIO.setVoltage(totalOutput);
 
-         SmartDashboard.putNumber("PID", PIDoutput);
-         SmartDashboard.putNumber("FeedForward", feedForwardOutput);
-         SmartDashboard.putNumber("Total Output", totalOutput);
-         
+        SmartDashboard.putNumber("PID", PIDoutput);
+        SmartDashboard.putNumber("FeedForward", feedForwardOutput);
+        SmartDashboard.putNumber("Total Output", totalOutput);
 
     }
 
-    //public Pose2d getPosition() {
-        //return frc.robot.subsystems.swervedrive.SwerveDriveSubsystem.getPose();
-    //}
-
+    // public Pose2d getPosition() {
+    // return frc.robot.subsystems.swervedrive.SwerveDriveSubsystem.getPose();
+    // }
 
     public Command shooterCommand() {
-
-        return new frc.robot.commands.shooterCommand(this, shooterConstants.setVelocity);
+        return new shooterCommand(this, shooterConstants.setVelocity);
     }
 
-    //public Command runEverything() {
-        //return new frc.robot.commands.runEverything(this, shooterConstants.setVelocity);
-    //}
+    // public Command runEverything() {
+    // return new frc.robot.commands.runEverything(this,
+    // shooterConstants.setVelocity);
+    // }
 
-        
 }
