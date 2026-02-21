@@ -29,13 +29,13 @@ abstract public class RobotContainer {
   protected SwerveDriveSubsystem swerveDriveSubsystem;
   protected VisionSubsystem visionSubsystem;
 
-  private final shooter m_shooter = shooter.getInstance();
+  protected final shooter m_shooter = shooter.getInstance();
   // private final Intake m_intake = Intake.getInstance();
-  private final Hopper m_hopper = Hopper.getInstance();
-  private final Feeder m_feeder = Feeder.getInstance();
+  protected final Hopper m_hopper = Hopper.getInstance();
+  protected final Feeder m_feeder = Feeder.getInstance();
   private final Turret m_turret = Turret.getInstance();
-  private final Intake m_intake = Intake.getInstance();
-  private final Climb m_climb = Climb.getInstance();
+  protected final Intake m_intake = Intake.getInstance();
+  protected final Climb m_climb = Climb.getInstance();
 
   /* Autonomous */
   protected LoggedDashboardChooser<Command> autoChooser;
@@ -82,6 +82,8 @@ abstract public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }
+
+
 
   // Methods used by simulation only
 
