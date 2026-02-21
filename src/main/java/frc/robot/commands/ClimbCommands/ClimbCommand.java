@@ -7,15 +7,14 @@ package frc.robot.commands.ClimbCommands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.Climb;
-
 import frc.robot.Constants;
 import frc.robot.Constants.climbConstants;
+import frc.robot.subsystems.climb.ClimbSubsystem;
 
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ClimbCommand extends Command {
-  private final Climb m_Climb;
+  private final ClimbSubsystem m_Climb;
   public final Timer m_timer = new Timer();
 
 
@@ -23,7 +22,7 @@ public class ClimbCommand extends Command {
 
 
   /** Creates a new ClimCommand. */
-  public ClimbCommand(Climb climb) {
+  public ClimbCommand(ClimbSubsystem climb) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_Climb = climb;
     addRequirements(m_Climb);

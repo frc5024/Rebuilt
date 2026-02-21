@@ -5,16 +5,16 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.intakeConstants;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class IntakeExtendArm extends Command {
-    private Intake s_Intake;
+    private IntakeSubsystem s_Intake;
     double speed = 0.6;
 
     static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
     static GenericEntry pEntry = tab.add("SET EXTENDING SPEED", intakeConstants.extendingSpeed).getEntry();
 
-    public IntakeExtendArm(Intake s_Intake) {
+    public IntakeExtendArm(IntakeSubsystem s_Intake) {
         this.s_Intake = s_Intake;
         addRequirements (s_Intake);
     }

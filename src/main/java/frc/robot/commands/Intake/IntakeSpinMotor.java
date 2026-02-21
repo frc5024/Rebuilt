@@ -5,15 +5,15 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.intakeConstants;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class IntakeSpinMotor extends Command {
-    private final Intake s_Intake;
+    private final IntakeSubsystem s_Intake;
 
    static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
     static GenericEntry intakeEntry = tab.add("SET INTAKESPEED", intakeConstants.intakeSpeed).getEntry();
 
-    public IntakeSpinMotor(Intake s_Intake) {
+    public IntakeSpinMotor(IntakeSubsystem s_Intake) {
         this.s_Intake = s_Intake;
     }
 

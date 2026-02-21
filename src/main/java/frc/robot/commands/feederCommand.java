@@ -9,16 +9,16 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.shooterConstants;
-import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.feeder.FeederSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class feederCommand extends Command {
-  private final Feeder feederSubsystem;
+  private final FeederSubsystem feederSubsystem;
 
   static ShuffleboardTab tab = Shuffleboard.getTab("feederMotor");
   static GenericEntry pEntry = tab.add("SET FEEDSPEED", shooterConstants.feederspeed).getEntry();
 
-  public feederCommand(Feeder feederSubsystem) {
+  public feederCommand(FeederSubsystem feederSubsystem) {
     this.feederSubsystem = feederSubsystem;
 
   }

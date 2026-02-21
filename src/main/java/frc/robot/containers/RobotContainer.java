@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Robot;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.shooterCommand;
-import frc.robot.subsystems.Climb;
-import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Hopper;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.shooter;
+import frc.robot.subsystems.climb.ClimbSubsystem;
+import frc.robot.subsystems.feeder.FeederSubsystem;
+import frc.robot.subsystems.hopper.HopperSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
+import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import frc.robot.containers.ButtonBindings;
@@ -24,24 +24,20 @@ abstract public class RobotContainer {
   /* Subsystems */
   protected SwerveDriveSubsystem swerveDriveSubsystem;
   protected VisionSubsystem visionSubsystem;
-
-  protected final shooter m_shooter = shooter.getInstance();
-  // private final Intake m_intake = Intake.getInstance();
-  protected final Hopper m_hopper = Hopper.getInstance();
-  protected final Feeder m_feeder = Feeder.getInstance();
-  private final Turret m_turret = Turret.getInstance();
-  protected final Intake m_intake = Intake.getInstance();
-  protected final Climb m_climb = Climb.getInstance();
-
+  protected ClimbSubsystem m_climb;
+  protected FeederSubsystem m_feeder;
+  protected HopperSubsystem m_hopper;
+  protected IntakeSubsystem m_intake;
+  protected  ShooterSubsystem m_shooter;
+  protected TurretSubsystem m_turret;
+  
   /* Autonomous */
   protected LoggedDashboardChooser<Command> autoChooser;
-
+  
   /* Controllers */
   public static CommandXboxController driverController;
   public static CommandXboxController operatorController;
-
-  private final shooter shooterSubsystem = new shooter();
-
+  
   /**
    * 
    */

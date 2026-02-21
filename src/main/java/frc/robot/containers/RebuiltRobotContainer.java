@@ -13,11 +13,25 @@ import frc.robot.Robot;
 import frc.robot.commands.TuningCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.climb.ClimbModuleIOTalonFX;
+import frc.robot.subsystems.climb.ClimbSubsystem;
+import frc.robot.subsystems.feeder.FeederModuleIO;
+import frc.robot.subsystems.feeder.FeederModuleIOSparkMax;
+import frc.robot.subsystems.feeder.FeederSubsystem;
+import frc.robot.subsystems.hopper.HopperModuleIO;
+import frc.robot.subsystems.hopper.HopperModuleIOSparkMax;
+import frc.robot.subsystems.hopper.HopperSubsystem;
+import frc.robot.subsystems.intake.IntakeModuleIOSparkMax;
+import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterModuleIOSparkFlex;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOPigeon2;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOTalonFX;
+import frc.robot.subsystems.turret.TurretModuleIOSparkMax;
+import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import frc.robot.subsystems.shooter;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -40,10 +54,18 @@ public class RebuiltRobotContainer extends RobotContainer {
                                 new SwerveModuleIOTalonFX(TunerConstants.BackRight),
                                 (robotPose) -> {
                                 });
+
                 this.visionSubsystem = new VisionSubsystem(
                                 swerveDriveSubsystem::addVisionMeasurement,
                                 new VisionIOLimelight(VisionConstants.frontCamera, swerveDriveSubsystem::getRotation),
                                 new VisionIOLimelight(VisionConstants.rearCamera, swerveDriveSubsystem::getRotation));
+
+                this.m_climb = new ClimbSubsystem(new ClimbModuleIOTalonFX());
+                this.m_feeder = new FeederSubsystem(new FeederModuleIOSparkMax());
+                this.m_hopper = new HopperSubsystem(new HopperModuleIOSparkMax());
+                this.m_intake = new IntakeSubsystem(new IntakeModuleIOSparkMax());
+                this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
+                this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMax());
 
                 //Creates the commands for using non-drive subsystems in autonomous
 
