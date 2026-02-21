@@ -9,7 +9,6 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class IntakeRetractArm extends Command {
     private IntakeSubsystem s_Intake;
-    double speed = 0.6;
 
     static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
     static GenericEntry pEntry = tab.add("SET RETRACTING SPEED", intakeConstants.RETRACTING_SPEED).getEntry();
@@ -21,7 +20,7 @@ public class IntakeRetractArm extends Command {
 
     @Override
     public void initialize() {
-        s_Intake.setArmSpeed(pEntry.getDouble(0.1));
+        s_Intake.setArmSpeed(pEntry.getDouble(intakeConstants.RETRACTING_SPEED));
     }
 
     @Override

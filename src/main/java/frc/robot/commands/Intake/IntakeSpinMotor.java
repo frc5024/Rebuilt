@@ -19,7 +19,7 @@ public class IntakeSpinMotor extends Command {
 
     @Override
     public void initialize() {
-        s_Intake.setIntakeSpeed(intakeEntry.getDouble(-0.1));
+        s_Intake.setIntakeSpeed(intakeEntry.getDouble(intakeConstants.INTAKE_SPEED));
     }
 
     @Override

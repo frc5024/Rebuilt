@@ -9,7 +9,6 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class IntakeExtendArm extends Command {
     private IntakeSubsystem s_Intake;
-    double speed = 0.6;
 
     static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
     static GenericEntry pEntry = tab.add("SET EXTENDING SPEED", intakeConstants.EXTENDING_SPEED).getEntry();
@@ -21,7 +20,7 @@ public class IntakeExtendArm extends Command {
 
     @Override
     public void initialize() {
-        s_Intake.setArmSpeed(pEntry.getDouble(-0.1));
+        s_Intake.setArmSpeed(pEntry.getDouble(intakeConstants.EXTENDING_SPEED));
     }
 
     @Override
