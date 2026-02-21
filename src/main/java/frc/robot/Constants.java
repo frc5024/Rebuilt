@@ -186,8 +186,8 @@ public final class Constants {
         public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
         // Camera names, must match names configured on coprocessor
-        public static String camera0Name = "limelight-four";
-        public static String camera1Name = "limelight-three";
+        public static String camera0Name = "Arducam_OV9281-2";
+        public static String camera1Name = "Arducam_OV9281-2";
 
         // Robot to camera transforms
         // (Not used by Limelight, configure in web UI instead)
@@ -209,6 +209,10 @@ public final class Constants {
                 1.0, // Camera 0
                 1.0 // Camera 1
         };
+
+        public static double kP = 1;
+        public static double kI = 0;
+        public static double kD = 0;
 
         // Multipliers to apply for MegaTag 2 observations
         public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve

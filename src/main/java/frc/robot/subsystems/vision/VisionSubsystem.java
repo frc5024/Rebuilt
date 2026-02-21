@@ -7,8 +7,11 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
@@ -24,6 +27,11 @@ public class VisionSubsystem extends SubsystemBase {
     private final VisionIO[] io;
     private final VisionIOInputsAutoLogged[] inputs;
     private final Alert[] disconnectedAlerts;
+
+    ShuffleboardTab tab = Shuffleboard.getTab("OBJ Detection");
+    GenericEntry pEntry = tab.add("SET P", VisionConstants.kP).getEntry();
+    GenericEntry dEntry = tab.add("SET D", VisionConstants.kD).getEntry();
+    GenericEntry iEntry = tab.add("SET I", VisionConstants.kI).getEntry();
 
     /**
      * 

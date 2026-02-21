@@ -3,8 +3,10 @@ package frc.robot.containers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.FollowTargetCommand;
 import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -66,8 +68,14 @@ public class ButtonBindings {
         // Switch to X pattern when X button is pressed
         commandXboxController.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
 
-        // Reset gyro to 0° when B button is pressed
         commandXboxController
+                .b()
+                .whileTrue(
+                        new FollowTargetCommand(swerveDriveSubsystem, visionSubsystem, swerveDriveSubsystem::getPose)
+                );
+
+        // Reset gyro to 0° when B button is pressed
+        /*commandXboxController
                 .b()
                 .onTrue(
                         Commands.runOnce(
@@ -76,7 +84,7 @@ public class ButtonBindings {
                                 swerveDriveSubsystem)
                                 .ignoringDisable(true));
         commandXboxController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
-
+        */
         return commandXboxController;
     }
 

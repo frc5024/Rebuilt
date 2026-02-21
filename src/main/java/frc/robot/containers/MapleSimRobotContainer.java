@@ -8,6 +8,7 @@ import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOSim;
 import frc.robot.subsystems.swervedrive.ModuleIOSim;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.util.MapleSimUtil;
 
@@ -41,8 +42,8 @@ public class MapleSimRobotContainer extends RobotContainer {
                 swerveDriveSimulation::setSimulationWorldPose);
         visionSubsystem = new VisionSubsystem(
                 swerveDriveSubsystem::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, swerveDriveSubsystem::getPose),
-                new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, swerveDriveSubsystem::getPose));
+                //new VisionIOPhotonVision(VisionConstants.camera0Name, VisionConstants.robotToCamera0, swerveDriveSubsystem::getPose),
+                new VisionIOPhotonVision(VisionConstants.camera0Name, VisionConstants.robotToCamera0));
 
         configureAutoChooser();
         configureButtonBindings();
