@@ -28,8 +28,8 @@ public class IntakeSubsystem extends SubsystemBase {
         this.intakeModuleIO = intakeModuleIO;
         this.inputs = new IntakeModuleIOInputsAutoLogged();
 
-        tab.addBoolean("Extending",() -> intakeModuleIO.isIntakeExtended());
-        tab.addBoolean("Retracting",() -> intakeModuleIO.isIntakeRetracted());
+        tab.addBoolean("Extended?",() -> intakeModuleIO.isIntakeExtended());
+        tab.addBoolean("Retracted?",() -> intakeModuleIO.isIntakeRetracted());
     }
 
     @Override

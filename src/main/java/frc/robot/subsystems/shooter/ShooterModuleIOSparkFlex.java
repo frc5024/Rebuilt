@@ -33,9 +33,6 @@ public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
     private final RelativeEncoder flywheel1Encoder;
     private final RelativeEncoder flywheel2Encoder;
 
-    private static DigitalInput retractingLimitSwitch = new DigitalInput(7);
-    private static DigitalInput extendingLimitSwitch = new DigitalInput(3);
-
     // Connection debouncers
     private final Debouncer fw1ConnectedDebouncer;
     private final Debouncer fw2ConnectedDebouncer;

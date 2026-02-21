@@ -45,7 +45,7 @@ public interface IntakeModuleIO {
     }
 
     default boolean isIntakeExtended() {
-        return false;
+        return true;
     }
 
     default void start() {
