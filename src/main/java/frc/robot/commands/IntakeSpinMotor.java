@@ -9,7 +9,7 @@ import frc.robot.subsystems.Intake;
 
 public class IntakeSpinMotor extends Command {
     private Intake s_Intake;
-    double speed = 0.6;
+    //double speed = 0.6;
 
     ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
     GenericEntry pEntry = tab.add("SET INTAKESPEED", intakeConstants.intakeSpeed).getEntry();
@@ -21,12 +21,12 @@ public class IntakeSpinMotor extends Command {
 
     @Override
     public void initialize() {
-        s_Intake.setIntakeSpeed(pEntry.getDouble(-0.1));
+        s_Intake.setIntakeSpeed(pEntry.getDouble(0.1));
     }
 
     @Override
     public void end(boolean interrupted) {
-        s_Intake.setIntakeSpeed(0.0);
+        s_Intake.setIntakeSpeed(0.0); // stop the motor when the command ends
     }
 
     @Override

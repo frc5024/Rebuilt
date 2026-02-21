@@ -9,7 +9,7 @@ import frc.robot.subsystems.Intake;
 
 public class IntakeStopArm extends Command {
     private Intake s_Intake;
-    double speed = 0.6;
+    //double speed = 0.6;
 
     ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
     GenericEntry pEntry = tab.add("STOP", intakeConstants.stopArm).getEntry();

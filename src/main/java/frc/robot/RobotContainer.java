@@ -54,8 +54,8 @@ public class RobotContainer {
 
     operatorController.a().whileTrue(Intake.getInstance().IntakeSpin());
     operatorController.b().whileTrue(Intake.getInstance().OuttakeSpin());
-    operatorController.rightBumper().onTrue(Intake.getInstance().ExtendSpin());
-    operatorController.leftBumper().onTrue(Intake.getInstance().RetractSpin());
+    operatorController.leftBumper().onTrue(Intake.getInstance().ExtendSpin());
+    operatorController.rightBumper().onTrue(Intake.getInstance().RetractSpin());
     operatorController.x().onTrue(Intake.getInstance().StopArm());
   }
 

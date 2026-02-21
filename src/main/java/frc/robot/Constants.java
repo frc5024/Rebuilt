@@ -15,10 +15,10 @@ package frc.robot;
 public final class Constants {
 
   public static class intakeConstants {
-    public static final double intakeSpeed = 0.1;
-    public static final double outtakeSpeed = 0.1;
+    public static final double intakeSpeed = 0.3;
+    public static final double outtakeSpeed = -0.3;
     public static final double extendingSpeed = 0.1;
-    public static final double retractingSpeed = 0.1;
+    public static final double retractingSpeed = -0.1;
     public static final double stopArm = 0.0;
   }
 
