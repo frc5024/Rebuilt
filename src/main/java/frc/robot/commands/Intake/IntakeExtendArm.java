@@ -16,7 +16,7 @@ public class IntakeExtendArm extends Command {
 
     public IntakeExtendArm(IntakeSubsystem s_Intake) {
         this.s_Intake = s_Intake;
-        addRequirements (s_Intake);
+        addRequirements(s_Intake);
     }
 
     @Override
@@ -31,8 +31,7 @@ public class IntakeExtendArm extends Command {
 
     @Override
     public boolean isFinished() {
-    return s_Intake.isIntakeExtended();
-  }
-
+        return s_Intake.isIntakeExtended();
+    }
 
 }

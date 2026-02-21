@@ -1,14 +1,12 @@
 package frc.robot.subsystems.intake;
 
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants;
 
 /**
  * 
@@ -46,20 +44,20 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
         }
 
         inputs.data = new IntakeModuleIOData(
-            connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
-            intakeEncoder.getPosition(),
-            intakeEncoder.getVelocity(),
-            intakeMotor.getAppliedOutput(),
-            0.0,
-            intakeMotor.getOutputCurrent(),
-            intakeMotor.getMotorTemperature(),
-            connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
-            armEncoder.getPosition(),
-            armEncoder.getVelocity(),
-            intakeMotor.getAppliedOutput(),
-            0.0,
-            armMotor.getOutputCurrent(),
-            armMotor.getMotorTemperature());
+                connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
+                intakeEncoder.getPosition(),
+                intakeEncoder.getVelocity(),
+                intakeMotor.getAppliedOutput(),
+                0.0,
+                intakeMotor.getOutputCurrent(),
+                intakeMotor.getMotorTemperature(),
+                connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
+                armEncoder.getPosition(),
+                armEncoder.getVelocity(),
+                intakeMotor.getAppliedOutput(),
+                0.0,
+                armMotor.getOutputCurrent(),
+                armMotor.getMotorTemperature());
     }
 
     @Override

@@ -16,7 +16,7 @@ public class IntakeRetractArm extends Command {
 
     public IntakeRetractArm(IntakeSubsystem s_Intake) {
         this.s_Intake = s_Intake;
-        addRequirements (s_Intake);
+        addRequirements(s_Intake);
     }
 
     @Override
@@ -31,6 +31,6 @@ public class IntakeRetractArm extends Command {
 
     @Override
     public boolean isFinished() {
-    return s_Intake.isIntakeRetracted();
-  }
+        return s_Intake.isIntakeRetracted();
+    }
 }

@@ -10,7 +10,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 public class IntakeSpinMotor extends Command {
     private final IntakeSubsystem s_Intake;
 
-   static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
+    static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
     static GenericEntry intakeEntry = tab.add("SET INTAKESPEED", intakeConstants.INTAKE_SPEED).getEntry();
 
     public IntakeSpinMotor(IntakeSubsystem s_Intake) {
@@ -29,6 +29,6 @@ public class IntakeSpinMotor extends Command {
 
     @Override
     public boolean isFinished() {
-    return false;
-  }
+        return false;
+    }
 }

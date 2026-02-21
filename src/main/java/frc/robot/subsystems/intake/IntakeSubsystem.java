@@ -1,16 +1,13 @@
 package frc.robot.subsystems.intake;
 
-import com.revrobotics.spark.SparkMax;
-
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.Intake.IntakeExtendArm;
 import frc.robot.commands.Intake.IntakeRetractArm;
 import frc.robot.commands.Intake.IntakeSpinMotor;
 import frc.robot.commands.Intake.OuttakeSpinMotor;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
  * 
@@ -20,7 +17,6 @@ public class IntakeSubsystem extends SubsystemBase {
     protected final IntakeModuleIOInputsAutoLogged inputs;
     static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
 
-
     /**
      * 
      */
@@ -28,8 +24,8 @@ public class IntakeSubsystem extends SubsystemBase {
         this.intakeModuleIO = intakeModuleIO;
         this.inputs = new IntakeModuleIOInputsAutoLogged();
 
-        tab.addBoolean("Extended?",() -> intakeModuleIO.isIntakeExtended());
-        tab.addBoolean("Retracted?",() -> intakeModuleIO.isIntakeRetracted());
+        tab.addBoolean("Extended?", () -> intakeModuleIO.isIntakeExtended());
+        tab.addBoolean("Retracted?", () -> intakeModuleIO.isIntakeRetracted());
     }
 
     @Override

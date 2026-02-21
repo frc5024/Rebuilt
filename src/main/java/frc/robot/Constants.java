@@ -37,30 +37,30 @@ import frc.robot.generated.TunerConstants;
  */
 public final class Constants {
 
-public static class HopperConstants {
+    public static class HopperConstants {
         public static double hopperSpeed = 0.05;
         public static int HopperMotorID = 8;
     }
 
-public static final class turretConstants {
-                public static final double speed = 0.01;
-                public static final int turretMotorChannel = 3;
-                public static final double turretTolerance = 0.5;
-                public static final double kP = 0.0;
-                public static final double kI = 0;
-                public static final double kD = 0.0;
-                public static final double kS = 0;
-                public static final double kV = 0.0001;
-                public static final double kA = 0.0;
+    public static final class turretConstants {
+        public static final double speed = 0.01;
+        public static final int turretMotorChannel = 3;
+        public static final double turretTolerance = 0.5;
+        public static final double kP = 0.0;
+        public static final double kI = 0;
+        public static final double kD = 0.0;
+        public static final double kS = 0;
+        public static final double kV = 0.0001;
+        public static final double kA = 0.0;
 
-                public static final double turretMaxSpeed = 10; //make note of units
-                public static final double turretMaxAccel = 10;
+        public static final double turretMaxSpeed = 10; // make note of units
+        public static final double turretMaxAccel = 10;
 
-                public static final double targetAngle = 25;
-                
-        }
+        public static final double targetAngle = 25;
 
-public static class shooterConstants {
+    }
+
+    public static class shooterConstants {
         public static final double kP = 0.0006;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
@@ -71,24 +71,24 @@ public static class shooterConstants {
 
         public static final double setVelocity = 3766; // Example set velocity in RPM
         public static final double speed = 0.1;
-         public static final double feederspeed = 0.1;
-}
+        public static final double feederspeed = 0.1;
+    }
 
-public static class intakeConstants {
-    public static final double INTAKE_SPEED = 0.5;
-    public static final double OUTTAKE_SPEED = 0.4;
-    public static final double EXTENDING_SPEED = 0.2;
-    public static final double RETRACTING_SPEED = 0.3;
-  }
+    public static class intakeConstants {
+        public static final double INTAKE_SPEED = 0.5;
+        public static final double OUTTAKE_SPEED = 0.4;
+        public static final double EXTENDING_SPEED = 0.2;
+        public static final double RETRACTING_SPEED = 0.3;
+    }
 
-public static class climbConstants{
-        //Speed for extending the farm
+    public static class climbConstants {
+        // Speed for extending the farm
         public static final double extendSpeed = 0.1;
-        //Speed for declimbing
+        // Speed for declimbing
         public static final double declimbSpeed = 0.1;
-        //Speed for contracting the arm and climbing
+        // Speed for contracting the arm and climbing
         public static final double contractSpeed = -0.75;
-}
+    }
 
     public static final Mode simMode = Mode.SIM;
     public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
@@ -141,7 +141,7 @@ public static class climbConstants{
      */
     public static class RobotConstants {
         public static final double LOOP_PERIOD_SECS = 0.02;
-        
+
         // PathPlanner config constants
         private static final double ROBOT_MASS_KG = 74.088;
         private static final double ROBOT_MOI = 6.883;
@@ -289,8 +289,10 @@ public static class climbConstants{
         public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
         // Camera names and positions, must match names configured on coprocessor
-        public static Camera frontCamera = new Camera("FrontCam", "limelight-four", new Transform3d(0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, 0.0)));
-        public static Camera rearCamera = new Camera("RearCam", "limelight-three", new Transform3d(-0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, Math.PI)));
+        public static Camera frontCamera = new Camera("FrontCam", "limelight-four",
+                new Transform3d(0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, 0.0)));
+        public static Camera rearCamera = new Camera("RearCam", "limelight-three",
+                new Transform3d(-0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, Math.PI)));
 
         // Basic filtering thresholds
         public static double maxAmbiguity = 0.3;

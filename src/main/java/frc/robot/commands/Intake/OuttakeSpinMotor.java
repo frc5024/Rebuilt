@@ -16,7 +16,7 @@ public class OuttakeSpinMotor extends Command {
 
     public OuttakeSpinMotor(IntakeSubsystem s_Intake) {
         this.s_Intake = s_Intake;
-        addRequirements (s_Intake);
+        addRequirements(s_Intake);
     }
 
     @Override
@@ -29,8 +29,8 @@ public class OuttakeSpinMotor extends Command {
         s_Intake.setIntakeSpeed(0.0);
     }
 
-     @Override
+    @Override
     public boolean isFinished() {
-    return false;
-  }
+        return false;
+    }
 }
