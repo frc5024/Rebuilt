@@ -42,8 +42,8 @@ public class RebuiltRobotContainer extends RobotContainer {
                                 });
                 this.visionSubsystem = new VisionSubsystem(
                                 swerveDriveSubsystem::addVisionMeasurement,
-                                new VisionIOLimelight(VisionConstants.camera0Name, swerveDriveSubsystem::getRotation),
-                                new VisionIOLimelight(VisionConstants.camera1Name, swerveDriveSubsystem::getRotation));
+                                new VisionIOLimelight(VisionConstants.frontCamera, swerveDriveSubsystem::getRotation),
+                                new VisionIOLimelight(VisionConstants.rearCamera, swerveDriveSubsystem::getRotation));
 
                 //Creates the commands for using non-drive subsystems in autonomous
 

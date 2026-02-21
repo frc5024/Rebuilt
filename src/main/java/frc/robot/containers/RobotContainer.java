@@ -40,16 +40,7 @@ abstract public class RobotContainer {
   public static CommandXboxController driverController;
   public static CommandXboxController operatorController;
 
-    private final shooter shooterSubsystem = new shooter();
-    
-    /**
-     * 
-     */
-    protected void configureButtonBindings() {
-        ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, visionSubsystem);
-        driverController = buttonBindings.getDriverController();
-        operatorController = buttonBindings.getOperatorController();
-    }
+  private final shooter shooterSubsystem = new shooter();
 
   /**
    * 
@@ -72,7 +63,6 @@ abstract public class RobotContainer {
     driverController.povUp().whileTrue(m_climb.climb());
     driverController.povDown().whileTrue(m_climb.declimb());
 
-
   }
 
   abstract protected void configureAutoChooser();
@@ -85,8 +75,6 @@ abstract public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }
-
-
 
   // Methods used by simulation only
 
