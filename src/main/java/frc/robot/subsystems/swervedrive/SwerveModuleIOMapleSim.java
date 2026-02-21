@@ -16,7 +16,7 @@ import org.ironmaple.simulation.motorsims.SimulatedMotorController;
  * a set of module
  * constants from Phoenix. Simulation is always based on voltage control.
  */
-public class ModuleIOSim implements ModuleIO {
+public class SwerveModuleIOMapleSim implements SwerveModuleIO {
     // TunerConstants doesn't support separate sim constants, so they are declared
     // locally
     private static final double DRIVE_KS = 0.03;
@@ -35,7 +35,7 @@ public class ModuleIOSim implements ModuleIO {
     private double driveAppliedVolts = 0.0;
     private double turnAppliedVolts = 0.0;
 
-    public ModuleIOSim(SwerveModuleSimulation moduleSimulation) {
+    public SwerveModuleIOMapleSim(SwerveModuleSimulation moduleSimulation) {
         this.moduleSimulation = moduleSimulation;
         this.driveMotor = moduleSimulation
                 .useGenericMotorControllerForDrive()
@@ -50,7 +50,7 @@ public class ModuleIOSim implements ModuleIO {
     }
 
     @Override
-    public void updateInputs(ModuleIOInputs inputs) {
+    public void updateInputs(SwerveModuleIOInputs inputs) {
         // Run closed-loop control
         if (driveClosedLoop) {
             driveAppliedVolts = driveFFVolts

@@ -6,15 +6,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.containers.RobotContainer;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.turret.TurretSubsystem;
 
 public class StickRotationCommand extends Command {
 
-    private final Turret turretSubsystem;
+    private final TurretSubsystem turretSubsystem;
     public double speed;
 
     
-    public StickRotationCommand(Turret turretSubsystem, double speed) {
+    public StickRotationCommand(TurretSubsystem turretSubsystem, double speed) {
         this.turretSubsystem = turretSubsystem;
         this.speed = speed;
 

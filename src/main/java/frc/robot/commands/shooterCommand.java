@@ -12,18 +12,26 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.shooterConstants;
-import frc.robot.subsystems.shooter;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class shooterCommand extends Command {
 
+<<<<<<< HEAD
   public final shooter shootersubsystem;
+=======
+  public final ShooterSubsystem shootersubsystem;
+>>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00
   public final SwerveDriveSubsystem swerveDriveSubsystem;
 
   public double setVelocity;
 
+<<<<<<< HEAD
   public shooterCommand (shooter shootersubsystem, SwerveDriveSubsystem swerveDriveSubsystem, double setVelocity) {  
+=======
+  public shooterCommand (ShooterSubsystem shootersubsystem, SwerveDriveSubsystem swerveDriveSubsystem, double setVelocity) {
+>>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00
     this.shootersubsystem = shootersubsystem;
     this.setVelocity = setVelocity;
     this.swerveDriveSubsystem = swerveDriveSubsystem;

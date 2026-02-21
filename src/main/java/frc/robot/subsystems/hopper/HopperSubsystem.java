@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.hopper;
 
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
@@ -12,31 +12,36 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.Hopper.Spin;
 import frc.robot.Constants;
 
-public class Hopper extends SubsystemBase{
-    public SparkMax hopperMotor;
+/**
+ * 
+ */
+public class HopperSubsystem extends SubsystemBase{
+    private final HopperModuleIO hopperModuleIO;
+    protected final HopperModuleIOInputsAutoLogged inputs;
 
-    public static Hopper mInstance = null;
     public double speed;
     public boolean direction;
 
-    public static Hopper getInstance() {
-        if (mInstance == null) {
-            mInstance = new Hopper();
-        }
-        return mInstance;
+    /**
+     * 
+     */
+    public HopperSubsystem(HopperModuleIO hopperModuleIO) {
+        this.hopperModuleIO = hopperModuleIO;
+        this.inputs = new HopperModuleIOInputsAutoLogged();
     }
 
-    public Hopper() {
-        hopperMotor = new SparkMax(Constants.HopperConstants.HopperMotorID, SparkLowLevel.MotorType.kBrushless);
-
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+        hopperModuleIO.updateInputs(inputs);
     }
 
     public void setSpeed(double speed) {
-        hopperMotor.set(speed);
+        hopperModuleIO.set(speed);
     }
 
     public void setIdle() {
-        hopperMotor.set(0);
+        hopperModuleIO.set(0);
     }
 
     public Command SpinCommand() {

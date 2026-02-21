@@ -1,4 +1,5 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.shooter;
+
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.swerve.utility.WheelForceCalculator.Feedforwards;
@@ -29,31 +30,17 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
-
-public class shooter extends SubsystemBase{
-    private SparkFlex flywheel1;
-    private SparkFlex flywheel2;
+/**
+ * 
+ */
+public class ShooterSubsystem extends SubsystemBase {
+    private final ShooterModuleIO shooterModuleIO;
+    protected final ShooterModuleIOInputsAutoLogged inputs;
 
     private boolean enabled;
 
-     private static shooter mInstance = null;
-
-    public static shooter getInstance() {
-        if (mInstance == null) {
-            mInstance = new shooter();
-        }
-        return mInstance;
-    }
-
-   private final SparkBaseConfig flywheel1MotorConfig = new SparkFlexConfig()
-            .idleMode(IdleMode.kCoast) // sets the motors to coast mode
-            .inverted(true);
-    private final SparkBaseConfig flywheel2MotorConfig = new SparkFlexConfig()
-            .idleMode(IdleMode.kCoast)
-            .follow(51, true);
-    
     private PIDController PID;
-    private SimpleMotorFeedforward feedForward; 
+    private SimpleMotorFeedforward feedForward;
 
     ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
     GenericEntry pEntry = tab.add("SET P", shooterConstants.kP).getEntry();
@@ -64,31 +51,28 @@ public class shooter extends SubsystemBase{
     GenericEntry aEntry = tab.add("SET A", shooterConstants.kA).getEntry();
     GenericEntry setVelocityEntry = tab.add("SET VELOCITY", shooterConstants.setVelocity).getEntry();
 
-    public shooter(){
-        flywheel1 = new SparkFlex(51, MotorType.kBrushless);
-        flywheel2 = new SparkFlex(52, MotorType.kBrushless);
-
-        flywheel1.configure(flywheel1MotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        flywheel2.configure(flywheel2MotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-        RelativeEncoder encoder = flywheel1.getEncoder();
+    /**
+     * 
+     */
+    public ShooterSubsystem(ShooterModuleIO shooterModuleIO) {
+        this.shooterModuleIO = shooterModuleIO;
+        this.inputs = new ShooterModuleIOInputsAutoLogged();
 
         PID = new PIDController(shooterConstants.kP, shooterConstants.kI, shooterConstants.kD);
 
         feedForward = new SimpleMotorFeedforward(shooterConstants.kS, shooterConstants.kV, shooterConstants.kA);
-
-        tab.addDouble("actual velocity", () -> flywheel1.getEncoder().getVelocity());
-        tab.addDouble("actualVoltage", () -> flywheel1.getBusVoltage());
     }
 
     @Override
-    public void periodic() { 
-         if (enabled) {
+    public void periodic() {
+        shooterModuleIO.updateInputs(inputs);
+
+        if (enabled) {
             System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
             setPIDMotor();
 
         } else {
-            flywheel1.set(0);
+            shooterModuleIO.set(0);
         }
 
     }
@@ -96,11 +80,10 @@ public class shooter extends SubsystemBase{
     public void setShooterPID(double setVelocity) {
         PID.setSetpoint(setVelocity);
 
-
     }
 
     public void setEnabled(boolean enabled) {
-       this.enabled = enabled;
+        this.enabled = enabled;
     }
 
     public void setPIDMotor() {
@@ -116,25 +99,28 @@ public class shooter extends SubsystemBase{
         feedForward.setKv(vEntry.getDouble(shooterConstants.kV));
         feedForward.setKa(aEntry.getDouble(shooterConstants.kA));
 
-
-        double PIDoutput = PID.calculate(flywheel1.getEncoder().getVelocity());
+        double PIDoutput = PID.calculate(shooterModuleIO.getVelocity());
         double feedForwardOutput = feedForward.calculate(PID.getSetpoint());
         double totalOutput = PIDoutput + feedForwardOutput;
 
-        flywheel1.setVoltage(totalOutput);
+        shooterModuleIO.setVoltage(totalOutput);
 
-         SmartDashboard.putNumber("PID", PIDoutput);
-         SmartDashboard.putNumber("FeedForward", feedForwardOutput);
-         SmartDashboard.putNumber("Total Output", totalOutput);
-         
+        SmartDashboard.putNumber("PID", PIDoutput);
+        SmartDashboard.putNumber("FeedForward", feedForwardOutput);
+        SmartDashboard.putNumber("Total Output", totalOutput);
 
     }
 
-    //public Pose2d getPosition() {
-        //return frc.robot.subsystems.swervedrive.SwerveDriveSubsystem.getPose();
-    //}
+    // public Pose2d getPosition() {
+    // return frc.robot.subsystems.swervedrive.SwerveDriveSubsystem.getPose();
+    // }
 
+    // public Command runEverything() {
+    // return new frc.robot.commands.runEverything(this,
+    // shooterConstants.setVelocity);
+    // }
 
+<<<<<<< HEAD:src/main/java/frc/robot/subsystems/shooter.java
    // public Command shooterCommand() {
 
         //return new frc.robot.commands.shooterCommand(this, shooterConstants.setVelocity);
@@ -145,4 +131,6 @@ public class shooter extends SubsystemBase{
     //}
 
         
+=======
+>>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00:src/main/java/frc/robot/subsystems/shooter/ShooterSubsystem.java
 }

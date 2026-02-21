@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.turret;
 
 import com.revrobotics.spark.SparkMax;
 //import com.kauailabs.navx.frc.AHRS;
@@ -28,9 +28,13 @@ import frc.robot.Constants.turretConstants;
 import frc.robot.commands.Turret.LockSetpointCommand;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 
-public class Turret extends SubsystemBase {
+/**
+ * 
+ */
+public class TurretSubsystem extends SubsystemBase {
+    private final TurretModuleIO turretModuleIO;
+    protected final TurretModuleIOInputsAutoLogged inputs;
 
-    private final SparkMax turretMotor;
     private final ProfiledPIDController pidController;
     // private final AHRS gyro;
     private TrapezoidProfile.Constraints feedForwardConstraints;
@@ -45,6 +49,7 @@ public class Turret extends SubsystemBase {
     private double voltageValue;
 
     private DigitalInput hallEffect;
+<<<<<<< HEAD:src/main/java/frc/robot/subsystems/Turret.java
 
     private static final double GEAR_RATIO = 10.75;
 
@@ -81,6 +86,38 @@ public class Turret extends SubsystemBase {
         turretMotor = new SparkMax(Constants.turretConstants.turretMotorChannel, SparkLowLevel.MotorType.kBrushless);
         // setDefaultCommand(new StickRotationCommand(this));
 
+=======
+
+    private static final double GEAR_RATIO = 10.75;
+
+    public final int rotationAxis = XboxController.Axis.kRightX.value;
+
+    // int hallEffectChannel = Constants.turretConstants.hallEffectChannel;
+
+    ShuffleboardTab tab = Shuffleboard.getTab("Turret");
+    GenericEntry pEntry = tab.add("SET P", turretConstants.kP).getEntry();
+    GenericEntry dEntry = tab.add("SET D", turretConstants.kD).getEntry();
+    GenericEntry iEntry = tab.add("SET I", turretConstants.kI).getEntry();
+
+    GenericEntry sEntry = tab.add("SET S", turretConstants.kS).getEntry();
+    GenericEntry vEntry = tab.add("SET V", turretConstants.kV).getEntry();
+    GenericEntry aEntry = tab.add("SET A", turretConstants.kA).getEntry();
+
+    GenericEntry targetAngleEntry = tab.add("SET target angle", turretConstants.targetAngle).getEntry();
+
+    GenericEntry maxSpeedEntry = tab.add("SET max speed", turretConstants.turretMaxSpeed).getEntry();
+    GenericEntry maxAccelEntry = tab.add("SET max accel", turretConstants.turretMaxAccel).getEntry();
+    GenericEntry toleranceEntry = tab.add("SET TOLERANCE", turretConstants.turretTolerance).getEntry();
+
+    /**
+     * 
+     */
+    public TurretSubsystem(TurretModuleIO turretModuleIO) {
+        this.turretModuleIO = turretModuleIO;
+        this.inputs = new TurretModuleIOInputsAutoLogged();
+        // setDefaultCommand(new StickRotationCommand(this));
+
+>>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00:src/main/java/frc/robot/subsystems/turret/TurretSubsystem.java
         // hallEffect = new DigitalInput(hallEffectChannel);
 
         feedForwardConstraints = new TrapezoidProfile.Constraints(turretConstants.turretMaxSpeed,
@@ -121,7 +158,7 @@ public class Turret extends SubsystemBase {
 
     public void disablePID() {
         pidEnabled = false;
-        turretMotor.set(0);
+        turretModuleIO.set(0);
         System.out.println("PID disabled for turret");
     }
 
@@ -130,7 +167,7 @@ public class Turret extends SubsystemBase {
     }
 
     public void runTurret(double speed) {
-        turretMotor.set(speed);
+        turretModuleIO.set(speed);
     }
 
     public void updatePID() {
@@ -152,9 +189,15 @@ public class Turret extends SubsystemBase {
                 + feedforwardValue;
 
         if (Math.abs(voltageValue) > turretConstants.turretMaxSpeed) {
+<<<<<<< HEAD:src/main/java/frc/robot/subsystems/Turret.java
             turretMotor.setVoltage(turretConstants.turretMaxSpeed * Math.signum(voltageValue));
         } else {
             turretMotor.setVoltage(voltageValue);
+=======
+            turretModuleIO.setVoltage(turretConstants.turretMaxSpeed * Math.signum(voltageValue));
+        } else {
+            turretModuleIO.setVoltage(voltageValue);
+>>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00:src/main/java/frc/robot/subsystems/turret/TurretSubsystem.java
         }
 
         // System.out.println("pidvalue: " + pidValue);
@@ -164,6 +207,7 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
+        turretModuleIO.updateInputs(inputs);
 
         pidController.setP(pEntry.getDouble(turretConstants.kP));
         pidController.setI(iEntry.getDouble(turretConstants.kI));
@@ -198,7 +242,7 @@ public class Turret extends SubsystemBase {
     // }
 
     public double getTurretAngle() {
-        double motorRotations = turretMotor.getEncoder().getPosition();
+        double motorRotations = turretModuleIO.getPosition();
         double turretRotations = motorRotations / GEAR_RATIO;
         // returns degrees normalized to [-180, 180)
         double angle = turretRotations * 360.0;
@@ -222,7 +266,7 @@ public class Turret extends SubsystemBase {
 
         // turretMotor.getEncoder().getVelocity() returns motor RPM (rotations per
         // minute)
-        double motorRPM = turretMotor.getEncoder().getVelocity();
+        double motorRPM = turretModuleIO.getVelocity();
         // Convert motor RPM -> turret rotations per second by dividing by gear ratio
         // and 60
         double turretRPS = (motorRPM / GEAR_RATIO) / 60.0;
@@ -237,7 +281,7 @@ public class Turret extends SubsystemBase {
     }
 
     public void zeroEncoder() {
-        turretMotor.getEncoder().setPosition(0.0);
+        turretModuleIO.setPosition(0.0);
 
     }
 
@@ -275,7 +319,11 @@ public class Turret extends SubsystemBase {
     // }
 
     public void setIdle() {
+<<<<<<< HEAD:src/main/java/frc/robot/subsystems/Turret.java
         turretMotor.set(0);
+=======
+        turretModuleIO.set(0);
+>>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00:src/main/java/frc/robot/subsystems/turret/TurretSubsystem.java
         joystickSpeed = 0;
     }
 
@@ -305,11 +353,14 @@ public class Turret extends SubsystemBase {
 
     public Command resetSetpoint() {
         return new resetSetpoint(this);
+<<<<<<< HEAD:src/main/java/frc/robot/subsystems/Turret.java
     }
 
     public void setDefaultCommand(Turret turretSubsystem, Object object) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'setDefaultCommand'");
+=======
+>>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00:src/main/java/frc/robot/subsystems/turret/TurretSubsystem.java
     }
 
 }

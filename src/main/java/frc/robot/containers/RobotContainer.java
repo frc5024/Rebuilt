@@ -1,11 +1,7 @@
 package frc.robot.containers;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.shooterConstants;
 import frc.robot.Constants;
@@ -13,13 +9,22 @@ import frc.robot.Robot;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.shooterCommand;
 import frc.robot.commands.Turret.LockSetpointCommand;
+<<<<<<< HEAD
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.shooter;
+=======
+import frc.robot.subsystems.climb.ClimbSubsystem;
+import frc.robot.subsystems.feeder.FeederSubsystem;
+import frc.robot.subsystems.hopper.HopperSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
+>>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
+import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import frc.robot.containers.ButtonBindings;
@@ -31,26 +36,20 @@ abstract public class RobotContainer {
   /* Subsystems */
   protected SwerveDriveSubsystem swerveDriveSubsystem;
   protected VisionSubsystem visionSubsystem;
-
-  private final shooter m_shooter = shooter.getInstance();
-  // private final Intake m_intake = Intake.getInstance();
-  private final Hopper m_hopper = Hopper.getInstance();
-  private final Feeder m_feeder = Feeder.getInstance();
-  private final Turret m_turret = Turret.getInstance();
-  private final Intake m_intake = Intake.getInstance();
-  private final Climb m_climb = Climb.getInstance();
-
+  protected ClimbSubsystem m_climb;
+  protected FeederSubsystem m_feeder;
+  protected HopperSubsystem m_hopper;
+  protected IntakeSubsystem m_intake;
+  protected  ShooterSubsystem m_shooter;
+  protected TurretSubsystem m_turret;
+  
   /* Autonomous */
   protected LoggedDashboardChooser<Command> autoChooser;
-
+  
   /* Controllers */
   public static CommandXboxController driverController;
   public static CommandXboxController operatorController;
-
-  private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  private final int rotationAxis = XboxController.Axis.kRightX.value;
-
+  
   /**
    * 
    */
@@ -78,7 +77,6 @@ abstract public class RobotContainer {
     driverController.b().whileTrue(m_intake.IntakeSpin());
     driverController.povUp().whileTrue(m_climb.climb());
     driverController.povDown().whileTrue(m_climb.declimb());
-
 
   }
 
