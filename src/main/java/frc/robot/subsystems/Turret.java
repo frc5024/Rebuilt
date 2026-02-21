@@ -283,6 +283,10 @@ public class Turret extends SubsystemBase {
     // return new StickRotationCommand(this);
     // }
 
+    //public Command lockSetpoint() {
+       // return new LockSetpointCommand(this, SwerveDriveSubsystem.getInstance());
+    //}
+
     // public Command lockontoTargetCommand() {
     // return new LockontoTargetCommand(this);
     // }

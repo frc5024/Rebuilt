@@ -4,8 +4,12 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.shooterConstants;
 import frc.robot.subsystems.shooter;
@@ -36,9 +40,11 @@ public class shooterCommand extends Command {
   @Override
   public void execute() {
     //get the position of the robot (with getpose), cords of the hub, calculate the dstance between the two
-    Pose2d hubPosition = (new Pose2d(0,0,Rotation2d.kZero));
+    Distance fieldLength = Inches.of(651.22);
+    Translation2d blueHubPosition = (new Translation2d(Inches.of(182.11), Inches.of(317.69 / 2.0)));
+    Translation2d redHubPosition = (new Translation2d(fieldLength.minus(Inches.of(182.11)), Inches.of(317.69 / 2.0)));
 
-    double distance = (swerveDriveSubsystem.getPose().getTranslation().getDistance(hubPosition.getTranslation()));
+    double distance = (swerveDriveSubsystem.getPose().getTranslation().getDistance(blueHubPosition));
     System.out.println(distance);
     
     shootersubsystem.setShooterPID(setVelocity);
