@@ -40,6 +40,14 @@ public interface IntakeModuleIO {
     default void setArm(double speed) {
     }
 
+    default boolean isIntakeRetracted() {
+        return false;
+    }
+
+    default boolean isIntakeExtended() {
+        return false;
+    }
+
     default void start() {
     }
 

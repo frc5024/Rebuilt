@@ -53,21 +53,21 @@ private static DigitalInput extendingLimitSwitch = new DigitalInput(8);
         armMotor.set(speed);
     }
 
-    public Command IntakeSpin() {
-        return new IntakeSpinMotor(this);
-    }
+    // public Command IntakeSpin() {
+    //     return new IntakeSpinMotor(this);
+    // }
 
-    public Command OuttakeSpin() {
-        return new OuttakeSpinMotor(this);
-    }
+    // public Command OuttakeSpin() {
+    //     return new OuttakeSpinMotor(this);
+    // }
 
-    public Command ExtendSpin() {
-        return new IntakeExtendArm(this);
-    }
+    // public Command ExtendSpin() {
+    //     return new IntakeExtendArm(this);
+    // }
 
-    public Command RetractSpin() {
-        return new IntakeRetractArm(this);
-    }
+    // public Command RetractSpin() {
+    //     return new IntakeRetractArm(this);
+    // }
 
      public boolean isIntakeRetracted() {
         return !retractingLimitSwitch.get();
