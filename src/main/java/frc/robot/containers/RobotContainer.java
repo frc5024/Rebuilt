@@ -8,9 +8,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.shooterConstants;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.shooterCommand;
+import frc.robot.commands.Turret.LockSetpointCommand;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
@@ -62,8 +64,15 @@ abstract public class RobotContainer {
     driverController.y().whileTrue(m_feeder.feederCommand());
     driverController.a().whileTrue(m_hopper.SpinCommand());
     driverController.x().onTrue(new runEverything(m_feeder, m_shooter, m_hopper));
-    driverController.povRight().whileTrue(m_turret.stickRotation(0.3));
-    driverController.povLeft().whileTrue(m_turret.stickRotation(-0.3));
+
+    // turret stuff
+
+    driverController.povRight().whileTrue(m_turret.spinCommand());
+    driverController.povLeft().whileTrue(m_turret.negativeSpin());
+    driverController.leftBumper().whileTrue(m_turret.spinToAngleCommand(Constants.turretConstants.targetAngle));
+    driverController.start().whileTrue(new LockSetpointCommand(m_turret, swerveDriveSubsystem));
+
+
     driverController.rightTrigger().whileTrue(m_intake.ExtendSpin());
     driverController.leftTrigger().whileTrue(m_intake.RetractSpin());
     driverController.b().whileTrue(m_intake.IntakeSpin());

@@ -11,14 +11,22 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.StickRotationCommand;
-import frc.robot.containers.RobotContainer;
+import frc.robot.commands.Turret.StickRotationCommand;
+import frc.robot.commands.Turret.spinCommand;
+import frc.robot.commands.Turret.negativeSpin;
+import frc.robot.commands.Turret.spinToAngleCommand;
+import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
+import frc.robot.commands.Turret.resetSetpoint;
 import frc.robot.Constants;
 import frc.robot.Constants.turretConstants;
+// import frc.robot.commands.Turret.LockontoTargetCommand;
+import frc.robot.commands.Turret.LockSetpointCommand;
+import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 
 public class Turret extends SubsystemBase {
 
@@ -36,7 +44,30 @@ public class Turret extends SubsystemBase {
 
     private double voltageValue;
 
-    private static Turret mInstance = null;
+    private DigitalInput hallEffect;
+
+    private static final double GEAR_RATIO = 10.75;
+
+    public final int rotationAxis = XboxController.Axis.kRightX.value;
+
+    // int hallEffectChannel = Constants.turretConstants.hallEffectChannel;
+
+    ShuffleboardTab tab = Shuffleboard.getTab("Turret");
+    GenericEntry pEntry = tab.add("SET P", turretConstants.kP).getEntry();
+    GenericEntry dEntry = tab.add("SET D", turretConstants.kD).getEntry();
+    GenericEntry iEntry = tab.add("SET I", turretConstants.kI).getEntry();
+
+    GenericEntry sEntry = tab.add("SET S", turretConstants.kS).getEntry();
+    GenericEntry vEntry = tab.add("SET V", turretConstants.kV).getEntry();
+    GenericEntry aEntry = tab.add("SET A", turretConstants.kA).getEntry();
+
+    GenericEntry targetAngleEntry = tab.add("SET target angle", turretConstants.targetAngle).getEntry();
+
+    GenericEntry maxSpeedEntry = tab.add("SET max speed", turretConstants.turretMaxSpeed).getEntry();
+    GenericEntry maxAccelEntry = tab.add("SET max accel", turretConstants.turretMaxAccel).getEntry();
+    GenericEntry toleranceEntry = tab.add("SET TOLERANCE", turretConstants.turretTolerance).getEntry();
+
+    private static Turret mInstance;
 
     public static Turret getInstance() {
         if (mInstance == null) {
@@ -45,27 +76,12 @@ public class Turret extends SubsystemBase {
         return mInstance;
     }
 
-    private static final double GEAR_RATIO = 10.75;
-
-    public final int rotationAxis = XboxController.Axis.kRightX.value;
-
-    ShuffleboardTab tab = Shuffleboard.getTab("Turret");
-    GenericEntry pEntry = tab.add("SET P", turretConstants.kP).getEntry();
-    GenericEntry dEntry = tab.add("SET D", turretConstants.kD).getEntry();
-    GenericEntry iEntry = tab.add("SET I", turretConstants.kI).getEntry();
-
-    GenericEntry kEntry = tab.add("SET S", turretConstants.kS).getEntry();
-    GenericEntry vEntry = tab.add("SET V", turretConstants.kV).getEntry();
-    GenericEntry aEntry = tab.add("SET A", turretConstants.kA).getEntry();
-
-    GenericEntry maxSpeedEntry = tab.add("SET max speed", turretConstants.turretMaxSpeed).getEntry();
-    GenericEntry maxAccelEntry = tab.add("SET max accel", turretConstants.turretMaxAccel).getEntry();
-    GenericEntry toleranceEntry = tab.add("SET TOLERANCE", turretConstants.turretTolerance).getEntry();
-
     public Turret() {
 
         turretMotor = new SparkMax(Constants.turretConstants.turretMotorChannel, SparkLowLevel.MotorType.kBrushless);
-        //setDefaultCommand(new StickRotationCommand(this, RobotContainer.driverController));
+        // setDefaultCommand(new StickRotationCommand(this));
+
+        // hallEffect = new DigitalInput(hallEffectChannel);
 
         feedForwardConstraints = new TrapezoidProfile.Constraints(turretConstants.turretMaxSpeed,
                 turretConstants.turretMaxAccel);
@@ -83,6 +99,10 @@ public class Turret extends SubsystemBase {
         tab.addDouble("current velocity", () -> getCurrentVelocity());
 
         tab.addDouble("Estimated Velocity", () -> pidController.getSetpoint().velocity);
+
+        tab.addDouble("Setpoint", () -> pidController.getSetpoint().position);
+        
+        tab.addDouble("voltageValue", () -> voltageValue);
 
         pEntry.setDouble(Constants.turretConstants.kP);
         iEntry.setDouble(Constants.turretConstants.kI);
@@ -125,9 +145,21 @@ public class Turret extends SubsystemBase {
 
         System.out.println("updating pid");
 
-        voltageValue = pidController.calculate(getTurretAngle())
-                + feedforward.calculate(pidController.getSetpoint().velocity);
-        turretMotor.setVoltage(voltageValue);
+        double pidValue = pidController.calculate(getTurretAngle());
+        double feedforwardValue = feedforward.calculate(pidController.getSetpoint().velocity);
+
+        voltageValue = pidValue
+                + feedforwardValue;
+
+        if (Math.abs(voltageValue) > turretConstants.turretMaxSpeed) {
+            turretMotor.setVoltage(turretConstants.turretMaxSpeed * Math.signum(voltageValue));
+        } else {
+            turretMotor.setVoltage(voltageValue);
+        }
+
+        // System.out.println("pidvalue: " + pidValue);
+        // System.out.println("ff value: " + feedforwardValue);
+        // System.out.println("voltage value: " + voltageValue);
     }
 
     @Override
@@ -136,6 +168,17 @@ public class Turret extends SubsystemBase {
         pidController.setP(pEntry.getDouble(turretConstants.kP));
         pidController.setI(iEntry.getDouble(turretConstants.kI));
         pidController.setD(dEntry.getDouble(turretConstants.kD));
+
+        feedForwardConstraints = new TrapezoidProfile.Constraints(
+                maxSpeedEntry.getDouble(turretConstants.turretMaxSpeed),
+                maxAccelEntry.getDouble(turretConstants.turretMaxAccel));
+
+        pidController.setConstraints(feedForwardConstraints);
+
+        feedforward.setKs(sEntry.getDouble(turretConstants.kS));
+        feedforward.setKv(vEntry.getDouble(turretConstants.kV));
+        feedforward.setKa(aEntry.getDouble(turretConstants.kA));
+
         // SimpleMotorFeedforward.setV(vEntry.getDouble(turretConstants.kV));
 
         // System.out.println("hello, pid is running");
@@ -202,14 +245,16 @@ public class Turret extends SubsystemBase {
         pidController.setGoal(targetAngle);
     }
 
-    public void zeroSetpoint() {
+    public void resetPID() {
         // reset the controller to the current measured angle
         // pidController.reset(currentAngle);
         pidController.reset(getTurretAngle());
     }
 
     public boolean isAtTargetAngle() {
-        System.out.println("@ goal");
+        if (pidController.atGoal() == true) {
+            System.out.println("@ goal");
+        }
         return pidController.atGoal();
     }
 
@@ -231,10 +276,36 @@ public class Turret extends SubsystemBase {
 
     public void setIdle() {
         turretMotor.set(0);
+        joystickSpeed = 0;
     }
 
-    public Command stickRotation(double speed) {
-        return new StickRotationCommand(this, speed);
+    // public Command stickRotation() {
+    // return new StickRotationCommand(this);
+    // }
+
+    // public Command lockontoTargetCommand() {
+    // return new LockontoTargetCommand(this);
+    // }
+
+    public Command spinCommand() {
+        return new spinCommand(this);
+    }
+
+    public Command negativeSpin() {
+        return new negativeSpin(this);
+    }
+
+    public Command spinToAngleCommand(double angle) {
+        return new spinToAngleCommand(this, angle);
+    }
+
+    public Command resetSetpoint() {
+        return new resetSetpoint(this);
+    }
+
+    public void setDefaultCommand(Turret turretSubsystem, Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setDefaultCommand'");
     }
 
 }
