@@ -6,14 +6,16 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.commands.TuningCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.swervedrive.GyroIO;
+import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOSim;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.vision.VisionSubsystem;
-import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 
 /**
  * 
@@ -45,6 +47,33 @@ public class SimulatedRobotContainer extends RobotContainer {
     @Override
     protected void configureAutoChooser() {
         this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+        // Set up SysId routines
+        this.autoChooser.addOption(
+                "Drive Wheel Radius Characterization",
+                TuningCommands.wheelRadiusCharacterization(this.swerveDriveSubsystem));
+        this.autoChooser.addOption(
+                "Drive Simple FF Characterization",
+                TuningCommands.feedforwardCharacterization(this.swerveDriveSubsystem));
+        this.autoChooser.addOption(
+                "Drive SysId (Quasistatic Forward)",
+                this.swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        this.autoChooser.addOption(
+                "Drive SysId (Quasistatic Reverse)",
+                this.swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        this.autoChooser.addOption(
+                "Drive SysId (Dynamic Forward)",
+                this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        this.autoChooser.addOption(
+                "Drive SysId (Dynamic Reverse)",
+                this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    }
+
+    @Override
+    protected void configureButtonBindings() {
+        ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, visionSubsystem);
+        driverController = buttonBindings.getDriverController();
+        operatorController = buttonBindings.getOperatorController();
     }
 
     @Override

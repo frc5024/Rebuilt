@@ -1,22 +1,22 @@
 package frc.robot.containers;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.vision.VisionSubsystem;
-import frc.robot.subsystems.swervedrive.GyroIOSim;
-import frc.robot.subsystems.swervedrive.SwerveModuleIOMapleSim;
-import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
-import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
-import frc.robot.util.MapleSimUtil;
-
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.swervedrive.GyroIOSim;
+import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
+import frc.robot.subsystems.swervedrive.SwerveModuleIOMapleSim;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.util.MapleSimUtil;
 
 /**
  * 
@@ -39,7 +39,7 @@ public class MapleSimRobotContainer extends RobotContainer {
                 new SwerveModuleIOMapleSim(swerveDriveSimulation.getModules()[2]),
                 new SwerveModuleIOMapleSim(swerveDriveSimulation.getModules()[3]),
                 swerveDriveSimulation::setSimulationWorldPose);
-                
+
         this.visionSubsystem = new VisionSubsystem(
                 this.swerveDriveSubsystem::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(VisionConstants.frontCamera, this.swerveDriveSubsystem::getPose),
@@ -48,10 +48,17 @@ public class MapleSimRobotContainer extends RobotContainer {
         configureAutoChooser();
         configureButtonBindings();
     }
-    
+
     @Override
     protected void configureAutoChooser() {
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    }
+
+    @Override
+    protected void configureButtonBindings() {
+        ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, visionSubsystem);
+        driverController = buttonBindings.getDriverController();
+        operatorController = buttonBindings.getOperatorController();
     }
 
     @Override
@@ -75,8 +82,11 @@ public class MapleSimRobotContainer extends RobotContainer {
     @Override
     public void updateSimulation() {
         SimulatedArena.getInstance().simulationPeriodic();
-        Logger.recordOutput("FieldSimulation/RobotPosition", MapleSimUtil.getSwerveDriveSimulation().getSimulatedDriveTrainPose());
-        // Logger.recordOutput("FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
-        // Logger.recordOutput("FieldSimulation/Algae", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
+        Logger.recordOutput("FieldSimulation/RobotPosition",
+                MapleSimUtil.getSwerveDriveSimulation().getSimulatedDriveTrainPose());
+        // Logger.recordOutput("FieldSimulation/Coral",
+        // SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
+        // Logger.recordOutput("FieldSimulation/Algae",
+        // SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
     }
 }
