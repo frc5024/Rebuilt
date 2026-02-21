@@ -1,22 +1,20 @@
-package frc.robot.commands;
+package frc.robot.commands.Turret;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.containers.RobotContainer;
 import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.Constants;
 
-public class StickRotationCommand extends Command {
+public class spinCommand extends Command {
 
     private final TurretSubsystem turretSubsystem;
-    public double speed;
 
+    // CommandXboxController operator = RobotContainer.operator;
     
-    public StickRotationCommand(TurretSubsystem turretSubsystem, double speed) {
+    public spinCommand(TurretSubsystem turretSubsystem) {
         this.turretSubsystem = turretSubsystem;
-        this.speed = speed;
 
         addRequirements(turretSubsystem);
     }
@@ -26,12 +24,13 @@ public class StickRotationCommand extends Command {
     }
     
     public void execute() {
-        turretSubsystem.runTurret(speed);
+        System.out.println("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
+        turretSubsystem.runTurret(Constants.turretConstants.speed);
+
     }
 
-  @Override
-  public void end(boolean interrupted) {
-    turretSubsystem.setIdle();
-  }
+    public void end(boolean interrupted) {
+        turretSubsystem.runTurret(0);
+    }
 
 }

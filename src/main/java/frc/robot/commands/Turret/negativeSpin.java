@@ -1,0 +1,36 @@
+package frc.robot.commands.Turret;
+
+import edu.wpi.first.wpilibj2.command.Command;
+//import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.containers.RobotContainer;
+import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.Constants;
+
+public class negativeSpin extends Command {
+
+    private final TurretSubsystem turretSubsystem;
+
+    // CommandXboxController operator = RobotContainer.operator;
+    
+    public negativeSpin(TurretSubsystem turretSubsystem) {
+        this.turretSubsystem = turretSubsystem;
+
+        addRequirements(turretSubsystem);
+    }
+
+    public void initialize() {
+        turretSubsystem.setIdle();
+    }
+    
+    public void execute() {
+        System.out.println("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
+        turretSubsystem.runTurret(-Constants.turretConstants.speed);
+
+    }
+
+    public void end(boolean interrupted) {
+        turretSubsystem.runTurret(0);
+    }
+
+}
