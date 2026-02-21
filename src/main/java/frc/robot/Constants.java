@@ -38,7 +38,7 @@ import frc.robot.generated.TunerConstants;
 public final class Constants {
 
 public static class HopperConstants {
-        public static double hopperSpeed = 0.05;
+        public static double hopperSpeed = 0.15;
         public static int HopperMotorID = 8;
     }
 
@@ -60,11 +60,15 @@ public static final class turretConstants {
                 
         }
 
-public static class shooterConstants {
-        public static final double kP = 0.0006;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
+public static class shooterConstants { //create constants for shooter subsystem
+        //created shooter motor IDs 
+        public static final int shooterMotorID1 = 51;
+        public static final int shooterMotorID2 = 52;
 
+        //pid and feedforward constant values for shooter subsystem
+        public static final double kP = 0.0006; // Proportional gain
+        public static final double kI = 0.0; // Integral gain
+        public static final double kD = 0.0; // Derivative gain
         public static final double kS = 0.2; // Static friction voltage
         public static final double kV = 0.001764; // Velocity constant
         public static final double kA = 0.01; // Acceleration constant
@@ -75,10 +79,10 @@ public static class shooterConstants {
 }
 
 public static class intakeConstants {
-    public static final double intakeSpeed = 0.1;
+    public static final double intakeSpeed = 0.55;
     public static final double outtakeSpeed = 0.1;
-    public static final double extendingSpeed = 0.1;
-    public static final double retractingSpeed = 0.1;
+    public static final double extendingSpeed = -0.1;
+    public static final double retractingSpeed = 0.2;
   }
 
 public static class climbConstants{

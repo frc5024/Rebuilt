@@ -5,30 +5,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.containers.RobotContainer;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
-<<<<<<< HEAD
-import frc.robot.subsystems.Turret;
-=======
 import frc.robot.subsystems.turret.TurretSubsystem;
->>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00
 import frc.robot.Constants;
 
 public class LockSetpointCommand extends Command {
 
-<<<<<<< HEAD
-    private final Turret turretSubsystem;
-=======
     private final TurretSubsystem turretSubsystem;
->>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00
     private final SwerveDriveSubsystem swerveDriveSubsystem;
     //private final double targetAngle;
 
     // CommandXboxController operator = RobotContainer.operator;
 
-<<<<<<< HEAD
-    public LockSetpointCommand(Turret turretSubsystem, SwerveDriveSubsystem swerveDriveSubsystem) {
-=======
     public LockSetpointCommand(TurretSubsystem turretSubsystem, SwerveDriveSubsystem swerveDriveSubsystem) {
->>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00
         this.turretSubsystem = turretSubsystem;
         this.swerveDriveSubsystem = swerveDriveSubsystem;
         addRequirements(turretSubsystem, swerveDriveSubsystem);

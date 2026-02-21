@@ -9,20 +9,11 @@ import frc.robot.Robot;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.shooterCommand;
 import frc.robot.commands.Turret.LockSetpointCommand;
-<<<<<<< HEAD
-import frc.robot.subsystems.Climb;
-import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Hopper;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.shooter;
-=======
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
->>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;

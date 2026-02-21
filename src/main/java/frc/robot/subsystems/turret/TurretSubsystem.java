@@ -49,44 +49,6 @@ public class TurretSubsystem extends SubsystemBase {
     private double voltageValue;
 
     private DigitalInput hallEffect;
-<<<<<<< HEAD:src/main/java/frc/robot/subsystems/Turret.java
-
-    private static final double GEAR_RATIO = 10.75;
-
-    public final int rotationAxis = XboxController.Axis.kRightX.value;
-
-    // int hallEffectChannel = Constants.turretConstants.hallEffectChannel;
-
-    ShuffleboardTab tab = Shuffleboard.getTab("Turret");
-    GenericEntry pEntry = tab.add("SET P", turretConstants.kP).getEntry();
-    GenericEntry dEntry = tab.add("SET D", turretConstants.kD).getEntry();
-    GenericEntry iEntry = tab.add("SET I", turretConstants.kI).getEntry();
-
-    GenericEntry sEntry = tab.add("SET S", turretConstants.kS).getEntry();
-    GenericEntry vEntry = tab.add("SET V", turretConstants.kV).getEntry();
-    GenericEntry aEntry = tab.add("SET A", turretConstants.kA).getEntry();
-
-    GenericEntry targetAngleEntry = tab.add("SET target angle", turretConstants.targetAngle).getEntry();
-
-    GenericEntry maxSpeedEntry = tab.add("SET max speed", turretConstants.turretMaxSpeed).getEntry();
-    GenericEntry maxAccelEntry = tab.add("SET max accel", turretConstants.turretMaxAccel).getEntry();
-    GenericEntry toleranceEntry = tab.add("SET TOLERANCE", turretConstants.turretTolerance).getEntry();
-
-    private static Turret mInstance;
-
-    public static Turret getInstance() {
-        if (mInstance == null) {
-            mInstance = new Turret();
-        }
-        return mInstance;
-    }
-
-    public Turret() {
-
-        turretMotor = new SparkMax(Constants.turretConstants.turretMotorChannel, SparkLowLevel.MotorType.kBrushless);
-        // setDefaultCommand(new StickRotationCommand(this));
-
-=======
 
     private static final double GEAR_RATIO = 10.75;
 
@@ -117,7 +79,6 @@ public class TurretSubsystem extends SubsystemBase {
         this.inputs = new TurretModuleIOInputsAutoLogged();
         // setDefaultCommand(new StickRotationCommand(this));
 
->>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00:src/main/java/frc/robot/subsystems/turret/TurretSubsystem.java
         // hallEffect = new DigitalInput(hallEffectChannel);
 
         feedForwardConstraints = new TrapezoidProfile.Constraints(turretConstants.turretMaxSpeed,
@@ -189,15 +150,9 @@ public class TurretSubsystem extends SubsystemBase {
                 + feedforwardValue;
 
         if (Math.abs(voltageValue) > turretConstants.turretMaxSpeed) {
-<<<<<<< HEAD:src/main/java/frc/robot/subsystems/Turret.java
-            turretMotor.setVoltage(turretConstants.turretMaxSpeed * Math.signum(voltageValue));
-        } else {
-            turretMotor.setVoltage(voltageValue);
-=======
             turretModuleIO.setVoltage(turretConstants.turretMaxSpeed * Math.signum(voltageValue));
         } else {
             turretModuleIO.setVoltage(voltageValue);
->>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00:src/main/java/frc/robot/subsystems/turret/TurretSubsystem.java
         }
 
         // System.out.println("pidvalue: " + pidValue);
@@ -319,11 +274,7 @@ public class TurretSubsystem extends SubsystemBase {
     // }
 
     public void setIdle() {
-<<<<<<< HEAD:src/main/java/frc/robot/subsystems/Turret.java
-        turretMotor.set(0);
-=======
         turretModuleIO.set(0);
->>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00:src/main/java/frc/robot/subsystems/turret/TurretSubsystem.java
         joystickSpeed = 0;
     }
 
@@ -353,14 +304,6 @@ public class TurretSubsystem extends SubsystemBase {
 
     public Command resetSetpoint() {
         return new resetSetpoint(this);
-<<<<<<< HEAD:src/main/java/frc/robot/subsystems/Turret.java
-    }
-
-    public void setDefaultCommand(Turret turretSubsystem, Object object) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setDefaultCommand'");
-=======
->>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00:src/main/java/frc/robot/subsystems/turret/TurretSubsystem.java
     }
 
 }

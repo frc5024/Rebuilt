@@ -120,17 +120,4 @@ public class ShooterSubsystem extends SubsystemBase {
     // shooterConstants.setVelocity);
     // }
 
-<<<<<<< HEAD:src/main/java/frc/robot/subsystems/shooter.java
-   // public Command shooterCommand() {
-
-        //return new frc.robot.commands.shooterCommand(this, shooterConstants.setVelocity);
-    //}
-
-    //public Command runEverything() {
-        //return new frc.robot.commands.runEverything(this, shooterConstants.setVelocity);
-    //}
-
-        
-=======
->>>>>>> 4035f3e568ecd0b77ffcdba7f64a940fd2a9cc00:src/main/java/frc/robot/subsystems/shooter/ShooterSubsystem.java
 }
