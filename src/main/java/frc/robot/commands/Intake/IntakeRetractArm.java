@@ -12,7 +12,7 @@ public class IntakeRetractArm extends Command {
     double speed = 0.6;
 
     static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
-    static GenericEntry pEntry = tab.add("SET RETRACTING SPEED", intakeConstants.retractingSpeed).getEntry();
+    static GenericEntry pEntry = tab.add("SET RETRACTING SPEED", intakeConstants.RETRACTING_SPEED).getEntry();
 
     public IntakeRetractArm(IntakeSubsystem s_Intake) {
         this.s_Intake = s_Intake;

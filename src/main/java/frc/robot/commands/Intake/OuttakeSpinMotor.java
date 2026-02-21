@@ -12,7 +12,7 @@ public class OuttakeSpinMotor extends Command {
     double speed = 0.6;
 
     static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
-    static GenericEntry pEntry = tab.add("SET OUTTAKESPEED", intakeConstants.outtakeSpeed).getEntry();
+    static GenericEntry pEntry = tab.add("SET OUTTAKESPEED", intakeConstants.OUTTAKE_SPEED).getEntry();
 
     public OuttakeSpinMotor(IntakeSubsystem s_Intake) {
         this.s_Intake = s_Intake;

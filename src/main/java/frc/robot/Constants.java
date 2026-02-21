@@ -75,10 +75,10 @@ public static class shooterConstants {
 }
 
 public static class intakeConstants {
-    public static final double intakeSpeed = 0.5;
-    public static final double outtakeSpeed = 0.4;
-    public static final double extendingSpeed = 0.2;
-    public static final double retractingSpeed = 0.3;
+    public static final double INTAKE_SPEED = 0.5;
+    public static final double OUTTAKE_SPEED = 0.4;
+    public static final double EXTENDING_SPEED = 0.2;
+    public static final double RETRACTING_SPEED = 0.3;
   }
 
 public static class climbConstants{

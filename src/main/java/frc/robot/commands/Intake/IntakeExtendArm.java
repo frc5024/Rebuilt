@@ -12,7 +12,7 @@ public class IntakeExtendArm extends Command {
     double speed = 0.6;
 
     static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
-    static GenericEntry pEntry = tab.add("SET EXTENDING SPEED", intakeConstants.extendingSpeed).getEntry();
+    static GenericEntry pEntry = tab.add("SET EXTENDING SPEED", intakeConstants.EXTENDING_SPEED).getEntry();
 
     public IntakeExtendArm(IntakeSubsystem s_Intake) {
         this.s_Intake = s_Intake;

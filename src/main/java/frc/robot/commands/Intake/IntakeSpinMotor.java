@@ -11,7 +11,7 @@ public class IntakeSpinMotor extends Command {
     private final IntakeSubsystem s_Intake;
 
    static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
-    static GenericEntry intakeEntry = tab.add("SET INTAKESPEED", intakeConstants.intakeSpeed).getEntry();
+    static GenericEntry intakeEntry = tab.add("SET INTAKESPEED", intakeConstants.INTAKE_SPEED).getEntry();
 
     public IntakeSpinMotor(IntakeSubsystem s_Intake) {
         this.s_Intake = s_Intake;
