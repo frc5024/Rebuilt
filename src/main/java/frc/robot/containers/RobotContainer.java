@@ -61,8 +61,8 @@ abstract public class RobotContainer {
     driverController.x().onTrue(new runEverything(m_feeder, m_shooter, m_hopper));
     driverController.povRight().whileTrue(m_turret.stickRotation(0.15));
     driverController.povLeft().whileTrue(m_turret.stickRotation(-0.15));
-    driverController.rightTrigger().whileTrue(m_intake.ExtendSpin());
-    driverController.leftTrigger().whileTrue(m_intake.RetractSpin());
+    driverController.rightTrigger().onTrue(m_intake.ExtendSpin());
+    driverController.leftTrigger().onTrue(m_intake.RetractSpin());
     driverController.b().whileTrue(m_intake.IntakeSpin());
 
   }
