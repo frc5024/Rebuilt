@@ -21,28 +21,27 @@ import org.littletonrobotics.junction.Logger;
  */
 public class VisionSubsystem extends SubsystemBase {
     private final VisionConsumer consumer;
-    private final VisionIO[] io;
+    private final VisionIO[] visionIO;
     private final VisionIOInputsAutoLogged[] inputs;
     private final Alert[] disconnectedAlerts;
 
     /**
      * 
      */
-    public VisionSubsystem(VisionConsumer consumer, VisionIO... io) {
+    public VisionSubsystem(VisionConsumer consumer, VisionIO... visionIO) {
         this.consumer = consumer;
-        this.io = io;
+        this.visionIO = visionIO;
 
         // Initialize inputs
-        this.inputs = new VisionIOInputsAutoLogged[io.length];
-        for (int i = 0; i < inputs.length; i++) {
-            inputs[i] = new VisionIOInputsAutoLogged();
+        this.inputs = new VisionIOInputsAutoLogged[visionIO.length];
+        for (int i = 0; i < this.inputs.length; i++) {
+            this.inputs[i] = new VisionIOInputsAutoLogged();
         }
 
         // Initialize disconnected alerts
-        this.disconnectedAlerts = new Alert[io.length];
-        for (int i = 0; i < inputs.length; i++) {
-            disconnectedAlerts[i] = new Alert(
-                    "Vision camera " + Integer.toString(i) + " is disconnected.", AlertType.kWarning);
+        this.disconnectedAlerts = new Alert[visionIO.length];
+        for (int i = 0; i < this.inputs.length; i++) {
+            this.disconnectedAlerts[i] = new Alert("Vision camera " + this.visionIO[i].getName() + " is disconnected.", AlertType.kWarning);
         }
     }
 
@@ -53,14 +52,14 @@ public class VisionSubsystem extends SubsystemBase {
      * @param cameraIndex The index of the camera to use.
      */
     public Rotation2d getTargetX(int cameraIndex) {
-        return inputs[cameraIndex].latestTargetObservation.tx();
+        return this.inputs[cameraIndex].latestTargetObservation.tx();
     }
 
     @Override
     public void periodic() {
-        for (int i = 0; i < io.length; i++) {
-            io[i].updateInputs(inputs[i]);
-            Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
+        for (int i = 0; i < this.visionIO.length; i++) {
+            this.visionIO[i].updateInputs(this.inputs[i]);
+            Logger.processInputs("Vision/" + this.visionIO[i].getName(), this.inputs[i]);
         }
 
         // Initialize logging values
@@ -70,9 +69,9 @@ public class VisionSubsystem extends SubsystemBase {
         List<Pose3d> allRobotPosesRejected = new LinkedList<>();
 
         // Loop over cameras
-        for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
+        for (int cameraIndex = 0; cameraIndex < this.visionIO.length; cameraIndex++) {
             // Update disconnected alert
-            disconnectedAlerts[cameraIndex].set(!inputs[cameraIndex].connected);
+            this.disconnectedAlerts[cameraIndex].set(!this.inputs[cameraIndex].connected);
 
             // Initialize logging values
             List<Pose3d> tagPoses = new LinkedList<>();
@@ -81,7 +80,7 @@ public class VisionSubsystem extends SubsystemBase {
             List<Pose3d> robotPosesRejected = new LinkedList<>();
 
             // Add tag poses
-            for (int tagId : inputs[cameraIndex].tagIds) {
+            for (int tagId : this.inputs[cameraIndex].tagIds) {
                 var tagPose = VisionConstants.aprilTagLayout.getTagPose(tagId);
                 if (tagPose.isPresent()) {
                     tagPoses.add(tagPose.get());
@@ -89,7 +88,7 @@ public class VisionSubsystem extends SubsystemBase {
             }
 
             // Loop over pose observations
-            for (var observation : inputs[cameraIndex].poseObservations) {
+            for (var observation : this.inputs[cameraIndex].poseObservations) {
                 // Check whether to reject pose
                 boolean rejectPose = observation.tagCount() == 0 // Must have at least one tag
                         || (observation.tagCount() == 1
@@ -129,7 +128,7 @@ public class VisionSubsystem extends SubsystemBase {
                 }
 
                 // Send vision observation
-                consumer.accept(
+                this.consumer.accept(
                         observation.pose().toPose2d(),
                         observation.timestamp(),
                         VecBuilder.fill(linearStdDev, linearStdDev, angularStdDev));
@@ -137,17 +136,18 @@ public class VisionSubsystem extends SubsystemBase {
 
             // Log camera datadata
             Logger.recordOutput(
-                    "Vision/Camera" + Integer.toString(cameraIndex) + "/TagPoses",
+                    "Vision/" + this.visionIO[cameraIndex].getName() + "/TagPoses",
                     tagPoses.toArray(new Pose3d[tagPoses.size()]));
             Logger.recordOutput(
-                    "Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPoses",
+                    "Vision/" + this.visionIO[cameraIndex].getName() + "/RobotPoses",
                     robotPoses.toArray(new Pose3d[robotPoses.size()]));
             Logger.recordOutput(
-                    "Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesAccepted",
+                    "Vision/" + this.visionIO[cameraIndex].getName() + "/RobotPosesAccepted",
                     robotPosesAccepted.toArray(new Pose3d[robotPosesAccepted.size()]));
             Logger.recordOutput(
-                    "Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesRejected",
+                    "Vision/" + this.visionIO[cameraIndex].getName() + "/RobotPosesRejected",
                     robotPosesRejected.toArray(new Pose3d[robotPosesRejected.size()]));
+
             allTagPoses.addAll(tagPoses);
             allRobotPoses.addAll(robotPoses);
             allRobotPosesAccepted.addAll(robotPosesAccepted);
@@ -155,16 +155,10 @@ public class VisionSubsystem extends SubsystemBase {
         }
 
         // Log summary data
-        Logger.recordOutput(
-                "Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
-        Logger.recordOutput(
-                "Vision/Summary/RobotPoses", allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
-        Logger.recordOutput(
-                "Vision/Summary/RobotPosesAccepted",
-                allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
-        Logger.recordOutput(
-                "Vision/Summary/RobotPosesRejected",
-                allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
+        Logger.recordOutput("Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
+        Logger.recordOutput("Vision/Summary/RobotPoses", allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
+        Logger.recordOutput("Vision/Summary/RobotPosesAccepted", allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
+        Logger.recordOutput("Vision/Summary/RobotPosesRejected", allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
     }
 
     @FunctionalInterface

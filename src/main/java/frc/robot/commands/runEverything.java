@@ -19,20 +19,18 @@ import frc.robot.Constants.HopperConstants;
 //import frc.robot.Constants.intakeConstants;
 import frc.robot.Constants.shooterConstants;
 import frc.robot.commands.Hopper.Spin;
-//import frc.robot.commands.Intake.IntakeSpinMotor;
-import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Hopper;
-//import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.shooter;
+import frc.robot.subsystems.feeder.FeederSubsystem;
+import frc.robot.subsystems.hopper.HopperSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class runEverything extends SequentialCommandGroup {
 
-  private final Feeder feederSubsystem;
-  private final shooter shooterSubsystem;
-  private final Hopper hopperSubsystem;
+  private final FeederSubsystem feederSubsystem;
+  private final ShooterSubsystem shooterSubsystem;
+  private final HopperSubsystem hopperSubsystem;
   //private final Intake intakeSubsystem;
  
 
@@ -47,7 +45,7 @@ public class runEverything extends SequentialCommandGroup {
 
     
   /** Creates a new runEverything. */
-  public runEverything(Feeder feederSubsystem, shooter shooterSubsystem, Hopper hopperSubsystem) { //Intake intakeSubsystem{ 
+  public runEverything(FeederSubsystem feederSubsystem, ShooterSubsystem shooterSubsystem, HopperSubsystem hopperSubsystem) { //Intake intakeSubsystem{ 
       this.feederSubsystem = feederSubsystem;
       this.shooterSubsystem = shooterSubsystem;
       this.hopperSubsystem = hopperSubsystem;

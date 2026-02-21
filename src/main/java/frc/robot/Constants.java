@@ -29,14 +29,11 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.lib.camera.Camera;
 import frc.robot.generated.TunerConstants;
 
 /**
- * This class defines the runtime mode used by AdvantageKit. The mode is always
- * "real" when running
- * on a roboRIO. Change the value of "simMode" to switch between "sim" (physics
- * sim) and "replay"
- * (log replay from a file).
+ * 
  */
 public final class Constants {
 
@@ -83,6 +80,15 @@ public static class intakeConstants {
     public static final double extendingSpeed = 0.1;
     public static final double retractingSpeed = 0.1;
   }
+
+public static class climbConstants{
+        //Speed for extending the farm
+        public static final double extendSpeed = 0.1;
+        //Speed for declimbing
+        public static final double declimbSpeed = 0.1;
+        //Speed for contracting the arm and climbing
+        public static final double contractSpeed = -0.75;
+}
 
     public static final Mode simMode = Mode.SIM;
     public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
@@ -134,6 +140,8 @@ public static class intakeConstants {
      * 
      */
     public static class RobotConstants {
+        public static final double LOOP_PERIOD_SECS = 0.02;
+        
         // PathPlanner config constants
         private static final double ROBOT_MASS_KG = 74.088;
         private static final double ROBOT_MOI = 6.883;
@@ -150,11 +158,36 @@ public static class intakeConstants {
                         TunerConstants.FrontLeft.SlipCurrent,
                         1),
                 SwerveDriveConstants.getModuleTranslations());
+
+        // AdvantageKit simulation
+        public static enum Mode {
+            REAL, // Running on a real robot
+            SIM, // Running a physics simulator
+            REPLAY // Replaying from a log file
+        }
+
+        public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;;
     }
 
     /**
      * Field Constants
      */
+    public static class FieldConstants {
+        public static final Pose2d[][] STATION_POSES = new Pose2d[][] {
+                {
+                        // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(3.500, 5.900, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(3.500, 4.000, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(3.500, 0.600, Rotation2d.fromDegrees(180.0))
+                },
+                {
+                        // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(13.000, 2.100, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(13.000, 4.000, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(13.000, 7.400, Rotation2d.fromDegrees(0.0))
+                }
+        };
+    }
 
     /**
      * Maple Sim Constants
@@ -195,6 +228,11 @@ public static class intakeConstants {
      * 
      */
     public static class SwerveDriveConstants {
+        public static final double maxLinearSpeed = 4.69;
+        public static final double maxLinearAcceleration = 4.0;
+        public static final double maxAngularAcceleration = 20.0;
+        public static final double maxAngularSpeed = 8.0; // 4.69 / driveBaseRadius;
+
         public static final double ODOMETRY_FREQUENCY = new CANBus(
                 TunerConstants.DrivetrainConstants.CANBusName).isNetworkFD() ? 250.0 : 100.0;
         public static final double DRIVE_BASE_RADIUS = Math.max(
@@ -226,18 +264,33 @@ public static class intakeConstants {
         }
     }
 
+    /**
+     * 
+     */
+    public static class TeleopConstants {
+        public static final PathConstraints CONSTRAINTS = new PathConstraints(4.5, 4.0, Units.degreesToRadians(540),
+                Units.degreesToRadians(720));
+
+        public static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(
+                SwerveDriveConstants.maxLinearSpeed,
+                SwerveDriveConstants.maxLinearAcceleration);
+        public static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(
+                SwerveDriveConstants.maxLinearSpeed,
+                SwerveDriveConstants.maxLinearAcceleration);
+        public static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(
+                SwerveDriveConstants.maxAngularSpeed, SwerveDriveConstants.maxLinearAcceleration);
+    }
+
+    /**
+     * 
+     */
     public static class VisionConstants {
         // AprilTag layout
         public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
-        // Camera names, must match names configured on coprocessor
-        public static String camera0Name = "camera_0";
-        public static String camera1Name = "camera_1";
-
-        // Robot to camera transforms
-        // (Not used by Limelight, configure in web UI instead)
-        public static Transform3d robotToCamera0 = new Transform3d(0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, 0.0));
-        public static Transform3d robotToCamera1 = new Transform3d(-0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, Math.PI));
+        // Camera names and positions, must match names configured on coprocessor
+        public static Camera frontCamera = new Camera("FrontCam", "limelight-four", new Transform3d(0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, 0.0)));
+        public static Camera rearCamera = new Camera("RearCam", "limelight-three", new Transform3d(-0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, Math.PI)));
 
         // Basic filtering thresholds
         public static double maxAmbiguity = 0.3;
@@ -259,5 +312,4 @@ public static class intakeConstants {
         public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
         public static double angularStdDevMegatag2Factor = Double.POSITIVE_INFINITY; // No rotation data available
     }
-
 }

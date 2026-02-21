@@ -7,8 +7,11 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
+import frc.lib.camera.Camera;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.function.Supplier;
  * 
  */
 public class VisionIOLimelight implements VisionIO {
+    protected final Camera camera;
     private final Supplier<Rotation2d> rotationSupplier;
     private final DoubleArrayPublisher orientationPublisher;
 
@@ -35,26 +39,28 @@ public class VisionIOLimelight implements VisionIO {
      * @param rotationSupplier Supplier for the current estimated rotation, used for
      *                         MegaTag 2.
      */
-    public VisionIOLimelight(String name, Supplier<Rotation2d> rotationSupplier) {
-        var table = NetworkTableInstance.getDefault().getTable(name);
+    public VisionIOLimelight(Camera camera, Supplier<Rotation2d> rotationSupplier) {
+        this.camera = camera;
         this.rotationSupplier = rotationSupplier;
-        orientationPublisher = table.getDoubleArrayTopic("robot_orientation_set").publish();
-        latencySubscriber = table.getDoubleTopic("tl").subscribe(0.0);
-        txSubscriber = table.getDoubleTopic("tx").subscribe(0.0);
-        tySubscriber = table.getDoubleTopic("ty").subscribe(0.0);
-        megatag1Subscriber = table.getDoubleArrayTopic("botpose_wpiblue").subscribe(new double[] {});
-        megatag2Subscriber = table.getDoubleArrayTopic("botpose_orb_wpiblue").subscribe(new double[] {});
+        
+        NetworkTable table = NetworkTableInstance.getDefault().getTable(camera.getNtName());
+        this.orientationPublisher = table.getDoubleArrayTopic("robot_orientation_set").publish();
+        this.latencySubscriber = table.getDoubleTopic("tl").subscribe(0.0);
+        this.txSubscriber = table.getDoubleTopic("tx").subscribe(0.0);
+        this.tySubscriber = table.getDoubleTopic("ty").subscribe(0.0);
+        this.megatag1Subscriber = table.getDoubleArrayTopic("botpose_wpiblue").subscribe(new double[] {});
+        this.megatag2Subscriber = table.getDoubleArrayTopic("botpose_orb_wpiblue").subscribe(new double[] {});
     }
 
     @Override
     public void updateInputs(VisionIOInputs inputs) {
         // Update connection status based on whether an update has been seen in the last
         // 250ms
-        inputs.connected = ((RobotController.getFPGATime() - latencySubscriber.getLastChange()) / 1000) < 250;
+        inputs.connected = ((RobotController.getFPGATime() - this.latencySubscriber.getLastChange()) / 1000) < 250;
 
         // Update target observation
         inputs.latestTargetObservation = new TargetObservation(
-                Rotation2d.fromDegrees(txSubscriber.get()), Rotation2d.fromDegrees(tySubscriber.get()));
+                Rotation2d.fromDegrees(this.txSubscriber.get()), Rotation2d.fromDegrees(this.tySubscriber.get()));
 
         // Update orientation for MegaTag 2
         orientationPublisher.accept(
@@ -65,7 +71,7 @@ public class VisionIOLimelight implements VisionIO {
         // Read new pose observations from NetworkTables
         Set<Integer> tagIds = new HashSet<>();
         List<PoseObservation> poseObservations = new LinkedList<>();
-        for (var rawSample : megatag1Subscriber.readQueue()) {
+        for (var rawSample : this.megatag1Subscriber.readQueue()) {
             if (rawSample.value.length == 0)
                 continue;
             for (int i = 11; i < rawSample.value.length; i += 7) {
@@ -92,7 +98,7 @@ public class VisionIOLimelight implements VisionIO {
                             // Observation type
                             PoseObservationType.MEGATAG_1));
         }
-        for (var rawSample : megatag2Subscriber.readQueue()) {
+        for (var rawSample : this.megatag2Subscriber.readQueue()) {
             if (rawSample.value.length == 0)
                 continue;
             for (int i = 11; i < rawSample.value.length; i += 7) {
@@ -143,5 +149,10 @@ public class VisionIOLimelight implements VisionIO {
                         Units.degreesToRadians(rawLLArray[3]),
                         Units.degreesToRadians(rawLLArray[4]),
                         Units.degreesToRadians(rawLLArray[5])));
+    }
+
+    @Override
+    public String getName() {
+        return this.camera.getName();
     }
 }

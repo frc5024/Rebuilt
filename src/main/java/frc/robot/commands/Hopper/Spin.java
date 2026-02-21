@@ -5,16 +5,16 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.hopper.HopperSubsystem;
 
 public class Spin extends Command{
-    public Hopper hopperSubsystem;
+    public HopperSubsystem hopperSubsystem;
     public double speed;
 
     static ShuffleboardTab tab = Shuffleboard.getTab("Hopper");
     static GenericEntry speedEntry = tab.add("SET HOPPERSPEED", Constants.HopperConstants.hopperSpeed).getEntry();
 
-    public Spin(Hopper hopperSubsystem) {
+    public Spin(HopperSubsystem hopperSubsystem) {
         this.hopperSubsystem = hopperSubsystem;
     }
 

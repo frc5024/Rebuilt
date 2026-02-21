@@ -2,11 +2,11 @@ package frc.robot.containers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOSim;
-import frc.robot.subsystems.swervedrive.ModuleIOSim;
+import frc.robot.subsystems.swervedrive.SwerveModuleIOMapleSim;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.util.MapleSimUtil;
@@ -32,17 +32,18 @@ public class MapleSimRobotContainer extends RobotContainer {
         SwerveDriveSimulation swerveDriveSimulation = MapleSimUtil.getSwerveDriveSimulation();
         SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
 
-        swerveDriveSubsystem = new SwerveDriveSubsystem(
+        this.swerveDriveSubsystem = new SwerveDriveSubsystem(
                 new GyroIOSim(swerveDriveSimulation.getGyroSimulation()),
-                new ModuleIOSim(swerveDriveSimulation.getModules()[0]),
-                new ModuleIOSim(swerveDriveSimulation.getModules()[1]),
-                new ModuleIOSim(swerveDriveSimulation.getModules()[2]),
-                new ModuleIOSim(swerveDriveSimulation.getModules()[3]),
+                new SwerveModuleIOMapleSim(swerveDriveSimulation.getModules()[0]),
+                new SwerveModuleIOMapleSim(swerveDriveSimulation.getModules()[1]),
+                new SwerveModuleIOMapleSim(swerveDriveSimulation.getModules()[2]),
+                new SwerveModuleIOMapleSim(swerveDriveSimulation.getModules()[3]),
                 swerveDriveSimulation::setSimulationWorldPose);
-        visionSubsystem = new VisionSubsystem(
-                swerveDriveSubsystem::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, swerveDriveSubsystem::getPose),
-                new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, swerveDriveSubsystem::getPose));
+                
+        this.visionSubsystem = new VisionSubsystem(
+                this.swerveDriveSubsystem::addVisionMeasurement,
+                new VisionIOPhotonVisionSim(VisionConstants.frontCamera, this.swerveDriveSubsystem::getPose),
+                new VisionIOPhotonVisionSim(VisionConstants.rearCamera, this.swerveDriveSubsystem::getPose));
 
         configureAutoChooser();
         configureButtonBindings();
@@ -58,8 +59,8 @@ public class MapleSimRobotContainer extends RobotContainer {
         int index = alliance == Alliance.Blue ? 0 : 1;
         location -= 1;
 
-        Pose2d pose2d = Constants.STATION_POSES[index][location];
-        swerveDriveSubsystem.setPose(pose2d);
+        Pose2d pose2d = FieldConstants.STATION_POSES[index][location];
+        this.swerveDriveSubsystem.setPose(pose2d);
         resetSimulationField(pose2d);
     }
 
@@ -74,11 +75,8 @@ public class MapleSimRobotContainer extends RobotContainer {
     @Override
     public void updateSimulation() {
         SimulatedArena.getInstance().simulationPeriodic();
-        Logger.recordOutput(
-                "FieldSimulation/RobotPosition", MapleSimUtil.getSwerveDriveSimulation().getSimulatedDriveTrainPose());
-        Logger.recordOutput(
-                "FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
-        Logger.recordOutput(
-                "FieldSimulation/Algae", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
+        Logger.recordOutput("FieldSimulation/RobotPosition", MapleSimUtil.getSwerveDriveSimulation().getSimulatedDriveTrainPose());
+        // Logger.recordOutput("FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
+        // Logger.recordOutput("FieldSimulation/Algae", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
     }
 }
