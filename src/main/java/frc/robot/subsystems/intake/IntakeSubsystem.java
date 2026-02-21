@@ -9,6 +9,8 @@ import frc.robot.commands.Intake.IntakeSpinMotor;
 import frc.robot.commands.Intake.OuttakeSpinMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
  * 
@@ -16,6 +18,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class IntakeSubsystem extends SubsystemBase {
     private final IntakeModuleIO intakeModuleIO;
     protected final IntakeModuleIOInputsAutoLogged inputs;
+    static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
+
 
     /**
      * 
@@ -23,6 +27,9 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem(IntakeModuleIO intakeModuleIO) {
         this.intakeModuleIO = intakeModuleIO;
         this.inputs = new IntakeModuleIOInputsAutoLogged();
+
+        tab.addBoolean("Extending",() -> intakeModuleIO.isIntakeExtended());
+        tab.addBoolean("Retracting",() -> intakeModuleIO.isIntakeRetracted());
     }
 
     @Override
@@ -56,10 +63,10 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean isIntakeRetracted() {
-        return false;// !retractingLimitSwitch.get();
+        return intakeModuleIO.isIntakeRetracted();
     }
 
     public boolean isIntakeExtended() {
-        return false;// !extendingLimitSwitch.get();
+        return intakeModuleIO.isIntakeExtended();
     }
 }

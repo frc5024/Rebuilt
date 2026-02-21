@@ -25,7 +25,7 @@ public class PathFinderAndFollowCommand extends Command {
     this.swerveDrive = swerveDrive;
     this.pathName = pathName;
   }
-
+  //End condition of the button being released
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);
@@ -36,6 +36,7 @@ public class PathFinderAndFollowCommand extends Command {
 
   @Override
   public void execute() {
+    //Executes the command to follow the path if it is not null, otherwise does nothing
     if (this.followPathCommand != null) {
       this.followPathCommand.execute();
     }
@@ -45,6 +46,7 @@ public class PathFinderAndFollowCommand extends Command {
   public void initialize() {
     // zero drive pid since we are driving closed loop
 
+    //Grabs the specified path and initializes the command to follow it
     this.followPathCommand = getfollowPathCommand();
     if (this.followPathCommand != null) {
 
@@ -52,7 +54,7 @@ public class PathFinderAndFollowCommand extends Command {
       Logger.recordOutput("Commands/Active Command", this.getName());
     }
   }
-
+  //The command is finished when the path is finished or if there was an error loading the path
   @Override
   public boolean isFinished() {
     return this.followPathCommand != null ? this.followPathCommand.isFinished() : true;

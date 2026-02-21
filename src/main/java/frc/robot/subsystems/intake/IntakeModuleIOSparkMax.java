@@ -23,7 +23,7 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     private final RelativeEncoder armEncoder;
 
     private static DigitalInput retractingLimitSwitch = new DigitalInput(7);
-    private static DigitalInput extendingLimitSwitch = new DigitalInput(3);
+    private static DigitalInput extendingLimitSwitch = new DigitalInput(8);
 
     // Connection debouncers
     private final Debouncer connectedDebouncer;
@@ -70,5 +70,15 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     @Override
     public void setIntake(double speed) {
         this.intakeMotor.set(speed);
+    }
+
+    @Override
+    public boolean isIntakeRetracted() {
+        return !retractingLimitSwitch.get();
+    }
+
+    @Override
+    public boolean isIntakeExtended() {
+        return !extendingLimitSwitch.get();
     }
 }
