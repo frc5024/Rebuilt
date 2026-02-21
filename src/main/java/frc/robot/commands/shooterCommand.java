@@ -4,6 +4,12 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Inches;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.shooterConstants;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -13,14 +19,14 @@ import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 public class shooterCommand extends Command {
 
   public final ShooterSubsystem shootersubsystem;
-  //public final SwerveDriveSubsystem swerveDriveSubsystem;
+  public final SwerveDriveSubsystem swerveDriveSubsystem;
 
   public double setVelocity;
 
-  public shooterCommand (ShooterSubsystem shootersubsystem, double setVelocity) {  //SwerveDriveSubsystem swerveDriveSubsystem,
+  public shooterCommand (ShooterSubsystem shootersubsystem, SwerveDriveSubsystem swerveDriveSubsystem, double setVelocity) {
     this.shootersubsystem = shootersubsystem;
     this.setVelocity = setVelocity;
-    //this.swerveDriveSubsystem = swerveDriveSubsystem;
+    this.swerveDriveSubsystem = swerveDriveSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -34,7 +40,15 @@ public class shooterCommand extends Command {
 
   @Override
   public void execute() {
-     
+    //get the position of the robot (with getpose), cords of the hub, calculate the dstance between the two
+    Distance fieldLength = Inches.of(651.22);
+    Translation2d blueHubPosition = (new Translation2d(Inches.of(182.11), Inches.of(317.69 / 2.0)));
+    Translation2d redHubPosition = (new Translation2d(fieldLength.minus(Inches.of(182.11)), Inches.of(317.69 / 2.0)));
+
+    double distance = (swerveDriveSubsystem.getPose().getTranslation().getDistance(blueHubPosition));
+    System.out.println(distance);
+    
+    shootersubsystem.setShooterPID(setVelocity);
   }
 
   // Called once the command ends or is interrupted.

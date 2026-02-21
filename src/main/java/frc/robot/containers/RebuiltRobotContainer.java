@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.shooterCommand;
 import frc.robot.commands.Hopper.Spin;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.shooterConstants;
 import frc.robot.Robot;
 import frc.robot.commands.TuningCommands;
 import frc.robot.generated.TunerConstants;
@@ -67,9 +68,9 @@ public class RebuiltRobotContainer extends RobotContainer {
                 this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
                 this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMax());
 
-                //Creates the commands for using non-drive subsystems in autonomous
+                // Creates the commands for using non-drive subsystems in autonomous
 
-                NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
+                NamedCommands.registerCommand("Shooter", shooterCommand());
                 NamedCommands.registerCommand("Feeder", m_feeder.feederCommand());
                 NamedCommands.registerCommand("Intake", m_intake.IntakeSpin());
                 NamedCommands.registerCommand("ExtendIntake", m_intake.ExtendSpin());
@@ -80,11 +81,8 @@ public class RebuiltRobotContainer extends RobotContainer {
                 NamedCommands.registerCommand("Dontdeclimb", m_climb.dontdeclimb());
                 NamedCommands.registerCommand("SpinHopper", m_hopper.SpinCommand());
 
-
                 configureAutoChooser();
                 configureButtonBindings();
-
-                
 
         }
 
@@ -114,6 +112,10 @@ public class RebuiltRobotContainer extends RobotContainer {
                 this.autoChooser.addOption(
                                 "Drive SysId (Dynamic Reverse)",
                                 this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        }
+
+        public Command shooterCommand() {
+                return new shooterCommand(this.m_shooter, this.swerveDriveSubsystem, shooterConstants.setVelocity);
         }
 
         /**

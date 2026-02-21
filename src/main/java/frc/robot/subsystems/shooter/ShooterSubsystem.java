@@ -115,10 +115,6 @@ public class ShooterSubsystem extends SubsystemBase {
     // return frc.robot.subsystems.swervedrive.SwerveDriveSubsystem.getPose();
     // }
 
-    public Command shooterCommand() {
-        return new shooterCommand(this, shooterConstants.setVelocity);
-    }
-
     // public Command runEverything() {
     // return new frc.robot.commands.runEverything(this,
     // shooterConstants.setVelocity);

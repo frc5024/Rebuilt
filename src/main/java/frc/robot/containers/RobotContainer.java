@@ -50,7 +50,7 @@ abstract public class RobotContainer {
     operatorController = buttonBindings.getOperatorController();
 
     // driverController.b().whileTrue(m_hopper.SpinEntryCommand());
-    driverController.rightBumper().whileTrue(new shooterCommand(m_shooter, shooterConstants.setVelocity));
+    driverController.rightBumper().whileTrue(new shooterCommand(m_shooter, swerveDriveSubsystem, shooterConstants.setVelocity));
     driverController.y().whileTrue(m_feeder.feederCommand());
     driverController.a().whileTrue(m_hopper.SpinCommand());
     driverController.x().onTrue(new runEverything(m_feeder, m_shooter, m_hopper));
