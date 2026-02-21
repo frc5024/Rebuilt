@@ -10,6 +10,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.shooterConstants;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -22,6 +25,8 @@ public class shooterCommand extends Command {
   public final SwerveDriveSubsystem swerveDriveSubsystem;
 
   public double setVelocity;
+
+  static ShuffleboardTab tab = Shuffleboard.getTab("feederMotor");
 
   public shooterCommand (ShooterSubsystem shootersubsystem, SwerveDriveSubsystem swerveDriveSubsystem, double setVelocity) {
     this.shootersubsystem = shootersubsystem;
@@ -45,7 +50,8 @@ public class shooterCommand extends Command {
     Translation2d redHubPosition = (new Translation2d(fieldLength.minus(Inches.of(182.11)), Inches.of(317.69 / 2.0)));
 
     double distance = (swerveDriveSubsystem.getPose().getTranslation().getDistance(blueHubPosition));
-    System.out.println(distance);
+    SmartDashboard.putNumber("Distance", distance);
+    
     
     shootersubsystem.setShooterPID(setVelocity);
   }

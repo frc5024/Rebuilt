@@ -43,7 +43,7 @@ public static class HopperConstants {
     }
 
 public static final class turretConstants {
-                public static final double speed = 0.3;
+                public static final double speed = 0.3; 
                 public static final int turretMotorChannel = 3;
                 public static final double turretTolerance = 0.5;
                 public static final double kP = 0.0;
@@ -79,7 +79,7 @@ public static class shooterConstants { //create constants for shooter subsystem
 }
 
 public static class intakeConstants {
-    public static final double intakeSpeed = 0.55;
+    public static final double intakeSpeed = 0.5;
     public static final double outtakeSpeed = 0.1;
     public static final double extendingSpeed = -0.1;
     public static final double retractingSpeed = 0.2;

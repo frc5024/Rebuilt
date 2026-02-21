@@ -1,38 +1,15 @@
 package frc.robot.subsystems.shooter;
 
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.swerve.utility.WheelForceCalculator.Feedforwards;
-import com.google.flatbuffers.Constants;
-
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkFlex;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.shooterConstants;
-import frc.robot.commands.shooterCommand;
-import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkFlexConfig;
 
-/**
- * 
- */
 public class ShooterSubsystem extends SubsystemBase {
     private final ShooterModuleIO shooterModuleIO;
     protected final ShooterModuleIOInputsAutoLogged inputs;
@@ -68,7 +45,6 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterModuleIO.updateInputs(inputs);
 
         if (enabled) {
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
             setPIDMotor();
 
         } else {

@@ -14,7 +14,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants;
+import frc.robot.Constants.shooterConstants;;
 
 /**
  * 
@@ -44,8 +44,8 @@ public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
      * 
      */
     public ShooterModuleIOSparkFlex() {
-        this.flywheel1 = new SparkFlex(51, MotorType.kBrushless);
-        this.flywheel2 = new SparkFlex(52, MotorType.kBrushless);
+        this.flywheel1 = new SparkFlex(shooterConstants.shooterMotorID1, MotorType.kBrushless);
+        this.flywheel2 = new SparkFlex(shooterConstants.shooterMotorID2, MotorType.kBrushless);
 
         flywheel1.configure(flywheel1MotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         flywheel2.configure(flywheel2MotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
