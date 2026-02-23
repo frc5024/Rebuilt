@@ -11,6 +11,8 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.TuningCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.feeder.FeederModuleIOSim;
+import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIO;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOSim;
@@ -39,6 +41,8 @@ public class SimulatedRobotContainer extends RobotContainer {
                 this.swerveDriveSubsystem::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(VisionConstants.frontCamera, this.swerveDriveSubsystem::getPose),
                 new VisionIOPhotonVisionSim(VisionConstants.rearCamera, this.swerveDriveSubsystem::getPose));
+
+        this.m_feeder = new FeederSubsystem(new FeederModuleIOSim());
 
         configureAutoChooser();
         configureButtonBindings();
