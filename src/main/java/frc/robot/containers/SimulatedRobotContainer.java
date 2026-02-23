@@ -74,13 +74,6 @@ public class SimulatedRobotContainer extends RobotContainer {
     }
 
     @Override
-    protected void configureButtonBindings() {
-        ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, visionSubsystem);
-        driverController = buttonBindings.getDriverController();
-        operatorController = buttonBindings.getOperatorController();
-    }
-
-    @Override
     public void onAllianceChanged(Alliance alliance, int location) {
         int index = alliance == Alliance.Blue ? 0 : 1;
         location -= 1;

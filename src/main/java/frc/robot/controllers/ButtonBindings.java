@@ -1,16 +1,20 @@
-package frc.robot.containers;
+package frc.robot.controllers;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
+import frc.robot.commands.runEverything;
+import frc.robot.subsystems.climb.ClimbSubsystem;
+import frc.robot.subsystems.feeder.FeederSubsystem;
+import frc.robot.subsystems.hopper.HopperSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
-import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.turret.TurretSubsystem;
 
 /**
- * 
+ * Define button commands when running the real robot
  */
 public class ButtonBindings {
     private final int DRIVER_PORT = 0;
@@ -24,14 +28,26 @@ public class ButtonBindings {
 
     /* Subsystems */
     private final SwerveDriveSubsystem swerveDriveSubsystem;
-    private final VisionSubsystem visionSubsystem;
+    private ClimbSubsystem m_climb;
+    private FeederSubsystem m_feeder;
+    private HopperSubsystem m_hopper;
+    private IntakeSubsystem m_intake;
+    private ShooterSubsystem m_shooter;
+    private TurretSubsystem m_turret;
 
     /**
      * 
      */
-    public ButtonBindings(SwerveDriveSubsystem swerveDriveSubsystem, VisionSubsystem visionSubsystem) {
+    public ButtonBindings(SwerveDriveSubsystem swerveDriveSubsystem, ClimbSubsystem m_climb, FeederSubsystem m_feeder,
+            HopperSubsystem m_hopper, IntakeSubsystem m_intake, ShooterSubsystem m_shooter, TurretSubsystem m_turret) {
         this.swerveDriveSubsystem = swerveDriveSubsystem;
-        this.visionSubsystem = visionSubsystem;
+        this.m_climb = m_climb;
+        this.m_feeder = m_feeder;
+        this.m_hopper = m_hopper;
+        this.m_intake = m_intake;
+        this.m_shooter = m_shooter;
+        this.m_turret = m_turret;
+
         this.driverController = setDriverBindingsController();
         this.operatorController = setOperatorBindingsController();
 
@@ -53,29 +69,18 @@ public class ButtonBindings {
                         () -> -commandXboxController.getLeftX(),
                         () -> -commandXboxController.getRightX()));
 
-        // Lock to 0° when A button is held
-        commandXboxController
-                .a()
-                .whileTrue(
-                        DriveCommands.joystickDriveAtAngle(
-                                swerveDriveSubsystem,
-                                () -> -commandXboxController.getLeftY(),
-                                () -> -commandXboxController.getLeftX(),
-                                () -> new Rotation2d()));
-
-        // Switch to X pattern when X button is pressed
-        commandXboxController.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
-
-        // Reset gyro to 0° when B button is pressed
-        commandXboxController
-                .b()
-                .onTrue(
-                        Commands.runOnce(
-                                () -> swerveDriveSubsystem.setPose(
-                                        new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
-                                swerveDriveSubsystem)
-                                .ignoringDisable(true));
-        commandXboxController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
+        // driverController.b().whileTrue(m_hopper.SpinEntryCommand());
+        commandXboxController.a().whileTrue(m_hopper.SpinCommand());
+        commandXboxController.b().whileTrue(m_intake.IntakeSpin());
+        commandXboxController.x().onTrue(new runEverything(m_feeder, m_shooter, m_hopper));
+        commandXboxController.y().whileTrue(m_feeder.feederCommand());
+        commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
+        commandXboxController.rightTrigger().onTrue(m_intake.ExtendSpin());
+        commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
+        commandXboxController.povUp().whileTrue(m_climb.climb());
+        commandXboxController.povDown().whileTrue(m_climb.declimb());
+        commandXboxController.povLeft().whileTrue(m_turret.stickRotation(-0.15));
+        commandXboxController.povRight().whileTrue(m_turret.stickRotation(0.15));
 
         return commandXboxController;
     }
@@ -85,6 +90,10 @@ public class ButtonBindings {
      */
     private CommandXboxController setOperatorBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(OPERATOR_PORT);
+
+        // For testing pathfinding
+        commandXboxController.y().whileTrue(
+                Commands.runOnce(() -> new PathFinderAndFollowCommand(swerveDriveSubsystem, "Pathfind Test Path")));
 
         return commandXboxController;
     }

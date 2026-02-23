@@ -7,11 +7,9 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
-import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.commands.TuningCommands;
 import frc.robot.commands.runEverything;
 import frc.robot.generated.TunerConstants;
@@ -111,30 +109,6 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.autoChooser.addOption(
                 "Drive SysId (Dynamic Reverse)",
                 this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    }
-
-    @Override
-    protected void configureButtonBindings() {
-        ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, visionSubsystem);
-        driverController = buttonBindings.getDriverController();
-        operatorController = buttonBindings.getOperatorController();
-
-        // driverController.b().whileTrue(m_hopper.SpinEntryCommand());
-        driverController.rightBumper().whileTrue(m_shooter.shooterCommand());
-        driverController.y().whileTrue(m_feeder.feederCommand());
-        driverController.a().whileTrue(m_hopper.SpinCommand());
-        driverController.x().onTrue(new runEverything(m_feeder, m_shooter, m_hopper));
-        driverController.povRight().whileTrue(m_turret.stickRotation(0.15));
-        driverController.povLeft().whileTrue(m_turret.stickRotation(-0.15));
-        driverController.rightTrigger().onTrue(m_intake.ExtendSpin());
-        driverController.leftTrigger().onTrue(m_intake.RetractSpin());
-        driverController.b().whileTrue(m_intake.IntakeSpin());
-        driverController.povUp().whileTrue(m_climb.climb());
-        driverController.povDown().whileTrue(m_climb.declimb());
-
-        // For testing pathfinding
-        operatorController.y().whileTrue(
-                Commands.runOnce(() -> new PathFinderAndFollowCommand(swerveDriveSubsystem, "Pathfind Test Path")));
     }
 
     /**
