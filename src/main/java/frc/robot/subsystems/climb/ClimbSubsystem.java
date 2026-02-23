@@ -4,13 +4,10 @@
 
 package frc.robot.subsystems.climb;
 
-import com.ctre.phoenix6.hardware.TalonFX;
+import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ClimbCommands.ClimbCommand;
 import frc.robot.commands.ClimbCommands.DeclimbCommand;
 import frc.robot.commands.ClimbCommands.PauseclimbCommand;
@@ -34,6 +31,7 @@ public class ClimbSubsystem extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         climbModuleIO.updateInputs(inputs);
+        Logger.processInputs("Climb", inputs);
     }
 
     // Sets the speed of the climb motor to the inputted speel value

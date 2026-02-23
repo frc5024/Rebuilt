@@ -72,28 +72,28 @@ public class ButtonsBindingsSim {
                         () -> -commandXboxController.getRightX()));
 
         // Lock to 0° when A button is held
-        commandXboxController
-                .a()
-                .whileTrue(
-                        DriveCommands.joystickDriveAtAngle(
-                                swerveDriveSubsystem,
-                                () -> -commandXboxController.getLeftY(),
-                                () -> -commandXboxController.getLeftX(),
-                                () -> new Rotation2d()));
+        commandXboxController.a().whileTrue(
+                DriveCommands.joystickDriveAtAngle(
+                        swerveDriveSubsystem,
+                        () -> -commandXboxController.getLeftY(),
+                        () -> -commandXboxController.getLeftX(),
+                        () -> new Rotation2d()));
+
+        // Reset gyro to 0° when B button is pressed
+        commandXboxController.b().onTrue(
+                Commands.runOnce(
+                        () -> swerveDriveSubsystem.setPose(
+                                new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
+                        swerveDriveSubsystem)
+                        .ignoringDisable(true));
 
         // Switch to X pattern when X button is pressed
         commandXboxController.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
 
-        // Reset gyro to 0° when B button is pressed
-        commandXboxController
-                .b()
-                .onTrue(
-                        Commands.runOnce(
-                                () -> swerveDriveSubsystem.setPose(
-                                        new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
-                                swerveDriveSubsystem)
-                                .ignoringDisable(true));
         commandXboxController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
+
+        commandXboxController.povUp().whileTrue(m_climb.climb());
+        commandXboxController.povDown().whileTrue(m_climb.declimb());
 
         return commandXboxController;
     }

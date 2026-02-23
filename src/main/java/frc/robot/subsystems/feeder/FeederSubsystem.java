@@ -4,8 +4,7 @@
 
 package frc.robot.subsystems.feeder;
 
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,6 +29,7 @@ public class FeederSubsystem extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         feederModuleIO.updateInputs(inputs);
+        Logger.processInputs("Feeder", inputs);
     }
 
     public void setIdle() {

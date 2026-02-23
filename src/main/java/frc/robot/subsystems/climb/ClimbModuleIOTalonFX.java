@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * 
  */
 public class ClimbModuleIOTalonFX implements ClimbModuleIO {
-    private final TalonFX climbMotor;
+    protected final TalonFX climbMotor;
 
     // Inputs from climb motor
     private final StatusSignal<Angle> position;
@@ -60,16 +60,17 @@ public class ClimbModuleIOTalonFX implements ClimbModuleIO {
         }
 
         // Refresh all signals
-        StatusCode statusCode = BaseStatusSignal.refreshAll(this.position, this.velocity, this.appliedVolts, this.current);
+        StatusCode statusCode = BaseStatusSignal.refreshAll(this.position, this.velocity, this.appliedVolts,
+                this.current);
 
         inputs.data = new ClimbModuleIOData(
-            this.connectedDebouncer.calculate(statusCode.isOK()),
-            Units.rotationsToRadians(this.position.getValueAsDouble()),
-            Units.rotationsToRadians(this.velocity.getValueAsDouble()),
-            this.appliedVolts.getValueAsDouble(),
-            0.0,
-            this.current.getValueAsDouble(),
-            0.0);
+                this.connectedDebouncer.calculate(statusCode.isOK()),
+                Units.rotationsToRadians(this.position.getValueAsDouble()),
+                Units.rotationsToRadians(this.velocity.getValueAsDouble()),
+                this.appliedVolts.getValueAsDouble(),
+                0.0,
+                this.current.getValueAsDouble(),
+                0.0);
     }
 
     @Override
