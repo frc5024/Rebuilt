@@ -19,7 +19,7 @@ public class RobotMechanism {
     private final LoggedMechanismLigament2d intakeArm;
     private final LoggedMechanismLigament2d climbShaft;
     private final LoggedMechanismLigament2d shooterArm;
-    private final LoggedMechanismLigament2d spindexerArm;
+    private final LoggedMechanismLigament2d hopperArm;
 
     /**
      * 
@@ -34,13 +34,13 @@ public class RobotMechanism {
                 new Color8Bit(Color.kPurple));
         this.shooterArm = new LoggedMechanismLigament2d("ShooterArm", Units.inchesToMeters(14), 0, 10,
                 new Color8Bit(Color.kRed));
-        this.spindexerArm = new LoggedMechanismLigament2d("SpindexerArm", Units.inchesToMeters(14), 0, 10,
+        this.hopperArm = new LoggedMechanismLigament2d("SpindexerArm", Units.inchesToMeters(14), 0, 10,
                 new Color8Bit(Color.kBlue));
 
         this.canvasRoot.append(intakeArm);
         this.canvasRoot.append(climbShaft);
         this.canvasRoot.append(shooterArm);
-        this.canvasRoot.append(spindexerArm);
+        this.canvasRoot.append(hopperArm);
     }
 
     /**
@@ -67,22 +67,17 @@ public class RobotMechanism {
     /**
      * 
      */
-    public double getSpindexerArmAngle() {
-        return spindexerArm.getAngle();
+    public double getHopperArmAngle() {
+        return hopperArm.getAngle();
     }
 
     /**
      * 
      */
-    public void setMechanisms(double armAngle, double climbHeight, double shooterAngle, double spindexerAngle) {
-        // Logger.recordOutput("ArmAngle", armAngle);
-        // Logger.recordOutput("ClimbHeight", climbHeight);
-        // Logger.recordOutput("ShooterAngle", shooterAngle);
-        // Logger.recordOutput("SpindexerAngle", spindexerAngle);
-
+    public void setMechanisms(double armAngle, double climbHeight, double shooterAngle, double hopperPosition) {
         intakeArm.setAngle(armAngle);
         climbShaft.setLength(Units.inchesToMeters(4.33) - climbHeight);
         shooterArm.setAngle(shooterAngle);
-        spindexerArm.setAngle(spindexerAngle);
+        hopperArm.setAngle(Units.radiansToDegrees(hopperPosition));
     }
 }

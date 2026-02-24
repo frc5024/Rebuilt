@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Robot;
 import frc.robot.controllers.ButtonBindings;
 import frc.robot.controllers.ButtonsBindingsSim;
+import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -30,6 +31,9 @@ abstract public class RobotContainer {
     protected IntakeSubsystem m_intake;
     protected ShooterSubsystem m_shooter;
     protected TurretSubsystem m_turret;
+
+    /* Mechanisms */
+    protected MechanismVisualizer mechanismVisualizer;
 
     /* Autonomous */
     protected LoggedDashboardChooser<Command> autoChooser;
@@ -66,6 +70,8 @@ abstract public class RobotContainer {
     public Command getAutonomousCommand() {
         return autoChooser.get();
     }
+
+    public abstract void updateMechanisms();
 
     // Methods used by simulation only
 

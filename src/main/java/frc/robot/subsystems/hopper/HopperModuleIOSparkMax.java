@@ -1,8 +1,7 @@
 package frc.robot.subsystems.hopper;
 
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.filter.Debouncer;
@@ -13,7 +12,7 @@ import frc.robot.Constants;
  * 
  */
 public class HopperModuleIOSparkMax implements HopperModuleIO {
-    private final SparkMax hopperMotor;
+    protected final SparkMax hopperMotor;
     private final RelativeEncoder encoder;
 
     // Connection debouncers
@@ -35,13 +34,18 @@ public class HopperModuleIOSparkMax implements HopperModuleIO {
         }
 
         inputs.data = new HopperModuleIOData(
-            connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
-            encoder.getPosition(),
-            encoder.getVelocity(),
-            hopperMotor.getAppliedOutput(),
-            0.0,
-            hopperMotor.getOutputCurrent(),
-            hopperMotor.getMotorTemperature());
+                connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
+                encoder.getPosition(),
+                encoder.getVelocity(),
+                hopperMotor.getAppliedOutput(),
+                0.0,
+                hopperMotor.getOutputCurrent(),
+                hopperMotor.getMotorTemperature());
+    }
+
+    @Override
+    public double getPosition() {
+        return encoder.getPosition();
     }
 
     @Override

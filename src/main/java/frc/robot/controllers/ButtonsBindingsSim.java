@@ -104,6 +104,8 @@ public class ButtonsBindingsSim {
     private CommandXboxController setOperatorBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(OPERATOR_PORT);
 
+        commandXboxController.a().whileTrue(m_hopper.SpinCommand());
+
         return commandXboxController;
     }
 

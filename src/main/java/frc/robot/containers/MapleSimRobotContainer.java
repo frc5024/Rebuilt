@@ -9,8 +9,16 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.mechanisms.MechanismVisualizer;
+import frc.robot.subsystems.climb.ClimbModuleIOSim;
+import frc.robot.subsystems.climb.ClimbSubsystem;
+import frc.robot.subsystems.feeder.FeederModuleIOSim;
+import frc.robot.subsystems.feeder.FeederSubsystem;
+import frc.robot.subsystems.hopper.HopperModuleIOSim;
+import frc.robot.subsystems.hopper.HopperSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOSim;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOMapleSim;
@@ -45,6 +53,12 @@ public class MapleSimRobotContainer extends RobotContainer {
                 new VisionIOPhotonVisionSim(VisionConstants.frontCamera, this.swerveDriveSubsystem::getPose),
                 new VisionIOPhotonVisionSim(VisionConstants.rearCamera, this.swerveDriveSubsystem::getPose));
 
+        this.m_feeder = new FeederSubsystem(new FeederModuleIOSim());
+        this.m_climb = new ClimbSubsystem(new ClimbModuleIOSim());
+        this.m_hopper = new HopperSubsystem(new HopperModuleIOSim());
+
+        this.mechanismVisualizer = new MechanismVisualizer();
+
         configureAutoChooser();
         configureButtonBindings();
     }
@@ -73,13 +87,19 @@ public class MapleSimRobotContainer extends RobotContainer {
     }
 
     @Override
+    public void updateMechanisms() {
+        mechanismVisualizer.update(
+                Math.sin(Timer.getTimestamp()) - 1.0,
+                Math.sin(Timer.getTimestamp()) - 1.0,
+                Math.sin(Timer.getTimestamp()) - 1.0,
+                m_hopper.getPosition());
+    }
+
+    @Override
     public void updateSimulation() {
         SimulatedArena.getInstance().simulationPeriodic();
         Logger.recordOutput("FieldSimulation/RobotPosition",
                 MapleSimUtil.getSwerveDriveSimulation().getSimulatedDriveTrainPose());
-        // Logger.recordOutput("FieldSimulation/Coral",
-        // SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
-        // Logger.recordOutput("FieldSimulation/Algae",
-        // SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
+        Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
     }
 }

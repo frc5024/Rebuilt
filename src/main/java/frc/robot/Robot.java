@@ -22,9 +22,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.containers.MapleSimRobotContainer;
 import frc.robot.containers.RebuiltRobotContainer;
 import frc.robot.containers.RobotContainer;
-import frc.robot.containers.SimulatedRobotContainer;
 import frc.robot.generated.TunerConstants;
-import frc.robot.mechanisms.MechanismVisualizer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,7 +36,6 @@ import frc.robot.mechanisms.MechanismVisualizer;
 public class Robot extends LoggedRobot {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
-    private MechanismVisualizer mechanismVisualizer;
 
     private Alliance alliance = Alliance.Blue;
     private int location = 0;
@@ -79,8 +76,8 @@ public class Robot extends LoggedRobot {
                 // Running a physics simulator, log to NT
                 Logger.addDataReceiver(new NT4Publisher());
 
-                // robotContainer = new MapleSimRobotContainer();
-                robotContainer = new SimulatedRobotContainer();
+                robotContainer = new MapleSimRobotContainer();
+                // robotContainer = new SimulatedRobotContainer();
                 break;
 
             case REPLAY:
@@ -91,8 +88,6 @@ public class Robot extends LoggedRobot {
                 Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
                 break;
         }
-
-        mechanismVisualizer = new MechanismVisualizer();
 
         // Start AdvantageKit logger
         Logger.start();
@@ -209,7 +204,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void simulationPeriodic() {
         robotContainer.updateSimulation();
-        mechanismVisualizer.update();
+        robotContainer.updateMechanisms();
     }
 
     /**

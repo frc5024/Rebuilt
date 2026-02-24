@@ -31,6 +31,14 @@ public class HopperSubsystem extends SubsystemBase {
         Logger.processInputs("Hopper", inputs);
     }
 
+    public double getCurrentDrawAmps() {
+        return hopperModuleIO.getCurrentDrawAmps();
+    }
+
+    public double getPosition() {
+        return hopperModuleIO.getPosition();
+    }
+
     public void setSpeed(double speed) {
         hopperModuleIO.set(-speed);
     }

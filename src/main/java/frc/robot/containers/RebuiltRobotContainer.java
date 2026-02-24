@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Robot;
 import frc.robot.commands.TuningCommands;
 import frc.robot.commands.runEverything;
 import frc.robot.generated.TunerConstants;
@@ -111,19 +110,20 @@ public class RebuiltRobotContainer extends RobotContainer {
                 this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
+    @Override
     public Command getAutonomousCommand() {
         return this.autoChooser.get();
     }
 
-    // Called periodically in simulation
+    @Override
+    public void updateMechanisms() {
+    }
+
+    @Override
     public void updateSimulation() {
     }
 
+    @Override
     public void onAllianceChanged(Alliance currentAlliance, int currentLocation) {
     }
 }
