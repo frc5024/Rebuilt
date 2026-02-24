@@ -106,6 +106,10 @@ public class ButtonsBindingsSim {
 
         commandXboxController.a().whileTrue(m_hopper.SpinCommand());
 
+        commandXboxController.b().whileTrue(m_intake.IntakeSpin());
+        commandXboxController.rightTrigger().onTrue(m_intake.ExtendSpin());
+        commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
+
         return commandXboxController;
     }
 

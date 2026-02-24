@@ -19,6 +19,8 @@ import frc.robot.subsystems.feeder.FeederModuleIOSim;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperModuleIOSim;
 import frc.robot.subsystems.hopper.HopperSubsystem;
+import frc.robot.subsystems.intake.IntakeModuleIOSim;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOSim;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOMapleSim;
@@ -56,6 +58,7 @@ public class MapleSimRobotContainer extends RobotContainer {
         this.m_feeder = new FeederSubsystem(new FeederModuleIOSim());
         this.m_climb = new ClimbSubsystem(new ClimbModuleIOSim());
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSim());
+        this.m_intake = new IntakeSubsystem(new IntakeModuleIOSim());
 
         this.mechanismVisualizer = new MechanismVisualizer();
 
@@ -89,7 +92,7 @@ public class MapleSimRobotContainer extends RobotContainer {
     @Override
     public void updateMechanisms() {
         mechanismVisualizer.update(
-                Math.sin(Timer.getTimestamp()) - 1.0,
+                m_intake.getPosition(),
                 Math.sin(Timer.getTimestamp()) - 1.0,
                 Math.sin(Timer.getTimestamp()) - 1.0,
                 m_hopper.getPosition());

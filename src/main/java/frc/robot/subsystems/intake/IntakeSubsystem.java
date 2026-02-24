@@ -37,6 +37,14 @@ public class IntakeSubsystem extends SubsystemBase {
         Logger.processInputs("Intake", inputs);
     }
 
+    public double getCurrentDrawAmps() {
+        return intakeModuleIO.getCurrentDrawAmps();
+    }
+
+    public double getPosition() {
+        return intakeModuleIO.getPosition();
+    }
+
     public void setIntakeSpeed(double speed) {
         intakeModuleIO.setIntake(speed);
     }

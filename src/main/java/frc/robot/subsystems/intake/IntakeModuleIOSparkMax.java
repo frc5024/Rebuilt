@@ -15,8 +15,8 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     int intakeMotorID = 60; // ID on prototype board, subject to change
     int armMotorID = 5; // this is a placeholder ID
 
-    private final SparkMax intakeMotor;
-    private final SparkMax armMotor;
+    protected final SparkMax intakeMotor;
+    protected final SparkMax armMotor;
     private final RelativeEncoder intakeEncoder;
     private final RelativeEncoder armEncoder;
 
@@ -45,19 +45,24 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
 
         inputs.data = new IntakeModuleIOData(
                 connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
+                armEncoder.getPosition(),
+                armEncoder.getVelocity(),
+                armMotor.getAppliedOutput(),
+                0.0,
+                armMotor.getOutputCurrent(),
+                armMotor.getMotorTemperature(),
+                connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
                 intakeEncoder.getPosition(),
                 intakeEncoder.getVelocity(),
                 intakeMotor.getAppliedOutput(),
                 0.0,
                 intakeMotor.getOutputCurrent(),
-                intakeMotor.getMotorTemperature(),
-                connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
-                armEncoder.getPosition(),
-                armEncoder.getVelocity(),
-                intakeMotor.getAppliedOutput(),
-                0.0,
-                armMotor.getOutputCurrent(),
-                armMotor.getMotorTemperature());
+                intakeMotor.getMotorTemperature());
+    }
+
+    @Override
+    public double getPosition() {
+        return armEncoder.getPosition();
     }
 
     @Override
