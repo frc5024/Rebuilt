@@ -11,6 +11,8 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
  * 
@@ -33,6 +35,8 @@ public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
     private final Debouncer fw1ConnectedDebouncer;
     private final Debouncer fw2ConnectedDebouncer;
 
+    ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+
     /**
      * 
      */
@@ -48,6 +52,9 @@ public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
 
         this.fw1ConnectedDebouncer = new Debouncer(0.5);
         this.fw2ConnectedDebouncer = new Debouncer(0.5);
+
+        tab.addDouble("Actual Velocity", () -> flywheel1Encoder.getVelocity());
+
     }
 
     @Override

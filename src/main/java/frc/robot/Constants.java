@@ -38,7 +38,7 @@ import frc.robot.generated.TunerConstants;
 public final class Constants {
 
     public static class HopperConstants {
-        public static double hopperSpeed = 0.15;
+        public static double hopperSpeed = 0.85;
         public static int HopperMotorID = 8;
     }
 
@@ -71,12 +71,12 @@ public final class Constants {
 
         public static final double setVelocity = 3766; // Example set velocity in RPM
         public static final double speed = 0.1;
-        public static final double feederspeed = 0.5;
+        public static final double feederspeed = 0.85;
     }
 
     public static class intakeConstants {
         public static final double INTAKE_SPEED = 0.5;
-        public static final double OUTTAKE_SPEED = 0.4;
+        public static final double OUTTAKE_SPEED = -0.4;
         public static final double EXTENDING_SPEED = -0.1;
         public static final double RETRACTING_SPEED = 0.2;
     }

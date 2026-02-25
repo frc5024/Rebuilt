@@ -71,12 +71,18 @@ public class ButtonBindings {
 
         // driverController.b().whileTrue(m_hopper.SpinEntryCommand());
         commandXboxController.a().whileTrue(m_hopper.SpinCommand());
-        commandXboxController.b().whileTrue(m_intake.IntakeSpin());
-        commandXboxController.x().onTrue(new runEverything(m_feeder, m_shooter, m_hopper));
-        commandXboxController.y().whileTrue(m_feeder.feederCommand());
+        commandXboxController.b().whileTrue(m_intake.OuttakeSpin());
+        commandXboxController.leftTrigger().whileTrue(new runEverything(m_feeder, m_shooter, m_hopper));
+        // commandXboxController.y().whileTrue(m_feeder.feederCommand());
+        commandXboxController.y().onTrue(m_intake.RetractSpin());
         commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
-        commandXboxController.rightTrigger().onTrue(m_intake.ExtendSpin());
-        commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
+
+        commandXboxController.rightTrigger()
+                .onTrue((m_intake.ExtendSpin()));
+        commandXboxController.rightTrigger()
+                .whileTrue((m_intake.IntakeSpin()));
+
+        // commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
         commandXboxController.povUp().whileTrue(m_climb.climb());
         commandXboxController.povDown().whileTrue(m_climb.declimb());
         commandXboxController.povLeft().whileTrue(m_turret.stickRotation(-0.15));

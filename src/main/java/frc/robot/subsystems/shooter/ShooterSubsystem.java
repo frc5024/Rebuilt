@@ -51,7 +51,6 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.processInputs("Shooter", inputs);
 
         if (enabled) {
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
             setPIDMotor();
 
         } else {
