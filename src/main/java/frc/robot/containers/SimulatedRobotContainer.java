@@ -28,6 +28,8 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIO;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOSim;
+import frc.robot.subsystems.turret.TurretModuleIOSim;
+import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
@@ -59,6 +61,7 @@ public class SimulatedRobotContainer extends RobotContainer {
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSim());
         this.m_intake = new IntakeSubsystem(new IntakeModuleIOSim());
         this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSim());
+        this.m_turret = new TurretSubsystem(new TurretModuleIOSim());
 
         this.mechanismVisualizer = new MechanismVisualizer();
 

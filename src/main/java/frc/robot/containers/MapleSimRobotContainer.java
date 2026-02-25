@@ -26,6 +26,8 @@ import frc.robot.subsystems.shooter.ShooterModuleIOSim;
 import frc.robot.subsystems.swervedrive.GyroIOSim;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOMapleSim;
+import frc.robot.subsystems.turret.TurretModuleIOSim;
+import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.MapleSimUtil;
@@ -62,6 +64,7 @@ public class MapleSimRobotContainer extends RobotContainer {
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSim());
         this.m_intake = new IntakeSubsystemSim(new IntakeModuleIOSim());
         this.m_shooter = new ShooterSubsystemSim(new ShooterModuleIOSim());
+        this.m_turret = new TurretSubsystem(new TurretModuleIOSim());
 
         this.mechanismVisualizer = new MechanismVisualizer();
 
