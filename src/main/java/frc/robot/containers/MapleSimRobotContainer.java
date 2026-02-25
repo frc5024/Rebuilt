@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
+import frc.robot.simulation.IntakeSubsystemSim;
+import frc.robot.simulation.ShooterSubsystemSim;
 import frc.robot.subsystems.climb.ClimbModuleIOSim;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederModuleIOSim;
@@ -20,7 +22,7 @@ import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperModuleIOSim;
 import frc.robot.subsystems.hopper.HopperSubsystem;
 import frc.robot.subsystems.intake.IntakeModuleIOSim;
-import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterModuleIOSim;
 import frc.robot.subsystems.swervedrive.GyroIOSim;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOMapleSim;
@@ -58,7 +60,8 @@ public class MapleSimRobotContainer extends RobotContainer {
         this.m_feeder = new FeederSubsystem(new FeederModuleIOSim());
         this.m_climb = new ClimbSubsystem(new ClimbModuleIOSim());
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSim());
-        this.m_intake = new IntakeSubsystem(new IntakeModuleIOSim());
+        this.m_intake = new IntakeSubsystemSim(new IntakeModuleIOSim());
+        this.m_shooter = new ShooterSubsystemSim(new ShooterModuleIOSim());
 
         this.mechanismVisualizer = new MechanismVisualizer();
 

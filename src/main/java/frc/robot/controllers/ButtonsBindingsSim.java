@@ -4,8 +4,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.intakeConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
+import frc.robot.commands.Intake.IntakeExtendArm;
+import frc.robot.commands.Intake.IntakeRetractArm;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -95,6 +98,18 @@ public class ButtonsBindingsSim {
         commandXboxController.povUp().whileTrue(m_climb.climb());
         commandXboxController.povDown().whileTrue(m_climb.declimb());
 
+        commandXboxController.rightTrigger().onTrue(
+                Commands.sequence(
+                        new IntakeExtendArm(m_intake),
+                        Commands.runOnce(() -> m_intake.setIntakeSpeed(intakeConstants.INTAKE_SPEED), m_intake)));
+
+        commandXboxController.leftTrigger().onTrue(
+                Commands.sequence(
+                        new IntakeRetractArm(m_intake),
+                        Commands.runOnce(() -> m_intake.setIntakeSpeed(0.0))));
+
+        commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
+
         return commandXboxController;
     }
 
@@ -103,12 +118,6 @@ public class ButtonsBindingsSim {
      */
     private CommandXboxController setOperatorBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(OPERATOR_PORT);
-
-        commandXboxController.a().whileTrue(m_hopper.SpinCommand());
-
-        commandXboxController.b().whileTrue(m_intake.IntakeSpin());
-        commandXboxController.rightTrigger().onTrue(m_intake.ExtendSpin());
-        commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
 
         return commandXboxController;
     }

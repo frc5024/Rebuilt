@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
  */
 public class RobotMechanism {
     private final double CANVAS_SIZE = Units.inchesToMeters(90);
+    private final double INTAKEARM_START_ANGLE = 0.0;
 
     private final LoggedMechanism2d canvas;
     private final LoggedMechanismRoot2d canvasRoot;
@@ -26,9 +27,9 @@ public class RobotMechanism {
      */
     public RobotMechanism() {
         this.canvas = new LoggedMechanism2d(CANVAS_SIZE, CANVAS_SIZE, new Color8Bit(Color.kWheat));
-        this.canvasRoot = canvas.getRoot("InitialRoot", CANVAS_SIZE / 2, 0);
+        this.canvasRoot = canvas.getRoot("InitialRoot", CANVAS_SIZE / 2, CANVAS_SIZE / 2);
 
-        this.intakeArm = new LoggedMechanismLigament2d("IntakeArm", Units.inchesToMeters(14), 90, 10,
+        this.intakeArm = new LoggedMechanismLigament2d("IntakeArm", Units.inchesToMeters(14), INTAKEARM_START_ANGLE, 10,
                 new Color8Bit(Color.kGreen));
         this.climbShaft = new LoggedMechanismLigament2d("ClimbShaft", Units.inchesToMeters(4.33), 180, 10,
                 new Color8Bit(Color.kPurple));
@@ -46,22 +47,8 @@ public class RobotMechanism {
     /**
      * 
      */
-    public double getIntakeArmAngle() {
-        return intakeArm.getAngle();
-    }
-
-    /**
-     * 
-     */
     public double getClimbShaftLength() {
         return climbShaft.getLength();
-    }
-
-    /**
-     * 
-     */
-    public double getShooterArmAngle() {
-        return shooterArm.getAngle();
     }
 
     /**
@@ -74,10 +61,31 @@ public class RobotMechanism {
     /**
      * 
      */
+    public double getIntakeArmAngle() {
+        return intakeArm.getAngle();
+    }
+
+    /**
+     * 
+     */
+    public LoggedMechanism2d getMechanism() {
+        return canvas;
+    }
+
+    /**
+     * 
+     */
+    public double getShooterArmAngle() {
+        return shooterArm.getAngle();
+    }
+
+    /**
+     * 
+     */
     public void setMechanisms(double armAngle, double climbHeight, double shooterAngle, double hopperPosition) {
-        intakeArm.setAngle(armAngle);
+        intakeArm.setAngle(-Units.radiansToDegrees(armAngle));
         climbShaft.setLength(Units.inchesToMeters(4.33) - climbHeight);
-        shooterArm.setAngle(shooterAngle);
+        shooterArm.setAngle(Units.radiansToDegrees(shooterAngle));
         hopperArm.setAngle(Units.radiansToDegrees(hopperPosition));
     }
 }

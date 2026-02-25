@@ -51,11 +51,15 @@ public interface IntakeModuleIO {
     default void setArm(double speed) {
     }
 
-    default boolean isIntakeRetracted() {
+    default boolean isIntakeExtended() {
         return false;
     }
 
-    default boolean isIntakeExtended() {
+    default boolean isIntakeIntaking() {
+        return false;
+    }
+
+    default boolean isIntakeRetracted() {
         return true;
     }
 

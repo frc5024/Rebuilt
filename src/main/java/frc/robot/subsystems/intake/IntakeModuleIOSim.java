@@ -5,6 +5,7 @@ import com.revrobotics.sim.SparkMaxSim;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
@@ -13,9 +14,10 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
  */
 public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
     // Hardware objects
-    private final DCMotor dcMotor;
-    private final SparkMaxSim armSparkMaxSim;
+    private final DCMotor armDcMotor;
     private final DCMotorSim armMotorSim;
+    private final SparkMaxSim armSparkMaxSim;
+    private final DCMotor intakeDcMotor;
     private final DCMotorSim intakeMotorSim;
     private final SparkMaxSim intakeSparkMaxSim;
 
@@ -26,11 +28,14 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
      * 
      */
     public IntakeModuleIOSim() {
-        this.dcMotor = DCMotor.getNEO(1);
-        this.armSparkMaxSim = new SparkMaxSim(this.armMotor, this.dcMotor);
-        this.armMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, 4.0), dcMotor);
-        this.intakeMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, 4.0), dcMotor);
-        this.intakeSparkMaxSim = new SparkMaxSim(this.intakeMotor, this.dcMotor);
+        this.armDcMotor = DCMotor.getNEO(1);
+        this.armMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(armDcMotor, 0.01, 16.0), armDcMotor);
+        this.armSparkMaxSim = new SparkMaxSim(this.armMotor, this.armDcMotor);
+
+        this.intakeDcMotor = DCMotor.getNEO(1);
+        this.intakeMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(intakeDcMotor, 0.01, 4.0),
+                intakeDcMotor);
+        this.intakeSparkMaxSim = new SparkMaxSim(this.intakeMotor, this.intakeDcMotor);
 
         this.armVoltageRequest = 0.0;
         this.intakeVoltageRequest = 0.0;
@@ -47,8 +52,23 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
     }
 
     @Override
+    public boolean isIntakeExtended() {
+        return Units.radiansToDegrees(armSparkMaxSim.getPosition()) >= 20.0;
+    }
+
+    @Override
+    public boolean isIntakeIntaking() {
+        return intakeMotorSim.getAngularVelocityRPM() > 0.0;
+    }
+
+    @Override
+    public boolean isIntakeRetracted() {
+        return Units.radiansToDegrees(armSparkMaxSim.getPosition()) <= -100.0;
+    }
+
+    @Override
     public void setArm(double voltage) {
-        armVoltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        armVoltageRequest = MathUtil.clamp(-voltage * 12, -12.0, 12.0);
         armMotorSim.setInputVoltage(armVoltageRequest);
     }
 

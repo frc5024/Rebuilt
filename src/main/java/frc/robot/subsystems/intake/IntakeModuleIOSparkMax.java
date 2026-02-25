@@ -67,21 +67,26 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
 
     @Override
     public void setArm(double speed) {
-        this.armMotor.set(speed);
+        armMotor.set(speed);
     }
 
     @Override
     public void setIntake(double speed) {
-        this.intakeMotor.set(speed);
-    }
-
-    @Override
-    public boolean isIntakeRetracted() {
-        return !retractingLimitSwitch.get();
+        intakeMotor.set(speed);
     }
 
     @Override
     public boolean isIntakeExtended() {
         return !extendingLimitSwitch.get();
+    }
+
+    @Override
+    public boolean isIntakeIntaking() {
+        return intakeEncoder.getVelocity() > 0.0;
+    }
+
+    @Override
+    public boolean isIntakeRetracted() {
+        return !retractingLimitSwitch.get();
     }
 }
