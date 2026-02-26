@@ -1,7 +1,7 @@
 package frc.robot.subsystems.feeder;
 
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.filter.Debouncer;
@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * 
  */
 public class FeederModuleIOSparkMax implements FeederModuleIO {
-    private final SparkMax feederMotor;
+    protected final SparkMax feederMotor;
     private final RelativeEncoder encoder;
 
     // Connection debouncers
@@ -33,13 +33,13 @@ public class FeederModuleIOSparkMax implements FeederModuleIO {
         }
 
         inputs.data = new FeederModuleIOData(
-            connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
-            encoder.getPosition(),
-            encoder.getVelocity(),
-            feederMotor.getAppliedOutput(),
-            0.0,
-            feederMotor.getOutputCurrent(),
-            feederMotor.getMotorTemperature());
+                connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
+                encoder.getPosition(),
+                encoder.getVelocity(),
+                feederMotor.getAppliedOutput(),
+                0.0,
+                feederMotor.getOutputCurrent(),
+                feederMotor.getMotorTemperature());
     }
 
     @Override

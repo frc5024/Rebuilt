@@ -15,7 +15,6 @@ public class IntakeRetractArm extends Command {
 
     public IntakeRetractArm(IntakeSubsystem s_Intake) {
         this.s_Intake = s_Intake;
-        addRequirements(s_Intake);
     }
 
     @Override

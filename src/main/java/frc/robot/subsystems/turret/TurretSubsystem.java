@@ -1,24 +1,19 @@
 package frc.robot.subsystems.turret;
 
-import com.revrobotics.spark.SparkMax;
-//import com.kauailabs.navx.frc.AHRS;
-//import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.SparkLowLevel;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.StickRotationCommand;
-import frc.robot.containers.RobotContainer;
 import frc.robot.Constants;
 import frc.robot.Constants.turretConstants;
+import frc.robot.commands.StickRotationCommand;
 
 /**
  * 
@@ -133,6 +128,7 @@ public class TurretSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         turretModuleIO.updateInputs(inputs);
+        Logger.processInputs("Turret", inputs);
 
         pidController.setP(pEntry.getDouble(turretConstants.kP));
         pidController.setI(iEntry.getDouble(turretConstants.kI));

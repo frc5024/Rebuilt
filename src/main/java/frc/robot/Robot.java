@@ -1,5 +1,14 @@
 package frc.robot;
 
+import java.util.NoSuchElementException;
+
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
@@ -13,15 +22,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.containers.MapleSimRobotContainer;
 import frc.robot.containers.RebuiltRobotContainer;
 import frc.robot.containers.RobotContainer;
-import frc.robot.containers.SimulatedRobotContainer;
 import frc.robot.generated.TunerConstants;
-import java.util.NoSuchElementException;
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -75,8 +76,8 @@ public class Robot extends LoggedRobot {
                 // Running a physics simulator, log to NT
                 Logger.addDataReceiver(new NT4Publisher());
 
-                // robotContainer = new MapleSimRobotContainer();
-                robotContainer = new SimulatedRobotContainer();
+                robotContainer = new MapleSimRobotContainer();
+                // robotContainer = new SimulatedRobotContainer();
                 break;
 
             case REPLAY:
@@ -203,6 +204,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void simulationPeriodic() {
         robotContainer.updateSimulation();
+        robotContainer.updateMechanisms();
     }
 
     /**

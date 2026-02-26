@@ -38,23 +38,24 @@ import frc.robot.generated.TunerConstants;
 public final class Constants {
 
     public static class HopperConstants {
-        public static double hopperSpeed = 0.05;
+        public static final int CAPACITY = 20;
+        public static double hopperSpeed = 0.85;
         public static int HopperMotorID = 8;
     }
 
     public static final class turretConstants {
-        public static final double speed = 0.01;
+        public static final double speed = 0.3;
         public static final int turretMotorChannel = 3;
         public static final double turretTolerance = 0.5;
-        public static final double kP = 0.0;
+        public static final double kP = 0.2;
         public static final double kI = 0;
-        public static final double kD = 0.0;
+        public static final double kD = 0.01;
         public static final double kS = 0;
         public static final double kV = 0.0001;
         public static final double kA = 0.0;
 
-        public static final double turretMaxSpeed = 10; // make note of units
-        public static final double turretMaxAccel = 10;
+        public static final double turretMaxSpeed = 1000; // make note of units
+        public static final double turretMaxAccel = 1000;
 
         public static final double targetAngle = 25;
 
@@ -71,14 +72,32 @@ public final class Constants {
 
         public static final double setVelocity = 3766; // Example set velocity in RPM
         public static final double speed = 0.1;
-        public static final double feederspeed = 0.1;
+        public static final double feederspeed = 0.85;
+
+        public static final double WHEEL_DIAMETER_METERS = 0.1016;
     }
 
     public static class intakeConstants {
         public static final double INTAKE_SPEED = 0.5;
-        public static final double OUTTAKE_SPEED = 0.4;
-        public static final double EXTENDING_SPEED = 0.2;
-        public static final double RETRACTING_SPEED = 0.3;
+        public static final double OUTTAKE_SPEED = -0.4;
+        public static final double EXTENDING_SPEED = -0.1;
+        public static final double RETRACTING_SPEED = 0.2;
+
+        public static final double kArmP = 0.0;
+        public static final double kArmI = 0.0;
+        public static final double kArmD = 0.0;
+        public static final double kArmS = 0.0;
+        public static final double kArmA = 0.0;
+        public static final double kArmV = 0.0;
+        public static final double kArmG = 0.0;
+
+        public static final double kRollP = 0.0;
+        public static final double kRollI = 0.0;
+        public static final double kRollD = 0.0;
+        public static final double kRollS = 0.0;
+        public static final double kRollA = 0.0;
+        public static final double kRollV = 0.0;
+        public static final double kRollG = 0.0;
     }
 
     public static class climbConstants {
@@ -173,20 +192,48 @@ public final class Constants {
      * Field Constants
      */
     public static class FieldConstants {
-        public static final Pose2d[][] STATION_POSES = new Pose2d[][] {
+        public static final Pose2d[][] SIMULATION_START_POSES = new Pose2d[][] {
+                // Blue Alliance
                 {
-                        // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(3.500, 5.900, Rotation2d.fromDegrees(180.0)),
-                        new Pose2d(3.500, 4.000, Rotation2d.fromDegrees(180.0)),
-                        new Pose2d(3.500, 0.600, Rotation2d.fromDegrees(180.0))
+                        new Pose2d(3.500, 5.900, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(3.500, 4.000, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(3.500, 0.600, Rotation2d.fromDegrees(0.0))
                 },
+                // Red Alliance
                 {
-                        // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(13.000, 2.100, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(13.000, 4.000, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(13.000, 7.400, Rotation2d.fromDegrees(0.0))
+                        new Pose2d(13.000, 2.100, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(13.000, 4.000, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(13.000, 7.400, Rotation2d.fromDegrees(180.0))
                 }
         };
+
+        public static final Pose2d[] HUB_POSES = new Pose2d[] {
+                new Pose2d(4.6256, 4.0345, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(11.9154, 4.0345, Rotation2d.fromDegrees(0.0))
+        };
+
+        public static final Pose2d[] BLUE_ZONE = new Pose2d[] {
+                new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(4.6256, 8.0693, Rotation2d.fromDegrees(0.0))
+        };
+
+        public static final Pose2d[] NEUTRAL_ZONE = new Pose2d[] {
+                new Pose2d(4.6256, 0.0, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(11.9154, 8.0693, Rotation2d.fromDegrees(0.0))
+        };
+
+        public static final Pose2d[] RED_ZONE = new Pose2d[] {
+                new Pose2d(11.9154, 0.0, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(16.541, 8.0693, Rotation2d.fromDegrees(0.0))
+        };
+    }
+
+    /**
+     * Game Piece Constants
+     */
+    public static class FuelCellConstants {
+        public static final double DIAMETER = .15; // meters
+        public static final double MASS = 0.203; // kg could go to 0.227
     }
 
     /**

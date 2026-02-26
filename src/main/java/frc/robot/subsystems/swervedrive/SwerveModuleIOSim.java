@@ -12,7 +12,6 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.util.PhoenixUtil;
 
 /**
  * Physics sim implementation of module IO. The sim models are configured using
@@ -20,8 +19,8 @@ import frc.robot.util.PhoenixUtil;
  * constants from Phoenix. Simulation is always based on voltage control.
  */
 public class SwerveModuleIOSim implements SwerveModuleIO {
-    private static final double[] DRIVE_PIDs = { 0.05, 0.0, 0.0, 0.0, 0.0, 0.0 };
-    private static final double[] TURN_PIDs = { 8.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+    private static final double[] DRIVE_PIDs = { 0.1, 0.0, 0.0, 0.0, 0.0, 0.0 };
+    private static final double[] TURN_PIDs = { 10.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
     private static final DCMotor DRIVE_GEARBOX = DCMotor.getKrakenX60Foc(1);
     private static final DCMotor TURN_GEARBOX = DCMotor.getKrakenX60Foc(1);
@@ -82,7 +81,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
         inputs.driveConnected = true;
         inputs.drivePositionRad = this.driveMotorSim.getAngularPositionRad();
         inputs.driveVelocityRadPerSec = this.driveMotorSim.getAngularVelocityRadPerSec();
-        inputs.driveAppliedVolts =  this.driveAppliedVolts;
+        inputs.driveAppliedVolts = this.driveAppliedVolts;
         inputs.driveCurrentAmps = Math.abs(this.driveMotorSim.getCurrentDrawAmps());
 
         inputs.turnConnected = true;
@@ -93,7 +92,8 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
         inputs.turnAppliedVolts = this.turnAppliedVolts;
         inputs.turnCurrentAmps = Math.abs(this.turnMotorSim.getCurrentDrawAmps());
 
-        // Update odometry inputs (50Hz because high-frequency odometry in sim doesn't matter)
+        // Update odometry inputs (50Hz because high-frequency odometry in sim doesn't
+        // matter)
         inputs.odometryTimestamps = new double[] { Timer.getTimestamp() };
         inputs.odometryDrivePositionsRad = new double[] { inputs.drivePositionRad };
         inputs.odometryTurnPositions = new Rotation2d[] { inputs.turnPosition };

@@ -1,34 +1,32 @@
 package frc.robot.subsystems.shooter;
 
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
  * 
  */
 public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
-    private final SparkFlex flywheel1;
+    protected final SparkFlex flywheel1;
     private final SparkFlex flywheel2;
 
     private final SparkBaseConfig flywheel1MotorConfig = new SparkFlexConfig()
-                .idleMode(IdleMode.kCoast) // sets the motors to coast mode
-                .inverted(true);
+            .idleMode(IdleMode.kCoast) // sets the motors to coast mode
+            .inverted(true);
     private final SparkBaseConfig flywheel2MotorConfig = new SparkFlexConfig()
-                .idleMode(IdleMode.kCoast)
-                .follow(51, true);
+            .idleMode(IdleMode.kCoast)
+            .follow(51, true);
 
     private final RelativeEncoder flywheel1Encoder;
     private final RelativeEncoder flywheel2Encoder;
@@ -36,6 +34,8 @@ public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
     // Connection debouncers
     private final Debouncer fw1ConnectedDebouncer;
     private final Debouncer fw2ConnectedDebouncer;
+
+    ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
 
     /**
      * 
@@ -49,9 +49,12 @@ public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
 
         this.flywheel1Encoder = this.flywheel1.getEncoder();
         this.flywheel2Encoder = this.flywheel2.getEncoder();
-        
+
         this.fw1ConnectedDebouncer = new Debouncer(0.5);
         this.fw2ConnectedDebouncer = new Debouncer(0.5);
+
+        tab.addDouble("Actual Velocity", () -> flywheel1Encoder.getVelocity());
+
     }
 
     @Override
@@ -75,6 +78,11 @@ public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
                 flywheel2.getBusVoltage(),
                 flywheel2.getOutputCurrent(),
                 flywheel2.getMotorTemperature());
+    }
+
+    @Override
+    public double getPosition() {
+        return this.flywheel1Encoder.getPosition();
     }
 
     @Override

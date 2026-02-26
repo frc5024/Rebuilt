@@ -1,8 +1,7 @@
 package frc.robot.subsystems.turret;
 
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.filter.Debouncer;
@@ -13,7 +12,7 @@ import frc.robot.Constants;
  * 
  */
 public class TurretModuleIOSparkMax implements TurretModuleIO {
-    private final SparkMax turretMotor;
+    protected final SparkMax turretMotor;
     private final RelativeEncoder encoder;
 
     // Connection debouncers
@@ -23,7 +22,8 @@ public class TurretModuleIOSparkMax implements TurretModuleIO {
      * 
      */
     public TurretModuleIOSparkMax() {
-        this.turretMotor = new SparkMax(Constants.turretConstants.turretMotorChannel, SparkLowLevel.MotorType.kBrushless);
+        this.turretMotor = new SparkMax(Constants.turretConstants.turretMotorChannel,
+                SparkLowLevel.MotorType.kBrushless);
         this.encoder = this.turretMotor.getEncoder();
         this.connectedDebouncer = new Debouncer(0.5);
     }
@@ -35,13 +35,13 @@ public class TurretModuleIOSparkMax implements TurretModuleIO {
         }
 
         inputs.data = new TurretModuleIOData(
-            connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
-            encoder.getPosition(),
-            encoder.getVelocity(),
-            turretMotor.getAppliedOutput(),
-            0.0,
-            turretMotor.getOutputCurrent(),
-            turretMotor.getMotorTemperature());
+                connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
+                encoder.getPosition(),
+                encoder.getVelocity(),
+                turretMotor.getAppliedOutput(),
+                0.0,
+                turretMotor.getOutputCurrent(),
+                turretMotor.getMotorTemperature());
     }
 
     @Override
@@ -53,7 +53,7 @@ public class TurretModuleIOSparkMax implements TurretModuleIO {
     public double getVelocity() {
         return encoder.getVelocity();
     }
-    
+
     @Override
     public void set(double turretspeed) {
         turretMotor.set(-turretspeed);
