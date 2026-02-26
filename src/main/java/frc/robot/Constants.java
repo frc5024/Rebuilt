@@ -176,19 +176,39 @@ public final class Constants {
      * Field Constants
      */
     public static class FieldConstants {
-        public static final Pose2d[][] STATION_POSES = new Pose2d[][] {
+        public static final Pose2d[][] SIMULATION_START_POSES = new Pose2d[][] {
+                // Blue Alliance
                 {
-                        // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(3.500, 5.900, Rotation2d.fromDegrees(180.0)),
-                        new Pose2d(3.500, 4.000, Rotation2d.fromDegrees(180.0)),
-                        new Pose2d(3.500, 0.600, Rotation2d.fromDegrees(180.0))
+                        new Pose2d(3.500, 5.900, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(3.500, 4.000, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(3.500, 0.600, Rotation2d.fromDegrees(0.0))
                 },
+                // Red Alliance
                 {
-                        // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(13.000, 2.100, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(13.000, 4.000, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(13.000, 7.400, Rotation2d.fromDegrees(0.0))
+                        new Pose2d(13.000, 2.100, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(13.000, 4.000, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(13.000, 7.400, Rotation2d.fromDegrees(180.0))
                 }
+        };
+
+        public static final Pose2d[] HUB_POSES = new Pose2d[] {
+                new Pose2d(4.6256, 4.0345, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(11.9154, 4.0345, Rotation2d.fromDegrees(0.0))
+        };
+
+        public static final Pose2d[] BLUE_ZONE = new Pose2d[] {
+                new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(4.6256, 8.0693, Rotation2d.fromDegrees(0.0))
+        };
+
+        public static final Pose2d[] NEUTRAL_ZONE = new Pose2d[] {
+                new Pose2d(4.6256, 0.0, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(11.9154, 8.0693, Rotation2d.fromDegrees(0.0))
+        };
+
+        public static final Pose2d[] RED_ZONE = new Pose2d[] {
+                new Pose2d(11.9154, 0.0, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(16.541, 8.0693, Rotation2d.fromDegrees(0.0))
         };
     }
 

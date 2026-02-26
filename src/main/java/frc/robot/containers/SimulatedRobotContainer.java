@@ -100,7 +100,7 @@ public class SimulatedRobotContainer extends RobotContainer {
         int index = alliance == Alliance.Blue ? 0 : 1;
         location -= 1;
 
-        Pose2d pose2d = FieldConstants.STATION_POSES[index][location];
+        Pose2d pose2d = FieldConstants.SIMULATION_START_POSES[index][location];
         this.swerveDriveSubsystem.setPose(pose2d);
         resetSimulationField(pose2d);
     }
