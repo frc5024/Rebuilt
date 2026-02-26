@@ -34,14 +34,14 @@ public class IntakeSubsystem extends SubsystemBase {
     GenericEntry armAEntry = tab.add("Set Arm kA", intakeConstants.kArmA).getEntry();
     GenericEntry armGEntry = tab.add("Set Arm kG", intakeConstants.kArmG).getEntry();
 
-    GenericEntry rollerPEntry = tab.add("Set Arm kP", intakeConstants.kRollP).getEntry();
-    GenericEntry rollerIEntry = tab.add("Set Arm kI", intakeConstants.kRollI).getEntry();
-    GenericEntry rollerDEntry = tab.add("Set Arm kD", intakeConstants.kRollD).getEntry();
+    GenericEntry rollerPEntry = tab.add("Set Roller kP", intakeConstants.kRollP).getEntry();
+    GenericEntry rollerIEntry = tab.add("Set Roller kI", intakeConstants.kRollI).getEntry();
+    GenericEntry rollerDEntry = tab.add("Set Roller kD", intakeConstants.kRollD).getEntry();
 
-    GenericEntry rollerSEntry = tab.add("Set Arm kS", intakeConstants.kRollS).getEntry();
-    GenericEntry rollerVEntry = tab.add("Set Arm kV", intakeConstants.kRollV).getEntry();
-    GenericEntry rollerAEntry = tab.add("Set Arm kA", intakeConstants.kRollA).getEntry();
-    GenericEntry rollerGEntry = tab.add("Set Arm kG", intakeConstants.kRollG).getEntry();
+    GenericEntry rollerSEntry = tab.add("Set Roller kS", intakeConstants.kRollS).getEntry();
+    GenericEntry rollerVEntry = tab.add("Set Roller kV", intakeConstants.kRollV).getEntry();
+    GenericEntry rollerAEntry = tab.add("Set Roller kA", intakeConstants.kRollA).getEntry();
+    GenericEntry rollerGEntry = tab.add("Set Roller kG", intakeConstants.kRollG).getEntry();
 
     private PIDController armPIDController;
     private ArmFeedforward armFeedforward;

@@ -77,10 +77,8 @@ public class ButtonBindings {
         commandXboxController.y().onTrue(m_intake.RetractSpin());
         commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
 
-        commandXboxController.rightTrigger()
-                .onTrue((m_intake.ExtendSpin()));
-        commandXboxController.rightTrigger()
-                .whileTrue((m_intake.IntakeSpin()));
+        commandXboxController.rightTrigger().onTrue((m_intake.ExtendSpin()));
+        commandXboxController.rightTrigger().whileTrue((m_intake.IntakeSpin()));
 
         // commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
         commandXboxController.povUp().whileTrue(m_climb.climb());
