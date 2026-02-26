@@ -61,6 +61,11 @@ public final class Constants {
 
     }
 
+    public static final double targetAngle = 25;
+
+}
+
+public static class shooterConstants {
     public static class shooterConstants {
         public static final double kP = 0.0006;
         public static final double kI = 0.0;
@@ -107,6 +112,9 @@ public final class Constants {
         public static final double declimbSpeed = 0.1;
         // Speed for contracting the arm and climbing
         public static final double contractSpeed = -0.75;
+        // Position at which to stop motor
+
+        public static final double stopPos = 2.0;
     }
 
     public static final Mode simMode = Mode.SIM;
