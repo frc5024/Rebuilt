@@ -127,12 +127,12 @@ public class IntakeSubsystem extends SubsystemBase {
         }
     }
 
-    public void setArmPID(boolean state) {
-        this.armPIDEnabled = state;
+    public void setArmPID(boolean armPIDEnabled) {
+        this.armPIDEnabled = armPIDEnabled;
     }
 
-    public void setRollerPID(boolean state) {
-        this.rollerPIDEnabled = state;
+    public void setRollerPID(boolean rollerPIDEnabled) {
+        this.rollerPIDEnabled = rollerPIDEnabled;
     }
 
     public double getCurrentDrawAmps() {
