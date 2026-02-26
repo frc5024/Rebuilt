@@ -16,6 +16,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.util.GameUtil;
 
 /**
  * 
@@ -80,7 +81,18 @@ public class ButtonsBindingsSim {
                         swerveDriveSubsystem,
                         () -> -commandXboxController.getLeftY(),
                         () -> -commandXboxController.getLeftX(),
-                        () -> new Rotation2d()));
+                        () -> {
+                            Pose2d robotPose = swerveDriveSubsystem.getPose();
+                            double robotX = robotPose.getX();
+                            double robotY = robotPose.getY();
+
+                            Pose2d hubPose = GameUtil.getHubPose();
+                            double hubX = hubPose.getX();
+                            double hubY = hubPose.getY();
+
+                            double angleToHub = Math.atan2(hubY - robotY, hubX - robotX);
+                            return Rotation2d.fromRadians(angleToHub);
+                        }));
 
         // Reset gyro to 0° when B button is pressed
         commandXboxController.b().onTrue(

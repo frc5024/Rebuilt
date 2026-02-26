@@ -293,6 +293,7 @@ public final class Constants {
                             TunerConstants.BackRight.LocationY)
             };
         }
+
     }
 
     /**
@@ -310,6 +311,13 @@ public final class Constants {
                 SwerveDriveConstants.maxLinearAcceleration);
         public static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(
                 SwerveDriveConstants.maxAngularSpeed, SwerveDriveConstants.maxLinearAcceleration);
+
+    }
+
+    public static final class PIDConstants {
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
     }
 
     /**
@@ -345,4 +353,5 @@ public final class Constants {
         public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
         public static double angularStdDevMegatag2Factor = Double.POSITIVE_INFINITY; // No rotation data available
     }
+
 }

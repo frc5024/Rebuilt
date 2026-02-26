@@ -1,5 +1,7 @@
 package frc.robot.controllers;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
@@ -12,6 +14,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.util.GameUtil;
 
 /**
  * Define button commands when running the real robot
@@ -70,7 +73,25 @@ public class ButtonBindings {
                         () -> -commandXboxController.getRightX()));
 
         // driverController.b().whileTrue(m_hopper.SpinEntryCommand());
-        commandXboxController.a().whileTrue(m_hopper.SpinCommand());
+        // commandXboxController.a().whileTrue(m_hopper.SpinCommand());
+        commandXboxController.a().whileTrue(
+                DriveCommands.joystickDriveAtAngle(
+                        swerveDriveSubsystem,
+                        () -> -commandXboxController.getLeftY(),
+                        () -> -commandXboxController.getLeftX(),
+                        () -> {
+                            Pose2d robotPose = swerveDriveSubsystem.getPose();
+                            double robotX = robotPose.getX();
+                            double robotY = robotPose.getY();
+
+                            Pose2d hubPose = GameUtil.getHubPose();
+                            double hubX = hubPose.getX();
+                            double hubY = hubPose.getY();
+
+                            double angleToHub = Math.atan2(hubY - robotY, hubX - robotX);
+                            return Rotation2d.fromRadians(angleToHub);
+                        }));
+
         commandXboxController.b().whileTrue(m_intake.OuttakeSpin());
         commandXboxController.leftTrigger().whileTrue(new runEverything(m_feeder, m_shooter, m_hopper));
         // commandXboxController.y().whileTrue(m_feeder.feederCommand());
