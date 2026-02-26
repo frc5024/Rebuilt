@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -57,6 +58,19 @@ public class ShooterSubsystem extends SubsystemBase {
             shooterModuleIO.set(0);
         }
 
+    }
+
+    public double getPosition() {
+        return shooterModuleIO.getPosition();
+    }
+
+    public double getVelocity() {
+        return shooterModuleIO.getVelocity();
+    }
+
+    public double getTangentialVelocity() {
+        return (Units.radiansPerSecondToRotationsPerMinute(getVelocity()) / 60.0)
+                * (Math.PI * shooterConstants.WHEEL_DIAMETER_METERS);
     }
 
     public void setShooterPID(double setVelocity) {

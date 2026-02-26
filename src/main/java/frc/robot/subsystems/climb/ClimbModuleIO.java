@@ -21,11 +21,16 @@ public interface ClimbModuleIO {
             double tempCelsius) {
     }
 
+    default double getPosition() {
+        return 0.0;
+    }
+
     default boolean isRunning() {
         return false;
     }
 
-    // TODO: remove after refactoring - speed is a constant so set it in the hardware module
+    // TODO: remove after refactoring - speed is a constant so set it in the
+    // hardware module
     default void set(double speed) {
     }
 

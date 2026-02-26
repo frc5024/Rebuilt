@@ -18,9 +18,9 @@ public class RobotMechanism {
     private final LoggedMechanism2d canvas;
     private final LoggedMechanismRoot2d canvasRoot;
     private final LoggedMechanismLigament2d intakeArm;
-    private final LoggedMechanismLigament2d climbShaft;
-    private final LoggedMechanismLigament2d shooterArm;
     private final LoggedMechanismLigament2d hopperArm;
+    private final LoggedMechanismLigament2d turretArm;
+    private final LoggedMechanismLigament2d climbShaft;
 
     /**
      * 
@@ -31,17 +31,17 @@ public class RobotMechanism {
 
         this.intakeArm = new LoggedMechanismLigament2d("IntakeArm", Units.inchesToMeters(14), INTAKEARM_START_ANGLE, 10,
                 new Color8Bit(Color.kGreen));
-        this.climbShaft = new LoggedMechanismLigament2d("ClimbShaft", Units.inchesToMeters(4.33), 180, 10,
-                new Color8Bit(Color.kPurple));
-        this.shooterArm = new LoggedMechanismLigament2d("ShooterArm", Units.inchesToMeters(14), 0, 10,
-                new Color8Bit(Color.kRed));
         this.hopperArm = new LoggedMechanismLigament2d("SpindexerArm", Units.inchesToMeters(14), 0, 10,
                 new Color8Bit(Color.kBlue));
+        this.turretArm = new LoggedMechanismLigament2d("TurretArm", Units.inchesToMeters(14), 0, 10,
+                new Color8Bit(Color.kRed));
+        this.climbShaft = new LoggedMechanismLigament2d("ClimbShaft", Units.inchesToMeters(4.33), 180, 10,
+                new Color8Bit(Color.kPurple));
 
         this.canvasRoot.append(intakeArm);
-        this.canvasRoot.append(climbShaft);
-        this.canvasRoot.append(shooterArm);
         this.canvasRoot.append(hopperArm);
+        this.canvasRoot.append(turretArm);
+        this.canvasRoot.append(climbShaft);
     }
 
     /**
@@ -76,16 +76,16 @@ public class RobotMechanism {
      * 
      */
     public double getShooterArmAngle() {
-        return shooterArm.getAngle();
+        return turretArm.getAngle();
     }
 
     /**
      * 
      */
-    public void setMechanisms(double armAngle, double climbHeight, double shooterAngle, double hopperPosition) {
-        intakeArm.setAngle(-Units.radiansToDegrees(armAngle));
-        climbShaft.setLength(Units.inchesToMeters(4.33) - climbHeight);
-        shooterArm.setAngle(Units.radiansToDegrees(shooterAngle));
+    public void setMechanisms(double intakePosition, double hopperPosition, double turretArmAngle, double climbHeight) {
+        intakeArm.setAngle(-Units.radiansToDegrees(intakePosition));
         hopperArm.setAngle(Units.radiansToDegrees(hopperPosition));
+        turretArm.setAngle(turretArmAngle);
+        climbShaft.setLength(Units.inchesToMeters(4.33) - climbHeight);
     }
 }

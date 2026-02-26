@@ -8,9 +8,12 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.FuelCellConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.simulation.IntakeSubsystemSim;
@@ -97,11 +100,23 @@ public class MapleSimRobotContainer extends RobotContainer {
 
     @Override
     public void updateMechanisms() {
+
+        // Pose of the turret
+        Pose2d robotPose = MapleSimUtil.getSwerveDriveSimulation().getSimulatedDriveTrainPose();
+        Pose3d turretPose = new Pose3d(
+                robotPose.getX() - FuelCellConstants.DIAMETER,
+                robotPose.getY() + (FuelCellConstants.DIAMETER * 3),
+                FuelCellConstants.DIAMETER * 3,
+                new Rotation3d(0.0, -Units.degreesToRadians(60.0),
+                        robotPose.getRotation().getRadians() + Math.toRadians(m_turret.getTurretAngle())));
+
         mechanismVisualizer.update(
                 m_intake.getPosition(),
-                Math.sin(Timer.getTimestamp()) - 1.0,
-                Math.sin(Timer.getTimestamp()) - 1.0,
-                m_hopper.getPosition());
+                m_hopper.getPosition(),
+                m_turret.getTurretAngle(),
+                m_climb.getPosition(),
+                turretPose,
+                m_shooter.getTangentialVelocity());
     }
 
     @Override

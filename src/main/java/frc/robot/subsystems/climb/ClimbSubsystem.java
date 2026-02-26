@@ -34,6 +34,10 @@ public class ClimbSubsystem extends SubsystemBase {
         Logger.processInputs("Climb", inputs);
     }
 
+    public double getPosition() {
+        return climbModuleIO.getPosition();
+    }
+
     // Sets the speed of the climb motor to the inputted speel value
     public void setSpeed(Double speed) {
         climbModuleIO.set(speed);

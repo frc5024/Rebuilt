@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -113,10 +114,12 @@ public class SimulatedRobotContainer extends RobotContainer {
     @Override
     public void updateMechanisms() {
         mechanismVisualizer.update(
+                m_intake.getPosition(),
+                m_hopper.getPosition(),
                 Math.sin(Timer.getTimestamp()) - 1.0,
-                Math.sin(Timer.getTimestamp()) - 1.0,
-                Math.sin(Timer.getTimestamp()) - 1.0,
-                m_hopper.getPosition());
+                m_climb.getPosition(),
+                new Pose3d(),
+                0.0);
     }
 
     @Override

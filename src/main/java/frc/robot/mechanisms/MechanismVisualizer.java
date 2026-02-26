@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import frc.robot.util.MapleSimUtil;
 
 /**
  * 
@@ -21,11 +22,9 @@ public class MechanismVisualizer {
     /**
      * 
      */
-    public void update(double intakeArmPosition, double climbShaftLength, double shooterArmAngle,
-            double hopperPosition) {
-        robotMechanism.setMechanisms(intakeArmPosition, climbShaftLength, shooterArmAngle, hopperPosition);
-
-        Logger.recordOutput("ArmAngle", robotMechanism.getIntakeArmAngle());
+    public void update(double intakeArmPosition, double hopperPosition, double turretArmAngle, double climbShaftLength,
+            Pose3d turretPose, double shooterVelocity) {
+        robotMechanism.setMechanisms(intakeArmPosition, hopperPosition, turretArmAngle, climbShaftLength);
 
         Logger.recordOutput("Mechanism/2d", robotMechanism.getMechanism());
 
@@ -36,6 +35,8 @@ public class MechanismVisualizer {
                         new Pose3d(-0.15, 0.16, 0.37, new Rotation3d(0.0, 0.0, robotMechanism.getShooterArmAngle())), // shooter
                         new Pose3d(0.09, 0.0, 0.02, new Rotation3d(0.0, 0.0, robotMechanism.getHopperArmAngle())) // spindexer
                 });
+
+        Logger.recordOutput("Mechanism/Trajectory", MapleSimUtil.getShooterTrajectory(turretPose, shooterVelocity));
     }
 
 }
