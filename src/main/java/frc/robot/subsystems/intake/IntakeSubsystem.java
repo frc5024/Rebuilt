@@ -33,7 +33,7 @@ public class IntakeSubsystem extends SubsystemBase {
     GenericEntry armVEntry = armTab.add("Set kV", intakeConstants.kArmV).getEntry();
     GenericEntry armAEntry = armTab.add("Set kA", intakeConstants.kArmA).getEntry();
 
-    static ShuffleboardTab rollerTab = Shuffleboard.getTab("Roller")
+    static ShuffleboardTab rollerTab = Shuffleboard.getTab("Roller");
     GenericEntry rollerPEntry = rollerTab.add("Set kP", intakeConstants.kRollP).getEntry();
     GenericEntry rollerIEntry = rollerTab.add("Set kI", intakeConstants.kRollI).getEntry();
     GenericEntry rollerDEntry = rollerTab.add("Set kD", intakeConstants.kRollD).getEntry();
