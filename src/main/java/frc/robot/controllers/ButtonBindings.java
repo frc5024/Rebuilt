@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
+import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
@@ -70,12 +71,17 @@ public class ButtonBindings {
                         () -> -commandXboxController.getRightX()));
 
         // driverController.b().whileTrue(m_hopper.SpinEntryCommand());
+        commandXboxController.leftTrigger()
+                .whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter, m_hopper),
+                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
         commandXboxController.a().whileTrue(m_hopper.SpinCommand());
         commandXboxController.b().whileTrue(m_intake.OuttakeSpin());
-        commandXboxController.leftTrigger().whileTrue(new runEverything(m_feeder, m_shooter, m_hopper));
+        // commandXboxController.leftTrigger().whileTrue( new runEverything(m_feeder,
+        // m_shooter, m_hopper));
         // commandXboxController.y().whileTrue(m_feeder.feederCommand());
         commandXboxController.y().onTrue(m_intake.RetractSpin());
         commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
+        commandXboxController.x().whileTrue(new distanceShooterCommand(m_shooter, swerveDriveSubsystem));
 
         commandXboxController.rightTrigger()
                 .onTrue((m_intake.ExtendSpin()));

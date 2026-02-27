@@ -25,6 +25,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -75,6 +76,19 @@ public final class Constants {
         public static final double feederspeed = 0.85;
 
         public static final double WHEEL_DIAMETER_METERS = 0.1016;
+
+        public static InterpolatingDoubleTreeMap velocityToRPMMap = new InterpolatingDoubleTreeMap();
+        static {
+            velocityToRPMMap.put(1.91897, 2000.0);
+            velocityToRPMMap.put(2.9464, 2500.0);
+            velocityToRPMMap.put(3.9624, 3000.0);
+            velocityToRPMMap.put(4.78536, 3500.0);
+            velocityToRPMMap.put(6.096, 4000.0);
+            velocityToRPMMap.put(7.53872, 4500.0);
+            velocityToRPMMap.put(8.67664, 5000.0);
+            velocityToRPMMap.put(9.48944, 5500.0);
+            velocityToRPMMap.put(9.8298, 6000.0);
+        }
     }
 
     public static class intakeConstants {
