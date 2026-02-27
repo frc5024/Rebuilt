@@ -30,8 +30,8 @@ public class LEDSubsystem extends SubsystemBase {
 
     // Constructor
     private LEDSubsystem() {
-        ledController = new LEDController(Constants.LEDConstants.s_LED);// Sets which motor we are using, currently port
-                                                                        // 9
+        ledController = new LEDController(Constants.LEDConstants.LEDStripID);
+        // Sets which motor we are using, currently port 9
 
         // setDefaultCommand(new LEDDefaultCmd(this));
         set(LEDPreset.Solid.kBlack);

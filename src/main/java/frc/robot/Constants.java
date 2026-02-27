@@ -110,7 +110,7 @@ public final class Constants {
     }
 
     public static class LEDConstants {
-        public static final int s_LED = 12345;
+        public static final int LEDStripID = 9;
     }
 
     public static final Mode simMode = Mode.SIM;

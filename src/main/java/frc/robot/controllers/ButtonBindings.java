@@ -85,7 +85,6 @@ public class ButtonBindings {
         commandXboxController.rightTrigger().onTrue((m_intake.ExtendSpin()));
         commandXboxController.rightTrigger().whileTrue((m_intake.IntakeSpin()));
         commandXboxController.rightTrigger().onTrue((m_leds.setCommand(LEDPreset.Solid.kRed)));
-        // ^ What are the possible parameters for this command?
 
         // commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
         commandXboxController.povUp().whileTrue(m_climb.climb());
