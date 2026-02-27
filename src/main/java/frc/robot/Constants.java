@@ -79,15 +79,12 @@ public final class Constants {
 
         public static InterpolatingDoubleTreeMap velocityToRPMMap = new InterpolatingDoubleTreeMap();
         static {
-            velocityToRPMMap.put(1.91897, 2000.0);
-            velocityToRPMMap.put(2.9464, 2500.0);
-            velocityToRPMMap.put(3.9624, 3000.0);
-            velocityToRPMMap.put(4.78536, 3500.0);
-            velocityToRPMMap.put(6.096, 4000.0);
-            velocityToRPMMap.put(7.53872, 4500.0);
-            velocityToRPMMap.put(8.67664, 5000.0);
-            velocityToRPMMap.put(9.48944, 5500.0);
-            velocityToRPMMap.put(9.8298, 6000.0);
+            velocityToRPMMap.put(2.4384, 2800.0);
+            velocityToRPMMap.put(3.048, 3100.0);
+            velocityToRPMMap.put(4.2672, 3650.0);
+            velocityToRPMMap.put(5.4864, 4200.0);
+            velocityToRPMMap.put(6.7056, 4575.0);
+            velocityToRPMMap.put(7.9248, 5100.0);
         }
     }
 
