@@ -15,6 +15,7 @@ import frc.robot.commands.Intake.IntakeExtendArm;
 import frc.robot.commands.Intake.IntakeRetractArm;
 import frc.robot.commands.Intake.IntakeSpinMotor;
 import frc.robot.commands.Intake.OuttakeSpinMotor;
+import frc.robot.commands.Intake.PIDIntakeSpin;
 
 /**
  * 
@@ -33,7 +34,7 @@ public class IntakeSubsystem extends SubsystemBase {
     GenericEntry armVEntry = armTab.add("Set kV", intakeConstants.kArmV).getEntry();
     GenericEntry armAEntry = armTab.add("Set kA", intakeConstants.kArmA).getEntry();
 
-    static ShuffleboardTab rollerTab = Shuffleboard.getTab("Roller")
+    static ShuffleboardTab rollerTab = Shuffleboard.getTab("Roller");
     GenericEntry rollerPEntry = rollerTab.add("Set kP", intakeConstants.kRollP).getEntry();
     GenericEntry rollerIEntry = rollerTab.add("Set kI", intakeConstants.kRollI).getEntry();
     GenericEntry rollerDEntry = rollerTab.add("Set kD", intakeConstants.kRollD).getEntry();
@@ -127,12 +128,12 @@ public class IntakeSubsystem extends SubsystemBase {
         }
     }
 
-    public void setArmPID(boolean state) {
-        this.armPIDEnabled = state;
+    public void setArmPID(boolean armPIDEnabled) {
+        this.armPIDEnabled = armPIDEnabled;
     }
 
-    public void setRollerPID(boolean state) {
-        this.rollerPIDEnabled = state;
+    public void setRollerPID(boolean rollerPIDEnabled) {
+        this.rollerPIDEnabled = rollerPIDEnabled;
     }
 
     public double getCurrentDrawAmps() {
@@ -173,6 +174,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command RetractSpin() {
         return new IntakeRetractArm(this);
+    }
+
+    public Command PIDSpinCommand() {
+        return new PIDIntakeSpin(this);
     }
 
     public boolean isIntakeRetracted() {
