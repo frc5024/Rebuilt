@@ -11,11 +11,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.intakeConstants;
-import frc.robot.commands.Intake.IntakeExtendArm;
-import frc.robot.commands.Intake.IntakeRetractArm;
-import frc.robot.commands.Intake.IntakeSpinMotor;
-import frc.robot.commands.Intake.OuttakeSpinMotor;
+import frc.robot.commands.Intake.PIDExtendArm;
 import frc.robot.commands.Intake.PIDIntakeSpin;
+import frc.robot.commands.Intake.PIDOuttakeSpin;
+import frc.robot.commands.Intake.PIDRetractArm;
 
 /**
  * 
@@ -160,24 +159,20 @@ public class IntakeSubsystem extends SubsystemBase {
         this.rollerDesiredSpeed = speed;
     }
 
-    public Command IntakeSpin() {
-        return new IntakeSpinMotor(this);
-    }
-
-    public Command OuttakeSpin() {
-        return new OuttakeSpinMotor(this);
-    }
-
-    public Command ExtendSpin() {
-        return new IntakeExtendArm(this);
-    }
-
-    public Command RetractSpin() {
-        return new IntakeRetractArm(this);
-    }
-
-    public Command PIDSpinCommand() {
+    public Command IntakeCommand() {
         return new PIDIntakeSpin(this);
+    }
+
+    public Command OuttakeCommand() {
+        return new PIDOuttakeSpin(this);
+    }
+
+    public Command ExtendArmCommand() {
+        return new PIDExtendArm(this);
+    }
+
+    public Command RetractArmCommand() {
+        return new PIDRetractArm(this);
     }
 
     public boolean isIntakeRetracted() {
