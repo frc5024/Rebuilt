@@ -1,12 +1,19 @@
 package frc.robot.subsystems.swervedrive;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
+import java.util.function.Consumer;
+
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
+
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
@@ -34,10 +41,6 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.PhoenixOdometryThread;
 
-import java.util.function.Consumer;
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
-
 /**
  * 
  */
@@ -63,10 +66,22 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             lastModulePositions, new Pose2d());
     private final Consumer<Pose2d> resetSimulationPoseCallBack;
 
+    private static double speedModifier = 1.0;
+    public boolean isSlowMode = false;
+
+    public double getSpeedModifier() {
+        if (isSlowMode) {
+            return speedModifier * 0.3;
+        } else {
+            return speedModifier;
+        }
+    }
+
     /**
      * 
      */
-    public SwerveDriveSubsystem(GyroIO gyroIO, SwerveModuleIO flModuleIO, SwerveModuleIO frModuleIO, SwerveModuleIO blModuleIO, SwerveModuleIO brModuleIO,
+    public SwerveDriveSubsystem(GyroIO gyroIO, SwerveModuleIO flModuleIO, SwerveModuleIO frModuleIO,
+            SwerveModuleIO blModuleIO, SwerveModuleIO brModuleIO,
             Consumer<Pose2d> resetSimulationPoseCallBack) {
         this.gyroIO = gyroIO;
         this.resetSimulationPoseCallBack = resetSimulationPoseCallBack;

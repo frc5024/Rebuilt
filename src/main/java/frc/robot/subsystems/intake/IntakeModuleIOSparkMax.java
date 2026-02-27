@@ -76,6 +76,16 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     }
 
     @Override
+    public double getIntakeVelocity() {
+        return intakeMotor.getEncoder().getVelocity();
+    }
+
+    @Override
+    public double getArmVelocity() {
+        return armMotor.getEncoder().getVelocity();
+    }
+
+    @Override
     public boolean isIntakeExtended() {
         return !extendingLimitSwitch.get();
     }
