@@ -44,6 +44,7 @@ public class DeclimbCommand extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
+        // Ends the command when the climb is fully extended
         return m_Climb.value() >= climbConstants.maxPos;
     }
 }

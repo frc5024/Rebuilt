@@ -55,12 +55,14 @@ public class ClimbSubsystem extends SubsystemBase {
         return inputs.data.positionRads();
     }
 
-    // Calls ClimbCommand to set climb motor speed to climb speed
+    // Calls ClimbCommand to set climb motor speed to climb speed (Same direction as
+    // contract speed)
     public Command climb() {
         return new ClimbCommand(this);
     }
 
-    // Calls DeclimbCommand to set climb motor speed to declimb speed
+    // Calls DeclimbCommand to set climb motor speed to declimb speed (Same
+    // direction as extend speed)
     public Command declimb() {
         return new DeclimbCommand(this);
     }
@@ -70,10 +72,14 @@ public class ClimbSubsystem extends SubsystemBase {
         return new PauseclimbCommand(this);
     }
 
+    // Calls ExtendCommand to set climb motor speed to extend speed (Same direction
+    // as declimb speed)
     public Command extendclimb() {
         return new ExtendCommand(this);
     }
 
+    // Calls ContractCommand to set climb motor speed to contract speed (Same
+    // direction as climb speed)
     public Command contractclimb() {
         return new ContractCommand(this);
     }
