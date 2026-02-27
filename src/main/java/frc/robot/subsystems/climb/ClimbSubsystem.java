@@ -6,10 +6,13 @@ package frc.robot.subsystems.climb;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.ClimbCommands.ClimbCommand;
+import frc.robot.commands.ClimbCommands.ContractCommand;
 import frc.robot.commands.ClimbCommands.DeclimbCommand;
+import frc.robot.commands.ClimbCommands.ExtendCommand;
 import frc.robot.commands.ClimbCommands.PauseclimbCommand;
 
 /**
@@ -20,8 +23,8 @@ public class ClimbSubsystem extends SubsystemBase {
     protected final ClimbModuleIOInputsAutoLogged inputs;
 
     /** 
-     * 
-     */
+    * 
+    */
     public ClimbSubsystem(ClimbModuleIO climbModuleIO) {
         this.climbModuleIO = climbModuleIO;
         this.inputs = new ClimbModuleIOInputsAutoLogged();
@@ -31,6 +34,7 @@ public class ClimbSubsystem extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         climbModuleIO.updateInputs(inputs);
+        SmartDashboard.putNumber("Climb Position Rads", inputs.data.positionRads());
         Logger.processInputs("Climb", inputs);
     }
 
@@ -38,9 +42,17 @@ public class ClimbSubsystem extends SubsystemBase {
         return climbModuleIO.getPosition();
     }
 
+    public void zeroPosition() {
+        climbModuleIO.zeroPosition();
+    }
+
     // Sets the speed of the climb motor to the inputted speel value
     public void setSpeed(Double speed) {
         climbModuleIO.set(speed);
+    }
+
+    public Double value() {
+        return inputs.data.positionRads();
     }
 
     // Calls ClimbCommand to set climb motor speed to climb speed
@@ -56,5 +68,13 @@ public class ClimbSubsystem extends SubsystemBase {
     // Calls PauseclimbCommand to set climb motor speed to stopped
     public Command dontdeclimb() {
         return new PauseclimbCommand(this);
+    }
+
+    public Command extend() {
+        return new ExtendCommand(this);
+    }
+
+    public Command contract() {
+        return new ContractCommand(this);
     }
 }

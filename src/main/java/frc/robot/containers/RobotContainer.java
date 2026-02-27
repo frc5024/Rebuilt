@@ -71,6 +71,11 @@ abstract public class RobotContainer {
         return autoChooser.get();
     }
 
+    /** This function is called once when teleop is enabled. */
+    public void teleopInit() {
+        m_climb.zeroPosition();
+    }
+
     public abstract void updateMechanisms();
 
     // Methods used by simulation only

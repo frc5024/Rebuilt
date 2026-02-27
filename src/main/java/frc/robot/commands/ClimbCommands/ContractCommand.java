@@ -10,29 +10,28 @@ import frc.robot.Constants.climbConstants;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class DeclimbCommand extends Command {
+public class ContractCommand extends Command {
     private final ClimbSubsystem m_Climb;
-
     public final Timer m_timer = new Timer();
 
-    /** Creates a new ClimCommand. */
-    public DeclimbCommand(ClimbSubsystem climb) {
+    /** Creates a new ContractCommand. */
+    public ContractCommand(ClimbSubsystem climb) {
         // Use addRequirements() here to declare subsystem dependencies.
         this.m_Climb = climb;
         addRequirements(m_Climb);
+
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         m_Climb.setSpeed(0.0);
-
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_Climb.setSpeed(climbConstants.declimbSpeed);
+        m_Climb.setSpeed(climbConstants.contractSpeed);
     }
 
     // Called once the command ends or is interrupted.
@@ -45,5 +44,6 @@ public class DeclimbCommand extends Command {
     @Override
     public boolean isFinished() {
         return false;
+        // return m_Climb.value() < climbConstants.minPos;
     }
 }

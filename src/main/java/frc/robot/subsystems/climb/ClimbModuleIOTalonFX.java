@@ -25,7 +25,6 @@ public class ClimbModuleIOTalonFX implements ClimbModuleIO {
     private final StatusSignal<AngularVelocity> velocity;
     private final StatusSignal<Voltage> appliedVolts;
     private final StatusSignal<Current> current;
-
     // Connection debouncers
     private final Debouncer connectedDebouncer;
 
@@ -78,13 +77,21 @@ public class ClimbModuleIOTalonFX implements ClimbModuleIO {
     }
 
     @Override
+    public void zeroPosition() {
+        climbMotor.setPosition(0);
+    }
+
+    @Override
     public void set(double speed) {
         climbMotor.set(speed);
         System.out.println(speed);
     }
 
-    @Override
-    public void stop() {
-        climbMotor.setVoltage(0.0);
+    /**
+     * 
+     * @return The angle of the motor
+     */
+    public Angle value() {
+        return this.climbMotor.getPosition().getValue();
     }
 }
