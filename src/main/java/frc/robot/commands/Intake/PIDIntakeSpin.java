@@ -1,6 +1,7 @@
 package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.intakeConstants;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class PIDIntakeSpin extends Command {
@@ -12,7 +13,7 @@ public class PIDIntakeSpin extends Command {
 
     @Override
     public void initialize() {
-        m_IntakeSubsystem.setRollerSetVelocity(100);
+        m_IntakeSubsystem.setRollerSetVelocity(intakeConstants.INTAKE_SPEED);
         m_IntakeSubsystem.setRollerPID(true);
     }
 
