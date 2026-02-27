@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.shooterConstants;
+import frc.robot.commands.shooterCommand;
 
 /**
  * 
@@ -57,7 +58,6 @@ public class ShooterSubsystem extends SubsystemBase {
         } else {
             shooterModuleIO.set(0);
         }
-
     }
 
     public double getPosition() {
@@ -84,8 +84,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setPIDMotor() {
 
-        double setVelocity = setVelocityEntry.getDouble(100);
-        PID.setSetpoint(setVelocity);
+        // double setVelocity = setVelocityEntry.getDouble(100);
+        // PID.setSetpoint(setVelocity);
 
         PID.setP(pEntry.getDouble(shooterConstants.kP));
         PID.setI(iEntry.getDouble(shooterConstants.kI));
@@ -112,8 +112,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // }
 
     public Command shooterCommand() {
-
-        return new frc.robot.commands.shooterCommand(this, shooterConstants.setVelocity);
+        return new shooterCommand(this, shooterConstants.setVelocity);
     }
 
     // public Command runEverything() {

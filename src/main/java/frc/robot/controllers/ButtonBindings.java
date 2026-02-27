@@ -1,9 +1,13 @@
 package frc.robot.controllers;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
+import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
@@ -12,6 +16,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.util.GameUtil;
 
 /**
  * Define button commands when running the real robot
@@ -59,6 +64,7 @@ public class ButtonBindings {
     /**
      * 
      */
+
     private CommandXboxController setDriverBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(DRIVER_PORT);
         // Default command, normal field-relative drive
@@ -70,17 +76,43 @@ public class ButtonBindings {
                         () -> -commandXboxController.getRightX()));
 
         // driverController.b().whileTrue(m_hopper.SpinEntryCommand());
-        commandXboxController.a().whileTrue(m_hopper.SpinCommand());
-        commandXboxController.b().whileTrue(m_intake.OuttakeSpin());
-        commandXboxController.leftTrigger().whileTrue(new runEverything(m_feeder, m_shooter, m_hopper));
-        // commandXboxController.y().whileTrue(m_feeder.feederCommand());
-        commandXboxController.y().onTrue(m_intake.RetractSpin());
-        commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
+        commandXboxController.leftTrigger()
+                .whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter, m_hopper),
+                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
+        commandXboxController.rightTrigger()
+                .whileTrue(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = true));
+        commandXboxController.rightTrigger().onFalse(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = false));
+        // commandXboxController.a().whileTrue(m_hopper.SpinCommand());
+        commandXboxController.a().whileTrue(
+                DriveCommands.joystickDriveAtAngle(
+                        swerveDriveSubsystem,
+                        () -> -commandXboxController.getLeftY(),
+                        () -> -commandXboxController.getLeftX(),
+                        () -> {
+                            Pose2d robotPose = swerveDriveSubsystem.getPose();
+                            double robotX = robotPose.getX();
+                            double robotY = robotPose.getY();
 
-        commandXboxController.rightTrigger()
-                .onTrue((m_intake.ExtendSpin()));
-        commandXboxController.rightTrigger()
-                .whileTrue((m_intake.IntakeSpin()));
+                            Pose2d hubPose = GameUtil.getHubPose();
+                            double hubX = hubPose.getX();
+                            double hubY = hubPose.getY();
+
+                            double angleToHub = Math.atan2(hubY - robotY, hubX - robotX);
+                            return Rotation2d.fromRadians(angleToHub);
+                        }));
+
+        commandXboxController.b().whileTrue(m_intake.OuttakeCommand());
+        // commandXboxController.leftTrigger().whileTrue( new runEverything(m_feeder,
+        // m_shooter, m_hopper));
+        // commandXboxController.y().whileTrue(m_feeder.feedsdAerCommand());
+        commandXboxController.y().onTrue(m_intake.RetractArmCommand());
+        // commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
+        commandXboxController.x().whileTrue(new distanceShooterCommand(m_shooter, swerveDriveSubsystem));
+        commandXboxController.x()
+                .onTrue(new InstantCommand(() -> swerveDriveSubsystem.setPose(swerveDriveSubsystem.getPose())));
+
+        commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
+        // commandXboxController.rightBumper().whileTrue((m_intake.IntakeSpin()));
 
         // commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
         commandXboxController.povUp().whileTrue(m_climb.extend());

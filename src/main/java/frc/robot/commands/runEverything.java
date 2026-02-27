@@ -54,8 +54,8 @@ public class runEverything extends SequentialCommandGroup {
                     public void initialize() {
                         System.out.println("Running all commands sequentially");
                         feederSubsystem.setIdle();
-                        shooterSubsystem.setEnabled(true);
-                        shooterSubsystem.setShooterPID(shooterConstants.setVelocity);
+                        // shooterSubsystem.setEnabled(true);
+                        // shooterSubsystem.setShooterPID(shooterConstants.setVelocity);
                         hopperSubsystem.setIdle();
                     }
                 },
@@ -63,15 +63,15 @@ public class runEverything extends SequentialCommandGroup {
                 // intakeSubsystem.setIntakeSpeed(intakeEntry.getDouble(-0.1))),
                 // new WaitCommand(1),
                 // new shooterCommand(shooterSubsystem),
-                new WaitCommand(0.5),
+                new WaitCommand(1),
                 new InstantCommand(() -> feederSubsystem.setFeederSpeed(feederEntry.getDouble(0.1))),
-                new WaitCommand(0.2),
+                new WaitCommand(1),
                 new InstantCommand(() -> hopperSubsystem.setSpeed(hopperEntry.getDouble(0.1))),
 
                 new StartEndCommand(() -> {
                 }, () -> {
                     feederSubsystem.setIdle();
-                    shooterSubsystem.setEnabled(false);
+                    // shooterSubsystem.setEnabled(false);
                     hopperSubsystem.setIdle();
                     feederSubsystem.setIdle();
                     System.out.println("All commands stopped");

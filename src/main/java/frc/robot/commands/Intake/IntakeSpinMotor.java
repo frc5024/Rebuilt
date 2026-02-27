@@ -24,11 +24,11 @@ public class IntakeSpinMotor extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        // s_Intake.setIntakeSpeed(0.0);
+        s_Intake.setIntakeSpeed(0.0);
     }
 
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 }
