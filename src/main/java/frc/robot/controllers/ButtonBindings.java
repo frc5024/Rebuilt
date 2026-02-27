@@ -2,9 +2,11 @@ package frc.robot.controllers;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.lib.leds.LEDPreset;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.commands.runEverything;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -34,12 +36,14 @@ public class ButtonBindings {
     private IntakeSubsystem m_intake;
     private ShooterSubsystem m_shooter;
     private TurretSubsystem m_turret;
+    private LEDSubsystem m_leds;
 
     /**
      * 
      */
     public ButtonBindings(SwerveDriveSubsystem swerveDriveSubsystem, ClimbSubsystem m_climb, FeederSubsystem m_feeder,
-            HopperSubsystem m_hopper, IntakeSubsystem m_intake, ShooterSubsystem m_shooter, TurretSubsystem m_turret) {
+            HopperSubsystem m_hopper, IntakeSubsystem m_intake, ShooterSubsystem m_shooter, TurretSubsystem m_turret,
+            LEDSubsystem m_leds) {
         this.swerveDriveSubsystem = swerveDriveSubsystem;
         this.m_climb = m_climb;
         this.m_feeder = m_feeder;
@@ -47,6 +51,7 @@ public class ButtonBindings {
         this.m_intake = m_intake;
         this.m_shooter = m_shooter;
         this.m_turret = m_turret;
+        this.m_leds = m_leds;
 
         this.driverController = setDriverBindingsController();
         this.operatorController = setOperatorBindingsController();
@@ -79,6 +84,8 @@ public class ButtonBindings {
 
         commandXboxController.rightTrigger().onTrue((m_intake.ExtendSpin()));
         commandXboxController.rightTrigger().whileTrue((m_intake.IntakeSpin()));
+        commandXboxController.rightTrigger().onTrue((m_leds.setCommand(LEDPreset.Solid.kRed)));
+        // ^ What are the possible parameters for this command?
 
         // commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
         commandXboxController.povUp().whileTrue(m_climb.climb());

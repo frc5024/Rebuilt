@@ -9,6 +9,7 @@ import frc.robot.Robot;
 import frc.robot.controllers.ButtonBindings;
 import frc.robot.controllers.ButtonsBindingsSim;
 import frc.robot.mechanisms.MechanismVisualizer;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -31,6 +32,7 @@ abstract public class RobotContainer {
     protected IntakeSubsystem m_intake;
     protected ShooterSubsystem m_shooter;
     protected TurretSubsystem m_turret;
+    protected LEDSubsystem m_leds;
 
     /* Mechanisms */
     protected MechanismVisualizer mechanismVisualizer;
@@ -47,7 +49,7 @@ abstract public class RobotContainer {
     protected void configureButtonBindings() {
         if (Robot.isReal()) {
             ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, m_climb, m_feeder, m_hopper,
-                    m_intake, m_shooter, m_turret);
+                    m_intake, m_shooter, m_turret, m_leds);
 
             driverController = buttonBindings.getDriverController();
             operatorController = buttonBindings.getOperatorController();

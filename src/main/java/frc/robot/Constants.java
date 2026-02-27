@@ -109,6 +109,10 @@ public final class Constants {
         public static final double contractSpeed = -0.75;
     }
 
+    public static class LEDConstants {
+        public static final int s_LED = 12345;
+    }
+
     public static final Mode simMode = Mode.SIM;
     public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
