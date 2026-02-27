@@ -13,6 +13,12 @@ public class PIDExtendArm extends Command {
 
     @Override
     public void initialize() {
+
+    }
+
+    @Override
+    public void execute() {
+        System.out.println("Extending");
         m_IntakeSubsystem.setArmSetVelocity(intakeConstants.EXTENDING_SPEED);
         m_IntakeSubsystem.setArmPID(true);
     }

@@ -101,18 +101,21 @@ public class ButtonBindings {
                             return Rotation2d.fromRadians(angleToHub);
                         }));
 
-        commandXboxController.b().whileTrue(m_intake.OuttakeCommand());
+        // commandXboxController.b().whileTrue(m_intake.OuttakeCommand());
+        // commandXboxController.b().whileTrue(m_intake.retractArmPIDCommand());
         // commandXboxController.leftTrigger().whileTrue( new runEverything(m_feeder,
         // m_shooter, m_hopper));
         // commandXboxController.y().whileTrue(m_feeder.feedsdAerCommand());
         commandXboxController.y().onTrue(m_intake.RetractArmCommand());
         // commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
-        commandXboxController.x().whileTrue(new distanceShooterCommand(m_shooter, swerveDriveSubsystem));
-        commandXboxController.x()
-                .onTrue(new InstantCommand(() -> swerveDriveSubsystem.setPose(swerveDriveSubsystem.getPose())));
-
+        // commandXboxController.x().whileTrue(new distanceShooterCommand(m_shooter,
+        // swerveDriveSubsystem));
+        // commandXboxController.x()
+        // .onTrue(new InstantCommand(() ->
+        // swerveDriveSubsystem.setPose(swerveDriveSubsystem.getPose())));
+        // commandXboxController.x().whileTrue(m_intake.extendArmPIDCommand());
         commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
-        // commandXboxController.rightBumper().whileTrue((m_intake.IntakeSpin()));
+        commandXboxController.rightBumper().whileTrue((m_intake.IntakeCommand()));
 
         // commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
         commandXboxController.povUp().whileTrue(m_climb.extend());

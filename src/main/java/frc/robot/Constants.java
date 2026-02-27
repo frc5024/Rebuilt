@@ -93,8 +93,8 @@ public final class Constants {
     public static class intakeConstants {
         public static final double INTAKE_SPEED = 0.5;
         public static final double OUTTAKE_SPEED = -0.4;
-        public static final double EXTENDING_SPEED = -0.1;
-        public static final double RETRACTING_SPEED = 0.2;
+        public static final double EXTENDING_SPEED = -0.15;
+        public static final double RETRACTING_SPEED = 0.25;
 
         public static final double kArmP = 0.0;
         public static final double kArmI = 0.0;

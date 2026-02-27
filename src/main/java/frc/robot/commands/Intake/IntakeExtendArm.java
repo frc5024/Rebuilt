@@ -23,6 +23,11 @@ public class IntakeExtendArm extends Command {
     }
 
     @Override
+    public void execute() {
+        s_Intake.setArmSpeed(pEntry.getDouble(intakeConstants.EXTENDING_SPEED));
+    }
+
+    @Override
     public void end(boolean interrupted) {
         s_Intake.setArmSpeed(0.0);
     }
