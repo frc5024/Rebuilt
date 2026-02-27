@@ -1,5 +1,8 @@
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,9 +17,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
 /**
  * 
  */
@@ -26,6 +26,8 @@ public class DriveCommands {
     private static final double ANGLE_KD = 0.4;
     private static final double ANGLE_MAX_VELOCITY = 8.0;
     private static final double ANGLE_MAX_ACCELERATION = 20.0;
+    // private static double driveSpeedModifier =
+    // SwerveDriveSubsystem.getSpeedModifier();
 
     /**
      * 
@@ -73,8 +75,8 @@ public class DriveCommands {
 
                     // Convert to field relative speeds & send command
                     ChassisSpeeds speeds = new ChassisSpeeds(
-                            linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                            linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                            linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec() * drive.getSpeedModifier(),
+                            linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec() * drive.getSpeedModifier(),
                             omega * drive.getMaxAngularSpeedRadPerSec());
                     boolean isFlipped = DriverStation.getAlliance().isPresent()
                             && DriverStation.getAlliance().get() == Alliance.Red;
@@ -122,8 +124,8 @@ public class DriveCommands {
 
                     // Convert to field relative speeds & send command
                     ChassisSpeeds speeds = new ChassisSpeeds(
-                            linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                            linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                            linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec() * drive.getSpeedModifier(),
+                            linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec() * drive.getSpeedModifier(),
                             omega);
                     boolean isFlipped = DriverStation.getAlliance().isPresent()
                             && DriverStation.getAlliance().get() == Alliance.Red;
