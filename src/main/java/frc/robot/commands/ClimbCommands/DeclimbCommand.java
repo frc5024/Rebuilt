@@ -6,50 +6,44 @@ package frc.robot.commands.ClimbCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.containers.RobotContainer;
-import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.Constants.climbConstants;
-import frc.robot.Constants.intakeConstants;
+import frc.robot.subsystems.climb.ClimbSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DeclimbCommand extends Command {
-  private final ClimbSubsystem m_Climb;
+    private final ClimbSubsystem m_Climb;
 
-  public final Timer m_timer = new Timer();
+    public final Timer m_timer = new Timer();
 
+    /** Creates a new ClimCommand. */
+    public DeclimbCommand(ClimbSubsystem climb) {
+        // Use addRequirements() here to declare subsystem dependencies.
+        this.m_Climb = climb;
+        addRequirements(m_Climb);
+    }
 
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        m_Climb.setSpeed(0.0);
 
+    }
 
-  /** Creates a new ClimCommand. */
-  public DeclimbCommand(ClimbSubsystem climb) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.m_Climb = climb;
-    addRequirements(m_Climb);
-  }
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        m_Climb.setSpeed(climbConstants.declimbSpeed);
+    }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    m_Climb.setSpeed(0.0);
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        m_Climb.setSpeed(0.0);
+    }
 
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    m_Climb.setSpeed(climbConstants.declimbSpeed);
-  }
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    m_Climb.setSpeed(0.0);
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

@@ -25,6 +25,8 @@ public interface ClimbModuleIO {
         return 0.0;
     }
 
+    public void zeroPosition();
+
     default boolean isRunning() {
         return false;
     }

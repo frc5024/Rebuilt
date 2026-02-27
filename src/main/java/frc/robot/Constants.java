@@ -63,57 +63,56 @@ public final class Constants {
 
     public static final double targetAngle = 25;
 
-}
+    public static class shooterConstants {
+        public static final double kP = 0.0006;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
 
-public static class shooterConstants {
-    public static final double kP = 0.0006;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
+        public static final double kS = 0.2; // Static friction voltage
+        public static final double kV = 0.001764; // Velocity constant
+        public static final double kA = 0.01; // Acceleration constant
 
-    public static final double kS = 0.2; // Static friction voltage
-    public static final double kV = 0.001764; // Velocity constant
-    public static final double kA = 0.01; // Acceleration constant
+        public static final double setVelocity = 3766; // Example set velocity in RPM
+        public static final double speed = 0.1;
+        public static final double feederspeed = 0.85;
 
-    public static final double setVelocity = 3766; // Example set velocity in RPM
-    public static final double speed = 0.1;
-    public static final double feederspeed = 0.85;
+        public static final double WHEEL_DIAMETER_METERS = 0.1016;
+    }
 
-    public static final double WHEEL_DIAMETER_METERS = 0.1016;
-}
+    public static class intakeConstants {
+        public static final double INTAKE_SPEED = 0.5;
+        public static final double OUTTAKE_SPEED = -0.4;
+        public static final double EXTENDING_SPEED = -0.1;
+        public static final double RETRACTING_SPEED = 0.2;
 
-public static class intakeConstants {
-    public static final double INTAKE_SPEED = 0.5;
-    public static final double OUTTAKE_SPEED = -0.4;
-    public static final double EXTENDING_SPEED = -0.1;
-    public static final double RETRACTING_SPEED = 0.2;
+        public static final double kArmP = 0.0;
+        public static final double kArmI = 0.0;
+        public static final double kArmD = 0.0;
+        public static final double kArmS = 0.0;
+        public static final double kArmA = 0.0;
+        public static final double kArmV = 0.0;
+        public static final double kArmG = 0.0;
 
-    public static final double kArmP = 0.0;
-    public static final double kArmI = 0.0;
-    public static final double kArmD = 0.0;
-    public static final double kArmS = 0.0;
-    public static final double kArmA = 0.0;
-    public static final double kArmV = 0.0;
-    public static final double kArmG = 0.0;
+        public static final double kRollP = 0.0;
+        public static final double kRollI = 0.0;
+        public static final double kRollD = 0.0;
+        public static final double kRollS = 0.0;
+        public static final double kRollA = 0.0;
+        public static final double kRollV = 0.0;
+        public static final double kRollG = 0.0;
+    }
 
-    public static final double kRollP = 0.0;
-    public static final double kRollI = 0.0;
-    public static final double kRollD = 0.0;
-    public static final double kRollS = 0.0;
-    public static final double kRollA = 0.0;
-    public static final double kRollV = 0.0;
-    public static final double kRollG = 0.0;
-}
-
-public static class climbConstants {
-        // Speed for extending the farm
-        public static final double extendSpeed = 0.1;
+    public static class climbConstants {
+        public static final double extendSpeed = 0.75;
         // Speed for declimbing
         public static final double declimbSpeed = 0.1;
         // Speed for contracting the arm and climbing
         public static final double contractSpeed = -0.75;
         // Position at which to stop motor
 
-        public static final double stopPos = 2.0;
+        public static final double maxPos = 780.0;
+        public static final double minPos = 10.0;
+
     }
 
     public static final Mode simMode = Mode.SIM;

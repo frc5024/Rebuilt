@@ -43,6 +43,6 @@ public class ExtendCommand extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return m_Climb.value() >= climbConstants.stopPos;
+        return m_Climb.value() >= climbConstants.maxPos;
     }
 }

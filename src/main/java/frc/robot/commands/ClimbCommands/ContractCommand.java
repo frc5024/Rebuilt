@@ -44,5 +44,6 @@ public class ContractCommand extends Command {
     @Override
     public boolean isFinished() {
         return false;
+        // return m_Climb.value() < climbConstants.minPos;
     }
 }

@@ -6,7 +6,6 @@ package frc.robot.commands.ClimbCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.climbConstants;
 import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.subsystems.climb.ClimbSubsystem;
@@ -40,12 +39,13 @@ public class MoveandClimbCommand extends Command {
     public void execute() {
 
         m_Climb.setSpeed(climbConstants.contractSpeed);
-        new SequentialCommandGroup(null)
+        // new SequentialCommandGroup(null)
 
-                // .andThen(new ParallelCommandGroup(
-                // new ContractCommand(m_Climb),
-                // new PathFinderAndFollowCommand(m_SwerveDriveSubsystem, toClimb)))
-                .addCommands(new PathFinderAndFollowCommand(m_SwerveDriveSubsystem, toClimb));
+        // .andThen(new ParallelCommandGroup(
+        // new ContractCommand(m_Climb),
+        // new PathFinderAndFollowCommand(m_SwerveDriveSubsystem, toClimb)))
+        // .addCommands(new PathFinderAndFollowCommand(m_SwerveDriveSubsystem,
+        // toClimb));
         // .addCommands(new ClimbCommand(this.m_Climb));
     }
 
