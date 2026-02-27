@@ -1,6 +1,7 @@
 package frc.robot.controllers;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
@@ -59,6 +60,7 @@ public class ButtonBindings {
     /**
      * 
      */
+
     private CommandXboxController setDriverBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(DRIVER_PORT);
         // Default command, normal field-relative drive
@@ -70,15 +72,20 @@ public class ButtonBindings {
                         () -> -commandXboxController.getRightX()));
 
         // driverController.b().whileTrue(m_hopper.SpinEntryCommand());
+        commandXboxController.rightTrigger()
+                .whileTrue(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = true));
+        commandXboxController.rightTrigger().onFalse(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = false));
         commandXboxController.a().whileTrue(m_hopper.SpinCommand());
         commandXboxController.b().whileTrue(m_intake.OuttakeSpin());
         commandXboxController.leftTrigger().whileTrue(new runEverything(m_feeder, m_shooter, m_hopper));
-        // commandXboxController.y().whileTrue(m_feeder.feederCommand());
+        // commandXboxController.y().whileTrue(m_feeder.feedsdAerCommand());
         commandXboxController.y().onTrue(m_intake.RetractSpin());
-        commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
+        // commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
+        commandXboxController.x()
+                .onTrue(new InstantCommand(() -> swerveDriveSubsystem.setPose(swerveDriveSubsystem.getPose())));
 
-        commandXboxController.rightTrigger().onTrue((m_intake.ExtendSpin()));
-        commandXboxController.rightTrigger().whileTrue((m_intake.IntakeSpin()));
+        commandXboxController.rightBumper().onTrue((m_intake.ExtendSpin()));
+        commandXboxController.rightBumper().whileTrue((m_intake.IntakeSpin()));
 
         // commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
         commandXboxController.povUp().whileTrue(m_climb.climb());
