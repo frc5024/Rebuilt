@@ -37,6 +37,14 @@ public interface IntakeModuleIO {
         return 0.0;
     }
 
+    default double getArmVelocity() {
+        return 0.0;
+    }
+
+    default double getIntakeVelocity() {
+        return 0.0;
+    }
+
     default boolean isRunning() {
         return false;
     }

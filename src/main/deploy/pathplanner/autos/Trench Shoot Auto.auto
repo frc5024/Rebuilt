@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Corner To Shoot"
+            "pathName": "Trench Start"
           }
         },
         {
@@ -15,15 +15,15 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
-                "data": {
-                  "waitTime": 5.0
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "RunEverything"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 4.0
                 }
               }
             ]
@@ -33,6 +33,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Corner Autos",
+  "folder": "Trench Autos",
   "choreoAuto": false
 }

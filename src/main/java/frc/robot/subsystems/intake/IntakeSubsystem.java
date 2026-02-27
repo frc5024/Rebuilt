@@ -2,7 +2,6 @@ package frc.robot.subsystems.intake;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
@@ -24,33 +23,38 @@ public class IntakeSubsystem extends SubsystemBase {
     private final IntakeModuleIO intakeModuleIO;
     protected final IntakeModuleIOInputsAutoLogged inputs;
 
-    static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
-    GenericEntry armPEntry = tab.add("Set Arm kP", intakeConstants.kArmP).getEntry();
-    GenericEntry armIEntry = tab.add("Set Arm kI", intakeConstants.kArmI).getEntry();
-    GenericEntry armDEntry = tab.add("Set Arm kD", intakeConstants.kArmD).getEntry();
+    static ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
+    GenericEntry armPEntry = armTab.add("Set kP", intakeConstants.kArmP).getEntry();
+    GenericEntry armIEntry = armTab.add("Set kI", intakeConstants.kArmI).getEntry();
+    GenericEntry armDEntry = armTab.add("Set kD", intakeConstants.kArmD).getEntry();
 
-    GenericEntry armSEntry = tab.add("Set Arm kS", intakeConstants.kArmS).getEntry();
-    GenericEntry armVEntry = tab.add("Set Arm kV", intakeConstants.kArmV).getEntry();
-    GenericEntry armAEntry = tab.add("Set Arm kA", intakeConstants.kArmA).getEntry();
-    GenericEntry armGEntry = tab.add("Set Arm kG", intakeConstants.kArmG).getEntry();
+    GenericEntry armSEntry = armTab.add("Set kS", intakeConstants.kArmS).getEntry();
+    GenericEntry armGEntry = armTab.add("Set kG", intakeConstants.kArmG).getEntry();
+    GenericEntry armVEntry = armTab.add("Set kV", intakeConstants.kArmV).getEntry();
+    GenericEntry armAEntry = armTab.add("Set kA", intakeConstants.kArmA).getEntry();
 
-    GenericEntry rollerPEntry = tab.add("Set Roller kP", intakeConstants.kRollP).getEntry();
-    GenericEntry rollerIEntry = tab.add("Set Roller kI", intakeConstants.kRollI).getEntry();
-    GenericEntry rollerDEntry = tab.add("Set Roller kD", intakeConstants.kRollD).getEntry();
+    static ShuffleboardTab rollerTab = Shuffleboard.getTab("Roller")
+    GenericEntry rollerPEntry = rollerTab.add("Set kP", intakeConstants.kRollP).getEntry();
+    GenericEntry rollerIEntry = rollerTab.add("Set kI", intakeConstants.kRollI).getEntry();
+    GenericEntry rollerDEntry = rollerTab.add("Set kD", intakeConstants.kRollD).getEntry();
 
-    GenericEntry rollerSEntry = tab.add("Set Roller kS", intakeConstants.kRollS).getEntry();
-    GenericEntry rollerVEntry = tab.add("Set Roller kV", intakeConstants.kRollV).getEntry();
-    GenericEntry rollerAEntry = tab.add("Set Roller kA", intakeConstants.kRollA).getEntry();
-    GenericEntry rollerGEntry = tab.add("Set Roller kG", intakeConstants.kRollG).getEntry();
+    GenericEntry rollerSEntry = rollerTab.add("Set kS", intakeConstants.kRollS).getEntry();
+    GenericEntry rollerVEntry = rollerTab.add("Set kV", intakeConstants.kRollV).getEntry();
+    GenericEntry rollerAEntry = rollerTab.add("Set kA", intakeConstants.kRollA).getEntry();
 
     private PIDController armPIDController;
-    private ArmFeedforward armFeedforward;
+    private SimpleMotorFeedforward armFeedforward;
 
     private PIDController rollerPIDController;
     private SimpleMotorFeedforward rollerFeedforward;
 
     public boolean armPIDEnabled;
     public boolean rollerPIDEnabled;
+
+    private double armCurrentSpeed;
+    private double armDesiredSpeed;
+    private double rollerCurrentSpeed;
+    private double rollerDesiredSpeed;
 
     /**
      * 
@@ -59,8 +63,8 @@ public class IntakeSubsystem extends SubsystemBase {
         this.intakeModuleIO = intakeModuleIO;
         this.inputs = new IntakeModuleIOInputsAutoLogged();
 
-        tab.addBoolean("Extended?", () -> intakeModuleIO.isIntakeExtended());
-        tab.addBoolean("Retracted?", () -> intakeModuleIO.isIntakeRetracted());
+        armTab.addBoolean("Extended?", () -> intakeModuleIO.isIntakeExtended());
+        armTab.addBoolean("Retracted?", () -> intakeModuleIO.isIntakeRetracted());
 
         armPEntry.setDouble(intakeConstants.kArmP);
         armIEntry.setDouble(intakeConstants.kArmI);
@@ -68,7 +72,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
         armSEntry.setDouble(intakeConstants.kArmS);
         armVEntry.setDouble(intakeConstants.kArmV);
-        armGEntry.setDouble(intakeConstants.kArmG);
         armAEntry.setDouble(intakeConstants.kArmA);
 
         rollerPEntry.setDouble(intakeConstants.kRollP);
@@ -77,8 +80,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
         rollerSEntry.setDouble(intakeConstants.kRollS);
         rollerVEntry.setDouble(intakeConstants.kRollV);
-        rollerGEntry.setDouble(intakeConstants.kRollG);
         rollerAEntry.setDouble(intakeConstants.kRollA);
+
+        armPIDController = new PIDController(intakeConstants.kArmP, intakeConstants.kArmI, intakeConstants.kArmD);
+        armFeedforward = new SimpleMotorFeedforward(intakeConstants.kArmS, intakeConstants.kArmV,
+                intakeConstants.kArmA);
+
+        rollerPIDController = new PIDController(intakeConstants.kRollP, intakeConstants.kRollI, intakeConstants.kRollD);
+        rollerFeedforward = new SimpleMotorFeedforward(intakeConstants.kRollS, intakeConstants.kRollV,
+                intakeConstants.kRollA);
     }
 
     @Override
@@ -91,6 +101,38 @@ public class IntakeSubsystem extends SubsystemBase {
         Logger.recordOutput("Intake/IsRetracted", intakeModuleIO.isIntakeRetracted());
         Logger.recordOutput("Intake/IsIntaking", intakeModuleIO.isIntakeIntaking());
         Logger.recordOutput("Intake/ArmAngle", Units.radiansToDegrees(intakeModuleIO.getPosition()));
+
+        armPIDController.setPID(armPEntry.getDouble(intakeConstants.kArmP), armIEntry.getDouble(intakeConstants.kArmI),
+                armDEntry.getDouble(intakeConstants.kArmD));
+        armFeedforward.setKs(armSEntry.getDouble(intakeConstants.kArmS));
+        armFeedforward.setKv(armVEntry.getDouble(intakeConstants.kArmV));
+        armFeedforward.setKa(armAEntry.getDouble(intakeConstants.kArmA));
+
+        rollerPIDController.setPID(armPEntry.getDouble(intakeConstants.kRollP),
+                armIEntry.getDouble(intakeConstants.kRollI), armDEntry.getDouble(intakeConstants.kRollD));
+        rollerFeedforward.setKs(armSEntry.getDouble(intakeConstants.kArmS));
+        rollerFeedforward.setKv(armVEntry.getDouble(intakeConstants.kArmV));
+        rollerFeedforward.setKa(armAEntry.getDouble(intakeConstants.kArmA));
+
+        if (armPIDEnabled) {
+            armPIDCalculate();
+        } else {
+            intakeModuleIO.setArm(0);
+        }
+
+        if (rollerPIDEnabled) {
+            rollerPIDCalculate();
+        } else {
+            intakeModuleIO.setIntake(0);
+        }
+    }
+
+    public void setArmPID(boolean state) {
+        this.armPIDEnabled = state;
+    }
+
+    public void setRollerPID(boolean state) {
+        this.rollerPIDEnabled = state;
     }
 
     public double getCurrentDrawAmps() {
@@ -107,6 +149,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void setArmSpeed(double speed) {
         intakeModuleIO.setArm(speed);
+    }
+
+    public void setArmSetVelocity(double speed) {
+        this.armDesiredSpeed = speed;
+    }
+
+    public void setRollerSetVelocity(double speed) {
+        this.rollerDesiredSpeed = speed;
     }
 
     public Command IntakeSpin() {
@@ -131,5 +181,25 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public boolean isIntakeExtended() {
         return intakeModuleIO.isIntakeExtended();
+    }
+
+    public void armPIDCalculate() {
+        armCurrentSpeed = intakeModuleIO.getArmVelocity();
+
+        double armPIDoutput = armPIDController.calculate(armCurrentSpeed, armDesiredSpeed);
+        double armFeedForwardOutput = armFeedforward.calculate(armPIDoutput);
+        double totalOutput = armPIDoutput + armFeedForwardOutput;
+
+        setArmSpeed(totalOutput);
+    }
+
+    public void rollerPIDCalculate() {
+        rollerCurrentSpeed = intakeModuleIO.getIntakeVelocity();
+
+        double rollerPIDoutput = rollerPIDController.calculate(rollerCurrentSpeed, rollerDesiredSpeed);
+        double rollerFeedforwardOutput = rollerFeedforward.calculate(rollerPIDoutput);
+        double totalOutput = rollerPIDoutput + rollerFeedforwardOutput;
+
+        setIntakeSpeed(totalOutput);
     }
 }

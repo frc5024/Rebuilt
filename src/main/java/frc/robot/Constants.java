@@ -86,18 +86,19 @@ public final class Constants {
         public static final double kArmP = 0.0;
         public static final double kArmI = 0.0;
         public static final double kArmD = 0.0;
+
         public static final double kArmS = 0.0;
+        public static final double kArmG = 0.0;
         public static final double kArmA = 0.0;
         public static final double kArmV = 0.0;
-        public static final double kArmG = 0.0;
 
         public static final double kRollP = 0.0;
         public static final double kRollI = 0.0;
         public static final double kRollD = 0.0;
+
         public static final double kRollS = 0.0;
         public static final double kRollA = 0.0;
         public static final double kRollV = 0.0;
-        public static final double kRollG = 0.0;
     }
 
     public static class climbConstants {
