@@ -1,6 +1,7 @@
 package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.intakeConstants;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class PIDExtendArm extends Command {
@@ -12,7 +13,7 @@ public class PIDExtendArm extends Command {
 
     @Override
     public void initialize() {
-        m_IntakeSubsystem.setArmSetVelocity(100);
+        m_IntakeSubsystem.setArmSetVelocity(intakeConstants.EXTENDING_SPEED);
         m_IntakeSubsystem.setArmPID(true);
     }
 
