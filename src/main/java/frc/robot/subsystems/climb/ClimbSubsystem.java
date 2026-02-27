@@ -70,11 +70,11 @@ public class ClimbSubsystem extends SubsystemBase {
         return new PauseclimbCommand(this);
     }
 
-    public Command extend() {
+    public Command extendclimb() {
         return new ExtendCommand(this);
     }
 
-    public Command contract() {
+    public Command contractclimb() {
         return new ContractCommand(this);
     }
 }
