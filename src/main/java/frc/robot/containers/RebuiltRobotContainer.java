@@ -74,8 +74,8 @@ public class RebuiltRobotContainer extends RobotContainer {
         NamedCommands.registerCommand("ExtendIntake", m_intake.ExtendArmCommand());
         NamedCommands.registerCommand("RetractIntake", m_intake.RetractArmCommand());
         NamedCommands.registerCommand("Outtake", m_intake.OuttakeCommand());
-        NamedCommands.registerCommand("Climb", m_climb.contract());
-        NamedCommands.registerCommand("Declimb", m_climb.extend());
+        NamedCommands.registerCommand("Climb", m_climb.contractclimb());
+        NamedCommands.registerCommand("Declimb", m_climb.extendclimb());
         NamedCommands.registerCommand("Dontdeclimb", m_climb.dontdeclimb());
         NamedCommands.registerCommand("ExtendClimb", m_climb.extendclimb());
         NamedCommands.registerCommand("ContractClimb", m_climb.contractclimb());
