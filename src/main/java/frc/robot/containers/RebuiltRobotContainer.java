@@ -82,7 +82,8 @@ public class RebuiltRobotContainer extends RobotContainer {
         NamedCommands.registerCommand("SpinHopper", m_hopper.SpinCommand());
         NamedCommands.registerCommand("RunEverything",
                 Commands.parallel(new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
-                        new runEverything(m_feeder, m_shooter, m_hopper)));
+                        new runEverything(m_feeder, m_shooter, m_hopper),
+                        Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
 
         configureAutoChooser();
         configureButtonBindings();
