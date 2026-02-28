@@ -31,11 +31,16 @@ abstract public class RobotContainer {
     public RobotContainer() {
     }
 
-    abstract protected void configureNamedCommands();
-
     abstract protected void configureAutoChooser();
 
-    abstract protected void configureButtonBindings();
+    protected void configureButtonBindings() {
+        ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, visionSubsystem, blowerSubsystem);
+
+        driverController = buttonBindings.getDriverController();
+        operatorController = buttonBindings.getOperatorController();
+    }
+
+    abstract protected void configureNamedCommands();
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

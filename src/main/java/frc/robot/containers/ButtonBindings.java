@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
+import frc.robot.subsystems.blower.BlowerSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
@@ -25,13 +26,16 @@ public class ButtonBindings {
     /* Subsystems */
     private final SwerveDriveSubsystem swerveDriveSubsystem;
     private final VisionSubsystem visionSubsystem;
+    private final BlowerSubsystem blowerSubsystem;
 
     /**
      * 
      */
-    public ButtonBindings(SwerveDriveSubsystem swerveDriveSubsystem, VisionSubsystem visionSubsystem) {
+    public ButtonBindings(SwerveDriveSubsystem swerveDriveSubsystem, VisionSubsystem visionSubsystem,
+            BlowerSubsystem blowerSubsystem) {
         this.swerveDriveSubsystem = swerveDriveSubsystem;
         this.visionSubsystem = visionSubsystem;
+        this.blowerSubsystem = blowerSubsystem;
         this.driverController = setDriverBindingsController();
         this.operatorController = setOperatorBindingsController();
 
@@ -45,37 +49,13 @@ public class ButtonBindings {
      */
     private CommandXboxController setDriverBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(DRIVER_PORT);
-        // Default command, normal field-relative drive
-        swerveDriveSubsystem.setDefaultCommand(
-                DriveCommands.joystickDrive(
-                        swerveDriveSubsystem,
-                        () -> -commandXboxController.getLeftY(),
-                        () -> -commandXboxController.getLeftX(),
-                        () -> -commandXboxController.getRightX()));
 
-        // Lock to 0° when A button is held
-        commandXboxController
-                .a()
-                .whileTrue(
-                        DriveCommands.joystickDriveAtAngle(
-                                swerveDriveSubsystem,
-                                () -> -commandXboxController.getLeftY(),
-                                () -> -commandXboxController.getLeftX(),
-                                () -> new Rotation2d()));
-
-        // Switch to X pattern when X button is pressed
-        commandXboxController.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
-
-        // Reset gyro to 0° when B button is pressed
-        commandXboxController
-                .b()
-                .onTrue(
-                        Commands.runOnce(
-                                () -> swerveDriveSubsystem.setPose(
-                                        new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
-                                swerveDriveSubsystem)
-                                .ignoringDisable(true));
-        commandXboxController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
+        commandXboxController.a()
+                .whileTrue(Commands.runOnce(() -> blowerSubsystem.addAction(BlowerSubsystem.Action.START),
+                        blowerSubsystem));
+        commandXboxController.b()
+                .whileTrue(Commands.runOnce(() -> blowerSubsystem.addAction(BlowerSubsystem.Action.STOP),
+                        blowerSubsystem));
 
         return commandXboxController;
     }
