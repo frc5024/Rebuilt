@@ -11,8 +11,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.intakeConstants;
+import frc.robot.commands.Intake.IntakeExtendArm;
+import frc.robot.commands.Intake.IntakeRetractArm;
+import frc.robot.commands.Intake.IntakeSpinMotor;
 import frc.robot.commands.Intake.PIDExtendArm;
-import frc.robot.commands.Intake.PIDIntakeSpin;
 import frc.robot.commands.Intake.PIDOuttakeSpin;
 import frc.robot.commands.Intake.PIDRetractArm;
 
@@ -160,7 +162,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command IntakeCommand() {
-        return new PIDIntakeSpin(this);
+        return new IntakeSpinMotor(this);
     }
 
     public Command OuttakeCommand() {
@@ -168,11 +170,23 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command ExtendArmCommand() {
-        return new PIDExtendArm(this);
+        System.out.println("Command Run");
+        return new IntakeExtendArm(this);
     }
 
     public Command RetractArmCommand() {
+        System.out.println("Command Retract Run");
+        return new IntakeRetractArm(this);
+    }
+
+    public Command retractArmPIDCommand() {
+        System.out.println("PID Retract");
         return new PIDRetractArm(this);
+    }
+
+    public Command extendArmPIDCommand() {
+        System.out.println("PID Extend");
+        return new PIDExtendArm(this);
     }
 
     public boolean isIntakeRetracted() {

@@ -92,9 +92,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Declimb"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ExtendClimb"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.001
+                }
+              }
+            ]
           }
         },
         {

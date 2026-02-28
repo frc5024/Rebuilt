@@ -93,8 +93,8 @@ public final class Constants {
     public static class intakeConstants {
         public static final double INTAKE_SPEED = 0.5;
         public static final double OUTTAKE_SPEED = -0.4;
-        public static final double EXTENDING_SPEED = -0.1;
-        public static final double RETRACTING_SPEED = 0.2;
+        public static final double EXTENDING_SPEED = -0.15;
+        public static final double RETRACTING_SPEED = 0.25;
 
         public static final double kArmP = 0.0;
         public static final double kArmI = 0.0;
@@ -115,13 +115,16 @@ public final class Constants {
     }
 
     public static class climbConstants {
+        // Speed for extending the arm
         public static final double extendSpeed = 0.75;
+        // Speed for contracting the arm
+        public static final double contractSpeed = -0.80;
         // Speed for declimbing
         public static final double declimbSpeed = 0.1;
-        // Speed for contracting the arm and climbing
-        public static final double contractSpeed = -0.75;
-        // Position at which to stop motor
+        // Speed for climbing
+        public static final double climbspeed = -0.70;
 
+        // Maximum and minimum positions for the climb, in radians.
         public static final double maxPos = 780.0;
         public static final double minPos = 10.0;
 

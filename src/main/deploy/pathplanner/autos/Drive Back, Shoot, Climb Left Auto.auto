@@ -36,15 +36,41 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Declimb"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ExtendClimb"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.001
+                }
+              }
+            ]
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "Climb"
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 5.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Climb"
+                }
+              }
+            ]
           }
         }
       ]
