@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Trench Start"
-          }
-        },
-        {
           "type": "race",
           "data": {
             "commands": [
@@ -36,13 +30,19 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "To Neutral"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Intake at Neutral"
+                  "pathName": "Intake At Neutral"
                 }
               },
               {
@@ -92,41 +92,15 @@
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Declimb"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 3.001
-                }
-              }
-            ]
+            "name": "Declimb"
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Climb"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 5.0
-                }
-              }
-            ]
+            "name": "Climb"
           }
         }
       ]

@@ -7,9 +7,11 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.TuningCommands;
+import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climb.ClimbModuleIOTalonFX;
@@ -66,16 +68,19 @@ public class RebuiltRobotContainer extends RobotContainer {
         // Creates the commands for using non-drive subsystems in autonomous
 
         NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
+        NamedCommands.registerCommand("DistanceShooter", new distanceShooterCommand(m_shooter, swerveDriveSubsystem));
         NamedCommands.registerCommand("Feeder", m_feeder.feederCommand());
         NamedCommands.registerCommand("Intake", m_intake.IntakeCommand());
         NamedCommands.registerCommand("ExtendIntake", m_intake.ExtendArmCommand());
         NamedCommands.registerCommand("RetractIntake", m_intake.RetractArmCommand());
         NamedCommands.registerCommand("Outtake", m_intake.OuttakeCommand());
-        NamedCommands.registerCommand("Climb", m_climb.climb());
-        NamedCommands.registerCommand("Declimb", m_climb.declimb());
+        NamedCommands.registerCommand("Climb", m_climb.contract());
+        NamedCommands.registerCommand("Declimb", m_climb.extend());
         NamedCommands.registerCommand("Dontdeclimb", m_climb.dontdeclimb());
         NamedCommands.registerCommand("SpinHopper", m_hopper.SpinCommand());
-        NamedCommands.registerCommand("RunEverything", new runEverything(m_feeder, m_shooter, m_hopper));
+        NamedCommands.registerCommand("RunEverything",
+                Commands.parallel(new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
+                        new runEverything(m_feeder, m_shooter, m_hopper)));
 
         configureAutoChooser();
         configureButtonBindings();

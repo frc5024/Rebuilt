@@ -40,6 +40,8 @@ public class distanceShooterCommand extends Command {
 
         double distance = (swerveDriveSubsystem.getPose().getTranslation().getDistance(hubPose.getTranslation()));
         double RPM = Constants.shooterConstants.velocityToRPMMap.get(distance);
+        // TESTING RPM IN LIBRARY
+        // RPM *= 0.5;
         SmartDashboard.putNumber("Distance", distance);
         SmartDashboard.putNumber("RPM", RPM);
         Logger.recordOutput("shooting/distance", distance);

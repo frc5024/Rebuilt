@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Trench Start"
-          }
-        },
-        {
           "type": "race",
           "data": {
             "commands": [
@@ -30,15 +24,15 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ExtendIntake"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "To Neutral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ExtendIntake"
           }
         },
         {
@@ -61,12 +55,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "RetractIntake"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Neutral to Center"
@@ -86,50 +74,6 @@
                 "type": "wait",
                 "data": {
                   "waitTime": 4.0
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "To Left Tower"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Declimb"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 3.001
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Climb"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 5.0
                 }
               }
             ]
