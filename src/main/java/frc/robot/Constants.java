@@ -366,9 +366,17 @@ public final class Constants {
 
         // Camera names and positions, must match names configured on coprocessor
         public static Camera frontCamera = new Camera("FrontCam", "limelight-four",
-                new Transform3d(0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, 0.0)));
+                new Transform3d(
+                        -Units.inchesToMeters(4.0),
+                        -Units.inchesToMeters(11.75),
+                        Units.inchesToMeters(19.25),
+                        new Rotation3d(0.0, -Units.degreesToRadians(15.0), 0.0)));
         public static Camera rearCamera = new Camera("RearCam", "limelight-three",
-                new Transform3d(-0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, Math.PI)));
+                new Transform3d(
+                        -Units.inchesToMeters(6.75),
+                        -Units.inchesToMeters(11.75),
+                        Units.inchesToMeters(19.25),
+                        new Rotation3d(0.0, -Units.degreesToRadians(15.0), Math.PI)));
 
         // Basic filtering thresholds
         public static double maxAmbiguity = 0.3;
