@@ -124,10 +124,6 @@ public class RebuiltRobotContainer extends RobotContainer {
     }
 
     @Override
-    public void updateMechanisms() {
-    }
-
-    @Override
     public void updateSimulation() {
     }
 
