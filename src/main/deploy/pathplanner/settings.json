@@ -2,15 +2,12 @@
   "robotWidth": 0.876,
   "robotLength": 0.851,
   "holonomicMode": true,
-  "pathFolders": [
-    "Hub Start",
-    "Left Trench Start",
-    "Climb",
-    "Right Trench Start"
-  ],
+  "pathFolders": [],
   "autoFolders": [
     "Calibration",
-    "Simple Autos"
+    "Corner Autos",
+    "Drive Back Autos",
+    "Trench Autos"
   ],
   "defaultMaxVel": 1.5,
   "defaultMaxAccel": 3.0,
