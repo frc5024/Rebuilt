@@ -75,7 +75,7 @@ public class RobotMechanism {
     /**
      * 
      */
-    public double getShooterArmAngle() {
+    public double getTurretArmAngle() {
         return turretArm.getAngle();
     }
 
