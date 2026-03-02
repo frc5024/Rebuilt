@@ -60,6 +60,10 @@ public class ShooterSubsystem extends SubsystemBase {
         }
     }
 
+    public double getCurrentDrawAmps() {
+        return shooterModuleIO.getCurrentDrawAmps();
+    }
+
     public double getPosition() {
         return shooterModuleIO.getPosition();
     }

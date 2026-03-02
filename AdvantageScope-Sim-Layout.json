@@ -1,0 +1,248 @@
+{
+  "hubs": [
+    {
+      "x": 1337,
+      "y": 34,
+      "width": 2103,
+      "height": 1261,
+      "state": {
+        "sidebar": {
+          "width": 357,
+          "expanded": [
+            "/AdvantageKit",
+            "/AdvantageKit/RealOutputs",
+            "/AdvantageKit/Elevator",
+            "/AdvantageKit/Elevator/Data",
+            "/AdvantageKit/RealOutputs/Subsystems",
+            "/AdvantageKit/RealOutputs/Subsystems/Elevator",
+            "/AdvantageKit/RealOutputs/FieldSimulation",
+            "/AdvantageKit/RealOutputs/Mechanism3d",
+            "/AdvantageKit/RealOutputs/Subsystems/Vision",
+            "/AdvantageKit/RealOutputs/Subsystems/Vision/Summary",
+            "/RealOutputs/Subsystems",
+            "/RealOutputs/Subsystems/SwerveDrive",
+            "/RealOutputs/Subsystems/SwerveDrive/SwerveStates",
+            "/RealOutputs/Subsystems/SwerveDrive/SwerveChassisSpeeds",
+            "/RealOutputs/Subsystems/SwerveDrive/SwerveChassisSpeeds/Measured",
+            "/RealOutputs/SwerveDrive/SwerveChassisSpeeds/Measured",
+            "/RealOutputs/SwerveDrive/Odometry",
+            "/RealOutputs/Mechanism3d/Measured",
+            "/Feeder/Data",
+            "/Climb/Data",
+            "/Hopper/Data",
+            "/Intake/Data",
+            "/RealOutputs/Field Simulation",
+            "/Turret/Data",
+            "/NetworkInputs/SmartDashboard",
+            "/DriverStation/Joystick0/AxisValues",
+            "/RealOutputs/SwerveDrive/SwerveChassisSpeeds/Setpoints",
+            "/RealOutputs/AprilTagVision",
+            "/RealOutputs",
+            "/RealOutputs/Mechanism3d/Components",
+            "/RealOutputs/SwerveStates",
+            "/RealOutputs/Kicker",
+            "/RealOutputs/LaunchCalculator",
+            "/Flywheel",
+            "/RealOutputs/SwerveChassisSpeeds",
+            "/RealOutputs/Turret",
+            "/RealOutputs/Commands",
+            "/RealOutputs/Commands/ChassisSpeeds",
+            "/Shooter",
+            "/RealOutputs/Shooter",
+            "/RealOutputs/Turret/Pose",
+            "/RealOutputs/Turret/Pose/rotation",
+            "/RealOutputs/Turret/Pose/rotation/q",
+            "/Vision/RearCam",
+            "/Vision/FrontCam",
+            "/RealOutputs/Vision/RearCam",
+            "/RealOutputs/Vision/FrontCam",
+            "/Vision/FrontCam/PoseObservations/1",
+            "/Vision/FrontCam/PoseObservations/0",
+            "/Vision/FrontCam/PoseObservations/0/pose",
+            "/Vision/FrontCam/PoseObservations/0/pose/translation",
+            "/Vision/RearCam/PoseObservations/1",
+            "/Vision/RearCam/PoseObservations/1/pose",
+            "/Vision/RearCam/PoseObservations/1/pose/translation",
+            "/RealOutputs/Vision/Cameras",
+            "/RealOutputs/Vision/Cameras/Poses",
+            "/Shooter/Data",
+            "/PowerDistribution/ChannelCurrent"
+          ]
+        },
+        "tabs": {
+          "selected": 3,
+          "tabs": [
+            {
+              "type": 0,
+              "title": "",
+              "controller": null,
+              "controllerUUID": "inndbz12x6tlofk0teydgei3seue7lu2",
+              "renderer": "",
+              "controlsHeight": 0
+            },
+            {
+              "type": 5,
+              "title": "Console",
+              "controller": null,
+              "controllerUUID": "97pu69jkhwxrwpdoxjkvjq26wy8cz0lq",
+              "renderer": {
+                "highlight": false
+              },
+              "controlsHeight": 0
+            },
+            {
+              "type": 1,
+              "title": "Line Graph",
+              "controller": {
+                "leftSources": [],
+                "rightSources": [],
+                "discreteSources": [],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "type": null,
+                  "factor": 1
+                },
+                "rightUnitConversion": {
+                  "type": null,
+                  "factor": 1
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "u1vsee28rus6bulyc85841qjn73vmtsh",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 3,
+              "title": "3D Field",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "robot",
+                    "logKey": "/RealOutputs/SwerveDrive/Odometry/Robot",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "2026 IndieBot"
+                    }
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "/RealOutputs/Mechanism/3d",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "vision",
+                    "logKey": "/RealOutputs/Vision/FrontCam/TagPoses",
+                    "logType": "Pose3d[]",
+                    "visible": false,
+                    "options": {
+                      "color": "#00ff00",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "vision",
+                    "logKey": "/RealOutputs/Vision/RearCam/TagPoses",
+                    "logType": "Pose3d[]",
+                    "visible": false,
+                    "options": {
+                      "color": "#00ff00",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "gamePiece",
+                    "logKey": "/RealOutputs/FuelSim/FuelPoses",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "variant": "Fuel"
+                    }
+                  },
+                  {
+                    "type": "gamePiece",
+                    "logKey": "/RealOutputs/FuelSim/FuelInRobot",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "variant": "Fuel"
+                    }
+                  },
+                  {
+                    "type": "trajectory",
+                    "logKey": "/RealOutputs/Mechanism/Trajectory",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#00ff00",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "game": "FRC:2026 Field"
+              },
+              "controllerUUID": "rkdkiw08zlvm4wgubzknv1n0lho8ptvq",
+              "renderer": {
+                "cameraIndex": -1,
+                "orbitFov": 50,
+                "cameraPosition": [
+                  7.621583687927346,
+                  2.237574870978788,
+                  1.5970733813367963
+                ],
+                "cameraTarget": [
+                  1.4344612649105928,
+                  -0.13466355352564727,
+                  0.9139059147389389
+                ]
+              },
+              "controlsHeight": 349
+            },
+            {
+              "type": 9,
+              "title": "Swerve",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "states",
+                    "logKey": "/RealOutputs/SwerveDrive/SwerveStates/SetpointsOptimized",
+                    "logType": "SwerveModuleState[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#ff0000",
+                      "arrangement": "0,1,2,3"
+                    }
+                  },
+                  {
+                    "type": "states",
+                    "logKey": "/RealOutputs/SwerveDrive/SwerveStates/Measured",
+                    "logType": "SwerveModuleState[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#0000ff",
+                      "arrangement": "0,1,2,3"
+                    }
+                  }
+                ],
+                "maxSpeed": 5,
+                "sizeX": 0.65,
+                "sizeY": 0.65,
+                "orientation": 1
+              },
+              "controllerUUID": "mo527owvqtw4qxm2l13l6wkcgzocgnre",
+              "renderer": null,
+              "controlsHeight": 200
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "satellites": [],
+  "version": "26.0.0"
+}

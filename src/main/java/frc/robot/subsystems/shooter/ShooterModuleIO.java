@@ -29,6 +29,10 @@ public interface ShooterModuleIO {
             double fw2TempCelsius) {
     }
 
+    default double getCurrentDrawAmps() {
+        return 0.0;
+    }
+
     default double getPosition() {
         return 0.0;
     }

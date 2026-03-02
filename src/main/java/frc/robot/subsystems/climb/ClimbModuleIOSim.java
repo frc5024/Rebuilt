@@ -61,6 +61,11 @@ public class ClimbModuleIOSim extends ClimbModuleIOTalonFX {
     }
 
     @Override
+    public double getCurrentDrawAmps() {
+        return talonFXSimState.getSupplyCurrent();
+    }
+
+    @Override
     public double getPosition() {
         return climbMotor.getPosition().getValueAsDouble();
     }

@@ -142,6 +142,10 @@ public class TurretSubsystem extends SubsystemBase {
         }
     }
 
+    public double getCurrentDrawAmps() {
+        return turretModuleIO.getCurrentDrawAmps();
+    }
+
     // public void turretMath(double joystickSpeed) {
     // if(Math.abs(joystickSpeed) > 0.01) {
     // outputSpeed = joystickSpeed;

@@ -129,20 +129,20 @@ public class IntakeSubsystem extends SubsystemBase {
         }
     }
 
-    public void setArmPID(boolean armPIDEnabled) {
-        this.armPIDEnabled = armPIDEnabled;
-    }
-
-    public void setRollerPID(boolean rollerPIDEnabled) {
-        this.rollerPIDEnabled = rollerPIDEnabled;
-    }
-
     public double getCurrentDrawAmps() {
         return intakeModuleIO.getCurrentDrawAmps();
     }
 
     public double getPosition() {
         return intakeModuleIO.getPosition();
+    }
+
+    public void setArmPID(boolean armPIDEnabled) {
+        this.armPIDEnabled = armPIDEnabled;
+    }
+
+    public void setRollerPID(boolean rollerPIDEnabled) {
+        this.rollerPIDEnabled = rollerPIDEnabled;
     }
 
     public void setIntakeSpeed(double speed) {

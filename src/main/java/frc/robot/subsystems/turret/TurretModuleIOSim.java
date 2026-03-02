@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 public class TurretModuleIOSim extends TurretModuleIOSparkMax {
     // Hardware objects
     private final DCMotor dcMotor;
-    private final SparkMaxSim sparkMaxSim;
     private final DCMotorSim dcMotorSim;
+    private final SparkMaxSim sparkMaxSim;
 
     private double voltageRequest;
 
@@ -23,8 +23,8 @@ public class TurretModuleIOSim extends TurretModuleIOSparkMax {
      */
     public TurretModuleIOSim() {
         this.dcMotor = DCMotor.getNEO(1);
-        this.sparkMaxSim = new SparkMaxSim(this.turretMotor, this.dcMotor);
         this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, 4.0), dcMotor);
+        this.sparkMaxSim = new SparkMaxSim(this.turretMotor, this.dcMotor);
 
         this.voltageRequest = 0.0;
     }
@@ -48,5 +48,10 @@ public class TurretModuleIOSim extends TurretModuleIOSparkMax {
                 0.0,
                 sparkMaxSim.getMotorCurrent(),
                 0.0);
+    }
+
+    @Override
+    public double getCurrentDrawAmps() {
+        return sparkMaxSim.getMotorCurrent();
     }
 }

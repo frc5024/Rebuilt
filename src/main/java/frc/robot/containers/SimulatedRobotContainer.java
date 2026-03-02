@@ -173,7 +173,13 @@ public class SimulatedRobotContainer extends RobotContainer {
 
         RoboRioSim.setVInVoltage(
                 BatterySim.calculateDefaultBatteryLoadedVoltage(
-                        m_hopper.getCurrentDrawAmps()));
+                        m_climb.getCurrentDrawAmps(),
+                        m_feeder.getCurrentDrawAmps(),
+                        m_hopper.getCurrentDrawAmps(),
+                        m_intake.getCurrentDrawAmps(),
+                        m_shooter.getCurrentDrawAmps(),
+                        swerveDriveSubsystem.getCurrentDrawAmps(),
+                        m_turret.getCurrentDrawAmps()));
 
         Logger.recordOutput("FuelSim/FuelInRobot", fuelSimCount.getFuelInRobotPoses(swerveDriveSubsystem.getPose()));
     }

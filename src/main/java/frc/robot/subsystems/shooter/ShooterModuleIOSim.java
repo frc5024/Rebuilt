@@ -30,28 +30,6 @@ public class ShooterModuleIOSim extends ShooterModuleIOSparkFlex {
     }
 
     @Override
-    public double getPosition() {
-        return sparkFlexSim.getPosition();
-    }
-
-    @Override
-    public double getVelocity() {
-        return flywheelSim.getAngularVelocityRPM();
-    }
-
-    @Override
-    public void set(double voltage) {
-        voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
-        flywheelSim.setInputVoltage(voltageRequest);
-    }
-
-    @Override
-    public void setVoltage(double voltage) {
-        voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
-        flywheelSim.setInputVoltage(voltageRequest);
-    }
-
-    @Override
     public void updateInputs(ShooterModuleIOInputs inputs) {
         if (DriverStation.isDisabled()) {
             stop();
@@ -80,5 +58,32 @@ public class ShooterModuleIOSim extends ShooterModuleIOSparkFlex {
                 0.0,
                 sparkFlexSim.getMotorCurrent(),
                 0.0);
+    }
+
+    @Override
+    public double getCurrentDrawAmps() {
+        return sparkFlexSim.getMotorCurrent();
+    }
+
+    @Override
+    public double getPosition() {
+        return sparkFlexSim.getPosition();
+    }
+
+    @Override
+    public double getVelocity() {
+        return flywheelSim.getAngularVelocityRPM();
+    }
+
+    @Override
+    public void set(double voltage) {
+        voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        flywheelSim.setInputVoltage(voltageRequest);
+    }
+
+    @Override
+    public void setVoltage(double voltage) {
+        voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        flywheelSim.setInputVoltage(voltageRequest);
     }
 }

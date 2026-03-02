@@ -27,12 +27,6 @@ public class FeederModuleIOSim extends FeederModuleIOSparkMax {
     }
 
     @Override
-    public void set(double voltage) {
-        voltageRequest = MathUtil.clamp(voltage, -12.0, 12.0);
-        sparkMaxSim.setAppliedOutput(voltageRequest);
-    }
-
-    @Override
     public void updateInputs(FeederModuleIOInputs inputs) {
         if (DriverStation.isDisabled()) {
             stop();
@@ -46,5 +40,16 @@ public class FeederModuleIOSim extends FeederModuleIOSparkMax {
                 0.0,
                 sparkMaxSim.getMotorCurrent(),
                 0.0);
+    }
+
+    @Override
+    public double getCurrentDrawAmps() {
+        return sparkMaxSim.getMotorCurrent();
+    }
+
+    @Override
+    public void set(double voltage) {
+        voltageRequest = MathUtil.clamp(voltage, -12.0, 12.0);
+        sparkMaxSim.setAppliedOutput(voltageRequest);
     }
 }

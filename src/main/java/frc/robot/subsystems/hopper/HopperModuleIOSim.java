@@ -31,22 +31,6 @@ public class HopperModuleIOSim extends HopperModuleIOSparkMax {
     }
 
     @Override
-    public double getCurrentDrawAmps() {
-        return 0.0;
-    }
-
-    @Override
-    public double getPosition() {
-        return sparkMaxSim.getPosition();
-    }
-
-    @Override
-    public void set(double voltage) {
-        voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
-        dcMotorSim.setInputVoltage(voltageRequest);
-    }
-
-    @Override
     public void updateInputs(HopperModuleIOInputs inputs) {
         if (DriverStation.isDisabled()) {
             stop();
@@ -65,5 +49,21 @@ public class HopperModuleIOSim extends HopperModuleIOSparkMax {
                 0.0,
                 sparkMaxSim.getMotorCurrent(),
                 0.0);
+    }
+
+    @Override
+    public double getCurrentDrawAmps() {
+        return sparkMaxSim.getMotorCurrent();
+    }
+
+    @Override
+    public double getPosition() {
+        return sparkMaxSim.getPosition();
+    }
+
+    @Override
+    public void set(double voltage) {
+        voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        dcMotorSim.setInputVoltage(voltageRequest);
     }
 }
