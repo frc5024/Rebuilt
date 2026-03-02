@@ -58,6 +58,8 @@ public class ShooterSubsystem extends SubsystemBase {
         } else {
             shooterModuleIO.set(0);
         }
+
+        Logger.recordOutput("Shooter/Velocity", getTangentialVelocity());
     }
 
     public double getCurrentDrawAmps() {

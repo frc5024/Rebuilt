@@ -25,12 +25,24 @@ public interface TurretModuleIO {
         return 0.0;
     }
 
+    default double getAngle() {
+        return 0.0;
+    }
+
     default double getPosition() {
+        return 0.0;
+    }
+
+    default double getSetpoint() {
         return 0.0;
     }
 
     default double getVelocity() {
         return 0.0;
+    }
+
+    default boolean isAtSetpoint() {
+        return false;
     }
 
     default boolean isRunning() {
@@ -40,6 +52,9 @@ public interface TurretModuleIO {
     // TODO: remove after refactoring - speed is a constant so set it in the
     // hardware module
     default void set(double speed) {
+    }
+
+    default void setAngle(double degrees) {
     }
 
     default void setPosition(double position) {
