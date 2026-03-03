@@ -4,7 +4,9 @@ import com.revrobotics.sim.SparkMaxSim;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 /**
@@ -35,16 +37,20 @@ public class TurretModuleIOSim extends TurretModuleIOSparkMax2 {
             stop();
         }
 
+        dcMotorSim.setInput(sparkMaxSim.getAppliedOutput() * RobotController.getBatteryVoltage());
         dcMotorSim.update(0.02);
 
-        sparkMaxSim.setPosition(dcMotorSim.getAngularPositionRotations());
-        sparkMaxSim.setVelocity(dcMotorSim.getAngularVelocityRPM());
+        double velocityRPM = Units.radiansPerSecondToRotationsPerMinute(dcMotorSim.getAngularVelocityRadPerSec());
+        sparkMaxSim.iterate(velocityRPM, RobotController.getBatteryVoltage(), 0.020);
+
+        sparkMaxSim.setMotorCurrent(dcMotorSim.getCurrentDrawAmps());
+        sparkMaxSim.setBusVoltage(voltageRequest);
 
         inputs.data = new TurretModuleIOData(
                 true,
                 sparkMaxSim.getPosition(),
                 sparkMaxSim.getVelocity(),
-                voltageRequest,
+                sparkMaxSim.getAppliedOutput() * RobotController.getBatteryVoltage(),
                 0.0,
                 sparkMaxSim.getMotorCurrent(),
                 0.0);
