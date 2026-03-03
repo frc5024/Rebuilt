@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -203,7 +202,7 @@ public class SimulatedRobotContainer extends RobotContainer {
         mechanismVisualizer.update(
                 m_intake.getPosition(),
                 m_hopper.getPosition(),
-                Math.sin(Timer.getTimestamp()) - 1.0,
+                m_turret.getAngle(),
                 m_climb.getPosition(),
                 turretPose,
                 m_shooter.getTangentialVelocity());

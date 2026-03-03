@@ -38,7 +38,7 @@ public class HopperModuleIOSparkMax implements HopperModuleIO {
         }
 
         inputs.data = new HopperModuleIOData(
-                connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
+                connectedDebouncer.calculate(hopperMotor.getFaults().other),
                 encoder.getPosition(),
                 encoder.getVelocity(),
                 hopperMotor.getAppliedOutput(),

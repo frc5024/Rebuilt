@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.turretConstants;
@@ -28,11 +27,6 @@ public class TurretSubsystem extends SubsystemBase {
     private TrapezoidProfile.Constraints feedForwardConstraints;
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(turretConstants.kS,
             turretConstants.kV, turretConstants.kA); // Tune these values
-
-    private double outputSpeed;
-    private double joystickSpeed;
-    private double currentAngle;
-    private double targetAngle;
 
     private double voltageValue;
 
@@ -101,10 +95,6 @@ public class TurretSubsystem extends SubsystemBase {
         System.out.println("PID disabled for turret");
     }
 
-    public void updateJoystick(double joystickSpeed) {
-        this.joystickSpeed = joystickSpeed;
-    }
-
     public void runTurret(double speed) {
         turretModuleIO.set(speed);
     }
@@ -147,6 +137,9 @@ public class TurretSubsystem extends SubsystemBase {
             // System.out.println("hello, pid is UPDATEDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
             updatePID();
         }
+
+        Logger.recordOutput("Turret/CurrentAngle", getAngle());
+        Logger.recordOutput("Turret/SetPoint", turretModuleIO.getSetpoint());
     }
 
     public double getAngle() {
@@ -205,6 +198,10 @@ public class TurretSubsystem extends SubsystemBase {
         return targetVelocity;
     }
 
+    public void setAngle(double degrees) {
+        turretModuleIO.setAngle(degrees);
+    }
+
     public void zeroEncoder() {
         turretModuleIO.setPosition(0.0);
 
@@ -243,12 +240,6 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void setIdle() {
         turretModuleIO.set(0);
-    }
-
-    public Command setAngle(double angle) {
-
-        return new InstantCommand(() -> turretModuleIO.setAngle(angle), this);
-
     }
 
     public Command stickRotation(double speed) {

@@ -37,6 +37,7 @@ public final class Constants {
     }
 
     public static final class turretConstants {
+        public static final double ANGLE_LIMIT = 135.0;
         public static final double speed = 0.3;
         public static final int turretMotorChannel = 3;
         public static final double turretTolerance = 0.5;
@@ -242,6 +243,21 @@ public final class Constants {
         public static final Pose2d[] RED_ZONE = new Pose2d[] {
                 new Pose2d(11.9154, 0.0, Rotation2d.fromDegrees(0.0)),
                 new Pose2d(16.541, 8.0693, Rotation2d.fromDegrees(0.0))
+        };
+
+        public static final Pose2d[][] MULE_POSES = new Pose2d[][] {
+                // Blue Alliance
+                {
+                        new Pose2d(2.0, 2.0, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(2.04, 6.0, Rotation2d.fromDegrees(180.0))
+
+                },
+                // Red Alliance
+                {
+                        new Pose2d(14.5, 2.0, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(14.5, 6.0, Rotation2d.fromDegrees(0.0))
+
+                }
         };
     }
 

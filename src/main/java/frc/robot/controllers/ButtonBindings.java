@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.turretConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.commands.distanceShooterCommand;
@@ -101,8 +102,6 @@ public class ButtonBindings {
                             return Rotation2d.fromRadians(angleToHub);
                         }));
 
-        commandXboxController.b().whileTrue(m_turret.setAngle(30));
-
         // commandXboxController.b().whileTrue(m_intake.OuttakeCommand());
         // commandXboxController.b().whileTrue(m_intake.retractArmPIDCommand());
         // commandXboxController.leftTrigger().whileTrue( new runEverything(m_feeder,
@@ -122,8 +121,10 @@ public class ButtonBindings {
         // commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
-        commandXboxController.povLeft().whileTrue(m_turret.setAngle(-135));
-        commandXboxController.povRight().whileTrue(m_turret.setAngle(135));
+        commandXboxController.povLeft().onTrue(
+                Commands.runOnce(() -> m_turret.setAngle(-turretConstants.ANGLE_LIMIT)));
+        commandXboxController.povRight().onTrue(
+                Commands.runOnce(() -> m_turret.setAngle(turretConstants.ANGLE_LIMIT)));
 
         return commandXboxController;
     }

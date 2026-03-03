@@ -37,8 +37,16 @@ public interface ShooterModuleIO {
         return 0.0;
     }
 
+    default double getSetpoint() {
+        return 0.0;
+    }
+
     default double getVelocity() {
         return 0.0;
+    }
+
+    default boolean isAtSetpoint() {
+        return false;
     }
 
     default boolean isRunning() {
@@ -48,6 +56,15 @@ public interface ShooterModuleIO {
     // TODO: remove after refactoring - speed is a constant so set it in the
     // hardware module
     default void set(double speed) {
+    }
+
+    default void setPID(double kP, double kI, double kD) {
+    }
+
+    default void setFF(double kS, double kV, double kA) {
+    }
+
+    default void setVelocity(double rpm) {
     }
 
     // TODO: remove after refactoring - speed is a constant so set it in the

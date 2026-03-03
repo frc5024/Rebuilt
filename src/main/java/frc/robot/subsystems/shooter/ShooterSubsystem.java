@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -60,9 +59,10 @@ public class ShooterSubsystem extends SubsystemBase {
         }
 
         Logger.recordOutput("Shooter/Enabled", enabled);
+        Logger.recordOutput("Shooter/AtSetpoint", shooterModuleIO.isAtSetpoint());
         Logger.recordOutput("Shooter/SetpointRPM", PID.getSetpoint());
         Logger.recordOutput("Shooter/VelocityTangential", getTangentialVelocity());
-        Logger.recordOutput("Shooter/VelocityRPM", Units.radiansPerSecondToRotationsPerMinute(getVelocity()));
+        Logger.recordOutput("Shooter/VelocityRPM", getVelocity());
     }
 
     public double getCurrentDrawAmps() {
@@ -78,8 +78,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getTangentialVelocity() {
-        return (Units.radiansPerSecondToRotationsPerMinute(getVelocity()) / 60.0)
-                * (Math.PI * shooterConstants.WHEEL_DIAMETER_METERS);
+        return (getVelocity() / 60.0) * (Math.PI * shooterConstants.WHEEL_DIAMETER_METERS);
     }
 
     public void setShooterPID(double setVelocity) {
@@ -121,6 +120,10 @@ public class ShooterSubsystem extends SubsystemBase {
     // public Pose2d getPosition() {
     // return frc.robot.subsystems.swervedrive.SwerveDriveSubsystem.getPose();
     // }
+
+    public void setVelocity(double rpm) {
+        shooterModuleIO.setVelocity(rpm);
+    }
 
     public Command shooterCommand() {
         return new shooterCommand(this, shooterConstants.setVelocity);

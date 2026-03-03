@@ -11,24 +11,15 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants;
 import frc.robot.Constants.turretConstants;
 
 public class TurretModuleIOSparkMax2 implements TurretModuleIO {
-
-    // ShuffleboardTab tab = Shuffleboard.getTab("Turret");
-
-    // GenericEntry pEntry = tab.add("SET P", turretConstants.kP).getEntry();
-    // GenericEntry dEntry = tab.add("SET D", turretConstants.kD).getEntry();
-    // GenericEntry iEntry = tab.add("SET I", turretConstants.kI).getEntry();
-
     /* Constants */
     protected final double GEAR_RATIO = 28.6667;
-    protected final double ANGLE_LIMIT = 135;
 
     /* Hardware */
     protected final SparkMax turretMotor;
-    private final SparkClosedLoopController pidController;
+    protected final SparkClosedLoopController pidController;
 
     private final SparkMaxConfig config;
 
@@ -52,21 +43,18 @@ public class TurretModuleIOSparkMax2 implements TurretModuleIO {
 
         // limit turn angle sue to wiring
         config.softLimit
-                .forwardSoftLimit(ANGLE_LIMIT)
+                .forwardSoftLimit(turretConstants.ANGLE_LIMIT)
                 .forwardSoftLimitEnabled(true)
-                .reverseSoftLimit(-ANGLE_LIMIT)
+                .reverseSoftLimit(-turretConstants.ANGLE_LIMIT)
                 .reverseSoftLimitEnabled(true);
 
-        // tab.addDouble("current angle", () -> getAngle());
-
-        // set controller PID
-        // config.closedLoop.p(Constants.turretConstants.kP);
-        // config.closedLoop.i(Constants.turretConstants.kI);
-        // config.closedLoop.d(Constants.turretConstants.kD);
-
-        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).p(Constants.turretConstants.kP)
-                .i(Constants.turretConstants.kI).d(Constants.turretConstants.kD).feedForward
-                .kS(Constants.turretConstants.kS).kV(Constants.turretConstants.kV).kA(Constants.turretConstants.kA);
+        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                .p(turretConstants.kP)
+                .i(turretConstants.kI)
+                .d(turretConstants.kD).feedForward
+                .kS(turretConstants.kS)
+                .kV(turretConstants.kV)
+                .kA(turretConstants.kA);
 
         this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -104,9 +92,7 @@ public class TurretModuleIOSparkMax2 implements TurretModuleIO {
 
     @Override
     public void setPID(double kP, double kI, double kD) {
-        config.closedLoop.p(kP);
-        config.closedLoop.i(kI);
-        config.closedLoop.d(kD);
+        config.closedLoop.p(kP).i(kI).d(kD);
 
         this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -114,6 +100,7 @@ public class TurretModuleIOSparkMax2 implements TurretModuleIO {
     @Override
     public void setFF(double kS, double kV, double kA) {
         config.closedLoop.feedForward.kS(kS).kV(kV).kA(kA);
+
         this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
@@ -124,7 +111,7 @@ public class TurretModuleIOSparkMax2 implements TurretModuleIO {
 
     @Override
     public void setAngle(double degrees) {
-        double target = Math.max(-ANGLE_LIMIT, Math.min(ANGLE_LIMIT, degrees));
+        double target = Math.max(-turretConstants.ANGLE_LIMIT, Math.min(turretConstants.ANGLE_LIMIT, degrees));
         pidController.setSetpoint(target, ControlType.kPosition);
     }
 

@@ -18,8 +18,6 @@ public class TurretModuleIOSim extends TurretModuleIOSparkMax2 {
     private final DCMotorSim dcMotorSim;
     private final SparkMaxSim sparkMaxSim;
 
-    private double voltageRequest;
-
     /**
      * 
      */
@@ -27,8 +25,6 @@ public class TurretModuleIOSim extends TurretModuleIOSparkMax2 {
         this.dcMotor = DCMotor.getNEO(1);
         this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, 4.0), dcMotor);
         this.sparkMaxSim = new SparkMaxSim(this.turretMotor, this.dcMotor);
-
-        this.voltageRequest = 0.0;
     }
 
     @Override
@@ -37,20 +33,21 @@ public class TurretModuleIOSim extends TurretModuleIOSparkMax2 {
             stop();
         }
 
-        dcMotorSim.setInput(sparkMaxSim.getAppliedOutput() * RobotController.getBatteryVoltage());
+        double appliedVoltage = sparkMaxSim.getAppliedOutput() * RobotController.getBatteryVoltage();
+        dcMotorSim.setInput(appliedVoltage);
         dcMotorSim.update(0.02);
 
         double velocityRPM = Units.radiansPerSecondToRotationsPerMinute(dcMotorSim.getAngularVelocityRadPerSec());
         sparkMaxSim.iterate(velocityRPM, RobotController.getBatteryVoltage(), 0.020);
 
         sparkMaxSim.setMotorCurrent(dcMotorSim.getCurrentDrawAmps());
-        sparkMaxSim.setBusVoltage(voltageRequest);
+        sparkMaxSim.setBusVoltage(appliedVoltage);
 
         inputs.data = new TurretModuleIOData(
                 true,
                 sparkMaxSim.getPosition(),
                 sparkMaxSim.getVelocity(),
-                sparkMaxSim.getAppliedOutput() * RobotController.getBatteryVoltage(),
+                appliedVoltage,
                 0.0,
                 sparkMaxSim.getMotorCurrent(),
                 0.0);
