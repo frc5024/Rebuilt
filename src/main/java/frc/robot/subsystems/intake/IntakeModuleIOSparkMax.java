@@ -12,9 +12,12 @@ import edu.wpi.first.wpilibj.DriverStation;
  * 
  */
 public class IntakeModuleIOSparkMax implements IntakeModuleIO {
-    int intakeMotorID = 60; // ID on prototype board, subject to change
-    int armMotorID = 5; // this is a placeholder ID
+    // Constants
+    protected final double GEAR_RATIO = 9.0;
+    protected final int intakeMotorID = 60; // ID on prototype board, subject to change
+    protected final int armMotorID = 5; // this is a placeholder ID
 
+    // Hardware
     protected final SparkMax intakeMotor;
     protected final SparkMax armMotor;
     private final RelativeEncoder intakeEncoder;

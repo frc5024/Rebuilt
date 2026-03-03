@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 public class HopperModuleIOSim extends HopperModuleIOSparkMax {
     // Hardware objects
     private final DCMotor dcMotor;
-    private final SparkMaxSim sparkMaxSim;
     private final DCMotorSim dcMotorSim;
+    private final SparkMaxSim sparkMaxSim;
 
     private double voltageRequest;
 
@@ -24,8 +24,8 @@ public class HopperModuleIOSim extends HopperModuleIOSparkMax {
      */
     public HopperModuleIOSim() {
         this.dcMotor = DCMotor.getNEO(1);
+        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, GEAR_RATIO), dcMotor);
         this.sparkMaxSim = new SparkMaxSim(this.hopperMotor, this.dcMotor);
-        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, 4.0), dcMotor);
 
         this.voltageRequest = 0.0;
     }

@@ -24,7 +24,7 @@ public class ClimbModuleIOSim extends ClimbModuleIOTalonFX {
      */
     public ClimbModuleIOSim() {
         this.dcMotor = DCMotor.getFalcon500(1);
-        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.001, 4.0), dcMotor);
+        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.001, GEAR_RATIO), dcMotor);
         this.talonFXSimState = this.climbMotor.getSimState();
         this.talonFXSimState.Orientation = ChassisReference.CounterClockwise_Positive;
 

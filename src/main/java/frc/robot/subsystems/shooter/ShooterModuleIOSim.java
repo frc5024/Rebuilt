@@ -24,7 +24,7 @@ public class ShooterModuleIOSim extends ShooterModuleIOSparkFlex {
     public ShooterModuleIOSim() {
         this.dcMotor = DCMotor.getNEO(1);
         this.sparkFlexSim = new SparkFlexSim(this.flywheel1, this.dcMotor);
-        this.flywheelSim = new FlywheelSim(LinearSystemId.createFlywheelSystem(dcMotor, 0.003, 1.0), dcMotor);
+        this.flywheelSim = new FlywheelSim(LinearSystemId.createFlywheelSystem(dcMotor, 0.003, GEAR_RATIO), dcMotor);
 
         this.voltageRequest = 0.0;
     }
@@ -36,8 +36,8 @@ public class ShooterModuleIOSim extends ShooterModuleIOSparkFlex {
         }
 
         flywheelSim.update(0.02);
-        sparkFlexSim.setVelocity(flywheelSim.getAngularVelocityRPM());
-        double deltaRotations = (flywheelSim.getAngularVelocityRPM() / 60.0) * 0.02;
+        sparkFlexSim.setVelocity(flywheelSim.getAngularVelocityRadPerSec());
+        double deltaRotations = (flywheelSim.getAngularVelocityRadPerSec() / 60.0) * 0.02;
         sparkFlexSim.setPosition(sparkFlexSim.getPosition() + deltaRotations);
 
         sparkFlexSim.setMotorCurrent(flywheelSim.getCurrentDrawAmps());
@@ -72,7 +72,7 @@ public class ShooterModuleIOSim extends ShooterModuleIOSparkFlex {
 
     @Override
     public double getVelocity() {
-        return flywheelSim.getAngularVelocityRPM();
+        return flywheelSim.getAngularVelocityRadPerSec();
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ShooterModuleIOSim extends ShooterModuleIOSparkFlex {
 
     @Override
     public void setVoltage(double voltage) {
-        voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        voltageRequest = MathUtil.clamp(voltage, -12.0, 12.0);
         flywheelSim.setInputVoltage(voltageRequest);
     }
 }

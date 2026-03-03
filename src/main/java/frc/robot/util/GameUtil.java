@@ -40,6 +40,9 @@ public class GameUtil {
                 : FieldConstants.HUB_POSES[1];
     }
 
+    /**
+     * 
+     */
     public static Pose3d[] getShooterTrajectory(Pose3d turretPose, double velocityMetersPerSec) {
         List<Pose3d> trajectory = new ArrayList<>();
 

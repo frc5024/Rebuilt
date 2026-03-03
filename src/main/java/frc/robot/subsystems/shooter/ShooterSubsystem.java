@@ -59,7 +59,10 @@ public class ShooterSubsystem extends SubsystemBase {
             shooterModuleIO.set(0);
         }
 
-        Logger.recordOutput("Shooter/Velocity", getTangentialVelocity());
+        Logger.recordOutput("Shooter/Enabled", enabled);
+        Logger.recordOutput("Shooter/SetpointRPM", PID.getSetpoint());
+        Logger.recordOutput("Shooter/VelocityTangential", getTangentialVelocity());
+        Logger.recordOutput("Shooter/VelocityRPM", Units.radiansPerSecondToRotationsPerMinute(getVelocity()));
     }
 
     public double getCurrentDrawAmps() {
@@ -111,6 +114,8 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("FeedForward", feedForwardOutput);
         SmartDashboard.putNumber("Total Output", totalOutput);
 
+        Logger.recordOutput("Shooter/PID", PIDoutput);
+        Logger.recordOutput("Shooter/FeedForward", feedForwardOutput);
     }
 
     // public Pose2d getPosition() {
