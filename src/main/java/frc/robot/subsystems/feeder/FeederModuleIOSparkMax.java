@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj.DriverStation;
  * 
  */
 public class FeederModuleIOSparkMax implements FeederModuleIO {
+    // Constants
+    protected final double GEAR_RATIO = 1.0;
+
+    // Hardware
     protected final SparkMax feederMotor;
     private final RelativeEncoder encoder;
 

@@ -18,6 +18,10 @@ import edu.wpi.first.wpilibj.DriverStation;
  * 
  */
 public class ClimbModuleIOTalonFX implements ClimbModuleIO {
+    // Constants
+    protected final double GEAR_RATIO = 4.0;
+
+    // Hardward
     protected final TalonFX climbMotor;
 
     // Inputs from climb motor

@@ -12,6 +12,10 @@ import frc.robot.Constants;
  * 
  */
 public class HopperModuleIOSparkMax implements HopperModuleIO {
+    // Constants
+    protected final double GEAR_RATIO = 9.0;
+
+    // Hardware
     protected final SparkMax hopperMotor;
     private final RelativeEncoder encoder;
 

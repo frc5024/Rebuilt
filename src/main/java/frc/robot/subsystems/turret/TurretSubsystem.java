@@ -149,6 +149,10 @@ public class TurretSubsystem extends SubsystemBase {
         }
     }
 
+    public double getAngle() {
+        return turretModuleIO.getAngle();
+    }
+
     public double getCurrentDrawAmps() {
         return turretModuleIO.getCurrentDrawAmps();
     }
