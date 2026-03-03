@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.turretConstants;
@@ -35,7 +36,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     private double voltageValue;
 
-    private static final double GEAR_RATIO = 10.75;
+    private static final double GEAR_RATIO = 28.6667;
 
     public final int rotationAxis = XboxController.Axis.kRightX.value;
 
@@ -44,7 +45,7 @@ public class TurretSubsystem extends SubsystemBase {
     GenericEntry dEntry = tab.add("SET D", turretConstants.kD).getEntry();
     GenericEntry iEntry = tab.add("SET I", turretConstants.kI).getEntry();
 
-    GenericEntry kEntry = tab.add("SET S", turretConstants.kS).getEntry();
+    GenericEntry sEntry = tab.add("SET S", turretConstants.kS).getEntry();
     GenericEntry vEntry = tab.add("SET V", turretConstants.kV).getEntry();
     GenericEntry aEntry = tab.add("SET A", turretConstants.kA).getEntry();
 
@@ -73,16 +74,16 @@ public class TurretSubsystem extends SubsystemBase {
         pidController.setTolerance(Constants.turretConstants.turretTolerance);
         // gyro = new AHRS(SPI.Port.kMXP);
 
-        tab.addDouble("current angle", () -> getTurretAngle());
+        tab.addDouble("current angle", () -> turretModuleIO.getAngle());
 
         tab.addDouble("current velocity", () -> getCurrentVelocity());
 
         tab.addDouble("Estimated Velocity", () -> pidController.getSetpoint().velocity);
 
-        pEntry.setDouble(Constants.turretConstants.kP);
-        iEntry.setDouble(Constants.turretConstants.kI);
-        dEntry.setDouble(Constants.turretConstants.kD);
-        vEntry.setDouble(Constants.turretConstants.kV);
+        // pEntry.setDouble(Constants.turretConstants.kP);
+        // iEntry.setDouble(Constants.turretConstants.kI);
+        // dEntry.setDouble(Constants.turretConstants.kD);
+        // vEntry.setDouble(Constants.turretConstants.kV);
         toleranceEntry.setDouble(Constants.turretConstants.turretTolerance);
 
     }
@@ -130,9 +131,15 @@ public class TurretSubsystem extends SubsystemBase {
         turretModuleIO.updateInputs(inputs);
         Logger.processInputs("Turret", inputs);
 
-        pidController.setP(pEntry.getDouble(turretConstants.kP));
-        pidController.setI(iEntry.getDouble(turretConstants.kI));
-        pidController.setD(dEntry.getDouble(turretConstants.kD));
+        turretModuleIO.setPID(pEntry.getDouble(turretConstants.kP), iEntry.getDouble(turretConstants.kI),
+                dEntry.getDouble(turretConstants.kD));
+
+        turretModuleIO.setFF(sEntry.getDouble(turretConstants.kS), vEntry.getDouble(turretConstants.kV),
+                aEntry.getDouble(turretConstants.kA));
+
+        // pidController.setP(pEntry.getDouble(turretConstants.kP));
+        // pidController.setI(iEntry.getDouble(turretConstants.kI));
+        // pidController.setD(dEntry.getDouble(turretConstants.kD));
         // SimpleMotorFeedforward.setV(vEntry.getDouble(turretConstants.kV));
 
         // System.out.println("hello, pid is running");
@@ -232,6 +239,12 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void setIdle() {
         turretModuleIO.set(0);
+    }
+
+    public Command setAngle(double angle) {
+
+        return new InstantCommand(() -> turretModuleIO.setAngle(angle), this);
+
     }
 
     public Command stickRotation(double speed) {

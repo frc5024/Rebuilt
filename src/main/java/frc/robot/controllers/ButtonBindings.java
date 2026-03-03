@@ -101,6 +101,8 @@ public class ButtonBindings {
                             return Rotation2d.fromRadians(angleToHub);
                         }));
 
+        commandXboxController.b().whileTrue(m_turret.setAngle(30));
+
         // commandXboxController.b().whileTrue(m_intake.OuttakeCommand());
         // commandXboxController.b().whileTrue(m_intake.retractArmPIDCommand());
         // commandXboxController.leftTrigger().whileTrue( new runEverything(m_feeder,
@@ -120,8 +122,8 @@ public class ButtonBindings {
         // commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
-        commandXboxController.povLeft().whileTrue(m_turret.stickRotation(-0.15));
-        commandXboxController.povRight().whileTrue(m_turret.stickRotation(0.15));
+        commandXboxController.povLeft().whileTrue(m_turret.setAngle(-135));
+        commandXboxController.povRight().whileTrue(m_turret.setAngle(135));
 
         return commandXboxController;
     }

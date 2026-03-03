@@ -25,6 +25,12 @@ public interface TurretModuleIO {
         return 0.0;
     }
 
+    default void setPID(double kP, double kI, double kD) {
+    }
+
+    default void setFF(double kS, double kV, double kA) {
+    }
+
     default double getAngle() {
         return 0.0;
     }

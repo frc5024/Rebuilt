@@ -2,6 +2,7 @@ package frc.robot.subsystems.turret;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
@@ -10,16 +11,26 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Constants;
 import frc.robot.Constants.turretConstants;
 
 public class TurretModuleIOSparkMax2 implements TurretModuleIO {
+
+    // ShuffleboardTab tab = Shuffleboard.getTab("Turret");
+
+    // GenericEntry pEntry = tab.add("SET P", turretConstants.kP).getEntry();
+    // GenericEntry dEntry = tab.add("SET D", turretConstants.kD).getEntry();
+    // GenericEntry iEntry = tab.add("SET I", turretConstants.kI).getEntry();
+
     /* Constants */
-    protected final double GEAR_RATIO = 4.0;
-    protected final double ANGLE_LIMIT = 30.0;
+    protected final double GEAR_RATIO = 28.6667;
+    protected final double ANGLE_LIMIT = 135;
 
     /* Hardware */
     protected final SparkMax turretMotor;
     private final SparkClosedLoopController pidController;
+
+    private final SparkMaxConfig config;
 
     /* Connection debouncers */
     private final Debouncer connectedDebouncer;
@@ -30,10 +41,11 @@ public class TurretModuleIOSparkMax2 implements TurretModuleIO {
     public TurretModuleIOSparkMax2() {
         this.turretMotor = new SparkMax(turretConstants.turretMotorChannel, SparkLowLevel.MotorType.kBrushless);
         this.pidController = this.turretMotor.getClosedLoopController();
+        this.config = new SparkMaxConfig();
         this.connectedDebouncer = new Debouncer(0.5);
 
         // set position factor so we can turn turret to specific angle
-        SparkMaxConfig config = new SparkMaxConfig();
+
         double positionFactor = 360.0 / GEAR_RATIO;
         config.encoder.positionConversionFactor(positionFactor);
         config.encoder.velocityConversionFactor(positionFactor / 60.0);
@@ -45,10 +57,16 @@ public class TurretModuleIOSparkMax2 implements TurretModuleIO {
                 .reverseSoftLimit(-ANGLE_LIMIT)
                 .reverseSoftLimitEnabled(true);
 
+        // tab.addDouble("current angle", () -> getAngle());
+
         // set controller PID
-        config.closedLoop.p(0.1);
-        config.closedLoop.i(0.0);
-        config.closedLoop.d(0.005);
+        // config.closedLoop.p(Constants.turretConstants.kP);
+        // config.closedLoop.i(Constants.turretConstants.kI);
+        // config.closedLoop.d(Constants.turretConstants.kD);
+
+        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).p(Constants.turretConstants.kP)
+                .i(Constants.turretConstants.kI).d(Constants.turretConstants.kD).feedForward
+                .kS(Constants.turretConstants.kS).kV(Constants.turretConstants.kV).kA(Constants.turretConstants.kA);
 
         this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -82,6 +100,21 @@ public class TurretModuleIOSparkMax2 implements TurretModuleIO {
     @Override
     public double getSetpoint() {
         return pidController.getSetpoint();
+    }
+
+    @Override
+    public void setPID(double kP, double kI, double kD) {
+        config.closedLoop.p(kP);
+        config.closedLoop.i(kI);
+        config.closedLoop.d(kD);
+
+        this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
+
+    @Override
+    public void setFF(double kS, double kV, double kA) {
+        config.closedLoop.feedForward.kS(kS).kV(kV).kA(kA);
+        this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override
