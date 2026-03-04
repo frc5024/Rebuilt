@@ -131,7 +131,6 @@ public final class Constants {
         // Maximum and minimum positions for the climb, in radians.
         public static final double maxPos = 780.0;
         public static final double minPos = 10.0;
-
     }
 
     /**
@@ -145,12 +144,12 @@ public final class Constants {
         public static final double fullLength = Units.inchesToMeters(34.5);
 
         // PathPlanner config constants
-        private static final double ROBOT_MASS_KG = 74.088;
-        private static final double ROBOT_MOI = 6.883;
+        private static final double MASS_KG = 74.088;
+        private static final double MOI = 6.883;
         private static final double WHEEL_COF = 1.2;
         public static final RobotConfig PP_CONFIG = new RobotConfig(
-                ROBOT_MASS_KG,
-                ROBOT_MOI,
+                MASS_KG,
+                MOI,
                 new ModuleConfig(
                         TunerConstants.FrontLeft.WheelRadius,
                         TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
