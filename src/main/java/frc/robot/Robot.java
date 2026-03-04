@@ -19,9 +19,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.containers.MapleSimRobotContainer;
 import frc.robot.containers.RebuiltRobotContainer;
 import frc.robot.containers.RobotContainer;
+import frc.robot.containers.SimulatedRobotContainer;
 import frc.robot.generated.TunerConstants;
 
 /**
@@ -76,8 +76,7 @@ public class Robot extends LoggedRobot {
                 // Running a physics simulator, log to NT
                 Logger.addDataReceiver(new NT4Publisher());
 
-                robotContainer = new MapleSimRobotContainer();
-                // robotContainer = new SimulatedRobotContainer();
+                robotContainer = new SimulatedRobotContainer();
                 break;
 
             case REPLAY:
@@ -148,7 +147,7 @@ public class Robot extends LoggedRobot {
 
     /**
      * This autonomous runs the autonomous command selected by your
-     * {@link MapleSimRobotContainer} class.
+     * {@link RobotContainer} class.
      */
     @Override
     public void autonomousInit() {
@@ -207,7 +206,6 @@ public class Robot extends LoggedRobot {
     @Override
     public void simulationPeriodic() {
         robotContainer.updateSimulation();
-        robotContainer.updateMechanisms();
     }
 
     /**

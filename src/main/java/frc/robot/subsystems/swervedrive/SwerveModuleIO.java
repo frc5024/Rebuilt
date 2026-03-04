@@ -28,6 +28,10 @@ public interface SwerveModuleIO {
         public Rotation2d[] odometryTurnPositions = new Rotation2d[] {};
     }
 
+    default double getCurrentDrawAmps() {
+        return 0.0;
+    }
+
     /** Updates the set of loggable inputs. */
     public default void updateInputs(SwerveModuleIOInputs inputs) {
     }

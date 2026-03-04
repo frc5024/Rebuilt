@@ -100,6 +100,11 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
     }
 
     @Override
+    public double getCurrentDrawAmps() {
+        return Math.abs(driveMotorSim.getCurrentDrawAmps()) + Math.abs(turnMotorSim.getCurrentDrawAmps());
+    }
+
+    @Override
     public void setDriveOpenLoop(double output) {
         this.driveClosedLoop = false;
         this.driveAppliedVolts = output;

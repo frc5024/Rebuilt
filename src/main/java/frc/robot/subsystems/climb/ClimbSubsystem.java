@@ -38,6 +38,10 @@ public class ClimbSubsystem extends SubsystemBase {
         Logger.processInputs("Climb", inputs);
     }
 
+    public double getCurrentDrawAmps() {
+        return climbModuleIO.getCurrentDrawAmps();
+    }
+
     public double getPosition() {
         return climbModuleIO.getPosition();
     }

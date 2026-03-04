@@ -3,12 +3,12 @@ package frc.robot.controllers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.intakeConstants;
+import frc.robot.Constants.turretConstants;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.PathFinderAndFollowCommand;
-import frc.robot.commands.Intake.IntakeExtendArm;
-import frc.robot.commands.Intake.IntakeRetractArm;
+import frc.robot.commands.distanceShooterCommand;
+import frc.robot.commands.runEverything;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -75,7 +75,7 @@ public class ButtonsBindingsSim {
                         () -> -commandXboxController.getLeftX(),
                         () -> -commandXboxController.getRightX()));
 
-        // Lock to 0° when A button is held
+        // commandXboxController.a().whileTrue(m_hopper.SpinCommand());
         commandXboxController.a().whileTrue(
                 DriveCommands.joystickDriveAtAngle(
                         swerveDriveSubsystem,
@@ -94,33 +94,30 @@ public class ButtonsBindingsSim {
                             return Rotation2d.fromRadians(angleToHub);
                         }));
 
-        // Reset gyro to 0° when B button is pressed
-        commandXboxController.b().onTrue(
-                Commands.runOnce(
-                        () -> swerveDriveSubsystem.setPose(
-                                new Pose2d(swerveDriveSubsystem.getPose().getTranslation(), new Rotation2d())),
-                        swerveDriveSubsystem)
-                        .ignoringDisable(true));
+        commandXboxController.y().onTrue(m_intake.RetractArmCommand());
 
-        // Switch to X pattern when X button is pressed
-        commandXboxController.x().onTrue(Commands.runOnce(swerveDriveSubsystem::stopWithX, swerveDriveSubsystem));
+        commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
+        commandXboxController.rightBumper().whileTrue((m_intake.IntakeCommand()));
 
-        commandXboxController.y().whileTrue(new PathFinderAndFollowCommand(swerveDriveSubsystem, "Example Path"));
+        commandXboxController.leftTrigger()
+                .whileTrue(
+                        Commands.parallel(
+                                new runEverything(m_feeder, m_shooter, m_hopper),
+                                new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
 
-        commandXboxController.povUp().whileTrue(m_climb.climb());
-        commandXboxController.povDown().whileTrue(m_climb.declimb());
+        commandXboxController.rightTrigger()
+                .whileTrue(
+                        new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = true));
+        commandXboxController.rightTrigger()
+                .onFalse(
+                        new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = false));
 
-        commandXboxController.rightTrigger().onTrue(
-                Commands.sequence(
-                        new IntakeExtendArm(m_intake),
-                        Commands.runOnce(() -> m_intake.setIntakeSpeed(intakeConstants.INTAKE_SPEED), m_intake)));
-
-        commandXboxController.leftTrigger().onTrue(
-                Commands.sequence(
-                        new IntakeRetractArm(m_intake),
-                        Commands.runOnce(() -> m_intake.setIntakeSpeed(0.0))));
-
-        commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
+        commandXboxController.povUp().whileTrue(m_climb.extendclimb());
+        commandXboxController.povDown().whileTrue(m_climb.contractclimb());
+        commandXboxController.povLeft().onTrue(
+                Commands.runOnce(() -> m_turret.setAngle(-turretConstants.ANGLE_LIMIT)));
+        commandXboxController.povRight().onTrue(
+                Commands.runOnce(() -> m_turret.setAngle(turretConstants.ANGLE_LIMIT)));
 
         return commandXboxController;
     }

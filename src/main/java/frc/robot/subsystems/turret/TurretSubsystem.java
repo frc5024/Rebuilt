@@ -28,14 +28,9 @@ public class TurretSubsystem extends SubsystemBase {
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(turretConstants.kS,
             turretConstants.kV, turretConstants.kA); // Tune these values
 
-    private double outputSpeed;
-    private double joystickSpeed;
-    private double currentAngle;
-    private double targetAngle;
-
     private double voltageValue;
 
-    private static final double GEAR_RATIO = 10.75;
+    private static final double GEAR_RATIO = 28.6667;
 
     public final int rotationAxis = XboxController.Axis.kRightX.value;
 
@@ -44,7 +39,7 @@ public class TurretSubsystem extends SubsystemBase {
     GenericEntry dEntry = tab.add("SET D", turretConstants.kD).getEntry();
     GenericEntry iEntry = tab.add("SET I", turretConstants.kI).getEntry();
 
-    GenericEntry kEntry = tab.add("SET S", turretConstants.kS).getEntry();
+    GenericEntry sEntry = tab.add("SET S", turretConstants.kS).getEntry();
     GenericEntry vEntry = tab.add("SET V", turretConstants.kV).getEntry();
     GenericEntry aEntry = tab.add("SET A", turretConstants.kA).getEntry();
 
@@ -73,16 +68,16 @@ public class TurretSubsystem extends SubsystemBase {
         pidController.setTolerance(Constants.turretConstants.turretTolerance);
         // gyro = new AHRS(SPI.Port.kMXP);
 
-        tab.addDouble("current angle", () -> getTurretAngle());
+        tab.addDouble("current angle", () -> turretModuleIO.getAngle());
 
         tab.addDouble("current velocity", () -> getCurrentVelocity());
 
         tab.addDouble("Estimated Velocity", () -> pidController.getSetpoint().velocity);
 
-        pEntry.setDouble(Constants.turretConstants.kP);
-        iEntry.setDouble(Constants.turretConstants.kI);
-        dEntry.setDouble(Constants.turretConstants.kD);
-        vEntry.setDouble(Constants.turretConstants.kV);
+        // pEntry.setDouble(Constants.turretConstants.kP);
+        // iEntry.setDouble(Constants.turretConstants.kI);
+        // dEntry.setDouble(Constants.turretConstants.kD);
+        // vEntry.setDouble(Constants.turretConstants.kV);
         toleranceEntry.setDouble(Constants.turretConstants.turretTolerance);
 
     }
@@ -98,10 +93,6 @@ public class TurretSubsystem extends SubsystemBase {
         pidEnabled = false;
         turretModuleIO.set(0);
         System.out.println("PID disabled for turret");
-    }
-
-    public void updateJoystick(double joystickSpeed) {
-        this.joystickSpeed = joystickSpeed;
     }
 
     public void runTurret(double speed) {
@@ -130,9 +121,15 @@ public class TurretSubsystem extends SubsystemBase {
         turretModuleIO.updateInputs(inputs);
         Logger.processInputs("Turret", inputs);
 
-        pidController.setP(pEntry.getDouble(turretConstants.kP));
-        pidController.setI(iEntry.getDouble(turretConstants.kI));
-        pidController.setD(dEntry.getDouble(turretConstants.kD));
+        turretModuleIO.setPID(pEntry.getDouble(turretConstants.kP), iEntry.getDouble(turretConstants.kI),
+                dEntry.getDouble(turretConstants.kD));
+
+        turretModuleIO.setFF(sEntry.getDouble(turretConstants.kS), vEntry.getDouble(turretConstants.kV),
+                aEntry.getDouble(turretConstants.kA));
+
+        // pidController.setP(pEntry.getDouble(turretConstants.kP));
+        // pidController.setI(iEntry.getDouble(turretConstants.kI));
+        // pidController.setD(dEntry.getDouble(turretConstants.kD));
         // SimpleMotorFeedforward.setV(vEntry.getDouble(turretConstants.kV));
 
         // System.out.println("hello, pid is running");
@@ -140,6 +137,17 @@ public class TurretSubsystem extends SubsystemBase {
             // System.out.println("hello, pid is UPDATEDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
             updatePID();
         }
+
+        Logger.recordOutput("Turret/CurrentAngle", getAngle());
+        Logger.recordOutput("Turret/SetPoint", turretModuleIO.getSetpoint());
+    }
+
+    public double getAngle() {
+        return turretModuleIO.getAngle();
+    }
+
+    public double getCurrentDrawAmps() {
+        return turretModuleIO.getCurrentDrawAmps();
     }
 
     // public void turretMath(double joystickSpeed) {
@@ -188,6 +196,10 @@ public class TurretSubsystem extends SubsystemBase {
     public double getTargetVelocity() {
         double targetVelocity = pidController.getSetpoint().velocity;
         return targetVelocity;
+    }
+
+    public void setAngle(double degrees) {
+        turretModuleIO.setAngle(degrees);
     }
 
     public void zeroEncoder() {

@@ -4,29 +4,27 @@ import com.revrobotics.sim.SparkMaxSim;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 /**
  * 
  */
-public class TurretModuleIOSim extends TurretModuleIOSparkMax {
+public class TurretModuleIOSim extends TurretModuleIOSparkMax2 {
     // Hardware objects
     private final DCMotor dcMotor;
-    private final SparkMaxSim sparkMaxSim;
     private final DCMotorSim dcMotorSim;
-
-    private double voltageRequest;
+    private final SparkMaxSim sparkMaxSim;
 
     /**
      * 
      */
     public TurretModuleIOSim() {
         this.dcMotor = DCMotor.getNEO(1);
-        this.sparkMaxSim = new SparkMaxSim(this.turretMotor, this.dcMotor);
         this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, 4.0), dcMotor);
-
-        this.voltageRequest = 0.0;
+        this.sparkMaxSim = new SparkMaxSim(this.turretMotor, this.dcMotor);
     }
 
     @Override
@@ -35,18 +33,28 @@ public class TurretModuleIOSim extends TurretModuleIOSparkMax {
             stop();
         }
 
+        double appliedVoltage = sparkMaxSim.getAppliedOutput() * RobotController.getBatteryVoltage();
+        dcMotorSim.setInput(appliedVoltage);
         dcMotorSim.update(0.02);
 
-        sparkMaxSim.setPosition(dcMotorSim.getAngularPositionRotations());
-        sparkMaxSim.setVelocity(dcMotorSim.getAngularVelocityRPM());
+        double velocityRPM = Units.radiansPerSecondToRotationsPerMinute(dcMotorSim.getAngularVelocityRadPerSec());
+        sparkMaxSim.iterate(velocityRPM, RobotController.getBatteryVoltage(), 0.020);
+
+        sparkMaxSim.setMotorCurrent(dcMotorSim.getCurrentDrawAmps());
+        sparkMaxSim.setBusVoltage(appliedVoltage);
 
         inputs.data = new TurretModuleIOData(
                 true,
                 sparkMaxSim.getPosition(),
                 sparkMaxSim.getVelocity(),
-                voltageRequest,
+                appliedVoltage,
                 0.0,
                 sparkMaxSim.getMotorCurrent(),
                 0.0);
+    }
+
+    @Override
+    public double getCurrentDrawAmps() {
+        return sparkMaxSim.getMotorCurrent();
     }
 }

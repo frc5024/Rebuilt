@@ -187,6 +187,20 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     /**
+     * 
+     * @return
+     */
+    public double getCurrentDrawAmps() {
+        double getCurrentDrawAmps = 0.0;
+
+        for (int i = 0; i < 4; i++) {
+            getCurrentDrawAmps += modules[i].getCurrentDrawAmps();
+        }
+
+        return getCurrentDrawAmps;
+    }
+
+    /**
      * Runs the drive at the desired velocity.
      *
      * @param speeds Speeds in meters/sec
@@ -276,7 +290,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     /** Returns the measured chassis speeds of the robot. */
     @AutoLogOutput(key = "SwerveDrive/SwerveChassisSpeeds/Measured")
-    private ChassisSpeeds getChassisSpeeds() {
+    public ChassisSpeeds getChassisSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
     }
 

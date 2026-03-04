@@ -12,6 +12,10 @@ import frc.robot.Constants;
  * 
  */
 public class HopperModuleIOSparkMax implements HopperModuleIO {
+    // Constants
+    protected final double GEAR_RATIO = 9.0;
+
+    // Hardware
     protected final SparkMax hopperMotor;
     private final RelativeEncoder encoder;
 
@@ -34,7 +38,7 @@ public class HopperModuleIOSparkMax implements HopperModuleIO {
         }
 
         inputs.data = new HopperModuleIOData(
-                connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
+                connectedDebouncer.calculate(hopperMotor.getFaults().other),
                 encoder.getPosition(),
                 encoder.getVelocity(),
                 hopperMotor.getAppliedOutput(),

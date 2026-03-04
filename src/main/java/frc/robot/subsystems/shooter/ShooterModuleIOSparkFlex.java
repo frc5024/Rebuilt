@@ -18,6 +18,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
  * 
  */
 public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
+    // Constants
+    protected final double GEAR_RATIO = 1.0;
+
+    // Hardware
     protected final SparkFlex flywheel1;
     private final SparkFlex flywheel2;
 

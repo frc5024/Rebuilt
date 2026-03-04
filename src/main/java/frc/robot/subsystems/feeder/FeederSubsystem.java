@@ -32,6 +32,10 @@ public class FeederSubsystem extends SubsystemBase {
         Logger.processInputs("Feeder", inputs);
     }
 
+    public double getCurrentDrawAmps() {
+        return feederModuleIO.getCurrentDrawAmps();
+    }
+
     public void setIdle() {
         feederModuleIO.set(0);
     }

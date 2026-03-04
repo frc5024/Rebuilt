@@ -17,6 +17,8 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.util.FuelSim;
+import frc.robot.util.FuelSimCount;
 
 /**
  * 
@@ -44,6 +46,13 @@ abstract public class RobotContainer {
 
     abstract protected void configureAutoChooser();
 
+    /* Simulation */
+    protected FuelSim fuelSim;
+    protected FuelSimCount fuelSimCount;
+
+    /**
+     * 
+     */
     protected void configureButtonBindings() {
         if (Robot.isReal()) {
             ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, m_climb, m_feeder, m_hopper,
@@ -75,8 +84,6 @@ abstract public class RobotContainer {
     public void teleopInit() {
         m_climb.zeroPosition();
     }
-
-    public abstract void updateMechanisms();
 
     // Methods used by simulation only
 

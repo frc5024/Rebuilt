@@ -42,8 +42,40 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
     }
 
     @Override
+    public void updateInputs(IntakeModuleIOInputs inputs) {
+        if (DriverStation.isDisabled()) {
+            stop();
+        }
+
+        armMotorSim.update(0.02);
+        intakeMotorSim.update(0.02);
+
+        armSparkMaxSim.setPosition(armMotorSim.getAngularPositionRotations());
+        armSparkMaxSim.setVelocity(armMotorSim.getAngularVelocityRPM());
+
+        intakeSparkMaxSim.setPosition(intakeMotorSim.getAngularPositionRotations());
+        intakeSparkMaxSim.setVelocity(intakeMotorSim.getAngularVelocityRPM());
+
+        inputs.data = new IntakeModuleIOData(
+                true,
+                armSparkMaxSim.getPosition(),
+                armSparkMaxSim.getVelocity(),
+                armVoltageRequest,
+                0.0,
+                armSparkMaxSim.getMotorCurrent(),
+                0.0,
+                true,
+                intakeSparkMaxSim.getPosition(),
+                intakeSparkMaxSim.getVelocity(),
+                intakeVoltageRequest,
+                0.0,
+                intakeSparkMaxSim.getMotorCurrent(),
+                0.0);
+    }
+
+    @Override
     public double getCurrentDrawAmps() {
-        return 0.0;
+        return armSparkMaxSim.getMotorCurrent() + intakeSparkMaxSim.getMotorCurrent();
     }
 
     @Override
@@ -76,37 +108,5 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
     public void setIntake(double voltage) {
         intakeVoltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
         intakeMotorSim.setInputVoltage(intakeVoltageRequest);
-    }
-
-    @Override
-    public void updateInputs(IntakeModuleIOInputs inputs) {
-        if (DriverStation.isDisabled()) {
-            stop();
-        }
-
-        armMotorSim.update(0.02);
-        intakeMotorSim.update(0.02);
-
-        armSparkMaxSim.setPosition(armMotorSim.getAngularPositionRotations());
-        armSparkMaxSim.setVelocity(armMotorSim.getAngularVelocityRPM());
-
-        intakeSparkMaxSim.setPosition(intakeMotorSim.getAngularPositionRotations());
-        intakeSparkMaxSim.setVelocity(intakeMotorSim.getAngularVelocityRPM());
-
-        inputs.data = new IntakeModuleIOData(
-                true,
-                armSparkMaxSim.getPosition(),
-                armSparkMaxSim.getVelocity(),
-                armVoltageRequest,
-                0.0,
-                armSparkMaxSim.getMotorCurrent(),
-                0.0,
-                true,
-                intakeSparkMaxSim.getPosition(),
-                intakeSparkMaxSim.getVelocity(),
-                intakeVoltageRequest,
-                0.0,
-                intakeSparkMaxSim.getMotorCurrent(),
-                0.0);
     }
 }

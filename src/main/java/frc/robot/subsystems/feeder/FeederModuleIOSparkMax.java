@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj.DriverStation;
  * 
  */
 public class FeederModuleIOSparkMax implements FeederModuleIO {
+    // Constants
+    protected final double GEAR_RATIO = 1.0;
+
+    // Hardware
     protected final SparkMax feederMotor;
     private final RelativeEncoder encoder;
 
@@ -33,7 +37,7 @@ public class FeederModuleIOSparkMax implements FeederModuleIO {
         }
 
         inputs.data = new FeederModuleIOData(
-                connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
+                connectedDebouncer.calculate(feederMotor.getFaults().other),
                 encoder.getPosition(),
                 encoder.getVelocity(),
                 feederMotor.getAppliedOutput(),

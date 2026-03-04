@@ -1,17 +1,9 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.KilogramSquareMeters;
-import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Volts;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.ironmaple.simulation.drivesims.COTS;
-import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
-import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 
 import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.config.ModuleConfig;
@@ -45,6 +37,7 @@ public final class Constants {
     }
 
     public static final class turretConstants {
+        public static final double ANGLE_LIMIT = 135.0;
         public static final double speed = 0.3;
         public static final int turretMotorChannel = 3;
         public static final double turretTolerance = 0.5;
@@ -182,6 +175,10 @@ public final class Constants {
     public static class RobotConstants {
         public static final double LOOP_PERIOD_SECS = 0.02;
 
+        public static final double frameWidth = Units.inchesToMeters(27);
+        public static final double fullWidth = Units.inchesToMeters(34.5);
+        public static final double fullLength = Units.inchesToMeters(34.5);
+
         // PathPlanner config constants
         private static final double ROBOT_MASS_KG = 74.088;
         private static final double ROBOT_MOI = 6.883;
@@ -247,6 +244,21 @@ public final class Constants {
                 new Pose2d(11.9154, 0.0, Rotation2d.fromDegrees(0.0)),
                 new Pose2d(16.541, 8.0693, Rotation2d.fromDegrees(0.0))
         };
+
+        public static final Pose2d[][] MULE_POSES = new Pose2d[][] {
+                // Blue Alliance
+                {
+                        new Pose2d(2.0, 2.0, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(2.04, 6.0, Rotation2d.fromDegrees(180.0))
+
+                },
+                // Red Alliance
+                {
+                        new Pose2d(14.5, 2.0, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(14.5, 6.0, Rotation2d.fromDegrees(0.0))
+
+                }
+        };
     }
 
     /**
@@ -255,41 +267,6 @@ public final class Constants {
     public static class FuelCellConstants {
         public static final double DIAMETER = .15; // meters
         public static final double MASS = 0.203; // kg could go to 0.227
-    }
-
-    /**
-     * Maple Sim Constants
-     */
-    public static class MapleSimConstants {
-        public static final int driveMotorCurrentLimit = 60;
-        public static final int turnMotorCurrentLimit = 20;
-
-        public static final double driveSimP = 0.05;
-        public static final double driveSimD = 0.0;
-        public static final double driveSimKs = 0.00865;
-        private static final double DRIVE_KV_ROT = 0.91035; // Same units as TunerConstants: (volt * secs) /
-                                                            // rotation
-        public static final double driveSimKv = 1.0 / Units.rotationsToRadians(1.0 / DRIVE_KV_ROT); // 0.0789;
-
-        public static final double turnSimP = 8.0;
-        public static final double turnSimD = 0.0;
-
-        public static final DriveTrainSimulationConfig mapleSimConfig = DriveTrainSimulationConfig.Default()
-                .withRobotMass(Kilograms.of(RobotConstants.ROBOT_MASS_KG))
-                .withCustomModuleTranslations(SwerveDriveConstants.getModuleTranslations())
-                .withGyro(COTS.ofPigeon2())
-                .withSwerveModule(
-                        new SwerveModuleSimulationConfig(
-                                DCMotor.getKrakenX60(1),
-                                DCMotor.getFalcon500(1),
-                                TunerConstants.FrontLeft.DriveMotorGearRatio,
-                                TunerConstants.FrontLeft.SteerMotorGearRatio,
-                                Volts.of(TunerConstants.FrontLeft.DriveFrictionVoltage),
-                                Volts.of(TunerConstants.FrontLeft.SteerFrictionVoltage),
-                                Inches.of(2),
-                                KilogramSquareMeters.of(
-                                        TunerConstants.FrontLeft.SteerInertia),
-                                RobotConstants.WHEEL_COF));
     }
 
     /**
@@ -366,9 +343,17 @@ public final class Constants {
 
         // Camera names and positions, must match names configured on coprocessor
         public static Camera frontCamera = new Camera("FrontCam", "limelight-four",
-                new Transform3d(0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, 0.0)));
+                new Transform3d(
+                        -Units.inchesToMeters(4.0),
+                        -Units.inchesToMeters(11.75),
+                        Units.inchesToMeters(19.25),
+                        new Rotation3d(0.0, -Units.degreesToRadians(15.0), 0.0)));
         public static Camera rearCamera = new Camera("RearCam", "limelight-three",
-                new Transform3d(-0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, Math.PI)));
+                new Transform3d(
+                        -Units.inchesToMeters(6.75),
+                        -Units.inchesToMeters(11.75),
+                        Units.inchesToMeters(19.25),
+                        new Rotation3d(0.0, -Units.degreesToRadians(15.0), Math.PI)));
 
         // Basic filtering thresholds
         public static double maxAmbiguity = 0.3;
