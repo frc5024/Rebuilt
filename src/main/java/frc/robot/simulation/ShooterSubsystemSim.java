@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.FuelCellConstants;
+import frc.robot.Constants.turretConstants;
 import frc.robot.subsystems.shooter.ShooterModuleIO;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.FuelSim;
@@ -33,8 +34,12 @@ public class ShooterSubsystemSim extends ShooterSubsystem {
     }
 
     @Override
-    public void setPIDMotor() {
-        super.setPIDMotor();
+    public void periodic() {
+        super.periodic();
+
+        if (!enabled) {
+            return;
+        }
 
         // launch fuel based on balls per second
         if (Timer.getFPGATimestamp() - lastTimestamp < (1 / fuelSimCount.getLaunchBPS())) {
@@ -44,7 +49,9 @@ public class ShooterSubsystemSim extends ShooterSubsystem {
         }
 
         if (fuelSimCount.getFuelStored() > 0) {
-            fuelSim.launchFuel(MetersPerSecond.of(getTangentialVelocity()), Degree.of(60.0), Degree.of(0.0),
+            fuelSim.launchFuel(MetersPerSecond.of(getTangentialVelocity()),
+                    Degree.of(turretConstants.verticalLaunchAngle),
+                    Degree.of(0.0),
                     Meters.of(FuelCellConstants.DIAMETER * 2.7));
             fuelSimCount.setFuelStored(fuelSimCount.getFuelStored() - 1);
         }

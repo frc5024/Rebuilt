@@ -20,7 +20,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private final ShooterModuleIO shooterModuleIO;
     protected final ShooterModuleIOInputsAutoLogged inputs;
 
-    private boolean enabled;
+    protected boolean enabled;
 
     private PIDController PID;
     private SimpleMotorFeedforward feedForward;
@@ -78,7 +78,10 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getTangentialVelocity() {
-        return (getVelocity() / 60.0) * (Math.PI * shooterConstants.WHEEL_DIAMETER_METERS);
+        // divide by 2 because only one side of the flywheel is touching the fuel
+        // times by 0.85 for "real world" efficiency factor
+        double tangentialVelocity = (getVelocity() / 60.0) * (Math.PI * shooterConstants.WHEEL_DIAMETER_METERS);
+        return tangentialVelocity / 2.0 * 0.85;
     }
 
     public void setShooterPID(double setVelocity) {

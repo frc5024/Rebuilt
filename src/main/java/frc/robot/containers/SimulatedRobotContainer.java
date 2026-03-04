@@ -24,6 +24,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.FuelCellConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.turretConstants;
 import frc.robot.commands.TuningCommands;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
@@ -194,8 +195,13 @@ public class SimulatedRobotContainer extends RobotContainer {
 
         // calulate pose of the turret
         Pose2d robotPose = swerveDriveSubsystem.getPose();
-        Transform3d transform3d = new Transform3d(-FuelCellConstants.DIAMETER * 1.1, FuelCellConstants.DIAMETER * 1.1,
-                FuelCellConstants.DIAMETER * 2.7, new Rotation3d(0.0, Units.degreesToRadians(-120.0),
+        Transform3d transform3d = new Transform3d(
+                -FuelCellConstants.DIAMETER * 1.1,
+                FuelCellConstants.DIAMETER * 1.1,
+                FuelCellConstants.DIAMETER * 2.7,
+                new Rotation3d(
+                        0.0,
+                        Units.degreesToRadians(-180.0 + turretConstants.verticalLaunchAngle), // launch angle
                         robotPose.getRotation().getRadians() + Math.toRadians(m_turret.getAngle())));
         Pose3d turretPose = new Pose3d(robotPose).transformBy(transform3d);
 
