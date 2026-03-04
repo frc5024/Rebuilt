@@ -2,7 +2,9 @@
   "robotWidth": 0.876,
   "robotLength": 0.851,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "Left Trench Paths"
+  ],
   "autoFolders": [
     "Calibration",
     "Corner Autos",

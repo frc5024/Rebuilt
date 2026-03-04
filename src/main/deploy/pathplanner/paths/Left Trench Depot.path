@@ -1,0 +1,126 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.800157657657657,
+        "y": 5.066610360360361
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.388683911136969,
+        "y": 6.67039043998675
+      },
+      "isLocked": false,
+      "linkedName": "Left Intake Stop"
+    },
+    {
+      "anchor": {
+        "x": 5.777792792792793,
+        "y": 7.374966216216217
+      },
+      "prevControl": {
+        "x": 6.027405344435394,
+        "y": 7.388879305825291
+      },
+      "nextControl": {
+        "x": 4.5624135478997925,
+        "y": 7.307222506086545
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.4694673416772359,
+        "y": 7.119617117117117
+      },
+      "prevControl": {
+        "x": 0.46653153153153215,
+        "y": 7.466891891891891
+      },
+      "nextControl": {
+        "x": 0.4715807295885198,
+        "y": 6.86962605009364
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.4694673416772359,
+        "y": 6.008866841544209
+      },
+      "prevControl": {
+        "x": 0.4694673416772359,
+        "y": 6.258866841544209
+      },
+      "nextControl": {
+        "x": 0.4694673416772359,
+        "y": 5.752995277240382
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.8249887387360482,
+        "y": 4.647837837839594
+      },
+      "prevControl": {
+        "x": 0.5697057519894246,
+        "y": 5.65677311506129
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Line Up Left Climb"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 1.3836477987421383,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 1.6603773584905661,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 3.8113207547169883,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "RunEverything",
+      "waypointRelativePos": 1.3152542372881362,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "Left Trench Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

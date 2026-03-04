@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.8249887387360482,
+        "y": 4.647837837839594
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.1651651349618244,
+        "y": 4.641626171186288
+      },
+      "isLocked": false,
+      "linkedName": "Line Up Left Climb"
+    },
+    {
+      "anchor": {
+        "x": 1.0599302731659082,
+        "y": 4.627701321041761
+      },
+      "prevControl": {
+        "x": 0.809940235460123,
+        "y": 4.629933147168521
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 0.5,
+    "maxAcceleration": 0.25,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "Left Trench Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": false
+}

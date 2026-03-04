@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Trench Neutral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Trench Depot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Run Everything"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
