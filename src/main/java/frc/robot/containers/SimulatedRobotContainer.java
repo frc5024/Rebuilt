@@ -225,5 +225,7 @@ public class SimulatedRobotContainer extends RobotContainer {
 
         Logger.recordOutput("Turret/Pose", turretPose);
         Logger.recordOutput("FuelSim/FuelInRobot", fuelSimCount.getFuelInRobotPoses(swerveDriveSubsystem.getPose()));
+        Logger.recordOutput("FuelSim/BlueHubScore", FuelSim.Hub.BLUE_HUB.getScore());
+        Logger.recordOutput("FuelSim/RedHubScore", FuelSim.Hub.RED_HUB.getScore());
     }
 }
