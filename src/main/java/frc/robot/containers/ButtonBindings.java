@@ -51,10 +51,10 @@ public class ButtonBindings {
         CommandXboxController commandXboxController = new CommandXboxController(DRIVER_PORT);
 
         commandXboxController.a()
-                .whileTrue(Commands.runOnce(() -> blowerSubsystem.addAction(BlowerSubsystem.Action.START),
+                .onTrue(Commands.runOnce(() -> blowerSubsystem.addAction(BlowerSubsystem.Action.START),
                         blowerSubsystem));
         commandXboxController.b()
-                .whileTrue(Commands.runOnce(() -> blowerSubsystem.addAction(BlowerSubsystem.Action.STOP),
+                .onTrue(Commands.runOnce(() -> blowerSubsystem.addAction(BlowerSubsystem.Action.STOP),
                         blowerSubsystem));
 
         return commandXboxController;

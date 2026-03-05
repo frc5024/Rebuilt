@@ -20,7 +20,7 @@ import frc.robot.generated.TunerConstants;
 
 public class BlowerModuleIOTalonFX implements BlowerModuleIO {
     // Hardware objects
-    private final TalonFX blowerTalon;
+    protected final TalonFX blowerTalon;
     private final int MOTOR_ID = 18;
 
     // Inputs from drive motor
@@ -31,7 +31,7 @@ public class BlowerModuleIOTalonFX implements BlowerModuleIO {
 
     // Connection debouncers
     private final Debouncer driveConnectedDebounce = new Debouncer(0.5);
-    
+
     // Variables for ramping the motor
     protected VoltageOut voltageRequest;
     protected double startTime;
@@ -57,7 +57,7 @@ public class BlowerModuleIOTalonFX implements BlowerModuleIO {
                 this.driveAppliedVolts,
                 this.driveCurrent);
         ParentDevice.optimizeBusUtilizationForAll(this.blowerTalon);
-                
+
         this.voltageRequest = new VoltageOut(0);
         this.startTime = 0.0;
         this.isRamping = false;
@@ -69,43 +69,43 @@ public class BlowerModuleIOTalonFX implements BlowerModuleIO {
             stop();
         }
 
-        if (this.isRamping) {
+        if (isRamping) {
             double elapsedTime = Timer.getFPGATimestamp() - this.startTime;
             double targetVoltage = MathUtil.clamp((TARGET_VOLTAGE / RAMP_TIME_SEC) * elapsedTime, -TARGET_VOLTAGE,
                     TARGET_VOLTAGE);
 
-            this.blowerTalon.setControl(voltageRequest.withOutput(targetVoltage));
+            blowerTalon.setControl(voltageRequest.withOutput(targetVoltage));
         }
 
         // Refresh all signals
-        var driveStatus = BaseStatusSignal.refreshAll(this.drivePosition, this.driveVelocity, this.driveAppliedVolts,
-                this.driveCurrent);
+        var driveStatus = BaseStatusSignal.refreshAll(drivePosition, driveVelocity, driveAppliedVolts,
+                driveCurrent);
 
         // Update drive inputs
         inputs.data = new BlowerModuleIOData(
                 driveConnectedDebounce.calculate(driveStatus.isOK()),
-                Units.rotationsToRadians(this.drivePosition.getValueAsDouble()),
-                Units.rotationsToRadians(this.driveVelocity.getValueAsDouble()),
-                this.driveAppliedVolts.getValueAsDouble(),
+                Units.rotationsToRadians(drivePosition.getValueAsDouble()),
+                Units.rotationsToRadians(driveVelocity.getValueAsDouble()),
+                driveAppliedVolts.getValueAsDouble(),
                 0.0,
-                this.driveCurrent.getValueAsDouble(),
+                driveCurrent.getValueAsDouble(),
                 0.0);
     }
 
     @Override
     public boolean isRunning() {
-        return this.isRamping;
+        return isRamping;
     }
 
     @Override
     public void start() {
-        this.isRamping = true;
-        this.startTime = Timer.getFPGATimestamp();
+        isRamping = true;
+        startTime = Timer.getFPGATimestamp();
     }
 
     @Override
     public void stop() {
-        this.isRamping = false;
-        this.blowerTalon.setControl(voltageRequest.withOutput(0.0));
+        isRamping = false;
+        blowerTalon.setControl(voltageRequest.withOutput(0.0));
     }
 }

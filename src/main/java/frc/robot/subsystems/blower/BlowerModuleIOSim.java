@@ -1,32 +1,34 @@
 package frc.robot.subsystems.blower;
 
+import com.ctre.phoenix6.sim.ChassisReference;
+import com.ctre.phoenix6.sim.TalonFXSimState;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
-public class BlowerModuleIOSim implements BlowerModuleIO {
+public class BlowerModuleIOSim extends BlowerModuleIOTalonFX {
     // Hardware objects
-    private final DCMotor motor = DCMotor.getKrakenX60Foc(1);
+    private final DCMotor dcMotor;
     private final DCMotorSim dcMotorSim;
-
-    private final double reduction = (18.0 / 12.0);
-    private final double moi = 0.001;
+    private final TalonFXSimState talonFXSimState;
 
     // Variables for ramping the motor
     protected double voltageRequest;
-    protected double startTime;
-    protected boolean isRamping;
-
 
     /**
      * 
      */
     public BlowerModuleIOSim() {
-        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(this.motor, this.moi, this.reduction),
-                this.motor);
+        this.dcMotor = DCMotor.getFalcon500(1);
+        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(this.dcMotor, 0.001, 1.0),
+                this.dcMotor);
+        this.talonFXSimState = this.blowerTalon.getSimState();
+        this.talonFXSimState.Orientation = ChassisReference.Clockwise_Positive;
 
         this.voltageRequest = 0.0;
         this.startTime = 0.0;
@@ -39,40 +41,44 @@ public class BlowerModuleIOSim implements BlowerModuleIO {
             stop();
         }
 
-        if (this.isRamping) {
+        if (isRamping) {
             double elapsedTime = Timer.getFPGATimestamp() - this.startTime;
-            this.voltageRequest = MathUtil.clamp((TARGET_VOLTAGE / RAMP_TIME_SEC) * elapsedTime, -TARGET_VOLTAGE, TARGET_VOLTAGE);
-
-            this.dcMotorSim.setInputVoltage(this.voltageRequest);
+            this.voltageRequest = MathUtil.clamp((TARGET_VOLTAGE / RAMP_TIME_SEC) *
+                    elapsedTime, -TARGET_VOLTAGE, TARGET_VOLTAGE);
+            // voltageRequest = talonFXSimState.getMotorVoltage();
+            dcMotorSim.setInputVoltage(voltageRequest);
         }
 
-        this.dcMotorSim.update(0.02);
+        dcMotorSim.update(0.02);
+        talonFXSimState.setRawRotorPosition(dcMotorSim.getAngularPositionRotations());
+        talonFXSimState.setRotorVelocity(dcMotorSim.getAngularVelocityRPM());
+        talonFXSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
 
         inputs.data = new BlowerModuleIOData(
                 true,
-                this.dcMotorSim.getAngularPositionRad(),
-                this.dcMotorSim.getAngularVelocityRadPerSec(),
-                this.voltageRequest,
+                blowerTalon.getPosition().getValueAsDouble(),
+                blowerTalon.getVelocity().getValueAsDouble(),
+                voltageRequest,
                 0.0,
-                this.dcMotorSim.getCurrentDrawAmps(),
+                talonFXSimState.getSupplyCurrent(),
                 0.0);
     }
 
     @Override
     public boolean isRunning() {
-        return this.isRamping;
+        return isRamping;
     }
 
     @Override
     public void start() {
-        this.isRamping = true;
-        this.startTime = Timer.getFPGATimestamp();
+        isRamping = true;
+        startTime = Timer.getFPGATimestamp();
     }
-    
+
     @Override
     public void stop() {
-        this.isRamping = false;
-        this.voltageRequest = 0.0;
-        this.dcMotorSim.setInputVoltage(this.voltageRequest);
+        isRamping = false;
+        voltageRequest = 0.0;
+        dcMotorSim.setInputVoltage(voltageRequest);
     }
 }

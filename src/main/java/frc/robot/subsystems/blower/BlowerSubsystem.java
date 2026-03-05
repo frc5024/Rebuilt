@@ -128,7 +128,7 @@ public class BlowerSubsystem extends SubsystemBase {
         this.disconnected.set(!this.inputs.data.connected());
 
         // actions run for no longer than 3 seconds
-        if (this.stateTimer.isRunning() && this.stateTimer.hasElapsed(3)) {
+        if (this.stateTimer.isRunning() && this.stateTimer.hasElapsed(15)) {
             this.stateTimer.stop();
         }
 
