@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Trench Position"
+            "pathName": "Right Trench Neutral"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "ExtendIntake"
+            "pathName": "Right Trench Depot Transition"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Trench Autos (ALPHA)",
+  "folder": null,
   "choreoAuto": false
 }

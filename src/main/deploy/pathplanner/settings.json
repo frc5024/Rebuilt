@@ -3,13 +3,14 @@
   "robotLength": 0.851,
   "holonomicMode": true,
   "pathFolders": [
-    "Left Trench Paths"
+    "Left Trench Paths",
+    "Right Trench Paths"
   ],
   "autoFolders": [
     "Calibration",
     "Corner Autos",
     "Drive Back Autos",
-    "Trench Autos"
+    "Trench Autos (ALPHA)"
   ],
   "defaultMaxVel": 1.5,
   "defaultMaxAccel": 3.0,
