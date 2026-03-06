@@ -3,9 +3,12 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.util.GameUtil;
 
@@ -29,23 +32,17 @@ public class spinToHubCommand extends Command {
     public void initialize() {
         turretSubsystem.zeroEncoder();
         turretSubsystem.enablePID();
-        // System.out.println("setting turret angle");
-        // turretSubsystem.resetPID(); // turretSubsystem.zeroEncoder();
-        // turretSubsystem.setTargetAngle(targetAngle);
-        // turretSubsystem.enablePID();
     }
 
     @Override
     public void execute() {
 
-        Pose2d targetPose = getTarget();
-        double targetAngle = Math.atan2(targetPose.getY() - robotPoseSupplier.get().getY(),
-                targetPose.getX() - robotPoseSupplier.get().getX());
+        Pose2d robotPose = robotPoseSupplier.get();
+        Pose2d targetPose = getTargetPose(robotPose);
 
-        turretSubsystem.setTargetAngle(Units.radiansToDegrees(targetAngle));
-
-        // System.out.println(turretSubsystem.getTurretAngle());
-        // turretSubsystem.updateTurretAngle();
+        Rotation2d fieldAngle = targetPose.getTranslation().getAngle();
+        Rotation2d turretAngle = fieldAngle.minus(robotPose.getRotation());
+        turretSubsystem.setTargetAngle(turretAngle.getDegrees());
 
     }
 
@@ -60,20 +57,15 @@ public class spinToHubCommand extends Command {
         turretSubsystem.setIdle();
     }
 
-    private Pose2d getTarget() {
-        Pose2d robotPose = robotPoseSupplier.get();
+    public Pose2d getTargetPose(Pose2d robotPose) {
+        boolean isRedAlliance = DriverStation.getAlliance().get() == Alliance.Red;
+        boolean isAboveMidLine = GameUtil.isAboveMidLine(robotPose);
 
-        // boolean isRedAlliance =
-        // DriverStation.getAlliance().equals(DriverStation.Alliance.Red);
-
-        double robotX = robotPose.getX();
-        double robotY = robotPose.getY();
-
-        Pose2d hubPose = GameUtil.getHubPose();
-        double hubX = hubPose.getX();
-        double hubY = hubPose.getY();
-
-        return hubPose;
+        if (GameUtil.inAllianceZone(robotPose)) {
+            return GameUtil.getHubPose();
+        } else {
+            return FieldConstants.MULE_POSES[isRedAlliance ? 1 : 0][isAboveMidLine ? 1 : 0];
+        }
     }
 
 }
