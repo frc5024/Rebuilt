@@ -46,11 +46,11 @@ public final class Constants {
         public static final double speed = 0.3;
         public static final int turretMotorChannel = 3;
         public static final double turretTolerance = 0.5;
-        public static final double kP = 0.2;
+        public static final double kP = 0.04;
         public static final double kI = 0;
-        public static final double kD = 0.01;
+        public static final double kD = 0.0;
         public static final double kS = 0;
-        public static final double kV = 0.0001;
+        public static final double kV = 0.0;
         public static final double kA = 0.0;
 
         public static final double turretMaxSpeed = 1000; // make note of units

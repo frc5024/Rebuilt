@@ -5,11 +5,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.turretConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
+import frc.robot.commands.spinToHubCommand;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -57,7 +57,7 @@ public class ButtonBindings {
         this.driverController = setDriverBindingsController();
         this.operatorController = setOperatorBindingsController();
 
-        // Set this to whichever button bindings you want to test
+        // Set this to whichever button bindpings you want to test
         // this.buttonTestController = setLEDTestBindingsController();
         this.testController = setTuningBindings();
     }
@@ -107,7 +107,12 @@ public class ButtonBindings {
         // commandXboxController.leftTrigger().whileTrue( new runEverything(m_feeder,
         // m_shooter, m_hopper));
         // commandXboxController.y().whileTrue(m_feeder.feedsdAerCommand());
-        commandXboxController.y().onTrue(m_intake.RetractArmCommand());
+
+        // commandXboxController.y().onTrue(m_intake.RetractArmCommand());
+        commandXboxController.y().onTrue(Commands.runOnce(() -> m_turret.zeroEncoder()));
+        commandXboxController.x().whileTrue(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
+                () -> swerveDriveSubsystem.getChassisSpeeds()));
+        commandXboxController.b().whileTrue(m_turret.spinToAngleCommand(100));
         // commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
         // commandXboxController.x().whileTrue(new distanceShooterCommand(m_shooter,
         // swerveDriveSubsystem));
@@ -121,10 +126,9 @@ public class ButtonBindings {
         // commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
-        commandXboxController.povLeft().onTrue(
-                Commands.runOnce(() -> m_turret.setAngle(-turretConstants.ANGLE_LIMIT)));
-        commandXboxController.povRight().onTrue(
-                Commands.runOnce(() -> m_turret.setAngle(turretConstants.ANGLE_LIMIT)));
+
+        commandXboxController.povLeft().whileTrue(m_turret.stickRotation(0.1));
+        commandXboxController.povRight().whileTrue(m_turret.stickRotation(-0.1));
 
         return commandXboxController;
     }
@@ -138,6 +142,11 @@ public class ButtonBindings {
         // For testing pathfinding
         commandXboxController.y().whileTrue(
                 Commands.runOnce(() -> new PathFinderAndFollowCommand(swerveDriveSubsystem, "Pathfind Test Path")));
+
+        // commandXboxController.povLeft().onTrue(
+        // Commands.runOnce(() -> m_turret.setAngle(-30)));
+        // commandXboxController.povRight().onTrue(
+        // Commands.runOnce(() -> m_turret.setAngle(30)));
 
         return commandXboxController;
     }
