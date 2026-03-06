@@ -48,7 +48,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Intake At Neutral"
+                  "pathName": null
                 }
               },
               {
@@ -139,6 +139,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Trench Autos",
+  "folder": "Trench Autos (ALPHA)",
   "choreoAuto": false
 }

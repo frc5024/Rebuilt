@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.825,
-        "y": 4.648
+        "x": 7.8,
+        "y": 3.2
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1651763962257764,
-        "y": 4.641788333346693
+        "x": 5.932730769230771,
+        "y": 5.314102564102564
       },
       "isLocked": false,
-      "linkedName": "Line Up Left Climb"
+      "linkedName": "Right Intake Stop"
     },
     {
       "anchor": {
-        "x": 1.0599302731659082,
-        "y": 4.627701321041761
+        "x": 5.777792792792793,
+        "y": 7.374966216216217
       },
       "prevControl": {
-        "x": 0.809940235460123,
-        "y": 4.629933147168521
+        "x": 5.796906016962735,
+        "y": 7.125697917666583
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Depot Travel To"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 0.25,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Left Trench Paths",
+  "folder": "Right Trench Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0

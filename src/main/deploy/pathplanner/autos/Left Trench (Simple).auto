@@ -13,13 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Trench Depot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Run Everything"
+            "pathName": "Left Climb Trench Depot"
           }
         }
       ]
