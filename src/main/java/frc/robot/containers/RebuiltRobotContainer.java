@@ -27,7 +27,6 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOPigeon2;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOTalonFX;
-import frc.robot.subsystems.turret.TurretModuleIOSparkMax2;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -63,7 +62,10 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSparkMax());
         this.m_intake = new IntakeSubsystem(new IntakeModuleIOSparkMax());
         this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
-        this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMax2());
+        this.m_turret = new TurretSubsystem();
+        // this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () ->
+        // swerveDriveSubsystem.getPose(),
+        // () -> swerveDriveSubsystem.getChassisSpeeds()));
 
         // Creates the commands for using non-drive subsystems in autonomous
 

@@ -1,40 +1,53 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.util.GameUtil;
 
 public class spinToHubCommand extends Command {
 
     private final TurretSubsystem turretSubsystem;
-    private final double targetAngle;
+    private final Supplier<Pose2d> robotPoseSupplier;
+    private final Supplier<ChassisSpeeds> chassisSpeedSupplier;
 
     // CommandXboxController operator = RobotContainer.operator;
 
-    public spinToHubCommand(TurretSubsystem turretSubsystem, double angle) {
+    public spinToHubCommand(TurretSubsystem turretSubsystem, Supplier<Pose2d> robotPoseSupplier,
+            Supplier<ChassisSpeeds> chassisSpeedSupplier) {
         this.turretSubsystem = turretSubsystem;
-        this.targetAngle = angle;
+        this.robotPoseSupplier = robotPoseSupplier;
+        this.chassisSpeedSupplier = chassisSpeedSupplier;
         addRequirements(turretSubsystem);
     }
 
+    @Override
     public void initialize() {
-        System.out.println("setting turret angle");
-        // turretSubsystem.resetPID(); // turretSubsystem.zeroEncoder();
-        turretSubsystem.setTargetAngle(targetAngle);
+        turretSubsystem.zeroEncoder();
         turretSubsystem.enablePID();
     }
 
+    @Override
     public void execute() {
 
-        // System.out.println(turretSubsystem.getTurretAngle());
-        // turretSubsystem.updateTurretAngle();
+        Pose2d robotPose = robotPoseSupplier.get();
+        Pose2d targetPose = getTargetPose(robotPose);
+
+        Rotation2d fieldAngle = targetPose.getTranslation().getAngle();
+        Rotation2d turretAngle = fieldAngle.minus(robotPose.getRotation());
+        turretSubsystem.setTargetAngle(turretAngle.getDegrees());
 
     }
 
     public boolean isFinished() {
-        if (turretSubsystem.isAtTargetAngle() == true) {
-            System.out.println("AT SETPOINT");
-        }
-        return turretSubsystem.isAtTargetAngle();
+        return false;
     }
 
     @Override
@@ -42,6 +55,17 @@ public class spinToHubCommand extends Command {
         turretSubsystem.disablePID();
         // Optionally stop motor explicitly
         turretSubsystem.setIdle();
+    }
+
+    public Pose2d getTargetPose(Pose2d robotPose) {
+        boolean isRedAlliance = DriverStation.getAlliance().get() == Alliance.Red;
+        boolean isAboveMidLine = GameUtil.isAboveMidLine(robotPose);
+
+        if (GameUtil.inAllianceZone(robotPose)) {
+            return GameUtil.getHubPose();
+        } else {
+            return FieldConstants.MULE_POSES[isRedAlliance ? 1 : 0][isAboveMidLine ? 1 : 0];
+        }
     }
 
 }

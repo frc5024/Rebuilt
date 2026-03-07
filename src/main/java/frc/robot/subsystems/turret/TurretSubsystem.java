@@ -2,6 +2,10 @@ package frc.robot.subsystems.turret;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.SparkMax;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -14,23 +18,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.turretConstants;
 import frc.robot.commands.StickRotationCommand;
+import frc.robot.commands.spinToAngleCommand;
 
 /**
  * 
  */
 public class TurretSubsystem extends SubsystemBase {
-    private final TurretModuleIO turretModuleIO;
-    protected final TurretModuleIOInputsAutoLogged inputs;
+    // private final TurretModuleIO turretModuleIO;
+    // protected final TurretModuleIOInputsAutoLogged inputs;
+
+    private final SparkMax turretMotor;
 
     private final ProfiledPIDController pidController;
-    // private final AHRS gyro;
     private TrapezoidProfile.Constraints feedForwardConstraints;
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(turretConstants.kS,
             turretConstants.kV, turretConstants.kA); // Tune these values
 
     private double voltageValue;
 
-    private static final double GEAR_RATIO = 28.6667;
+    private static final double GEAR_RATIO = 28.6667 * 12;
 
     public final int rotationAxis = XboxController.Axis.kRightX.value;
 
@@ -50,12 +56,10 @@ public class TurretSubsystem extends SubsystemBase {
     /**
      * 
      */
-    public TurretSubsystem(TurretModuleIO turretModuleIO) {
-        this.turretModuleIO = turretModuleIO;
-        this.inputs = new TurretModuleIOInputsAutoLogged();
-
-        // setDefaultCommand(new StickRotationCommand(this,
-        // RobotContainer.driverController));
+    public TurretSubsystem(/* TurretModuleIO turretModuleIO */) {
+        // this.turretModuleIO = turretModuleIO;
+        // this.inputs = new TurretModuleIOInputsAutoLogged();
+        turretMotor = new SparkMax(turretConstants.turretMotorChannel, SparkLowLevel.MotorType.kBrushless);
 
         feedForwardConstraints = new TrapezoidProfile.Constraints(turretConstants.turretMaxSpeed,
                 turretConstants.turretMaxAccel);
@@ -64,20 +68,30 @@ public class TurretSubsystem extends SubsystemBase {
                 Constants.turretConstants.kI, Constants.turretConstants.kD, feedForwardConstraints);
         // Enable continuous input so the controller will take the shortest path across
         // the -180/180 wrap
-        pidController.enableContinuousInput(-180.0, 180.0);
+        // pidController.enableContinuousInput(-135, 135);
         pidController.setTolerance(Constants.turretConstants.turretTolerance);
         // gyro = new AHRS(SPI.Port.kMXP);
 
-        tab.addDouble("current angle", () -> turretModuleIO.getAngle());
+        tab.addDouble("current angle", () -> getTurretAngle());
+
+        tab.addDouble("goal", () -> pidController.getGoal().position);
 
         tab.addDouble("current velocity", () -> getCurrentVelocity());
 
+        tab.addBoolean("pid enabled", () -> pidEnabled);
+
+        tab.addDouble("voltage value", () -> voltageValue);
+
+        tab.addBoolean("at target", () -> isAtTargetAngle());
+
         tab.addDouble("Estimated Velocity", () -> pidController.getSetpoint().velocity);
 
-        // pEntry.setDouble(Constants.turretConstants.kP);
-        // iEntry.setDouble(Constants.turretConstants.kI);
-        // dEntry.setDouble(Constants.turretConstants.kD);
-        // vEntry.setDouble(Constants.turretConstants.kV);
+        pEntry.setDouble(Constants.turretConstants.kP);
+        iEntry.setDouble(Constants.turretConstants.kI);
+        dEntry.setDouble(Constants.turretConstants.kD);
+        vEntry.setDouble(Constants.turretConstants.kV);
+        maxSpeedEntry.setDouble(Constants.turretConstants.turretMaxSpeed);
+        maxAccelEntry.setDouble(Constants.turretConstants.turretMaxAccel);
         toleranceEntry.setDouble(Constants.turretConstants.turretTolerance);
 
     }
@@ -91,15 +105,17 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void disablePID() {
         pidEnabled = false;
-        turretModuleIO.set(0);
+        // turretModuleIO.set(0);
         System.out.println("PID disabled for turret");
     }
 
     public void runTurret(double speed) {
-        turretModuleIO.set(speed);
+        turretMotor.set(speed);
+        // turretModuleIO.set(speed);
     }
 
     public void updatePID() {
+
         // double currentAngle = getTurretAngle();
         // double pidOutput = pidController.calculate(currentAngle, targetAngle);
 
@@ -109,27 +125,40 @@ public class TurretSubsystem extends SubsystemBase {
         // double totalOutput = Math.max(-1, Math.min(1, pidOutput));
         // double turretOutput = totalOutput + feedforwardOutput;
 
-        System.out.println("updating pid");
+        // System.out.println("updating pid");
 
-        voltageValue = pidController.calculate(getTurretAngle())
-                + feedforward.calculate(pidController.getSetpoint().velocity);
-        turretModuleIO.setVoltage(voltageValue);
+        voltageValue = pidController.calculate(getTurretAngle());
+        // + feedforward.calculate(pidController.getSetpoint().velocity);
+        // turretModuleIO.setVoltage(voltageValue);
+        turretMotor.setVoltage(voltageValue);
+
     }
 
     @Override
     public void periodic() {
-        turretModuleIO.updateInputs(inputs);
-        Logger.processInputs("Turret", inputs);
+        // turretModuleIO.updateInputs(inputs);
+        // Logger.processInputs("Turret", inputs);
 
-        turretModuleIO.setPID(pEntry.getDouble(turretConstants.kP), iEntry.getDouble(turretConstants.kI),
-                dEntry.getDouble(turretConstants.kD));
+        // turretModuleIO.setPID(pEntry.getDouble(turretConstants.kP),
+        // iEntry.getDouble(turretConstants.kI),
+        // dEntry.getDouble(turretConstants.kD));
 
-        turretModuleIO.setFF(sEntry.getDouble(turretConstants.kS), vEntry.getDouble(turretConstants.kV),
-                aEntry.getDouble(turretConstants.kA));
+        // turretModuleIO.setFF(sEntry.getDouble(turretConstants.kS),
+        // vEntry.getDouble(turretConstants.kV),
+        // aEntry.getDouble(turretConstants.kA));
 
-        // pidController.setP(pEntry.getDouble(turretConstants.kP));
-        // pidController.setI(iEntry.getDouble(turretConstants.kI));
-        // pidController.setD(dEntry.getDouble(turretConstants.kD));
+        pidController.setP(pEntry.getDouble(turretConstants.kP));
+        pidController.setI(iEntry.getDouble(turretConstants.kI));
+        pidController.setD(dEntry.getDouble(turretConstants.kD));
+
+        feedForwardConstraints = new TrapezoidProfile.Constraints(
+                maxSpeedEntry.getDouble(turretConstants.turretMaxSpeed),
+                maxAccelEntry.getDouble(turretConstants.turretMaxAccel));
+
+        pidController.setConstraints(feedForwardConstraints);
+        // feedforwardConstraints.setConstraints(maxSpeedEntry.getDouble(turretConstants.turretMaxSpeed));
+
+        pidController.setTolerance(toleranceEntry.getDouble(turretConstants.turretTolerance));
         // SimpleMotorFeedforward.setV(vEntry.getDouble(turretConstants.kV));
 
         // System.out.println("hello, pid is running");
@@ -138,30 +167,17 @@ public class TurretSubsystem extends SubsystemBase {
             updatePID();
         }
 
-        Logger.recordOutput("Turret/CurrentAngle", getAngle());
-        Logger.recordOutput("Turret/SetPoint", turretModuleIO.getSetpoint());
+        Logger.recordOutput("Turret/CurrentAngle", getTurretAngle());
+        // Logger.recordOutput("Turret/SetPoint", turretModuleIO.getSetpoint());
     }
 
-    public double getAngle() {
-        return turretModuleIO.getAngle();
-    }
-
-    public double getCurrentDrawAmps() {
-        return turretModuleIO.getCurrentDrawAmps();
-    }
-
-    // public void turretMath(double joystickSpeed) {
-    // if(Math.abs(joystickSpeed) > 0.01) {
-    // outputSpeed = joystickSpeed;
-    // } else {
-    // outputSpeed = 0;
-    // }
-    // turretMotor.set(outputSpeed);
+    // public double getCurrentDrawAmps() {
+    // return turretModuleIO.getCurrentDrawAmps();
     // }
 
     public double getTurretAngle() {
-        double motorRotations = turretModuleIO.getPosition();
-        double turretRotations = motorRotations / GEAR_RATIO;
+        // double motorRotations = turretModuleIO.getPosition();
+        double turretRotations = turretMotor.getEncoder().getPosition() / GEAR_RATIO;
         // returns degrees normalized to [-180, 180)
         double angle = turretRotations * 360.0;
         while (angle >= 180.0) {
@@ -184,7 +200,10 @@ public class TurretSubsystem extends SubsystemBase {
 
         // turretMotor.getEncoder().getVelocity() returns motor RPM (rotations per
         // minute)
-        double motorRPM = turretModuleIO.getVelocity();
+
+        // double motorRPM = turretModuleIO.getVelocity();
+        double motorRPM = turretMotor.getEncoder().getVelocity();
+
         // Convert motor RPM -> turret rotations per second by dividing by gear ratio
         // and 60
         double turretRPS = (motorRPM / GEAR_RATIO) / 60.0;
@@ -199,16 +218,20 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     public void setAngle(double degrees) {
-        turretModuleIO.setAngle(degrees);
+        // turretModuleIO.setAngle(degrees);
+
     }
 
     public void zeroEncoder() {
-        turretModuleIO.setPosition(0.0);
+        // turretModuleIO.setPosition(0.0);
+        turretMotor.getEncoder().setPosition(0.0);
 
     }
 
-    public void setTargetAngle(double targetAngle) {
-        pidController.setGoal(targetAngle);
+    public void setTargetAngle(double degrees) {
+
+        pidController.setGoal(MathUtil.clamp(degrees, -45, 45));
+
     }
 
     public void zeroSetpoint() {
@@ -218,7 +241,7 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     public boolean isAtTargetAngle() {
-        System.out.println("@ goal");
+        // System.out.println("@ goal");
         return pidController.atGoal();
     }
 
@@ -239,11 +262,16 @@ public class TurretSubsystem extends SubsystemBase {
     // }
 
     public void setIdle() {
-        turretModuleIO.set(0);
+        // turretModuleIO.set(0);
+        turretMotor.set(0);
     }
 
     public Command stickRotation(double speed) {
         return new StickRotationCommand(this, speed);
+    }
+
+    public Command spinToAngleCommand(double angle) {
+        return new spinToAngleCommand(this, angle);
     }
 
 }

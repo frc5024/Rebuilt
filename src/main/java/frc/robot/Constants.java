@@ -46,15 +46,15 @@ public final class Constants {
         public static final double speed = 0.3;
         public static final int turretMotorChannel = 3;
         public static final double turretTolerance = 0.5;
-        public static final double kP = 0.2;
+        public static final double kP = 0.04;
         public static final double kI = 0;
-        public static final double kD = 0.01;
+        public static final double kD = 0.0;
         public static final double kS = 0;
-        public static final double kV = 0.0001;
+        public static final double kV = 0.0;
         public static final double kA = 0.0;
 
-        public static final double turretMaxSpeed = 1000; // make note of units
-        public static final double turretMaxAccel = 1000;
+        public static final double turretMaxSpeed = 70; // degpersec
+        public static final double turretMaxAccel = 30;
 
         public static final double verticalLaunchAngle = 65;
     }
@@ -96,6 +96,8 @@ public final class Constants {
         public static final double OUTTAKE_SPEED = -0.4;
         public static final double EXTENDING_SPEED = -0.15;
         public static final double RETRACTING_SPEED = 0.25;
+
+        public static final double driveCoefficient = 0.1;
 
         public static final double kArmP = 0.0;
         public static final double kArmI = 0.0;
