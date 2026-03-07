@@ -8,24 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.612626106782102,
-        "y": 7.56263604818781
-      },
-      "isLocked": false,
-      "linkedName": "Depot Travel To"
-    },
-    {
-      "anchor": {
-        "x": 5.777792792792793,
-        "y": 7.374966216216217
-      },
-      "prevControl": {
-        "x": 6.027405344435394,
-        "y": 7.388879305825291
-      },
-      "nextControl": {
-        "x": 4.5624135478997925,
-        "y": 7.307222506086545
+        "x": 4.328038461538463,
+        "y": 7.418807692307692
       },
       "isLocked": false,
       "linkedName": "Depot Travel To"
@@ -78,19 +62,19 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.25,
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 1.3836477987421383,
+      "waypointRelativePos": 0.47085201793721093,
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 1.6603773584905661,
+      "waypointRelativePos": 0.85,
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 3.8113207547169883,
+      "waypointRelativePos": 2.8113207547169883,
       "rotationDegrees": -90.0
     }
   ],
@@ -99,25 +83,25 @@
   "eventMarkers": [
     {
       "name": "RunEverything",
-      "waypointRelativePos": 1.3152542372881362,
-      "endWaypointRelativePos": 4.0,
+      "waypointRelativePos": 0.31607629427794154,
+      "endWaypointRelativePos": 3.0,
       "command": null
     },
     {
       "name": "ExtendIntake",
-      "waypointRelativePos": 1.540417801998184,
+      "waypointRelativePos": 0.5504087193460416,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "Intake",
-      "waypointRelativePos": 1.9691189827429605,
-      "endWaypointRelativePos": 3.30608537693006,
+      "waypointRelativePos": 0.9863760217983613,
+      "endWaypointRelativePos": 2.185286103542235,
       "command": null
     },
     {
       "name": "RetractIntake",
-      "waypointRelativePos": 3.8,
+      "waypointRelativePos": 2.397820163487756,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -138,7 +122,7 @@
   "folder": "Right Trench Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

@@ -15,6 +15,12 @@
           "data": {
             "pathName": "Right Trench Depot Transition"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Trench Depot Climb"
+          }
         }
       ]
     }
