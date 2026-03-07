@@ -5,21 +5,21 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Run Everything"
+            "pathName": "Right Trench Neutral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left Trench Neutral"
+            "pathName": "Right Trench Depot Transition"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left Trench Depot Climb"
+            "pathName": "Right Trench Depot Climb"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Climb"
+            "pathName": "Right Climb"
           }
         },
         {
@@ -44,6 +44,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Left Trench Autos",
+  "folder": "Right Trench Autos",
   "choreoAuto": false
 }

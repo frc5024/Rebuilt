@@ -10,6 +10,8 @@
     "Calibration",
     "Corner Autos",
     "Drive Back Autos",
+    "Left Trench Autos",
+    "Right Trench Autos",
     "Trench Autos (ALPHA)"
   ],
   "defaultMaxVel": 1.5,
