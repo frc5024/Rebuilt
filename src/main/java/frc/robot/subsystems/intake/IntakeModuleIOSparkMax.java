@@ -1,8 +1,13 @@
 package frc.robot.subsystems.intake;
 
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -23,6 +28,9 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     private final RelativeEncoder intakeEncoder;
     private final RelativeEncoder armEncoder;
 
+    private final SparkBaseConfig armMotorConfig = new SparkMaxConfig()
+            .idleMode(IdleMode.kBrake);
+
     private static DigitalInput retractingLimitSwitch = new DigitalInput(7);
     private static DigitalInput extendingLimitSwitch = new DigitalInput(8);
 
@@ -35,6 +43,9 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     public IntakeModuleIOSparkMax() {
         this.intakeMotor = new SparkMax(intakeMotorID, SparkLowLevel.MotorType.kBrushless);
         this.armMotor = new SparkMax(armMotorID, SparkLowLevel.MotorType.kBrushless);
+
+        armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         this.intakeEncoder = this.intakeMotor.getEncoder();
         this.armEncoder = this.armMotor.getEncoder();
         this.connectedDebouncer = new Debouncer(0.5);
