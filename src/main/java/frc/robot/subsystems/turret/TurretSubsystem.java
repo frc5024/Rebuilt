@@ -53,6 +53,9 @@ public class TurretSubsystem extends SubsystemBase {
     GenericEntry maxAccelEntry = tab.add("SET max accel", turretConstants.turretMaxAccel).getEntry();
     GenericEntry toleranceEntry = tab.add("SET TOLERANCE", turretConstants.turretTolerance).getEntry();
 
+    double pValue;
+    double fValue;
+
     /**
      * 
      */
@@ -81,6 +84,10 @@ public class TurretSubsystem extends SubsystemBase {
         tab.addBoolean("pid enabled", () -> pidEnabled);
 
         tab.addDouble("voltage value", () -> voltageValue);
+
+        tab.addDouble("pid value", () -> pValue);
+
+        tab.addDouble("ff value", () -> fValue);
 
         tab.addBoolean("at target", () -> isAtTargetAngle());
 
@@ -127,8 +134,12 @@ public class TurretSubsystem extends SubsystemBase {
 
         // System.out.println("updating pid");
 
-        voltageValue = pidController.calculate(getTurretAngle());
-        // + feedforward.calculate(pidController.getSetpoint().velocity);
+        pValue = pidController.calculate(getTurretAngle());
+
+        fValue = feedforward.calculate(pidController.getSetpoint().velocity);
+
+        voltageValue = pValue + fValue;
+
         // turretModuleIO.setVoltage(voltageValue);
         turretMotor.setVoltage(voltageValue);
 
@@ -150,6 +161,10 @@ public class TurretSubsystem extends SubsystemBase {
         pidController.setP(pEntry.getDouble(turretConstants.kP));
         pidController.setI(iEntry.getDouble(turretConstants.kI));
         pidController.setD(dEntry.getDouble(turretConstants.kD));
+
+        feedforward.setKv(vEntry.getDouble(turretConstants.kV));
+        feedforward.setKs(sEntry.getDouble(turretConstants.kS));
+        feedforward.setKa(aEntry.getDouble(turretConstants.kA));
 
         feedForwardConstraints = new TrapezoidProfile.Constraints(
                 maxSpeedEntry.getDouble(turretConstants.turretMaxSpeed),
@@ -230,7 +245,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void setTargetAngle(double degrees) {
 
-        pidController.setGoal(MathUtil.clamp(degrees, -45, 45));
+        pidController.setGoal(MathUtil.clamp(degrees, -90, 90));
 
     }
 
