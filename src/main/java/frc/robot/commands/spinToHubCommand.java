@@ -43,16 +43,15 @@ public class spinToHubCommand extends Command {
     public void execute() {
 
         Pose2d robotPose = robotPoseSupplier.get();
-        Pose2d targetPose = getTargetPose(robotPose);
 
         double robotX = robotPose.getX();
         double robotY = robotPose.getY();
 
-        Pose2d hubPose = GameUtil.getHubPose();
-        double hubX = hubPose.getX();
-        double hubY = hubPose.getY();
+        Pose2d targetPose = getTargetPose(robotPose);
+        double targetX = targetPose.getX();
+        double targetY = targetPose.getY();
 
-        Rotation2d angleToHub = Rotation2d.fromRadians(Math.atan2(hubY - robotY, hubX - robotX))
+        Rotation2d angleToHub = Rotation2d.fromRadians(Math.atan2(targetY - robotY, targetX - robotX))
                 .rotateBy(Rotation2d.k180deg);
 
         Rotation2d fieldAngle = targetPose.getTranslation().getAngle();

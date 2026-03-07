@@ -5,28 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "ExtendIntake"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Right Trench Neutral"
-                }
-              }
-            ]
+            "pathName": "Right Trench Neutral"
           }
         },
         {

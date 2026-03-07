@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,6 +14,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.TuningCommands;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
+import frc.robot.commands.spinToHubCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climb.ClimbModuleIOTalonFX;
 import frc.robot.subsystems.climb.ClimbSubsystem;
@@ -63,18 +65,21 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_intake = new IntakeSubsystem(new IntakeModuleIOSparkMax());
         this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
         this.m_turret = new TurretSubsystem();
-        // this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () ->
-        // swerveDriveSubsystem.getPose(),
-        // () -> swerveDriveSubsystem.getChassisSpeeds()));
+        this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
+                () -> swerveDriveSubsystem.getChassisSpeeds()));
+
+        m_turret.zeroEncoder();
 
         // Creates the commands for using non-drive subsystems in autonomous
+        new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmCommand());
+        new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
 
         NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
         NamedCommands.registerCommand("DistanceShooter", new distanceShooterCommand(m_shooter, swerveDriveSubsystem));
         NamedCommands.registerCommand("Feeder", m_feeder.feederCommand());
         // NamedCommands.registerCommand("SetTurretToHub", m_turret.setAngle(0));
-        NamedCommands.registerCommand("Intake", m_intake.IntakeCommand());
-        NamedCommands.registerCommand("ExtendIntake", m_intake.ExtendArmCommand());
+        // NamedCommands.registerCommand("Intake", m_intake.IntakeCommand());
+        // NamedCommands.registerCommand("ExtendIntake", m_intake.ExtendArmCommand());
         NamedCommands.registerCommand("RetractIntake", m_intake.RetractArmCommand());
         NamedCommands.registerCommand("Outtake", m_intake.OuttakeCommand());
         NamedCommands.registerCommand("Climb", m_climb.contractclimb());

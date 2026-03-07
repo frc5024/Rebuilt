@@ -245,7 +245,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void setTargetAngle(double degrees) {
 
-        pidController.setGoal(MathUtil.clamp(degrees, -90, 90));
+        pidController.setGoal(MathUtil.clamp(degrees, -135, 135));
 
     }
 

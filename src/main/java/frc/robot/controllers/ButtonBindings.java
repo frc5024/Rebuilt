@@ -10,7 +10,6 @@ import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.spinToHubCommand;
-import frc.robot.commands.Intake.ProportionalIntake;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -113,7 +112,7 @@ public class ButtonBindings {
         commandXboxController.y().onTrue(m_intake.RetractArmCommand());
         commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
         commandXboxController.rightBumper()
-                .whileTrue(new ProportionalIntake(m_intake, () -> swerveDriveSubsystem.getChassisSpeeds()));
+                .whileTrue(m_intake.IntakeCommand());
 
         return commandXboxController;
     }
