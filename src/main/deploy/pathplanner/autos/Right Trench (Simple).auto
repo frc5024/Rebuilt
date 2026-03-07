@@ -15,30 +15,30 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "Right Trench Neutral"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Right Trench Neutral"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "RetractIntake"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Right Neutral Trench"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunEverything"
           }
         }
       ]

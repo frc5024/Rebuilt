@@ -8,32 +8,37 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.083897435897436,
-        "y": 7.372294871794873
+        "x": 6.956012820512821,
+        "y": 7.814166666666667
       },
       "isLocked": false,
-      "linkedName": "Left Intake Stop"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.431,
-        "y": 7.6144107142857145
+        "x": 4.409435897435899,
+        "y": 7.418807692307692
       },
       "prevControl": {
-        "x": 6.083897435897436,
-        "y": 7.349038461538462
+        "x": 7.060666666666667,
+        "y": 7.395551282051282
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Trench Start"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.39461883408071724,
+      "rotationDegrees": 180.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 2.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -42,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Left Trench Paths",
