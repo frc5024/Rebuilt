@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Pathfind Test Path"
+            "pathName": "Left Trench Neutral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Neutral Trench"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Calibration",
+  "folder": "Left Trench Autos",
   "choreoAuto": false
 }

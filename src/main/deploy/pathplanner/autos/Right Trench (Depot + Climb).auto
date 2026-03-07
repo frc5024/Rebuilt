@@ -5,34 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "RunEverything"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 4.0
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "ExtendIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "To Neutral"
           }
         },
         {
@@ -42,7 +17,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": null
+                  "pathName": "Right Trench Neutral"
                 }
               },
               {
@@ -55,46 +30,60 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "RetractIntake"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Neutral to Center"
+            "pathName": "Right Trench Depot Transition"
           }
         },
         {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "RunEverything"
+                  "pathName": "Right Trench Depot Climb"
                 }
               },
               {
-                "type": "wait",
+                "type": "race",
                 "data": {
-                  "waitTime": 4.0
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "RunEverything"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 3.0
+                      }
+                    }
+                  ]
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "To Right Tower"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Declimb"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Right Climb"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Declimb"
+                }
+              }
+            ]
           }
         },
         {
@@ -107,6 +96,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Trench Autos (ALPHA)",
+  "folder": "Right Trench Autos",
   "choreoAuto": false
 }

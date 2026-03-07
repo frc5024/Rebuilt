@@ -15,7 +15,8 @@ public class ProportionalIntake extends Command {
     private final Supplier<ChassisSpeeds> chassisSpeedSupplier;
 
     static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
-    static GenericEntry intakeEntry = tab.add("SET INTAKE SPEED", intakeConstants.INTAKE_SPEED).getEntry();
+    static GenericEntry intakeEntry = tab.add("SET prop INTAKESPEED", intakeConstants.INTAKE_SPEED).getEntry();
+
     static GenericEntry coefficientEntry = tab.add("coefficient", intakeConstants.driveCoefficient).getEntry();
 
     public ProportionalIntake(IntakeSubsystem s_Intake, Supplier<ChassisSpeeds> chassisSpeedSupplier) {

@@ -3,82 +3,94 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.625,
-        "y": 4.0
+        "x": 7.800157657657657,
+        "y": 5.066610360360361
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.625,
-        "y": 3.75
+        "x": 6.388683911136969,
+        "y": 6.67039043998675
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Intake Stop"
     },
     {
       "anchor": {
-        "x": 1.625,
-        "y": 5.1
+        "x": 5.777792792792793,
+        "y": 7.374966216216217
       },
       "prevControl": {
-        "x": 1.625,
-        "y": 4.85
+        "x": 6.027405344435394,
+        "y": 7.388879305825291
       },
       "nextControl": {
-        "x": 1.625,
-        "y": 5.35
+        "x": 4.5624135478997925,
+        "y": 7.307222506086545
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.675,
-        "y": 5.1
+        "x": 0.4694673416772359,
+        "y": 7.119617117117117
       },
       "prevControl": {
-        "x": 0.675,
-        "y": 5.35
+        "x": 0.46653153153153215,
+        "y": 7.466891891891891
       },
       "nextControl": {
-        "x": 0.675,
-        "y": 4.85
+        "x": 0.4715807295885198,
+        "y": 6.86962605009364
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.675,
-        "y": 4.72
+        "x": 0.475,
+        "y": 5.953653846153847
       },
       "prevControl": {
-        "x": 0.42500000000000004,
-        "y": 4.72
+        "x": 0.475,
+        "y": 6.203653846153847
       },
       "nextControl": {
-        "x": 0.925,
-        "y": 4.72
+        "x": 0.475,
+        "y": 5.69778228185002
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Depot Intake Stop"
     },
     {
       "anchor": {
-        "x": 1.072141025641027,
-        "y": 4.72
+        "x": 1.825,
+        "y": 4.647837837839594
       },
       "prevControl": {
-        "x": 0.8221410256410271,
-        "y": 4.72
+        "x": 0.5697170132533764,
+        "y": 5.65677311506129
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Line Up Left Climb"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 1.3836477987421383,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 1.6603773584905661,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 3.8113207547169883,
       "rotationDegrees": -90.0
     }
   ],
@@ -86,7 +98,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.5,
+    "maxVelocity": 2.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -98,10 +110,10 @@
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Left Trench Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

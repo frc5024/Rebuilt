@@ -17,7 +17,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left Trench Neutral"
+                  "pathName": "Right Trench Neutral"
                 }
               },
               {
@@ -36,13 +36,13 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left Trench Depot Climb"
+                  "pathName": "Right Trench Shooting Climb"
                 }
               },
               {
@@ -52,7 +52,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 3.0
+                        "waitTime": 1.9
                       }
                     },
                     {
@@ -66,11 +66,36 @@
               }
             ]
           }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Right Climb"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Declimb"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Climb"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Left Trench Autos",
+  "folder": "Right Trench Autos",
   "choreoAuto": false
 }

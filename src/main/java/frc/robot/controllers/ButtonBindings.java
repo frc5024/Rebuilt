@@ -101,19 +101,19 @@ public class ButtonBindings {
                             return Rotation2d.fromRadians(angleToHub);
                         }));
 
-        commandXboxController.y().onTrue(Commands.runOnce(() -> m_turret.zeroEncoder()));
         commandXboxController.x().whileTrue(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
                 () -> swerveDriveSubsystem.getChassisSpeeds()));
-        commandXboxController.b().whileTrue(m_turret.spinToAngleCommand(100));
-        commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
-        commandXboxController.rightBumper()
-                .whileTrue(new ProportionalIntake(m_intake, () -> swerveDriveSubsystem.getChassisSpeeds()));
 
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
 
         commandXboxController.povLeft().whileTrue(m_turret.stickRotation(0.1));
         commandXboxController.povRight().whileTrue(m_turret.stickRotation(-0.1));
+
+        commandXboxController.y().onTrue(m_intake.RetractArmCommand());
+        commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
+        commandXboxController.rightBumper()
+                .whileTrue(new ProportionalIntake(m_intake, () -> swerveDriveSubsystem.getChassisSpeeds()));
 
         return commandXboxController;
     }

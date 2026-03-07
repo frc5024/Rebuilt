@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Trench Neutral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Trench Depot Climb Drive Test"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Climb"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Left Trench Autos",
+  "choreoAuto": false
+}

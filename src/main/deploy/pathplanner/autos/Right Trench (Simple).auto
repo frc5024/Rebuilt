@@ -15,36 +15,36 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "Left Trench Neutral"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Right Trench Neutral"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "RetractIntake"
+            "pathName": "Right Neutral Trench"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Left Neutral Trench"
+            "name": "RunEverything"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Left Trench Autos",
+  "folder": "Right Trench Autos",
   "choreoAuto": false
 }

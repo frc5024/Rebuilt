@@ -7,31 +7,95 @@
         {
           "type": "named",
           "data": {
-            "name": "Run Everything"
+            "name": "ExtendIntake"
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "Left Trench Neutral"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Trench Neutral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Left Climb Trench Depot"
+            "name": "RetractIntake"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Left Climb"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Trench Depot Climb"
+                }
+              },
+              {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "RunEverything"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 3.0
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Climb"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Declimb"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Climb"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Left Trench Autos",
   "choreoAuto": false
 }

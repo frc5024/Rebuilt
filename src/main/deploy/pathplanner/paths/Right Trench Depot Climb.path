@@ -8,56 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.612626106782102,
-        "y": 7.56263604818781
+        "x": 4.328038461538463,
+        "y": 7.418807692307692
       },
       "isLocked": false,
       "linkedName": "Depot Travel To"
     },
     {
       "anchor": {
-        "x": 5.777792792792793,
-        "y": 7.374966216216217
+        "x": 0.6535256410256425,
+        "y": 7.139730769230769
       },
       "prevControl": {
-        "x": 6.027405344435394,
-        "y": 7.388879305825291
+        "x": 0.6505898308799387,
+        "y": 7.487005544005544
       },
       "nextControl": {
-        "x": 4.5624135478997925,
-        "y": 7.307222506086545
-      },
-      "isLocked": false,
-      "linkedName": "Depot Travel To"
-    },
-    {
-      "anchor": {
-        "x": 0.4694673416772359,
-        "y": 7.119617117117117
-      },
-      "prevControl": {
-        "x": 0.46653153153153215,
-        "y": 7.466891891891891
-      },
-      "nextControl": {
-        "x": 0.4715807295885198,
-        "y": 6.86962605009364
+        "x": 0.6556390289369264,
+        "y": 6.889739702207292
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.4694673416772359,
-        "y": 6.008866841544209
+        "x": 0.475,
+        "y": 5.953653846153847
       },
       "prevControl": {
-        "x": 0.2303903401497794,
-        "y": 6.081957109984272
+        "x": 0.4401153846153844,
+        "y": 6.3490128205128205
       },
       "nextControl": {
-        "x": 2.095423076923078,
-        "y": 5.511782051282052
+        "x": 0.6235761225926029,
+        "y": 4.269791123437688
       },
       "isLocked": false,
       "linkedName": "Depot Intake Stop"
@@ -68,8 +52,8 @@
         "y": 2.85
       },
       "prevControl": {
-        "x": 1.7582051282051299,
-        "y": 3.8605769230769234
+        "x": 2.0837948717948733,
+        "y": 6.383897435897436
       },
       "nextControl": null,
       "isLocked": false,
@@ -78,19 +62,19 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.25,
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 1.3836477987421383,
+      "waypointRelativePos": 0.47085201793721093,
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 1.6603773584905661,
+      "waypointRelativePos": 0.85,
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 3.8113207547169883,
+      "waypointRelativePos": 2.8113207547169883,
       "rotationDegrees": -90.0
     }
   ],
@@ -98,33 +82,21 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "RunEverything",
-      "waypointRelativePos": 1.3152542372881362,
-      "endWaypointRelativePos": 4.0,
-      "command": null
-    },
-    {
-      "name": "ExtendIntake",
-      "waypointRelativePos": 1.540417801998184,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
       "name": "Intake",
-      "waypointRelativePos": 1.9691189827429605,
-      "endWaypointRelativePos": 3.30608537693006,
+      "waypointRelativePos": 0.9863760217983613,
+      "endWaypointRelativePos": 2.185286103542235,
       "command": null
     },
     {
       "name": "RetractIntake",
-      "waypointRelativePos": 3.8,
+      "waypointRelativePos": 2.397820163487756,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -138,7 +110,7 @@
   "folder": "Right Trench Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
