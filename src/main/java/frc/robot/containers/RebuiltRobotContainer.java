@@ -73,6 +73,8 @@ public class RebuiltRobotContainer extends RobotContainer {
         // Creates the commands for using non-drive subsystems in autonomous
         new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmCommand());
         new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
+        new EventTrigger("RetractIntake").onTrue(m_intake.RetractArmCommand());
+        new EventTrigger("AimTurret").whileTrue(m_turret.spinToAngleCommand(0));
 
         NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
         NamedCommands.registerCommand("DistanceShooter", new distanceShooterCommand(m_shooter, swerveDriveSubsystem));
@@ -80,7 +82,7 @@ public class RebuiltRobotContainer extends RobotContainer {
         // NamedCommands.registerCommand("SetTurretToHub", m_turret.setAngle(0));
         // NamedCommands.registerCommand("Intake", m_intake.IntakeCommand());
         // NamedCommands.registerCommand("ExtendIntake", m_intake.ExtendArmCommand());
-        NamedCommands.registerCommand("RetractIntake", m_intake.RetractArmCommand());
+        // NamedCommands.registerCommand("RetractIntake", m_intake.RetractArmCommand());
         NamedCommands.registerCommand("Outtake", m_intake.OuttakeCommand());
         NamedCommands.registerCommand("Climb", m_climb.contractclimb());
         NamedCommands.registerCommand("Declimb", m_climb.extendclimb());

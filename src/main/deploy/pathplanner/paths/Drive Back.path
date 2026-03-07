@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 6.749615384615384
+        "x": 3.6327876631079485,
+        "y": 3.9865836298932384
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.25,
-        "y": 6.749615384615384
+        "x": 3.8827876631079485,
+        "y": 3.9865836298932384
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.0,
-        "y": 6.749615384615384
+        "x": 2.5138315539739033,
+        "y": 3.9865836298932384
       },
       "prevControl": {
-        "x": 2.75,
-        "y": 6.749615384615384
+        "x": 2.7638315539739033,
+        "y": 3.9865836298932384
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,9 +31,16 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "AimTurret",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 1.0,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 300.0,
     "maxAngularAcceleration": 450.0,

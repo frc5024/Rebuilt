@@ -78,7 +78,8 @@ public class ButtonBindings {
 
         commandXboxController.leftTrigger()
                 .whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter, m_hopper),
-                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
+                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
+                        Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
         commandXboxController.rightTrigger()
                 .whileTrue(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = true));
         commandXboxController.rightTrigger().onFalse(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = false));

@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Trench Start"
+            "pathName": null
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Trench to Right Climb"
+            "pathName": null
           }
         },
         {

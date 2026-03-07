@@ -14,7 +14,7 @@
     "Right Trench Autos",
     "Trench Autos (ALPHA)"
   ],
-  "defaultMaxVel": 2.0,
+  "defaultMaxVel": 1.0,
   "defaultMaxAccel": 3.5,
   "defaultMaxAngVel": 300.0,
   "defaultMaxAngAccel": 450.0,
