@@ -20,7 +20,6 @@ public class IntakeDrop extends SequentialCommandGroup {
                 new InstantCommand() {
                     @Override
                     public void initialize() {
-                        System.out.println("intake initializing");
                         s_Intake.setArmSpeed(0);
                         s_Intake.setIntakeSpeed(0);
                     }

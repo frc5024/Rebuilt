@@ -170,22 +170,18 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command ExtendArmCommand() {
-        System.out.println("Command Run");
         return new IntakeExtendArm(this);
     }
 
     public Command RetractArmCommand() {
-        System.out.println("Command Retract Run");
         return new IntakeRetractArm(this);
     }
 
     public Command retractArmPIDCommand() {
-        System.out.println("PID Retract");
         return new PIDRetractArm(this);
     }
 
     public Command extendArmPIDCommand() {
-        System.out.println("PID Extend");
         return new PIDExtendArm(this);
     }
 

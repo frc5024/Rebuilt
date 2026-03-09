@@ -23,8 +23,6 @@ public class spinToAngleCommand extends Command {
     }
 
     public void initialize() {
-        System.out.println("setting turret angle");
-
         targetAngle = angleEntry.getDouble(0);
         // turretSubsystem.zeroEncoder();
         turretSubsystem.setTargetAngle(targetAngle);

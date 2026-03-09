@@ -107,13 +107,11 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void enablePID() {
         pidEnabled = true;
-        System.out.println("PID enabled for turret");
     }
 
     public void disablePID() {
         pidEnabled = false;
         // turretModuleIO.set(0);
-        System.out.println("PID disabled for turret");
     }
 
     public void runTurret(double speed) {

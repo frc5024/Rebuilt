@@ -88,7 +88,6 @@ public class ClimbModuleIOTalonFX implements ClimbModuleIO {
     @Override
     public void set(double speed) {
         climbMotor.set(speed);
-        System.out.println(speed);
     }
 
     /**

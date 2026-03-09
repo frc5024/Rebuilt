@@ -52,7 +52,6 @@ public class runEverything extends SequentialCommandGroup {
                 new InstantCommand() {
                     @Override
                     public void initialize() {
-                        System.out.println("Running all commands sequentially");
                         feederSubsystem.setIdle();
                         // shooterSubsystem.setEnabled(true);
                         // shooterSubsystem.setShooterPID(shooterConstants.setVelocity);
@@ -74,7 +73,6 @@ public class runEverything extends SequentialCommandGroup {
                     // shooterSubsystem.setEnabled(false);
                     hopperSubsystem.setIdle();
                     feederSubsystem.setIdle();
-                    System.out.println("All commands stopped");
                 })
 
         );
