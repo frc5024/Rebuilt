@@ -57,6 +57,11 @@ public class FeederModuleIOSim extends FeederModuleIOSparkMax {
     }
 
     @Override
+    public double getPosition() {
+        return sparkMaxSim.getPosition();
+    }
+
+    @Override
     public void set(double voltage) {
         voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
         dcMotorSim.setInputVoltage(voltageRequest);

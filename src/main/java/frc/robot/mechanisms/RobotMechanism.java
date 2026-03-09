@@ -21,6 +21,7 @@ public class RobotMechanism {
     private final LoggedMechanismLigament2d hopperArm;
     private final LoggedMechanismLigament2d turretArm;
     private final LoggedMechanismLigament2d climbShaft;
+    private final LoggedMechanismLigament2d feederArm;
 
     /**
      * 
@@ -37,11 +38,14 @@ public class RobotMechanism {
                 new Color8Bit(Color.kRed));
         this.climbShaft = new LoggedMechanismLigament2d("ClimbShaft", Units.inchesToMeters(4.33), 180, 10,
                 new Color8Bit(Color.kPurple));
+        this.feederArm = new LoggedMechanismLigament2d("FeederArm", Units.inchesToMeters(4.33), 180, 10,
+                new Color8Bit(Color.kOrange));
 
         this.canvasRoot.append(intakeArm);
         this.canvasRoot.append(hopperArm);
         this.canvasRoot.append(turretArm);
         this.canvasRoot.append(climbShaft);
+        this.canvasRoot.append(feederArm);
     }
 
     /**
@@ -49,6 +53,13 @@ public class RobotMechanism {
      */
     public double getClimbShaftLength() {
         return climbShaft.getLength();
+    }
+
+    /**
+     * 
+     */
+    public double getFeederArmAngle() {
+        return feederArm.getAngle();
     }
 
     /**
@@ -82,10 +93,12 @@ public class RobotMechanism {
     /**
      * 
      */
-    public void setMechanisms(double intakePosition, double hopperPosition, double turretArmAngle, double climbHeight) {
+    public void setMechanisms(double intakePosition, double hopperPosition, double turretArmAngle, double climbHeight,
+            double feederArmPosition) {
         intakeArm.setAngle(-Units.radiansToDegrees(intakePosition));
         hopperArm.setAngle(Units.radiansToDegrees(hopperPosition));
         turretArm.setAngle(turretArmAngle);
         climbShaft.setLength(Units.inchesToMeters(4.33) - climbHeight);
+        feederArm.setAngle(Units.radiansToDegrees(feederArmPosition));
     }
 }

@@ -175,8 +175,10 @@ public class RebuiltRobotContainer extends RobotContainer {
                 m_hopper.getPosition(),
                 m_turret.getCurrentAngle(),
                 m_climb.getPosition(),
+                m_feeder.getPosition(),
                 turretPose,
-                m_shooter.getTangentialVelocity());
+                m_shooter.getTangentialVelocity(),
+                swerveDriveSubsystem.getModuleAngles());
 
         Logger.recordOutput("Turret/Pose", turretPose);
     }
