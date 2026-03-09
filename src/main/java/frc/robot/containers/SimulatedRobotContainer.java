@@ -198,13 +198,14 @@ public class SimulatedRobotContainer extends RobotContainer {
                 new Rotation3d(
                         0.0,
                         Units.degreesToRadians(-180.0 + turretConstants.verticalLaunchAngle), // launch angle
-                        robotPose.getRotation().getRadians() + Math.toRadians(m_turret.getTurretAngle())));
+                        robotPose.getRotation().getRadians()
+                                + (m_turret != null ? Math.toRadians(m_turret.getTurretAngle()) : 0.0)));
         Pose3d turretPose = new Pose3d(robotPose).transformBy(transform3d);
 
         mechanismVisualizer.update(
                 m_intake.getPosition(),
                 m_hopper.getPosition(),
-                m_turret.getTurretAngle(),
+                m_turret != null ? m_turret.getTurretAngle() : 0.0,
                 m_climb.getPosition(),
                 turretPose,
                 m_shooter.getTangentialVelocity());
