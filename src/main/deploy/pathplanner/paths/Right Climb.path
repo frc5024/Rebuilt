@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.825,
-        "y": 2.85
+        "x": 1.075,
+        "y": 2.440329879366967
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.186646678798474,
-        "y": 2.85
+        "x": 1.075,
+        "y": 2.690329879366967
       },
       "isLocked": false,
-      "linkedName": "Line Up Right Climb"
+      "linkedName": "Right Climb"
     },
     {
       "anchor": {
-        "x": 1.06,
-        "y": 2.85
+        "x": 1.075,
+        "y": 2.9462775175035323
       },
       "prevControl": {
-        "x": 2.0599999999999996,
-        "y": 2.85
+        "x": 1.075,
+        "y": 2.6962775175035323
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,9 +34,9 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 0.5,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAcceleration": 0.25,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 270.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },

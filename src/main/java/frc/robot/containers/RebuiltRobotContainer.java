@@ -128,6 +128,8 @@ public class RebuiltRobotContainer extends RobotContainer {
         new EventTrigger("RetractIntake").onTrue(m_intake.RetractArmCommand());
         new EventTrigger("AimTurret").whileTrue(
                 Commands.runOnce(() -> m_turret.setAngle(0), m_turret));
+        new EventTrigger("Climb").whileTrue(m_climb.contractclimb());
+        new EventTrigger("Declimb").whileTrue(m_climb.extendclimb());
 
         NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
         NamedCommands.registerCommand("DistanceShooter", new distanceShooterCommand(m_shooter, swerveDriveSubsystem));
@@ -137,8 +139,8 @@ public class RebuiltRobotContainer extends RobotContainer {
         // NamedCommands.registerCommand("ExtendIntake", m_intake.ExtendArmCommand());
         // NamedCommands.registerCommand("RetractIntake", m_intake.RetractArmCommand());
         NamedCommands.registerCommand("Outtake", m_intake.OuttakeCommand());
-        NamedCommands.registerCommand("Climb", m_climb.contractclimb());
-        NamedCommands.registerCommand("Declimb", m_climb.extendclimb());
+        // NamedCommands.registerCommand("Climb", m_climb.contractclimb());
+        // NamedCommands.registerCommand("Declimb", m_climb.extendclimb());
         NamedCommands.registerCommand("Dontdeclimb", m_climb.dontdeclimb());
         NamedCommands.registerCommand("ExtendClimb", m_climb.extendclimb());
         NamedCommands.registerCommand("ContractClimb", m_climb.contractclimb());

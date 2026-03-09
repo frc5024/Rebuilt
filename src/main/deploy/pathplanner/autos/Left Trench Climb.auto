@@ -13,13 +13,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Trench Depot Climb Drive Test"
+            "pathName": "Left Neutral Trench"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left Climb"
+            "pathName": "Left Trench Climb"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Climb Line Up"
           }
         }
       ]

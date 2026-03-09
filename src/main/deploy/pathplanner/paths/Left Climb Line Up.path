@@ -3,35 +3,42 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.825,
-        "y": 4.648
+        "x": 1.045,
+        "y": 4.923897721740112
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1651763962257764,
-        "y": 4.641788333346693
+        "x": 1.0648357898055787,
+        "y": 4.666064398857272
       },
       "isLocked": false,
-      "linkedName": "Line Up Left Climb"
+      "linkedName": "Left Climb"
     },
     {
       "anchor": {
-        "x": 1.0599302731659082,
-        "y": 4.627701321041761
+        "x": 1.045,
+        "y": 4.557207997209013
       },
       "prevControl": {
-        "x": 0.809940235460123,
-        "y": 4.629933147168521
+        "x": 1.045,
+        "y": 4.807207997209013
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Climb End"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Climb",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 0.5,
     "maxAcceleration": 0.25,

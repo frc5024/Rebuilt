@@ -5,91 +5,27 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "ExtendIntake"
+            "pathName": "Right Trench Neutral"
           }
         },
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Right Trench Neutral"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              }
-            ]
+            "pathName": "Right Neutral Trench"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "RetractIntake"
+            "pathName": "Right Trench Climb"
           }
         },
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Right Trench Shooting Climb"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.9
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "RunEverything"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Right Climb"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Declimb"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Climb"
+            "pathName": "Right Climb"
           }
         }
       ]

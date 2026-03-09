@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -26,8 +26,6 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.turretConstants;
 import frc.robot.commands.TuningCommands;
-import frc.robot.commands.distanceShooterCommand;
-import frc.robot.commands.runEverything;
 import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.simulation.ShooterSubsystemSim;
@@ -160,23 +158,34 @@ public class SimulatedRobotContainer extends RobotContainer {
 
     @Override
     public void configureNamedCommands() {
-        NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
-        NamedCommands.registerCommand("DistanceShooter", new distanceShooterCommand(m_shooter, swerveDriveSubsystem));
-        NamedCommands.registerCommand("Feeder", m_feeder.feederCommand());
-        NamedCommands.registerCommand("Intake", m_intake.IntakeCommand());
-        NamedCommands.registerCommand("ExtendIntake", m_intake.ExtendArmCommand());
-        NamedCommands.registerCommand("RetractIntake", m_intake.RetractArmCommand());
-        NamedCommands.registerCommand("Outtake", m_intake.OuttakeCommand());
-        NamedCommands.registerCommand("Climb", m_climb.contractclimb());
-        NamedCommands.registerCommand("Declimb", m_climb.extendclimb());
-        NamedCommands.registerCommand("Dontdeclimb", m_climb.dontdeclimb());
-        NamedCommands.registerCommand("ExtendClimb", m_climb.extendclimb());
-        NamedCommands.registerCommand("ContractClimb", m_climb.contractclimb());
-        NamedCommands.registerCommand("SpinHopper", m_hopper.SpinCommand());
-        NamedCommands.registerCommand("RunEverything",
-                Commands.parallel(new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
-                        new runEverything(m_feeder, m_shooter, m_hopper),
-                        Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
+
+        new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmCommand());
+        new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
+        new EventTrigger("RetractIntake").onTrue(m_intake.RetractArmCommand());
+        new EventTrigger("AimTurret").whileTrue(
+                Commands.runOnce(() -> m_turret.setAngle(0), m_turret));
+        new EventTrigger("Climb").whileTrue(m_climb.contractclimb());
+        new EventTrigger("Declimb").whileTrue(m_climb.extendclimb());
+
+        // NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
+        // NamedCommands.registerCommand("DistanceShooter", new
+        // distanceShooterCommand(m_shooter, swerveDriveSubsystem));
+        // NamedCommands.registerCommand("Feeder", m_feeder.feederCommand());
+        // NamedCommands.registerCommand("Intake", m_intake.IntakeCommand());
+        // NamedCommands.registerCommand("ExtendIntake", m_intake.ExtendArmCommand());
+        // NamedCommands.registerCommand("RetractIntake", m_intake.RetractArmCommand());
+        // NamedCommands.registerCommand("Outtake", m_intake.OuttakeCommand());
+        // NamedCommands.registerCommand("Climb", m_climb.contractclimb());
+        // NamedCommands.registerCommand("Declimb", m_climb.extendclimb());
+        // NamedCommands.registerCommand("Dontdeclimb", m_climb.dontdeclimb());
+        // NamedCommands.registerCommand("ExtendClimb", m_climb.extendclimb());
+        // NamedCommands.registerCommand("ContractClimb", m_climb.contractclimb());
+        // NamedCommands.registerCommand("SpinHopper", m_hopper.SpinCommand());
+        // NamedCommands.registerCommand("RunEverything",
+        // Commands.parallel(new distanceShooterCommand(m_shooter,
+        // swerveDriveSubsystem),
+        // new runEverything(m_feeder, m_shooter, m_hopper),
+        // Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
     }
 
     @Override

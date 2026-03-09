@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.431,
-        "y": 0.457
+        "x": 4.421521281849145,
+        "y": 0.43729692398316156
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.8870000000000005,
-        "y": 0.457
+        "x": 5.200123860809257,
+        "y": 0.6946588931192994
       },
       "isLocked": false,
       "linkedName": "Right Trench Start"
     },
     {
       "anchor": {
-        "x": 7.8,
-        "y": 3.2
+        "x": 7.6309772727272716,
+        "y": 0.9429545454545463
       },
       "prevControl": {
-        "x": 7.758358974358975,
-        "y": 0.5000256410256418
+        "x": 7.441663133222553,
+        "y": 0.670299759000041
+      },
+      "nextControl": {
+        "x": 7.794842876591166,
+        "y": 1.1789577375332623
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.795886363639276,
+        "y": 3.0249318181791636
+      },
+      "prevControl": {
+        "x": 7.81333225419749,
+        "y": 1.5010560512334656
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,33 +50,33 @@
   "eventMarkers": [
     {
       "name": "ExtendIntake",
-      "waypointRelativePos": 0.3,
+      "waypointRelativePos": 0.5170556552962298,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "Intake",
-      "waypointRelativePos": 0.3,
-      "endWaypointRelativePos": 1.0,
+      "waypointRelativePos": 0.6427289048473969,
+      "endWaypointRelativePos": 2.0,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
+    "maxVelocity": 1.5,
     "maxAcceleration": 3.5,
-    "maxAngularVelocity": 300.0,
-    "maxAngularAcceleration": 450.0,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 270.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 0,
     "rotation": 90.0
   },
   "reversed": false,
   "folder": "Right Trench Paths",
   "idealStartingState": {
-    "velocity": 0.0,
+    "velocity": 0,
     "rotation": 90.0
   },
   "useDefaultConstraints": true

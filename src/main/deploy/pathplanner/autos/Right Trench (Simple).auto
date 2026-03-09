@@ -15,12 +15,6 @@
           "data": {
             "pathName": "Right Neutral Trench"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RunEverything"
-          }
         }
       ]
     }

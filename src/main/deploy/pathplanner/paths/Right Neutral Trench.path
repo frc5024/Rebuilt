@@ -3,53 +3,67 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.8,
-        "y": 3.2
+        "x": 7.795886363639276,
+        "y": 3.0249318181791636
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.8611506524317925,
-        "y": 0.6727520759193348
+        "x": 7.154460257392693,
+        "y": 2.163493765609373
+      },
+      "isLocked": false,
+      "linkedName": "Right Intake Stop"
+    },
+    {
+      "anchor": {
+        "x": 6.084954545454545,
+        "y": 0.6749772727272727
+      },
+      "prevControl": {
+        "x": 6.334845516516445,
+        "y": 0.6823598591128707
+      },
+      "nextControl": {
+        "x": 4.969866116808609,
+        "y": 0.642033959020992
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.5975580914032923,
-        "y": 0.47389585368803067
+        "x": 3.631931818181818,
+        "y": 0.6749772727272727
       },
       "prevControl": {
-        "x": 7.2586358244365385,
-        "y": 0.4145314353499395
+        "x": 4.774321975528396,
+        "y": 0.6809562430057965
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Trench Stop"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4968553459119498,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "RetractIntake",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
+    "maxVelocity": 1.5,
     "maxAcceleration": 3.5,
-    "maxAngularVelocity": 300.0,
-    "maxAngularAcceleration": 450.0,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 270.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 90.0
+    "velocity": 0,
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Right Trench Paths",
