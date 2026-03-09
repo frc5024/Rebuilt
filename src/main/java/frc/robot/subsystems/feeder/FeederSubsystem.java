@@ -38,6 +38,10 @@ public class FeederSubsystem extends SubsystemBase {
         return feederModuleIO.getCurrentDrawAmps();
     }
 
+    public double getPosition() {
+        return feederModuleIO.getPosition();
+    }
+
     public void setIdle() {
         feederModuleIO.set(0);
     }

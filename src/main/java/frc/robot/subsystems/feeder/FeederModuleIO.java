@@ -25,6 +25,10 @@ public interface FeederModuleIO {
         return 0.0;
     }
 
+    default double getPosition() {
+        return 0.0;
+    }
+
     default boolean isRunning() {
         return false;
     }

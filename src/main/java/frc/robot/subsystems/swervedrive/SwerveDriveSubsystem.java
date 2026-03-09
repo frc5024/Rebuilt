@@ -300,7 +300,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * modules.
      */
     @AutoLogOutput(key = "SwerveDrive/SwerveStates/Measured")
-    private SwerveModuleState[] getModuleStates() {
+    public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (int i = 0; i < 4; i++) {
             states[i] = modules[i].getState();
@@ -318,6 +318,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             states[i] = modules[i].getPosition();
         }
         return states;
+    }
+
+    /**
+     * 
+     */
+    public Rotation2d[] getModuleAngles() {
+        Rotation2d[] angles = new Rotation2d[4];
+        for (int i = 0; i < 4; i++) {
+            angles[i] = modules[i].getAngle();
+        }
+        return angles;
     }
 
     /** Returns the measured chassis speeds of the robot. */
