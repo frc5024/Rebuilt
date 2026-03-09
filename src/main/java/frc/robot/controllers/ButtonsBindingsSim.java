@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.turretConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
@@ -114,10 +113,11 @@ public class ButtonsBindingsSim {
 
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
-        commandXboxController.povLeft().onTrue(
-                Commands.runOnce(() -> m_turret.setAngle(-turretConstants.ANGLE_LIMIT)));
-        commandXboxController.povRight().onTrue(
-                Commands.runOnce(() -> m_turret.setAngle(turretConstants.ANGLE_LIMIT)));
+
+        commandXboxController.povLeft().whileTrue(
+                Commands.runOnce(() -> m_turret.increaseAngle(), m_turret));
+        commandXboxController.povRight().whileTrue(
+                Commands.runOnce(() -> m_turret.decreaseAngle(), m_turret));
 
         return commandXboxController;
     }

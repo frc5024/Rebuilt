@@ -107,8 +107,10 @@ public class ButtonBindings {
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
 
-        commandXboxController.povLeft().whileTrue(m_turret.stickRotation(0.1));
-        commandXboxController.povRight().whileTrue(m_turret.stickRotation(-0.1));
+        commandXboxController.povLeft().whileTrue(
+                Commands.runOnce(() -> m_turret.increaseAngle(), m_turret));
+        commandXboxController.povRight().whileTrue(
+                Commands.runOnce(() -> m_turret.decreaseAngle(), m_turret));
 
         commandXboxController.y().onTrue(m_intake.RetractArmCommand());
         commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));

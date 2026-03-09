@@ -46,12 +46,30 @@ public final class Constants {
         public static final double speed = 0.3;
         public static final int turretMotorChannel = 3;
         public static final double turretTolerance = 0.5;
+
         public static final double kP = 0.04;
-        public static final double kI = 0;
+        public static final double kI = 0.0;
         public static final double kD = 0.0;
-        public static final double kS = 0;
+
+        public static final double kS = 0.0;
         public static final double kV = 0.0;
         public static final double kA = 0.0;
+
+        public static final double sim_kP = 0.09;
+        public static final double sim_kI = 0.0;
+        public static final double sim_kD = 0.009;
+
+        public static final double sim_kS = 0.0;
+        public static final double sim_kV = 0.0;
+        public static final double sim_kA = 0.0;
+
+        public static double[] getPIDs() {
+            if (Robot.isReal()) {
+                return new double[] { kP, kI, kD };
+            } else {
+                return new double[] { sim_kP, sim_kI, sim_kD };
+            }
+        }
 
         public static final double turretMaxSpeed = 70; // degpersec
         public static final double turretMaxAccel = 30;
@@ -292,12 +310,6 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(
                 SwerveDriveConstants.maxAngularSpeed, SwerveDriveConstants.maxLinearAcceleration);
 
-    }
-
-    public static final class PIDConstants {
-        public static final double kP = 0.0;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
     }
 
     /**

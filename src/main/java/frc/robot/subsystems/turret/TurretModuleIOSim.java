@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 /**
  * 
  */
-public class TurretModuleIOSim extends TurretModuleIOSparkMax2 {
+public class TurretModuleIOSim extends TurretModuleIOSparkMaxEncoderPID {
     // Hardware objects
     private final DCMotor dcMotor;
     private final DCMotorSim dcMotorSim;

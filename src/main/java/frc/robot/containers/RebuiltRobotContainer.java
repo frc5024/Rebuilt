@@ -29,6 +29,7 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.GyroIOPigeon2;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOTalonFX;
+import frc.robot.subsystems.turret.TurretModuleIOSparkMaxExternalPID;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -64,7 +65,7 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSparkMax());
         this.m_intake = new IntakeSubsystem(new IntakeModuleIOSparkMax());
         this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
-        this.m_turret = new TurretSubsystem();
+        this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxExternalPID());
         this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
                 () -> swerveDriveSubsystem.getChassisSpeeds()));
 
@@ -74,7 +75,8 @@ public class RebuiltRobotContainer extends RobotContainer {
         new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmCommand());
         new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
         new EventTrigger("RetractIntake").onTrue(m_intake.RetractArmCommand());
-        new EventTrigger("AimTurret").whileTrue(m_turret.spinToAngleCommand(0));
+        new EventTrigger("AimTurret").whileTrue(
+                Commands.runOnce(() -> m_turret.setAngle(0), m_turret));
 
         NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
         NamedCommands.registerCommand("DistanceShooter", new distanceShooterCommand(m_shooter, swerveDriveSubsystem));
