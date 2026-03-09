@@ -1,5 +1,10 @@
 package frc.robot.subsystems.vision;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -9,12 +14,10 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
-import java.util.LinkedList;
-import java.util.List;
-import org.littletonrobotics.junction.Logger;
 
 /**
  * 
@@ -41,7 +44,8 @@ public class VisionSubsystem extends SubsystemBase {
         // Initialize disconnected alerts
         this.disconnectedAlerts = new Alert[visionIO.length];
         for (int i = 0; i < this.inputs.length; i++) {
-            this.disconnectedAlerts[i] = new Alert("Vision camera " + this.visionIO[i].getName() + " is disconnected.", AlertType.kWarning);
+            this.disconnectedAlerts[i] = new Alert("Vision camera " + this.visionIO[i].getName() + " is disconnected.",
+                    AlertType.kWarning);
         }
     }
 
@@ -57,6 +61,11 @@ public class VisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // Disable vision during autonomous to prevent interference with PathPlanner
+        if (DriverStation.isAutonomous()) {
+            return;
+        }
+
         for (int i = 0; i < this.visionIO.length; i++) {
             this.visionIO[i].updateInputs(this.inputs[i]);
             Logger.processInputs("Vision/" + this.visionIO[i].getName(), this.inputs[i]);
@@ -93,7 +102,8 @@ public class VisionSubsystem extends SubsystemBase {
                 boolean rejectPose = observation.tagCount() == 0 // Must have at least one tag
                         || (observation.tagCount() == 1
                                 && observation.ambiguity() > VisionConstants.maxAmbiguity) // Cannot be high ambiguity
-                        || Math.abs(observation.pose().getZ()) > VisionConstants.maxZError // Must have realistic Z coordinate
+                        || Math.abs(observation.pose().getZ()) > VisionConstants.maxZError // Must have realistic Z
+                                                                                           // coordinate
 
                         // Must be within the field boundaries
                         || observation.pose().getX() < 0.0
@@ -127,6 +137,13 @@ public class VisionSubsystem extends SubsystemBase {
                     angularStdDev *= VisionConstants.cameraStdDevFactors[cameraIndex];
                 }
 
+                // During autonomous, heavily weight toward position and away from rotation
+                // This lets vision correct X,Y position but not interfere with PathPlanner's
+                // heading
+                if (DriverStation.isAutonomous()) {
+                    angularStdDev = 10000.0; // Extremely high = ignore rotation, only use position during auto
+                }
+
                 // Send vision observation
                 this.consumer.accept(
                         observation.pose().toPose2d(),
@@ -157,8 +174,10 @@ public class VisionSubsystem extends SubsystemBase {
         // Log summary data
         Logger.recordOutput("Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
         Logger.recordOutput("Vision/Summary/RobotPoses", allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
-        Logger.recordOutput("Vision/Summary/RobotPosesAccepted", allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
-        Logger.recordOutput("Vision/Summary/RobotPosesRejected", allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
+        Logger.recordOutput("Vision/Summary/RobotPosesAccepted",
+                allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
+        Logger.recordOutput("Vision/Summary/RobotPosesRejected",
+                allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
     }
 
     @FunctionalInterface
