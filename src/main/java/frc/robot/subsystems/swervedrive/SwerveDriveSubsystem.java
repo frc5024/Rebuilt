@@ -28,6 +28,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -69,6 +71,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private static double speedModifier = 1.0;
     public boolean isSlowMode = false;
 
+    // NetworkTable entries for live PID tuning
+    private final NetworkTable tuningTable = NetworkTableInstance.getDefault().getTable("PathPlanner");
+    private double ppPositionP = 7.0;
+    private double ppRotationP = 15.0;
+    private PPHolonomicDriveController driveController;
+
     public double getSpeedModifier() {
         if (isSlowMode) {
             return speedModifier * 0.3;
@@ -96,17 +104,25 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Start odometry thread
         PhoenixOdometryThread.getInstance().start();
 
+        // Initialize NetworkTable values for live tuning BEFORE AutoBuilder
+        tuningTable.getEntry("PositionP").setDouble(0.4);
+        tuningTable.getEntry("RotationP").setDouble(2.0);
+
+        // Create drive controller for PathPlanner
+        driveController = new PPHolonomicDriveController(
+                new PIDConstants(7.0, 0.0, 0.0), new PIDConstants(15.0, 0.0, 0.0));
+
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configure(
                 this::getPose,
                 this::setPose,
                 this::getChassisSpeeds,
                 this::runVelocity,
-                new PPHolonomicDriveController(
-                        new PIDConstants(0.5, 0.0, 0.0), new PIDConstants(6.0, 0.0, 0.0)),
+                driveController,
                 RobotConstants.PP_CONFIG,
                 () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
                 this);
+
         Pathfinding.setPathfinder(new LocalADStarAK());
         PathPlannerLogging.setLogActivePathCallback(
                 (activePath) -> {
@@ -116,6 +132,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         PathPlannerLogging.setLogTargetPoseCallback(
                 (targetPose) -> {
                     Logger.recordOutput("SwerveDrive/Odometry/TrajectorySetpoint", targetPose);
+                    // Log target heading for debugging
+                    double targetHeadingDegrees = targetPose.getRotation().getDegrees();
+                    double targetHeadingRadians = targetPose.getRotation().getRadians();
+                    Logger.recordOutput("SwerveDrive/Debug/TargetHeading", targetHeadingDegrees);
+                    Logger.recordOutput("SwerveDrive/Debug/TargetHeadingRadians", targetHeadingRadians);
                 });
 
         // Configure SysId
@@ -131,6 +152,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // Update PID values from NetworkTables (for live tuning)
+        double newPositionP = tuningTable.getEntry("PositionP").getDouble(0.4);
+        double newRotationP = tuningTable.getEntry("RotationP").getDouble(2.0);
+
+        // Update controller PID values if they changed
+        if (newPositionP != ppPositionP || newRotationP != ppRotationP) {
+            ppPositionP = newPositionP;
+            ppRotationP = newRotationP;
+            updateDriveControllerPID();
+        }
+
         SwerveDriveConstants.odometryLock.lock(); // Prevents odometry updates while reading data
         gyroIO.updateInputs(gyroInputs);
         Logger.processInputs("SwerveDrive/Gyro", gyroInputs);
@@ -184,6 +216,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         // Update gyro alert
         gyroDisconnectedAlert.set(!gyroInputs.connected && RobotConstants.currentMode != RobotConstants.Mode.SIM);
+
+        // Log heading debug info
+        logHeadingDebug();
     }
 
     /**
@@ -261,6 +296,24 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     /** Returns a command to run a dynamic test in the specified direction. */
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
+    }
+
+    /** Returns a command that aligns all wheels forward and stops */
+    public Command alignWheelsForward() {
+        return run(() -> {
+            // Create setpoint where all wheels point forward (0 degrees)
+            SwerveModuleState[] forwardStates = new SwerveModuleState[] {
+                    new SwerveModuleState(0, new Rotation2d(0)),
+                    new SwerveModuleState(0, new Rotation2d(0)),
+                    new SwerveModuleState(0, new Rotation2d(0)),
+                    new SwerveModuleState(0, new Rotation2d(0))
+            };
+
+            // Send to modules
+            for (int i = 0; i < 4; i++) {
+                modules[i].runSetpoint(forwardStates[i]);
+            }
+        }).withTimeout(1.0).finallyDo(() -> stop());
     }
 
     /**
@@ -349,5 +402,70 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     /** Returns the maximum angular speed in radians per sec. */
     public double getMaxAngularSpeedRadPerSec() {
         return getMaxLinearSpeedMetersPerSec() / SwerveDriveConstants.DRIVE_BASE_RADIUS;
+    }
+
+    /** Updates the PathPlanner drive controller PID values via reflection */
+    private void updateDriveControllerPID() {
+        try {
+            // Use reflection to access and update the PID controllers
+            // PPHolonomicDriveController has translationController and rotationController
+            // fields
+            java.lang.reflect.Field translationField = driveController.getClass()
+                    .getDeclaredField("translationController");
+            java.lang.reflect.Field rotationField = driveController.getClass().getDeclaredField("rotationController");
+
+            translationField.setAccessible(true);
+            rotationField.setAccessible(true);
+
+            Object translationController = translationField.get(driveController);
+            Object rotationController = rotationField.get(driveController);
+
+            // Update the PIDController objects
+            if (translationController != null) {
+                java.lang.reflect.Method setP = translationController.getClass().getMethod("setP", double.class);
+                setP.invoke(translationController, ppPositionP);
+            }
+
+            if (rotationController != null) {
+                java.lang.reflect.Method setP = rotationController.getClass().getMethod("setP", double.class);
+                setP.invoke(rotationController, ppRotationP);
+            }
+        } catch (Exception e) {
+            // Silently fail if reflection doesn't work
+        }
+    }
+
+    /** Logs the current actual heading and target heading from PathPlanner */
+    public void logHeadingDebug() {
+        Rotation2d actualHeading = getRotation();
+        Pose2d currentPose = getPose();
+
+        // Get module positions for diagnostics
+        SwerveModulePosition[] modulePositions = getModulePositions();
+        SwerveModuleState[] moduleStates = getModuleStates();
+
+        // Normalize steer angles to -180 to 180 range
+        double[] normalizedSteerAngles = new double[4];
+        for (int i = 0; i < 4; i++) {
+            double angle = moduleStates[i].angle.getDegrees();
+            // Normalize to -180 to 180
+            while (angle > 180)
+                angle -= 360;
+            while (angle < -180)
+                angle += 360;
+            normalizedSteerAngles[i] = angle;
+        }
+
+        Logger.recordOutput("SwerveDrive/Debug/ActualHeading", actualHeading.getDegrees());
+        Logger.recordOutput("SwerveDrive/Debug/ActualHeadingRadians", actualHeading.getRadians());
+        Logger.recordOutput("SwerveDrive/Debug/PoseX", currentPose.getX());
+        Logger.recordOutput("SwerveDrive/Debug/PoseY", currentPose.getY());
+        Logger.recordOutput("SwerveDrive/Debug/ModuleDistances", new double[] {
+                modulePositions[0].distanceMeters,
+                modulePositions[1].distanceMeters,
+                modulePositions[2].distanceMeters,
+                modulePositions[3].distanceMeters
+        });
+        Logger.recordOutput("SwerveDrive/Debug/ModuleSteerAngles", normalizedSteerAngles);
     }
 }
