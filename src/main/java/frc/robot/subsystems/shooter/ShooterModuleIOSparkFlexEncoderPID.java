@@ -17,7 +17,7 @@ import frc.robot.Constants.shooterConstants;
 /**
  * 
  */
-public class ShooterModuleIOSparkFlex2 implements ShooterModuleIO {
+public class ShooterModuleIOSparkFlexEncoderPID implements ShooterModuleIO {
     // Constants
     private final int LEAD_MOTOR_ID = 51;
     private final int FOLLOWER_MOTOR_ID = 52;
@@ -38,7 +38,7 @@ public class ShooterModuleIOSparkFlex2 implements ShooterModuleIO {
     /**
      * 
      */
-    public ShooterModuleIOSparkFlex2() {
+    public ShooterModuleIOSparkFlexEncoderPID() {
         this.leadMotor = new SparkFlex(LEAD_MOTOR_ID, MotorType.kBrushless);
         this.followerMotor = new SparkFlex(FOLLOWER_MOTOR_ID, MotorType.kBrushless);
         this.pidController = this.leadMotor.getClosedLoopController();

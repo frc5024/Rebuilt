@@ -29,134 +29,14 @@ import frc.robot.generated.TunerConstants;
  * 
  */
 public final class Constants {
-    /**
-     * 
-     */
-    public static class HopperConstants {
-        public static final int CAPACITY = 20;
-        public static double hopperSpeed = 0.85;
-        public static int HopperMotorID = 8;
-    }
-
-    /**
-     * 
-     */
-    public static final class turretConstants {
-        public static final double ANGLE_LIMIT = 135.0;
-        public static final double speed = 0.3;
-        public static final int turretMotorChannel = 3;
-        public static final double turretTolerance = 0.5;
-
-        public static final double kP = 0.04;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
-
-        public static final double kS = 0.0;
-        public static final double kV = 0.0;
-        public static final double kA = 0.0;
-
-        public static final double sim_kP = 0.09;
-        public static final double sim_kI = 0.0;
-        public static final double sim_kD = 0.009;
-
-        public static final double sim_kS = 0.0;
-        public static final double sim_kV = 0.0;
-        public static final double sim_kA = 0.0;
-
-        public static double[] getPIDs() {
-            if (Robot.isReal()) {
-                return new double[] { kP, kI, kD };
-            } else {
-                return new double[] { sim_kP, sim_kI, sim_kD };
-            }
-        }
-
-        public static final double turretMaxSpeed = 70; // degpersec
-        public static final double turretMaxAccel = 30;
-
-        public static final double verticalLaunchAngle = 65;
-    }
-
-    /**
-     * 
-     */
-    public static class shooterConstants {
-        public static final double kP = 0.0006;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
-
-        public static final double kS = 0.2; // Static friction voltage
-        public static final double kV = 0.001764; // Velocity constant
-        public static final double kA = 0.01; // Acceleration constant
-
-        public static final double setVelocity = 3766; // Example set velocity in RPM
-        public static final double speed = 0.1;
-        public static final double feederspeed = 0.85;
-
-        public static final double WHEEL_DIAMETER_METERS = 0.1016;
-
-        public static InterpolatingDoubleTreeMap velocityToRPMMap = new InterpolatingDoubleTreeMap();
-        static {
-            velocityToRPMMap.put(2.4384, 2800.0);
-            velocityToRPMMap.put(3.048, 3100.0);
-            velocityToRPMMap.put(4.2672, 3650.0);
-            velocityToRPMMap.put(5.4864, 4200.0);
-            velocityToRPMMap.put(6.7056, 4575.0);
-            velocityToRPMMap.put(7.9248, 5100.0);
-        }
-    }
-
-    /**
-     * 
-     */
-    public static class intakeConstants {
-        public static final double INTAKE_SPEED = 0.7;
-        public static final double OUTTAKE_SPEED = -0.4;
-        public static final double EXTENDING_SPEED = -0.15;
-        public static final double RETRACTING_SPEED = 0.35;
-
-        public static final double driveCoefficient = 0.1;
-
-        public static final double kArmP = 0.0;
-        public static final double kArmI = 0.0;
-        public static final double kArmD = 0.0;
-
-        public static final double kArmS = 0.0;
-        public static final double kArmG = 0.0;
-        public static final double kArmA = 0.0;
-        public static final double kArmV = 0.0;
-
-        public static final double kRollP = 0.0;
-        public static final double kRollI = 0.0;
-        public static final double kRollD = 0.0;
-
-        public static final double kRollS = 0.0;
-        public static final double kRollA = 0.0;
-        public static final double kRollV = 0.0;
-    }
-
-    /**
-     * 
-     */
-    public static class climbConstants {
-        // Speed for extending the arm
-        public static final double extendSpeed = 0.75;
-        // Speed for contracting the arm
-        public static final double contractSpeed = -0.80;
-        // Speed for declimbing
-        public static final double declimbSpeed = 0.1;
-        // Speed for climbing
-        public static final double climbspeed = -0.70;
-
-        // Maximum and minimum positions for the climb, in radians.
-        public static final double maxPos = 780.0;
-        public static final double minPos = 10.0;
-    }
 
     /**
      * 
      */
     public static class RobotConstants {
+        // used to show/hide shuffleboard entries for PID tuning
+        public static final boolean TUNING_MODE = false;
+
         public static final double LOOP_PERIOD_SECS = 0.02;
 
         public static final double frameWidth = Units.inchesToMeters(27);
@@ -188,6 +68,24 @@ public final class Constants {
         }
 
         public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;;
+    }
+
+    /**
+     * 
+     */
+    public static class climbConstants {
+        // Speed for extending the arm
+        public static final double extendSpeed = 0.75;
+        // Speed for contracting the arm
+        public static final double contractSpeed = -0.80;
+        // Speed for declimbing
+        public static final double declimbSpeed = 0.1;
+        // Speed for climbing
+        public static final double climbspeed = -0.70;
+
+        // Maximum and minimum positions for the climb, in radians.
+        public static final double maxPos = 780.0;
+        public static final double minPos = 10.0;
     }
 
     /**
@@ -256,6 +154,73 @@ public final class Constants {
     /**
      * 
      */
+    public static class HopperConstants {
+        public static final int CAPACITY = 20;
+        public static double hopperSpeed = 0.85;
+        public static int HopperMotorID = 8;
+    }
+
+    /**
+     * 
+     */
+    public static class intakeConstants {
+        public static final double INTAKE_SPEED = 0.7;
+        public static final double OUTTAKE_SPEED = -0.4;
+        public static final double EXTENDING_SPEED = -0.15;
+        public static final double RETRACTING_SPEED = 0.35;
+
+        public static final double driveCoefficient = 0.1;
+
+        public static final double kArmP = 0.0;
+        public static final double kArmI = 0.0;
+        public static final double kArmD = 0.0;
+
+        public static final double kArmS = 0.0;
+        public static final double kArmG = 0.0;
+        public static final double kArmA = 0.0;
+        public static final double kArmV = 0.0;
+
+        public static final double kRollP = 0.0;
+        public static final double kRollI = 0.0;
+        public static final double kRollD = 0.0;
+
+        public static final double kRollS = 0.0;
+        public static final double kRollA = 0.0;
+        public static final double kRollV = 0.0;
+    }
+
+    /**
+     * 
+     */
+    public static class shooterConstants {
+        public static final double kP = 0.0006;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+        public static final double kS = 0.2; // Static friction voltage
+        public static final double kV = 0.001764; // Velocity constant
+        public static final double kA = 0.01; // Acceleration constant
+
+        public static final double setVelocity = 3766; // Example set velocity in RPM
+        public static final double speed = 0.1;
+        public static final double feederspeed = 0.85;
+
+        public static final double WHEEL_DIAMETER_METERS = 0.1016;
+
+        public static InterpolatingDoubleTreeMap velocityToRPMMap = new InterpolatingDoubleTreeMap();
+        static {
+            velocityToRPMMap.put(2.4384, 2800.0);
+            velocityToRPMMap.put(3.048, 3100.0);
+            velocityToRPMMap.put(4.2672, 3650.0);
+            velocityToRPMMap.put(5.4864, 4200.0);
+            velocityToRPMMap.put(6.7056, 4575.0);
+            velocityToRPMMap.put(7.9248, 5100.0);
+        }
+    }
+
+    /**
+     * 
+     */
     public static class SwerveDriveConstants {
         public static final double maxLinearSpeed = 4.69;
         public static final double maxLinearAcceleration = 4.0;
@@ -310,6 +275,45 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(
                 SwerveDriveConstants.maxAngularSpeed, SwerveDriveConstants.maxLinearAcceleration);
 
+    }
+
+    /**
+     * 
+     */
+    public static final class turretConstants {
+        public static final double ANGLE_LIMIT = 135.0;
+        public static final double speed = 0.3;
+        public static final int turretMotorChannel = 3;
+        public static final double turretTolerance = 0.5;
+
+        public static final double kP = 0.04;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+        public static final double kS = 0.0;
+        public static final double kV = 0.0;
+        public static final double kA = 0.0;
+
+        public static final double sim_kP = 0.09;
+        public static final double sim_kI = 0.0;
+        public static final double sim_kD = 0.009;
+
+        public static final double sim_kS = 0.0;
+        public static final double sim_kV = 0.0;
+        public static final double sim_kA = 0.0;
+
+        public static double[] getPIDs() {
+            if (Robot.isReal()) {
+                return new double[] { kP, kI, kD };
+            } else {
+                return new double[] { sim_kP, sim_kI, sim_kD };
+            }
+        }
+
+        public static final double turretMaxSpeed = 70; // degpersec
+        public static final double turretMaxAccel = 30;
+
+        public static final double verticalLaunchAngle = 65;
     }
 
     /**

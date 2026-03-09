@@ -44,11 +44,21 @@ abstract public class RobotContainer {
     public static CommandXboxController driverController;
     public static CommandXboxController operatorController;
 
-    abstract protected void configureAutoChooser();
-
     /* Simulation */
     protected FuelSim fuelSim;
     protected FuelSimCount fuelSimCount;
+
+    /**
+     * 
+     */
+    public RobotContainer() {
+
+    }
+
+    /**
+     * 
+     */
+    abstract protected void configureAutoChooser();
 
     /**
      * 
@@ -72,6 +82,11 @@ abstract public class RobotContainer {
     }
 
     /**
+     * 
+     */
+    abstract protected void configureNamedCommands();
+
+    /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
@@ -84,6 +99,8 @@ abstract public class RobotContainer {
     public void teleopInit() {
         m_climb.zeroPosition();
     }
+
+    public abstract void updateVisualizer();
 
     // Methods used by simulation only
 
