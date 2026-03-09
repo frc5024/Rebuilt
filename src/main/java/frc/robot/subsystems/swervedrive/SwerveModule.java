@@ -22,6 +22,10 @@ public class SwerveModule {
     private final int index;
     private final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants;
 
+    // Wheel slip correction factors per module (to compensate for wheel slip/wear)
+    // Index: 0=FL, 1=FR, 2=BL, 3=BR
+    private static final double[] WHEEL_SLIP_CORRECTION = { 1.0, 1.0, 1.0, 1.0 };
+
     private final Alert driveDisconnectedAlert;
     private final Alert turnDisconnectedAlert;
     private final Alert turnEncoderDisconnectedAlert;
@@ -58,7 +62,8 @@ public class SwerveModule {
         int sampleCount = inputs.odometryTimestamps.length; // All signals are sampled together
         odometryPositions = new SwerveModulePosition[sampleCount];
         for (int i = 0; i < sampleCount; i++) {
-            double positionMeters = inputs.odometryDrivePositionsRad[i] * constants.WheelRadius;
+            double positionMeters = inputs.odometryDrivePositionsRad[i] * constants.WheelRadius
+                    * WHEEL_SLIP_CORRECTION[index];
             Rotation2d angle = inputs.odometryTurnPositions[i];
             odometryPositions[i] = new SwerveModulePosition(positionMeters, angle);
         }
