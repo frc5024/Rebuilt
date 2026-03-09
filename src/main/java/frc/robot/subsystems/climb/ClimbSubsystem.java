@@ -19,6 +19,7 @@ import frc.robot.commands.ClimbCommands.PauseclimbCommand;
  * 
  */
 public class ClimbSubsystem extends SubsystemBase {
+    // Advantagekit logging
     private final ClimbModuleIO climbModuleIO;
     protected final ClimbModuleIOInputsAutoLogged inputs;
 
@@ -26,16 +27,18 @@ public class ClimbSubsystem extends SubsystemBase {
     * 
     */
     public ClimbSubsystem(ClimbModuleIO climbModuleIO) {
+        // set advantage kit IO logging
         this.climbModuleIO = climbModuleIO;
         this.inputs = new ClimbModuleIOInputsAutoLogged();
     }
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
+        // process hardware inputs
         climbModuleIO.updateInputs(inputs);
-        SmartDashboard.putNumber("Climb Position Rads", inputs.data.positionRads());
         Logger.processInputs("Climb", inputs);
+
+        SmartDashboard.putNumber("Climb Position Rads", inputs.data.positionRads());
     }
 
     public double getCurrentDrawAmps() {

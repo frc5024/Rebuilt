@@ -13,7 +13,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.turretConstants;
 
-public class TurretModuleIOSparkMax2 implements TurretModuleIO {
+public class TurretModuleIOSparkMaxEncoderPID implements TurretModuleIO {
     /* Constants */
     protected final double GEAR_RATIO = 28.6667;
 
@@ -29,14 +29,13 @@ public class TurretModuleIOSparkMax2 implements TurretModuleIO {
     /**
      * 
      */
-    public TurretModuleIOSparkMax2() {
+    public TurretModuleIOSparkMaxEncoderPID() {
         this.turretMotor = new SparkMax(turretConstants.turretMotorChannel, SparkLowLevel.MotorType.kBrushless);
         this.pidController = this.turretMotor.getClosedLoopController();
         this.config = new SparkMaxConfig();
         this.connectedDebouncer = new Debouncer(0.5);
 
         // set position factor so we can turn turret to specific angle
-
         double positionFactor = 360.0 / GEAR_RATIO;
         config.encoder.positionConversionFactor(positionFactor);
         config.encoder.velocityConversionFactor(positionFactor / 60.0);
@@ -48,10 +47,12 @@ public class TurretModuleIOSparkMax2 implements TurretModuleIO {
                 .reverseSoftLimit(-turretConstants.ANGLE_LIMIT)
                 .reverseSoftLimitEnabled(true);
 
+        // get and set PID constants
+        double[] kPIDs = turretConstants.getPIDs();
         config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .p(turretConstants.kP)
-                .i(turretConstants.kI)
-                .d(turretConstants.kD).feedForward
+                .p(kPIDs[0])
+                .i(kPIDs[1])
+                .d(kPIDs[2]).feedForward
                 .kS(turretConstants.kS)
                 .kV(turretConstants.kV)
                 .kA(turretConstants.kA);
@@ -76,18 +77,29 @@ public class TurretModuleIOSparkMax2 implements TurretModuleIO {
     }
 
     @Override
+    public boolean atGoal() {
+        return pidController.isAtSetpoint();
+    }
+
+    @Override
     public double getCurrentDrawAmps() {
         return turretMotor.getOutputCurrent();
     }
 
     @Override
-    public double getAngle() {
+    public double getCurrentAngle() {
         return turretMotor.getEncoder().getPosition();
     }
 
     @Override
-    public double getSetpoint() {
+    public double getGoalPosition() {
         return pidController.getSetpoint();
+    }
+
+    @Override
+    public void setAngle(double degrees) {
+        double target = Math.max(-turretConstants.ANGLE_LIMIT, Math.min(turretConstants.ANGLE_LIMIT, degrees));
+        pidController.setSetpoint(target, ControlType.kPosition);
     }
 
     @Override
@@ -102,17 +114,6 @@ public class TurretModuleIOSparkMax2 implements TurretModuleIO {
         config.closedLoop.feedForward.kS(kS).kV(kV).kA(kA);
 
         this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    }
-
-    @Override
-    public boolean isAtSetpoint() {
-        return pidController.isAtSetpoint();
-    }
-
-    @Override
-    public void setAngle(double degrees) {
-        double target = Math.max(-turretConstants.ANGLE_LIMIT, Math.min(turretConstants.ANGLE_LIMIT, degrees));
-        pidController.setSetpoint(target, ControlType.kPosition);
     }
 
     @Override

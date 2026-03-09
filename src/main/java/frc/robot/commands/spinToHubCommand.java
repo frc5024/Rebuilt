@@ -35,8 +35,6 @@ public class spinToHubCommand extends Command {
 
     @Override
     public void initialize() {
-        // turretSubsystem.zeroEncoder();
-        turretSubsystem.enablePID();
     }
 
     @Override
@@ -64,7 +62,7 @@ public class spinToHubCommand extends Command {
 
         Rotation2d turretAngle = robotRotation.plus(angleToHub.unaryMinus());
 
-        turretSubsystem.setTargetAngle(turretAngle.getDegrees());
+        turretSubsystem.setAngle(turretAngle.getDegrees());
 
         SmartDashboard.putNumber("fieldAngle", fieldAngle.getDegrees());
         SmartDashboard.putNumber("turretAngle", turretAngle.getDegrees());
@@ -79,9 +77,6 @@ public class spinToHubCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        turretSubsystem.disablePID();
-        // Optionally stop motor explicitly
-        turretSubsystem.setIdle();
     }
 
     public Pose2d getTargetPose(Pose2d robotPose) {

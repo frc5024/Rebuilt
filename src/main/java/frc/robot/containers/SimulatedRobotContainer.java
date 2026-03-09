@@ -15,6 +15,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -41,6 +43,8 @@ import frc.robot.subsystems.shooter.ShooterModuleIOSim;
 import frc.robot.subsystems.swervedrive.GyroIO;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOSim;
+import frc.robot.subsystems.turret.TurretModuleIOSim;
+import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.FuelSim;
@@ -54,6 +58,8 @@ public class SimulatedRobotContainer extends RobotContainer {
      * 
      */
     public SimulatedRobotContainer() {
+        super();
+
         // used to visually simulate intake, hopper, turret, climb
         this.mechanismVisualizer = new MechanismVisualizer();
 
@@ -82,7 +88,7 @@ public class SimulatedRobotContainer extends RobotContainer {
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSim());
         this.m_intake = new IntakeSubsystem(new IntakeModuleIOSim());
         this.m_shooter = new ShooterSubsystemSim(new ShooterModuleIOSim(), fuelSim, fuelSimCount);
-        // this.m_turret = new TurretSubsystem(new TurretModuleIOSim());
+        this.m_turret = new TurretSubsystem(new TurretModuleIOSim());
 
         configureNamedCommands();
         configureAutoChooser();
@@ -99,25 +105,27 @@ public class SimulatedRobotContainer extends RobotContainer {
     protected void configureAutoChooser() {
         this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-        // Set up SysId routines
-        this.autoChooser.addOption(
-                "Drive Wheel Radius Characterization",
-                TuningCommands.wheelRadiusCharacterization(this.swerveDriveSubsystem));
-        this.autoChooser.addOption(
-                "Drive Simple FF Characterization",
-                TuningCommands.feedforwardCharacterization(this.swerveDriveSubsystem));
-        this.autoChooser.addOption(
-                "Drive SysId (Quasistatic Forward)",
-                this.swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        this.autoChooser.addOption(
-                "Drive SysId (Quasistatic Reverse)",
-                this.swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        this.autoChooser.addOption(
-                "Drive SysId (Dynamic Forward)",
-                this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        this.autoChooser.addOption(
-                "Drive SysId (Dynamic Reverse)",
-                this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        if (RobotConstants.TUNING_MODE) {
+            // Set up SysId routines
+            this.autoChooser.addOption(
+                    "Drive Wheel Radius Characterization",
+                    TuningCommands.wheelRadiusCharacterization(this.swerveDriveSubsystem));
+            this.autoChooser.addOption(
+                    "Drive Simple FF Characterization",
+                    TuningCommands.feedforwardCharacterization(this.swerveDriveSubsystem));
+            this.autoChooser.addOption(
+                    "Drive SysId (Quasistatic Forward)",
+                    this.swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+            this.autoChooser.addOption(
+                    "Drive SysId (Quasistatic Reverse)",
+                    this.swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+            this.autoChooser.addOption(
+                    "Drive SysId (Dynamic Forward)",
+                    this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+            this.autoChooser.addOption(
+                    "Drive SysId (Dynamic Reverse)",
+                    this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        }
     }
 
     /**
@@ -150,10 +158,8 @@ public class SimulatedRobotContainer extends RobotContainer {
                                 }));
     }
 
-    /**
-     * Creates the commands for using non-drive subsystems in autonomous
-     */
-    private void configureNamedCommands() {
+    @Override
+    public void configureNamedCommands() {
         NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
         NamedCommands.registerCommand("DistanceShooter", new distanceShooterCommand(m_shooter, swerveDriveSubsystem));
         NamedCommands.registerCommand("Feeder", m_feeder.feederCommand());
@@ -186,9 +192,7 @@ public class SimulatedRobotContainer extends RobotContainer {
     }
 
     @Override
-    public void updateSimulation() {
-        fuelSim.updateSim();
-
+    public void updateVisualizer() {
         // calulate pose of the turret
         Pose2d robotPose = swerveDriveSubsystem.getPose();
         Transform3d transform3d = new Transform3d(
@@ -198,29 +202,34 @@ public class SimulatedRobotContainer extends RobotContainer {
                 new Rotation3d(
                         0.0,
                         Units.degreesToRadians(-180.0 + turretConstants.verticalLaunchAngle), // launch angle
-                        robotPose.getRotation().getRadians()
-                                + (m_turret != null ? Math.toRadians(m_turret.getTurretAngle()) : 0.0)));
+                        robotPose.getRotation().getRadians() + Math.toRadians(m_turret.getCurrentAngle())));
         Pose3d turretPose = new Pose3d(robotPose).transformBy(transform3d);
 
         mechanismVisualizer.update(
                 m_intake.getPosition(),
                 m_hopper.getPosition(),
-                m_turret != null ? m_turret.getTurretAngle() : 0.0,
+                m_turret.getCurrentAngle(),
                 m_climb.getPosition(),
                 turretPose,
                 m_shooter.getTangentialVelocity());
 
-        // RoboRioSim.setVInVoltage(
-        // BatterySim.calculateDefaultBatteryLoadedVoltage(
-        // m_climb.getCurrentDrawAmps(),
-        // m_feeder.getCurrentDrawAmps(),
-        // m_hopper.getCurrentDrawAmps(),
-        // m_intake.getCurrentDrawAmps(),
-        // m_shooter.getCurrentDrawAmps(),
-        // swerveDriveSubsystem.getCurrentDrawAmps(),
-        // m_turret.getCurrentDrawAmps()));
-
         Logger.recordOutput("Turret/Pose", turretPose);
+    }
+
+    @Override
+    public void updateSimulation() {
+        fuelSim.updateSim();
+
+        RoboRioSim.setVInVoltage(
+                BatterySim.calculateDefaultBatteryLoadedVoltage(
+                        m_climb.getCurrentDrawAmps(),
+                        m_feeder.getCurrentDrawAmps(),
+                        m_hopper.getCurrentDrawAmps(),
+                        m_intake.getCurrentDrawAmps(),
+                        m_shooter.getCurrentDrawAmps(),
+                        swerveDriveSubsystem.getCurrentDrawAmps(),
+                        m_turret.getCurrentDrawAmps()));
+
         Logger.recordOutput("FuelSim/FuelInRobot", fuelSimCount.getFuelInRobotPoses(swerveDriveSubsystem.getPose()));
         Logger.recordOutput("FuelSim/BlueHubScore", FuelSim.Hub.BLUE_HUB.getScore());
         Logger.recordOutput("FuelSim/RedHubScore", FuelSim.Hub.RED_HUB.getScore());
