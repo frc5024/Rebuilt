@@ -37,16 +37,17 @@ public class MechanismVisualizer {
                         new Pose3d(-0.29, -0.05, robotMechanism.getClimbShaftLength(), new Rotation3d(0.0, 0.0, 0.0)), // climber
                         new Pose3d(-0.15, 0.16, 0.37,
                                 new Rotation3d(0.0, 0.0, Units.degreesToRadians(robotMechanism.getTurretArmAngle()))), // turret
-                        new Pose3d(0.09, 0.0, 0.02, new Rotation3d(0.0, 0.0, robotMechanism.getHopperArmAngle())), // spindexer
+                        new Pose3d(0.09, 0.0, 0.055, new Rotation3d(0.0, 0.0, robotMechanism.getHopperArmAngle())), // spindexer
                         new Pose3d(-0.09, 0.0, 0.275, new Rotation3d(0.0, robotMechanism.getFeederArmAngle(), 0.0)), // feeder
 
-                        new Pose3d(0.23, 0.3, -0.0175, new Rotation3d(0.0, 0.0, wheelAngles[0].getRadians())), // front
-                                                                                                               // right
-                        new Pose3d(-0.27, 0.26, -0.0175, new Rotation3d(0.0, 0.0, wheelAngles[1].getRadians())), // front
-                                                                                                                 // left
-                        new Pose3d(-0.28, -0.28, -0.0175, new Rotation3d(0.0, 0.0, wheelAngles[2].getRadians())), // rear
-                                                                                                                  // right
-                        new Pose3d(0.26, -0.28, 0.0, new Rotation3d(0.0, 0.0, wheelAngles[3].getRadians())) // rear left
+                        new Pose3d(0.27, 0.27, 0.02,
+                                new Rotation3d(0.0, 0.0, wheelAngles[0].getRadians())), // FL0
+                        new Pose3d(-0.27, 0.27, 0.02,
+                                new Rotation3d(0.0, 0.0, wheelAngles[2].getRadians())), // BL2
+                        new Pose3d(-0.27, -0.27, 0.02,
+                                new Rotation3d(0.0, 0.0, wheelAngles[3].getRadians())), // BR3
+                        new Pose3d(0.27, -0.27, 0.02,
+                                new Rotation3d(0.0, 0.0, wheelAngles[1].getRadians())), // FR1
                 });
 
         Logger.recordOutput("Mechanism/Trajectory", GameUtil.getShooterTrajectory(turretPose, shooterVelocity));
