@@ -67,6 +67,7 @@ public class TurretSubsystem extends SubsystemBase {
 
         Logger.recordOutput("Turret/CurrentAngle", getCurrentAngle());
         Logger.recordOutput("Turret/SetPointAngle", turretModuleIO.getGoalPosition());
+        Logger.recordOutput("Turret/AtTarget", isAtTarget());
     }
 
     public double getCurrentDrawAmps() {
@@ -91,6 +92,19 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void zeroEncoder() {
         turretModuleIO.setPosition(0.0);
+    }
+
+    /**
+     * Checks if the turret is locked on the hub (at target angle).
+     * 
+     * @return true if turret angle is within tolerance of target, false otherwise
+     */
+    public boolean isAtTarget() {
+        double currentAngle = getCurrentAngle();
+        double goalAngle = turretModuleIO.getGoalPosition();
+        double tolerance = turretConstants.turretTolerance;
+
+        return Math.abs(currentAngle - goalAngle) <= tolerance;
     }
 
     /**

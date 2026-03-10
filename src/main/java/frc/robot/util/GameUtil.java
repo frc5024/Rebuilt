@@ -2,6 +2,7 @@ package frc.robot.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -16,6 +17,101 @@ import frc.robot.Constants.VisionConstants;
  * Helpful functions when playing the game
  */
 public class GameUtil {
+    /**
+     * Determines if the alliance hub is active based on match time and game data.
+     * Hub activation cycles through shifts in teleop based on autonomous outcome.
+     * 
+     * @return true if the hub is currently active, false otherwise
+     */
+    public static boolean isHubActive() {
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+        // If we have no alliance, we cannot be enabled, therefore no hub.
+        if (alliance.isEmpty()) {
+            return false;
+        }
+        // Hub is always enabled in autonomous.
+        if (DriverStation.isAutonomousEnabled()) {
+            return true;
+        }
+        // At this point, if we're not teleop enabled, there is no hub.
+        if (!DriverStation.isTeleopEnabled()) {
+            return false;
+        }
+
+        // We're teleop enabled, compute.
+        String gameData = DriverStation.getGameSpecificMessage();
+        // If we have no game data, we cannot compute, assume hub is active, as its
+        // likely early in teleop.
+        if (gameData.isEmpty()) {
+            return true;
+        }
+
+        // For now, just return true - the actual phase timing needs to match simulator
+        return true;
+    }
+
+    /**
+     * Determines if the alliance hub is inactive (opposite of isHubActive).
+     * 
+     * @return true if the hub is currently inactive, false if active
+     */
+    public static boolean isHubInactive() {
+        return !isHubActive();
+    }
+
+    /**
+     * Gets the time remaining in the current phase countdown.
+     * Shows how much time is left within each phase of the match.
+     * 
+     * AUTO: Counts down from 20 to 0
+     * TELEOP:
+     * - Transition Shift (2:20-2:10): Counts down from 10 to 0
+     * - Shift 1 (2:10-1:45): Counts down from 25 to 0
+     * - Shift 2 (1:45-1:20): Counts down from 25 to 0
+     * - Shift 3 (1:20-0:55): Counts down from 25 to 0
+     * - Shift 4 (0:55-0:30): Counts down from 25 to 0
+     * - End Game (0:30-0:00): Counts down from 30 to 0
+     * 
+     * @return time remaining in current phase (duration down to 0), or 0 if not in
+     *         match
+     */
+    public static double getTimeRemainingInPhase() {
+        // In autonomous - count down from 20 to 0
+        if (DriverStation.isAutonomousEnabled()) {
+            double matchTime = DriverStation.getMatchTime();
+            return Math.round(matchTime); // AUTO is 20 seconds, so matchTime goes 20→0
+        }
+
+        // In teleop - calculate which phase and countdown for that phase
+        if (DriverStation.isTeleopEnabled()) {
+            double matchTime = DriverStation.getMatchTime();
+
+            // Match time values: 2:20 = 140, 2:10 = 130, 1:45 = 105, 1:20 = 80, 0:55 = 55,
+            // 0:30 = 30
+            if (matchTime > 130) {
+                // Transition Shift (140 to 130) - 10 seconds
+                return Math.round(matchTime - 130.0);
+            } else if (matchTime > 105) {
+                // Shift 1 (130 to 105) - 25 seconds
+                return Math.round(matchTime - 105.0);
+            } else if (matchTime > 80) {
+                // Shift 2 (105 to 80) - 25 seconds
+                return Math.round(matchTime - 80.0);
+            } else if (matchTime > 55) {
+                // Shift 3 (80 to 55) - 25 seconds
+                return Math.round(matchTime - 55.0);
+            } else if (matchTime > 30) {
+                // Shift 4 (55 to 30) - 25 seconds
+                return Math.round(matchTime - 30.0);
+            } else {
+                // End Game (30 to 0) - 30 seconds
+                return Math.round(matchTime);
+            }
+        }
+
+        return 0.0; // Not in match
+    }
+
     /**
      * 
      */

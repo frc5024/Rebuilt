@@ -16,6 +16,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.RobotConstants;
@@ -23,6 +24,7 @@ import frc.robot.containers.RebuiltRobotContainer;
 import frc.robot.containers.RobotContainer;
 import frc.robot.containers.SimulatedRobotContainer;
 import frc.robot.generated.TunerConstants;
+import frc.robot.util.GameUtil;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -129,6 +131,10 @@ public class Robot extends LoggedRobot {
         // This must be called from the robot's periodic block in order for anything in
         // the Command-based framework to work.
         CommandScheduler.getInstance().run();
+
+        // Publish game state to SmartDashboard
+        SmartDashboard.putBoolean("Hub/Active", GameUtil.isHubActive());
+        SmartDashboard.putNumber("Hub/TimeRemainingInPhase", GameUtil.getTimeRemainingInPhase());
 
         // Return to non-RT thread priority (do not modify the first argument)
         // Threads.setCurrentThreadPriority(false, 10);
