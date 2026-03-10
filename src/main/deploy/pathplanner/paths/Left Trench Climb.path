@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.023590909090909,
-        "y": 7.415636363636363
+        "x": 3.5973130921119667,
+        "y": 7.535909354769199
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2505795454545447,
-        "y": 7.384715909090909
+        "x": 2.8243017284756027,
+        "y": 7.504988900223745
       },
       "isLocked": false,
       "linkedName": "Left Trench End"
@@ -56,7 +56,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.5,
+    "maxVelocity": 1.5,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 180.0,
     "maxAngularAcceleration": 270.0,
@@ -71,7 +71,7 @@
   "folder": "Left Trench Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }
