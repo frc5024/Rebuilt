@@ -116,21 +116,15 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Using PID + feedforward for smooth path following
         // Position controller: handles XY position tracking
         driveController = new PPHolonomicDriveController(
-                new PIDConstants(10.0, 0.0, 0.0),
-                new PIDConstants(10.0, 0.0, 0.5));
+                new PIDConstants(0.5, 0.0, 0.0),
+                new PIDConstants(0.2, 0.0, 0.0));
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configure(
                 this::getPose,
                 this::setPose,
                 this::getChassisSpeeds,
-                (speeds) -> {
-                    // Estimate desired rotation velocity
-                    double dt = 0.02; // 20ms, typical loop time
-                    double desiredOmega = speeds.omegaRadiansPerSecond;
-                    runVelocityWithFeedforward(speeds, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond,
-                            desiredOmega);
-                },
+                this::runVelocity,
                 driveController,
                 RobotConstants.PP_CONFIG,
                 () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
