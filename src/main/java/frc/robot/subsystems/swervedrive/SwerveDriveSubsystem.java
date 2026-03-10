@@ -18,6 +18,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -69,6 +70,19 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private static double speedModifier = 1.0;
     public boolean isSlowMode = false;
 
+    // Voltage feedforward for drive translation
+    private final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(
+            0.14786, // kS from your driveGains
+            0.68343, // kV from your driveGains
+            0.0 // kA if you have acceleration info; can also tune later
+    );
+
+    // Maximum angular velocity robot can reach (rad/s)
+    double maxAngularVelocity = getMaxAngularSpeedRadPerSec();
+
+    // Feedforward gain for rotation
+    double kVTheta = 12.0 / maxAngularVelocity;
+
     private PPHolonomicDriveController driveController;
 
     public double getSpeedModifier() {
@@ -99,15 +113,24 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         PhoenixOdometryThread.getInstance().start();
 
         // Create drive controller for PathPlanner
+        // Using PID + feedforward for smooth path following
+        // Position controller: handles XY position tracking
         driveController = new PPHolonomicDriveController(
-                new PIDConstants(10.0, 0.1, 0.0), new PIDConstants(40.0, 0.3, 0.0));
+                new PIDConstants(10.0, 0.0, 0.0),
+                new PIDConstants(10.0, 0.0, 0.5));
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configure(
                 this::getPose,
                 this::setPose,
                 this::getChassisSpeeds,
-                this::runVelocity,
+                (speeds) -> {
+                    // Estimate desired rotation velocity
+                    double dt = 0.02; // 20ms, typical loop time
+                    double desiredOmega = speeds.omegaRadiansPerSecond;
+                    runVelocityWithFeedforward(speeds, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond,
+                            desiredOmega);
+                },
                 driveController,
                 RobotConstants.PP_CONFIG,
                 () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
@@ -243,6 +266,42 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         for (int i = 0; i < 4; i++) {
             modules[i].runCharacterization(output);
         }
+    }
+
+    /**
+     * Runs the drive with PathPlanner PID output plus feedforward.
+     * 
+     * @param pidSpeeds         ChassisSpeeds from PPHolonomicDriveController
+     * @param vxMetersPerSecond desired velocity X
+     * @param vyMetersPerSecond desired velocity Y
+     * @param desiredOmega      desired angular velocity
+     */
+    public void runVelocityWithFeedforward(ChassisSpeeds pidSpeeds, double vxMetersPerSecond, double vyMetersPerSecond,
+            double desiredOmega) {
+        // Translation feedforward
+        double vxFF = driveFF.calculate(vxMetersPerSecond);
+        double vyFF = driveFF.calculate(vyMetersPerSecond);
+
+        // Rotation feedforward
+        double omegaFF = kVTheta * desiredOmega; // simple linear FF
+
+        // Combine PID + feedforward
+        ChassisSpeeds outputSpeeds = new ChassisSpeeds(
+                pidSpeeds.vxMetersPerSecond + vxFF,
+                pidSpeeds.vyMetersPerSecond + vyFF,
+                pidSpeeds.omegaRadiansPerSecond + omegaFF);
+
+        // Convert to module states and run
+        SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(outputSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
+
+        for (int i = 0; i < 4; i++) {
+            modules[i].runSetpoint(setpointStates[i]);
+        }
+
+        // Logging
+        Logger.recordOutput("SwerveDrive/SwerveStates/SetpointsOptimized", setpointStates);
+        Logger.recordOutput("SwerveDrive/SwerveChassisSpeeds/Setpoints", outputSpeeds);
     }
 
     /** Stops the drive. */
