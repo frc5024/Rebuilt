@@ -14,6 +14,7 @@ import frc.robot.commands.ClimbCommands.ContractCommand;
 import frc.robot.commands.ClimbCommands.DeclimbCommand;
 import frc.robot.commands.ClimbCommands.ExtendCommand;
 import frc.robot.commands.ClimbCommands.PauseclimbCommand;
+import frc.robot.commands.ClimbCommands.ResetCommand;
 
 /**
  * 
@@ -83,6 +84,10 @@ public class ClimbSubsystem extends SubsystemBase {
     // as declimb speed)
     public Command extendclimb() {
         return new ExtendCommand(this);
+    }
+
+    public Command resetClimb() {
+        return new ResetCommand(this);
     }
 
     // Calls ContractCommand to set climb motor speed to contract speed (Same

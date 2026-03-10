@@ -78,6 +78,7 @@ public final class Constants {
         public static final double extendSpeed = 0.75;
         // Speed for contracting the arm
         public static final double contractSpeed = -0.80;
+        public static final double resetSpeed = -0.1;
         // Speed for declimbing
         public static final double declimbSpeed = 0.1;
         // Speed for climbing

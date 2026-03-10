@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.spinToHubCommand;
@@ -126,14 +125,8 @@ public class ButtonBindings {
     private CommandXboxController setOperatorBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(OPERATOR_PORT);
 
-        // For testing pathfinding
-        commandXboxController.y().whileTrue(
-                Commands.runOnce(() -> new PathFinderAndFollowCommand(swerveDriveSubsystem, "Pathfind Test Path")));
-
-        // commandXboxController.povLeft().onTrue(
-        // Commands.runOnce(() -> m_turret.setAngle(-30)));
-        // commandXboxController.povRight().onTrue(
-        // Commands.runOnce(() -> m_turret.setAngle(30)));
+        // Reset climb on X button
+        commandXboxController.x().whileTrue(m_climb.resetClimb());
 
         return commandXboxController;
     }
