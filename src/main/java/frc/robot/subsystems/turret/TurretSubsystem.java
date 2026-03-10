@@ -129,7 +129,7 @@ public class TurretSubsystem extends SubsystemBase {
         // // Calculate feedforward (velocity is approximately 0 for position control)
         // double feedforwardOutput = feedforward.calculate(0.1);
 
-        // double totalOutput = Math.max(-1, Math.min(1, pidOutput));
+        // double totalOutput = Math.max(-1, Math.min(1, pidOutput));s
         // double turretOutput = totalOutput + feedforwardOutput;
 
         // System.out.println("updating pid");
@@ -137,6 +137,8 @@ public class TurretSubsystem extends SubsystemBase {
         pValue = pidController.calculate(getTurretAngle());
 
         fValue = feedforward.calculate(pidController.getSetpoint().velocity);
+
+        System.out.println(fValue);
 
         voltageValue = pValue + fValue;
 

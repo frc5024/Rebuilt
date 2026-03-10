@@ -110,7 +110,7 @@ public class ButtonBindings {
         commandXboxController.povLeft().whileTrue(m_turret.stickRotation(0.1));
         commandXboxController.povRight().whileTrue(m_turret.stickRotation(-0.1));
 
-        commandXboxController.y().onTrue(m_intake.RetractArmCommand());
+        commandXboxController.y().onTrue(new InstantCommand(() -> m_turret.zeroEncoder()));
         commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
         commandXboxController.rightBumper()
                 .whileTrue(new ProportionalIntake(m_intake, () -> swerveDriveSubsystem.getChassisSpeeds()));
