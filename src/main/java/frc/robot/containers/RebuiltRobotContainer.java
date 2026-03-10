@@ -70,6 +70,7 @@ public class RebuiltRobotContainer extends RobotContainer {
 
         this.visionSubsystem = new VisionSubsystem(
                 swerveDriveSubsystem::addVisionMeasurement,
+                swerveDriveSubsystem,
                 new VisionIOLimelight(VisionConstants.frontCamera, swerveDriveSubsystem::getRotation),
                 new VisionIOLimelight(VisionConstants.rearCamera, swerveDriveSubsystem::getRotation));
 

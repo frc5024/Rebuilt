@@ -78,6 +78,7 @@ public class SimulatedRobotContainer extends RobotContainer {
 
         this.visionSubsystem = new VisionSubsystem(
                 this.swerveDriveSubsystem::addVisionMeasurement,
+                this.swerveDriveSubsystem,
                 new VisionIOPhotonVisionSim(VisionConstants.frontCamera, this.swerveDriveSubsystem::getPose),
                 new VisionIOPhotonVisionSim(VisionConstants.rearCamera, this.swerveDriveSubsystem::getPose));
 

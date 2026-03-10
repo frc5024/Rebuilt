@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 
 /**
@@ -27,12 +28,14 @@ public class VisionSubsystem extends SubsystemBase {
     private final VisionIO[] visionIO;
     private final VisionIOInputsAutoLogged[] inputs;
     private final Alert[] disconnectedAlerts;
+    private final SwerveDriveSubsystem drivetrain;
 
     /**
      * 
      */
-    public VisionSubsystem(VisionConsumer consumer, VisionIO... visionIO) {
+    public VisionSubsystem(VisionConsumer consumer, SwerveDriveSubsystem drivetrain, VisionIO... visionIO) {
         this.consumer = consumer;
+        this.drivetrain = drivetrain;
         this.visionIO = visionIO;
 
         // Initialize inputs
@@ -61,10 +64,10 @@ public class VisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // Disable vision during autonomous to prevent interference with PathPlanner
-        if (DriverStation.isAutonomous()) {
-            return;
-        }
+        // // Disable vision during autonomous to prevent interference with PathPlanner
+        // if (DriverStation.isAutonomous()) {
+        // return;
+        // }
 
         for (int i = 0; i < this.visionIO.length; i++) {
             this.visionIO[i].updateInputs(this.inputs[i]);
@@ -111,6 +114,18 @@ public class VisionSubsystem extends SubsystemBase {
                         || observation.pose().getY() < 0.0
                         || observation.pose().getY() > VisionConstants.aprilTagLayout.getFieldWidth();
 
+                // Reject if robot rotating fast
+                var chassisSpeeds = drivetrain.getChassisSpeeds();
+                if (Math.abs(chassisSpeeds.omegaRadiansPerSecond) > Math.toRadians(120)) {
+                    continue;
+                }
+
+                // Reject if robot moving fast
+                double linearSpeed = Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
+                if (linearSpeed > 3.0) {
+                    continue;
+                }
+
                 // Add pose to log
                 robotPoses.add(observation.pose());
                 if (rejectPose) {
@@ -125,7 +140,7 @@ public class VisionSubsystem extends SubsystemBase {
                 }
 
                 // Calculate standard deviations
-                double stdDevFactor = Math.pow(observation.averageTagDistance(), 2.0) / observation.tagCount();
+                double stdDevFactor = Math.pow(observation.averageTagDistance(), 4.0) / observation.tagCount();
                 double linearStdDev = VisionConstants.linearStdDevBaseline * stdDevFactor;
                 double angularStdDev = VisionConstants.angularStdDevBaseline * stdDevFactor;
                 if (observation.type() == PoseObservationType.MEGATAG_2) {
