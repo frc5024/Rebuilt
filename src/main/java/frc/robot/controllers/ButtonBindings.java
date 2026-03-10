@@ -9,7 +9,6 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PathFinderAndFollowCommand;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
-import frc.robot.commands.spinToHubCommand;
 import frc.robot.commands.Intake.ProportionalIntake;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
@@ -101,8 +100,12 @@ public class ButtonBindings {
                             return Rotation2d.fromRadians(angleToHub);
                         }));
 
-        commandXboxController.x().whileTrue(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
-                () -> swerveDriveSubsystem.getChassisSpeeds()));
+        // commandXboxController.x().whileTrue(new spinToHubCommand(m_turret, () ->
+        // swerveDriveSubsystem.getPose(),
+        // () -> swerveDriveSubsystem.getChassisSpeeds()));
+
+        commandXboxController.x().whileTrue(m_turret.spinToAngleCommand(90));
+        commandXboxController.leftBumper().whileTrue(m_turret.turretSweepCommand());
 
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());

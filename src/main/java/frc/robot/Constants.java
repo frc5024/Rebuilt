@@ -46,15 +46,18 @@ public final class Constants {
         public static final double speed = 0.3;
         public static final int turretMotorChannel = 3;
         public static final double turretTolerance = 0.5;
-        public static final double kP = 0.04;
+        public static final double kP = 0.045;
         public static final double kI = 0;
         public static final double kD = 0.0;
         public static final double kS = 0;
         public static final double kV = 0.0;
         public static final double kA = 0.0;
 
-        public static final double turretMaxSpeed = 70; // degpersec
-        public static final double turretMaxAccel = 30;
+        public static final int turretEncoderChannel = 0;
+        public static final int hallEffectChannel = 5;
+
+        public static final double turretMaxSpeed = 300; // degpersec
+        public static final double turretMaxAccel = 300;
 
         public static final double verticalLaunchAngle = 65;
     }

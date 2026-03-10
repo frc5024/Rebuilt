@@ -10,6 +10,8 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -19,6 +21,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.turretConstants;
 import frc.robot.commands.StickRotationCommand;
 import frc.robot.commands.spinToAngleCommand;
+import frc.robot.commands.turretSweepCommand;
 
 /**
  * 
@@ -28,6 +31,10 @@ public class TurretSubsystem extends SubsystemBase {
     // protected final TurretModuleIOInputsAutoLogged inputs;
 
     private final SparkMax turretMotor;
+
+    private final DutyCycleEncoder turretEncoder;
+
+    private final DigitalInput hallEffect;
 
     private final ProfiledPIDController pidController;
     private TrapezoidProfile.Constraints feedForwardConstraints;
@@ -64,6 +71,12 @@ public class TurretSubsystem extends SubsystemBase {
         // this.inputs = new TurretModuleIOInputsAutoLogged();
         turretMotor = new SparkMax(turretConstants.turretMotorChannel, SparkLowLevel.MotorType.kBrushless);
 
+        hallEffect = new DigitalInput(turretConstants.hallEffectChannel);
+
+        turretEncoder = new DutyCycleEncoder(turretConstants.turretEncoderChannel, 1, 0);
+
+        turretEncoder.setDutyCycleRange(0.1, 0.9);
+
         feedForwardConstraints = new TrapezoidProfile.Constraints(turretConstants.turretMaxSpeed,
                 turretConstants.turretMaxAccel);
 
@@ -83,15 +96,21 @@ public class TurretSubsystem extends SubsystemBase {
 
         tab.addBoolean("pid enabled", () -> pidEnabled);
 
+        tab.addBoolean("hall effect", () -> getHallEffect());
+
         tab.addDouble("voltage value", () -> voltageValue);
 
         tab.addDouble("pid value", () -> pValue);
 
         tab.addDouble("ff value", () -> fValue);
 
+        tab.addDouble("encoder value", () -> getEncoderValues());
+
         tab.addBoolean("at target", () -> isAtTargetAngle());
 
         tab.addDouble("Estimated Velocity", () -> pidController.getSetpoint().velocity);
+
+        tab.addDouble("Estimated Position", () -> pidController.getSetpoint().position);
 
         pEntry.setDouble(Constants.turretConstants.kP);
         iEntry.setDouble(Constants.turretConstants.kI);
@@ -110,10 +129,19 @@ public class TurretSubsystem extends SubsystemBase {
         System.out.println("PID enabled for turret");
     }
 
+    public double getEncoderValues() {
+        double position = turretEncoder.get();
+        return position;
+    }
+
     public void disablePID() {
         pidEnabled = false;
         // turretModuleIO.set(0);
         System.out.println("PID disabled for turret");
+    }
+
+    public boolean getHallEffect() {
+        return hallEffect.get();
     }
 
     public void runTurret(double speed) {
@@ -185,6 +213,9 @@ public class TurretSubsystem extends SubsystemBase {
         }
 
         Logger.recordOutput("Turret/CurrentAngle", getTurretAngle());
+
+        Logger.recordOutput("Turret/EncoderValue", getEncoderValues());
+        System.out.println(hallEffect.get());
         // Logger.recordOutput("Turret/SetPoint", turretModuleIO.getSetpoint());
     }
 
@@ -247,7 +278,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void setTargetAngle(double degrees) {
 
-        pidController.setGoal(MathUtil.clamp(degrees, -90, 90));
+        pidController.setGoal(MathUtil.clamp(degrees, -135, 135));
 
     }
 
@@ -289,6 +320,11 @@ public class TurretSubsystem extends SubsystemBase {
 
     public Command spinToAngleCommand(double angle) {
         return new spinToAngleCommand(this, angle);
+    }
+
+    public Command turretSweepCommand() {
+        return new turretSweepCommand(this);
+
     }
 
 }
