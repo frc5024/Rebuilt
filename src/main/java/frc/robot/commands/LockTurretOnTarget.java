@@ -51,7 +51,7 @@ public class LockTurretOnTarget extends Command {
         double ballVelocity = ballVelocitySupplier.getAsDouble();
 
         double distanceToTarget = robotPose.getTranslation().getDistance(targetPose.getTranslation());
-        double timeOfFlight = distanceToTarget / ballVelocity;
+        double timeOfFlight = ballVelocity > 0.0 ? distanceToTarget / ballVelocity : 0;
 
         double virtualX = targetPose.getX() - (robotVelocity.vxMetersPerSecond * timeOfFlight);
         double virtualY = targetPose.getY() - (robotVelocity.vxMetersPerSecond * timeOfFlight);
