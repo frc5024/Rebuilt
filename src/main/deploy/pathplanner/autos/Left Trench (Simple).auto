@@ -15,6 +15,12 @@
           "data": {
             "pathName": "Left Neutral Trench"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunEverything"
+          }
         }
       ]
     }
