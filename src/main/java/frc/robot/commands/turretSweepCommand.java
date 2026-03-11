@@ -8,60 +8,47 @@ import frc.robot.subsystems.turret.TurretSubsystem;
 public class turretSweepCommand extends Command {
 
     private final TurretSubsystem turretSubsystem;
-    private double targetAngle;
+    private boolean sweepDone;
 
-    static ShuffleboardTab tab = Shuffleboard.getTab("turretSweep");
+    ShuffleboardTab tab = Shuffleboard.getTab("turretSweep");
 
     // CommandXboxController operator = RobotContainer.operator;
 
     public turretSweepCommand(TurretSubsystem turretSubsystem) {
         this.turretSubsystem = turretSubsystem;
         addRequirements(turretSubsystem);
+
+        tab.addBoolean("Sweep Done", () -> sweepDone);
+        tab.addBoolean("isattargetangle", () -> turretSubsystem.isAtTargetAngle());
     }
 
     public void initialize() {
 
-        turretSubsystem.setTargetAngle(-150);
-
-        turretSubsystem.enablePID();
-
-        // if (turretSubsystem.getHallEffect() == false) {
-        // turretSubsystem.setTargetAngle(0);
-        // System.out.println("set to 0");
-        // turretSubsystem.zeroEncoder();
-        // } else {
-        // turretSubsystem.setTargetAngle(150);
-        // System.out.println("set to 150");
-        // }
     }
 
     public void execute() {
-        if (turretSubsystem.isAtTargetAngle() == true) {
-            turretSubsystem.disablePID();
-            turretSubsystem.setTargetAngle(150);
+        if (!turretSubsystem.getHallEffect()) {
+            turretSubsystem.setPosition(135);
+            turretSubsystem.setTargetAngle(0);
             turretSubsystem.enablePID();
-
-            if (turretSubsystem.isAtTargetAngle() == true && turretSubsystem.getHallEffect() == false) {
-                turretSubsystem.disablePID();
-                turretSubsystem.setTargetAngle(0);
-                turretSubsystem.enablePID();
-            }
+        } else if (turretSubsystem.getHallEffect() && !turretSubsystem.pidEnabled) {
+            turretSubsystem.runTurret(0.05);
         }
 
     }
 
     public boolean isFinished() {
-        // if (turretSubsystem.isAtTargetAngle() == true) {
-        // System.out.println("AT SETPOINT");
-        // }
-        // return turretSubsystem.isAtTargetAngle();
+        if (turretSubsystem.isAtTargetAngle()) {
+            // turretSubsystem.setPosition(0);
+            return true;
+        }
         return false;
     }
 
     @Override
     public void end(boolean interrupted) {
         turretSubsystem.disablePID();
-        // Optionally stop motor explicitly
+        sweepDone = true;
         turretSubsystem.setIdle();
     }
 

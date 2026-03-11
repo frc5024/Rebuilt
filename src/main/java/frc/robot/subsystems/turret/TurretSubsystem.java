@@ -136,7 +136,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void disablePID() {
         pidEnabled = false;
-        // turretModuleIO.set(0);
+        turretMotor.set(0);
         System.out.println("PID disabled for turret");
     }
 
@@ -215,7 +215,7 @@ public class TurretSubsystem extends SubsystemBase {
         Logger.recordOutput("Turret/CurrentAngle", getTurretAngle());
 
         Logger.recordOutput("Turret/EncoderValue", getEncoderValues());
-        System.out.println(hallEffect.get());
+        // System.out.println(hallEffect.get());
         // Logger.recordOutput("Turret/SetPoint", turretModuleIO.getSetpoint());
     }
 
@@ -274,6 +274,10 @@ public class TurretSubsystem extends SubsystemBase {
         // turretModuleIO.setPosition(0.0);
         turretMotor.getEncoder().setPosition(0.0);
 
+    }
+
+    public void setPosition(double position) {
+        turretMotor.getEncoder().setPosition(position);
     }
 
     public void setTargetAngle(double degrees) {

@@ -13,6 +13,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.TuningCommands;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
+import frc.robot.commands.spinToHubCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climb.ClimbModuleIOTalonFX;
 import frc.robot.subsystems.climb.ClimbSubsystem;
@@ -63,9 +64,8 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_intake = new IntakeSubsystem(new IntakeModuleIOSparkMax());
         this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
         this.m_turret = new TurretSubsystem();
-        // this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () ->
-        // swerveDriveSubsystem.getPose(),
-        // () -> swerveDriveSubsystem.getChassisSpeeds()));
+        this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
+                () -> swerveDriveSubsystem.getChassisSpeeds()));
 
         // Creates the commands for using non-drive subsystems in autonomous
 

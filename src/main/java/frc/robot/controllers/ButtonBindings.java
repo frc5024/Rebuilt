@@ -104,13 +104,13 @@ public class ButtonBindings {
         // swerveDriveSubsystem.getPose(),
         // () -> swerveDriveSubsystem.getChassisSpeeds()));
 
-        commandXboxController.x().whileTrue(m_turret.spinToAngleCommand(90));
-        commandXboxController.leftBumper().whileTrue(m_turret.turretSweepCommand());
+        // commandXboxController.x().whileTrue(m_turret.spinToAngleCommand(90));
+        commandXboxController.povLeft().onTrue(m_turret.turretSweepCommand());
 
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
 
-        commandXboxController.povLeft().whileTrue(m_turret.stickRotation(0.1));
+        // commandXboxController.povLeft().whileTrue(m_turret.stickRotation(0.1));
         commandXboxController.povRight().whileTrue(m_turret.stickRotation(-0.1));
 
         commandXboxController.y().onTrue(new InstantCommand(() -> m_turret.zeroEncoder()));
