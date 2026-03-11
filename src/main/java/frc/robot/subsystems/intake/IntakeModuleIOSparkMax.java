@@ -3,6 +3,7 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -23,7 +24,7 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     protected final int armMotorID = 5; // this is a placeholder ID
 
     // Hardware
-    protected final SparkMax intakeMotor;
+    protected final SparkFlex intakeMotor;
     protected final SparkMax armMotor;
     private final RelativeEncoder intakeEncoder;
     private final RelativeEncoder armEncoder;
@@ -41,7 +42,7 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
      * 
      */
     public IntakeModuleIOSparkMax() {
-        this.intakeMotor = new SparkMax(intakeMotorID, SparkLowLevel.MotorType.kBrushless);
+        this.intakeMotor = new SparkFlex(intakeMotorID, SparkLowLevel.MotorType.kBrushless);
         this.armMotor = new SparkMax(armMotorID, SparkLowLevel.MotorType.kBrushless);
 
         armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

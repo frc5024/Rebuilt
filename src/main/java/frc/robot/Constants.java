@@ -164,7 +164,7 @@ public final class Constants {
      * 
      */
     public static class intakeConstants {
-        public static final double INTAKE_SPEED = 0.7;
+        public static final double INTAKE_SPEED = 0.4;
         public static final double OUTTAKE_SPEED = -0.4;
         public static final double EXTENDING_SPEED = -0.15;
         public static final double RETRACTING_SPEED = 0.35;
@@ -286,7 +286,7 @@ public final class Constants {
         public static final int turretMotorChannel = 3;
         public static final double turretTolerance = 0.5;
 
-        public static final double kP = 0.04;
+        public static final double kP = 0.045;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
 
@@ -310,8 +310,8 @@ public final class Constants {
             }
         }
 
-        public static final double turretMaxSpeed = 70; // degpersec
-        public static final double turretMaxAccel = 30;
+        public static final double turretMaxSpeed = 300; // degpersec
+        public static final double turretMaxAccel = 300;
 
         public static final double verticalLaunchAngle = 65;
     }
