@@ -186,8 +186,6 @@ public class Robot extends LoggedRobot {
 
         robotContainer.teleopInit();
 
-        turretSubsystem.zeroEncoder();
-
     }
 
     /** This function is called periodically during operator control. */
