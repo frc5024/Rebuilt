@@ -20,8 +20,6 @@ public class TurretSubsystem extends SubsystemBase {
 
     // Variables
     private boolean pidEnabled;
-    private double pValue;
-    private double fValue;
 
     // Shuffleboard entries
     private ShuffleboardTab tab;
@@ -45,8 +43,6 @@ public class TurretSubsystem extends SubsystemBase {
         this.turretModuleIO = turretModuleIO;
         this.inputs = new TurretModuleIOInputsAutoLogged();
         this.pidEnabled = false;
-        this.pValue = 0.0;
-        this.fValue = 0.0;
 
         // set shuffleboard entries if in tuning mode
         if (RobotConstants.TUNING_MODE) {
@@ -109,8 +105,8 @@ public class TurretSubsystem extends SubsystemBase {
         return turretModuleIO.getCurrentAngle();
     }
 
-    public boolean getHallEffect() {
-        return turretModuleIO.getHallEffect();
+    public boolean getHallEffectValue() {
+        return turretModuleIO.getHallEffectValue();
     }
 
     public boolean isPIDEnabled() {

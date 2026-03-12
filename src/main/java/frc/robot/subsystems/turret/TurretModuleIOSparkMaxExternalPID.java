@@ -67,7 +67,8 @@ public class TurretModuleIOSparkMaxExternalPID implements TurretModuleIO {
                 turretMotor.getAppliedOutput(),
                 0.0,
                 turretMotor.getOutputCurrent(),
-                turretMotor.getMotorTemperature());
+                turretMotor.getMotorTemperature(),
+                false);
     }
 
     @Override

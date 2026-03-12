@@ -33,6 +33,7 @@ public class spinToHubCommand extends Command {
         this.turretSubsystem = turretSubsystem;
         this.robotPoseSupplier = robotPoseSupplier;
         this.chassisSpeedSupplier = chassisSpeedSupplier;
+
         addRequirements(turretSubsystem);
     }
 

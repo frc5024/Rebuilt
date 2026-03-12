@@ -8,7 +8,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface TurretModuleIO {
     @AutoLog
     class TurretModuleIOInputs {
-        public TurretModuleIOData data = new TurretModuleIOData(false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        public TurretModuleIOData data = new TurretModuleIOData(false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false);
     }
 
     record TurretModuleIOData(
@@ -18,7 +18,8 @@ public interface TurretModuleIO {
             double appliedVoltage,
             double torqueCurrentAmps,
             double supplyCurrentAmps,
-            double tempCelsius) {
+            double tempCelsius,
+            boolean hallEffectValue) {
     }
 
     default boolean atGoal() {
@@ -41,7 +42,7 @@ public interface TurretModuleIO {
         return 0.0;
     }
 
-    default boolean getHallEffect() {
+    default boolean getHallEffectValue() {
         return false;
     }
 

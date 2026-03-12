@@ -1,5 +1,6 @@
 package frc.robot.subsystems.turret;
 
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 
@@ -16,14 +17,15 @@ import frc.robot.Constants.turretConstants;
 /**
  * 
  */
-public class TurretModuleIOSparkDutyCycleEncoder implements TurretModuleIO {
+public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
     // Constants
     protected final double GEAR_RATIO = 28.6667 * 12;
 
     // Hardware
     protected final SparkMax turretMotor;
-    private final DigitalInput hallEffect;
-    private final DutyCycleEncoder turretEncoder;
+    protected final DigitalInput hallEffectSensor;
+    protected final DutyCycleEncoder absoluteEncoder;
+    protected final RelativeEncoder internalEncoder;
 
     // PID
     private final ProfiledPIDController pidController;
@@ -36,11 +38,12 @@ public class TurretModuleIOSparkDutyCycleEncoder implements TurretModuleIO {
     /**
      * 
      */
-    public TurretModuleIOSparkDutyCycleEncoder() {
+    public TurretModuleIOSparkMaxDutyCycleEncoder() {
         this.turretMotor = new SparkMax(turretConstants.turretMotorChannel, SparkLowLevel.MotorType.kBrushless);
-        this.hallEffect = new DigitalInput(turretConstants.hallEffectChannel);
-        this.turretEncoder = new DutyCycleEncoder(turretConstants.turretEncoderChannel, 1, 0);
-        this.turretEncoder.setDutyCycleRange(0.1, 0.9);
+        this.hallEffectSensor = new DigitalInput(turretConstants.hallEffectChannel);
+        this.absoluteEncoder = new DutyCycleEncoder(turretConstants.turretEncoderChannel, 1, 0);
+        this.absoluteEncoder.setDutyCycleRange(0.1, 0.9);
+        this.internalEncoder = this.turretMotor.getEncoder();
 
         this.feedForwardConstraints = new TrapezoidProfile.Constraints(turretConstants.turretMaxSpeed,
                 turretConstants.turretMaxAccel);
@@ -59,9 +62,10 @@ public class TurretModuleIOSparkDutyCycleEncoder implements TurretModuleIO {
             stop();
         }
 
-        double pValue = pidController.calculate(getCurrentAngle());
-        double fValue = feedforward.calculate(pidController.getSetpoint().velocity);
-        turretMotor.setVoltage(pValue + fValue);
+        // update relative encoder if hall effect is triggered
+        if (!hallEffectSensor.get()) {
+            internalEncoder.setPosition(turretConstants.ANGLE_LIMIT);
+        }
 
         inputs.data = new TurretModuleIOData(
                 connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
@@ -70,7 +74,8 @@ public class TurretModuleIOSparkDutyCycleEncoder implements TurretModuleIO {
                 turretMotor.getAppliedOutput(),
                 0.0,
                 turretMotor.getOutputCurrent(),
-                turretMotor.getMotorTemperature());
+                turretMotor.getMotorTemperature(),
+                !hallEffectSensor.get());
     }
 
     @Override
@@ -81,7 +86,7 @@ public class TurretModuleIOSparkDutyCycleEncoder implements TurretModuleIO {
     @Override
     public double getCurrentAngle() {
         // double motorRotations = turretModuleIO.getPosition();
-        double turretRotations = turretMotor.getEncoder().getPosition() / GEAR_RATIO;
+        double turretRotations = internalEncoder.getPosition() / GEAR_RATIO;
         // returns degrees normalized to [-180, 180)
         double angle = turretRotations * 360.0;
         while (angle >= 180.0) {
@@ -104,13 +109,13 @@ public class TurretModuleIOSparkDutyCycleEncoder implements TurretModuleIO {
     }
 
     @Override
-    public boolean getHallEffect() {
-        return hallEffect.get();
+    public boolean getHallEffectValue() {
+        return hallEffectSensor.get();
     }
 
     @Override
     public double getPosition() {
-        return turretMotor.getEncoder().getPosition();
+        return internalEncoder.getPosition();
     }
 
     @Override
@@ -123,7 +128,7 @@ public class TurretModuleIOSparkDutyCycleEncoder implements TurretModuleIO {
         // minute)
 
         // double motorRPM = turretModuleIO.getVelocity();
-        double motorRPM = turretMotor.getEncoder().getVelocity();
+        double motorRPM = internalEncoder.getVelocity();
 
         // Convert motor RPM -> turret rotations per second by dividing by gear ratio
         // and 60
@@ -159,7 +164,7 @@ public class TurretModuleIOSparkDutyCycleEncoder implements TurretModuleIO {
 
     @Override
     public void setPosition(double position) {
-        turretMotor.getEncoder().setPosition(position);
+        internalEncoder.setPosition(position);
     }
 
     @Override
@@ -169,6 +174,11 @@ public class TurretModuleIOSparkDutyCycleEncoder implements TurretModuleIO {
         double voltageRequest = MathUtil.clamp(pValue + fValue, -12.0, 12.0);
 
         turretMotor.setVoltage(voltageRequest);
+    }
+
+    @Override
+    public void set(double speed) {
+        turretMotor.set(speed);
     }
 
     @Override
