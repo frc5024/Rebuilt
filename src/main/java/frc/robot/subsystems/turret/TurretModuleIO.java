@@ -41,6 +41,10 @@ public interface TurretModuleIO {
         return 0.0;
     }
 
+    default boolean getHallEffect() {
+        return false;
+    }
+
     default double getPosition() {
         return 0.0;
     }
@@ -53,7 +57,13 @@ public interface TurretModuleIO {
         return false;
     }
 
+    default void set(double speed) {
+    }
+
     default void setAngle(double degrees) {
+    }
+
+    default void setConstraints(double maxVelocity, double maxAcceleration, double tolerance) {
     }
 
     default void setFF(double kS, double kV, double kA) {
@@ -63,6 +73,9 @@ public interface TurretModuleIO {
     }
 
     default void setPosition(double position) {
+    }
+
+    default void setVoltage() {
     }
 
     default void start() {
