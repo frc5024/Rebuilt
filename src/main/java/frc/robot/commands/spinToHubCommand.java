@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -76,6 +78,8 @@ public class spinToHubCommand extends Command {
             SmartDashboard.putNumber("robotRotation", robotRotation.getDegrees());
             SmartDashboard.putNumber("angleToHub", angleToHub.getDegrees());
         }
+
+        Logger.recordOutput("Turret/Active Command", this.getName());
     }
 
     @Override
@@ -86,6 +90,8 @@ public class spinToHubCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         turretSubsystem.disablePID();
+
+        Logger.recordOutput("Turret/Active Command", "");
     }
 
     /**

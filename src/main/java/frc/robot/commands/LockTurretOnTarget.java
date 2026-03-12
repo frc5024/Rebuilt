@@ -62,7 +62,7 @@ public class LockTurretOnTarget extends Command {
 
         turretSubsystem.setAngle(turretAngle.getDegrees());
 
-        Logger.recordOutput("Commands/Active Command", this.getName());
+        Logger.recordOutput("Turret/Active Command", this.getName());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class LockTurretOnTarget extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        Logger.recordOutput("Commands/Active Command", "");
+        Logger.recordOutput("Turret/Active Command", "");
     }
 
     /**

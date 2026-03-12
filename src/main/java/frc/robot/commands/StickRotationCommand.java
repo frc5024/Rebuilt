@@ -34,13 +34,13 @@ public class StickRotationCommand extends Command {
     public void execute() {
         turretSubsystem.runTurret(speed);
 
-        Logger.recordOutput("Commands/Active Command", this.getName());
+        Logger.recordOutput("Turret/Active Command", this.getName());
     }
 
     @Override
     public void end(boolean interrupted) {
         turretSubsystem.disablePID();
 
-        Logger.recordOutput("Commands/Active Command", "");
+        Logger.recordOutput("Turret/Active Command", "");
     }
 }

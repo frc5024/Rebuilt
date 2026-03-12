@@ -41,7 +41,7 @@ public class turretSweepCommand extends Command {
             hitHallEffect = true;
         }
 
-        Logger.recordOutput("Commands/Active Command", this.getName());
+        Logger.recordOutput("Turret/Active Command", this.getName());
     }
 
     @Override
@@ -53,6 +53,6 @@ public class turretSweepCommand extends Command {
     public void end(boolean interrupted) {
         turretSubsystem.disablePID();
 
-        Logger.recordOutput("Commands/Active Command", "");
+        Logger.recordOutput("Turret/Active Command", "");
     }
 }
