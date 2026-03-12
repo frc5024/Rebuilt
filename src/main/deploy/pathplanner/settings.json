@@ -12,7 +12,7 @@
     "Right Trench Autos"
   ],
   "defaultMaxVel": 1.5,
-  "defaultMaxAccel": 3.5,
+  "defaultMaxAccel": 1.5,
   "defaultMaxAngVel": 180.0,
   "defaultMaxAngAccel": 270.0,
   "defaultNominalVoltage": 12.0,

@@ -165,10 +165,10 @@ public final class Constants {
      * 
      */
     public static class intakeConstants {
-        public static final double INTAKE_SPEED = 0.4;
+        public static final double INTAKE_SPEED = 0.25;
         public static final double OUTTAKE_SPEED = -0.4;
         public static final double EXTENDING_SPEED = -0.15;
-        public static final double RETRACTING_SPEED = 0.35;
+        public static final double RETRACTING_SPEED = 0.25;
 
         public static final double driveCoefficient = 0.1;
 
@@ -314,8 +314,8 @@ public final class Constants {
         public static final int turretEncoderChannel = 0;
         public static final int hallEffectChannel = 5;
 
-        public static final double turretMaxSpeed = 300; // degpersec
-        public static final double turretMaxAccel = 300;
+        public static final double turretMaxSpeed = 200; // degpersec
+        public static final double turretMaxAccel = 200;
 
         public static final double verticalLaunchAngle = 65;
     }
