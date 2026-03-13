@@ -26,6 +26,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.turretConstants;
 import frc.robot.commands.TuningCommands;
+import frc.robot.commands.spinToHubCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.simulation.ShooterSubsystemSim;
@@ -88,6 +89,8 @@ public class SimulatedRobotContainer extends RobotContainer {
         this.m_intake = new IntakeSubsystem(new IntakeModuleIOSim());
         this.m_shooter = new ShooterSubsystemSim(new ShooterModuleIOSim(), fuelSim, fuelSimCount);
         this.m_turret = new TurretSubsystem(new TurretModuleIOSim());
+        this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
+                () -> swerveDriveSubsystem.getChassisSpeeds()));
 
         configureNamedCommands();
         configureAutoChooser();

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5975529798947656,
-        "y": 4.180306831091252
+        "x": 3.848375,
+        "y": 0.568964285714286
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8475529798947656,
-        "y": 4.180306831091252
+        "x": 6.229249999999999,
+        "y": 0.8605000000000007
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Trench Stop"
     },
     {
       "anchor": {
-        "x": 2.566219688363408,
-        "y": 4.180306831091252
+        "x": 6.407410714285715,
+        "y": 3.4357321428571423
       },
       "prevControl": {
-        "x": 2.816219688363408,
-        "y": 4.180306831091252
+        "x": 6.439803571428572,
+        "y": 0.0830714285714289
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Intake Stop Shallow"
     }
   ],
   "rotationTargets": [],
@@ -33,9 +33,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "AimTurret",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
+      "name": "ExtendIntake",
+      "waypointRelativePos": 0.24406779661016936,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.3389830508474578,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],
@@ -49,14 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Right Trench Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
-

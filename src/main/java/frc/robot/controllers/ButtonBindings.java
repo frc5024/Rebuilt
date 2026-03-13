@@ -6,9 +6,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.StickRotationCommand;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.spinToHubCommand;
+import frc.robot.commands.turretSweepCommand;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -106,10 +108,10 @@ public class ButtonBindings {
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
 
-        commandXboxController.povLeft().whileTrue(
-                Commands.runOnce(() -> m_turret.increaseAngle(), m_turret));
-        commandXboxController.povRight().whileTrue(
-                Commands.runOnce(() -> m_turret.decreaseAngle(), m_turret));
+        commandXboxController.povLeft().onTrue(new turretSweepCommand(m_turret));
+        commandXboxController.povRight().whileTrue(new StickRotationCommand(m_turret, -0.1));
+        // commandXboxController.y().onTrue(new InstantCommand(() ->
+        // m_turret.zeroEncoder()));
 
         commandXboxController.y().onTrue(m_intake.RetractArmCommand());
         commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));

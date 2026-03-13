@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.631931818181818,
-        "y": 0.6749772727272727
+        "x": 3.848375,
+        "y": 0.568964285714286
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7321621798584053,
-        "y": 1.2916487273478996
+        "x": 0.03876345326636388,
+        "y": 0.9630200321144329
       },
       "isLocked": false,
       "linkedName": "Right Trench Stop"
@@ -20,8 +20,8 @@
         "y": 2.440329879366967
       },
       "prevControl": {
-        "x": 1.5513362729804263,
-        "y": 2.1132524110129203
+        "x": 1.075,
+        "y": 1.9938026743623767
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.5,
-    "maxAcceleration": 3.5,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 180.0,
     "maxAngularAcceleration": 270.0,
     "nominalVoltage": 12.0,
@@ -48,7 +48,7 @@
   "folder": "Right Trench Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

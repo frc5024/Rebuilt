@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5975529798947656,
-        "y": 4.180306831091252
+        "x": 6.407410714285715,
+        "y": 3.4357321428571423
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.721635304162937,
-        "y": 4.168297445571947
+        "x": 6.407410714285715,
+        "y": 0.5630936856397875
       },
       "isLocked": false,
-      "linkedName": "Hub Start"
+      "linkedName": "Right Intake Stop Shallow"
     },
     {
       "anchor": {
-        "x": 2.5262075134168156,
-        "y": 4.180306831091252
+        "x": 3.848375,
+        "y": 0.568964285714286
       },
       "prevControl": {
-        "x": 2.776157610795618,
-        "y": 4.1753119516805715
+        "x": 5.98992645039893,
+        "y": 0.6082588077399544
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Trench Stop"
     }
   ],
   "rotationTargets": [],
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.5,
-    "maxAcceleration": 3.5,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 180.0,
     "maxAngularAcceleration": 270.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Right Trench Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

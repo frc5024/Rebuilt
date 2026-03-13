@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5975529798947656,
-        "y": 4.180306831091252
+        "x": 3.799785714285714,
+        "y": 7.598214285714285
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8475529798947656,
-        "y": 4.180306831091252
+        "x": 6.051089285714286,
+        "y": 7.225696428571428
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Trench End (Rotation)"
     },
     {
       "anchor": {
-        "x": 2.566219688363408,
-        "y": 4.180306831091252
+        "x": 6.326428571428571,
+        "y": 4.569482142857143
       },
       "prevControl": {
-        "x": 2.816219688363408,
-        "y": 4.180306831091252
+        "x": 6.261642857142857,
+        "y": 7.922142857142856
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Shallow"
     }
   ],
   "rotationTargets": [],
@@ -33,9 +33,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "AimTurret",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
+      "name": "ExtendIntake",
+      "waypointRelativePos": 0.305084745762712,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.48135593220339007,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],
@@ -49,14 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Left Trench Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
-

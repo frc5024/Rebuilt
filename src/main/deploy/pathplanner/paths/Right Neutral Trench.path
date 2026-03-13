@@ -8,36 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.154460257392693,
-        "y": 2.163493765609373
+        "x": 7.719321428571428,
+        "y": 0.19644642857142935
       },
       "isLocked": false,
       "linkedName": "Right Intake Stop"
     },
     {
       "anchor": {
-        "x": 6.084954545454545,
-        "y": 0.6749772727272727
+        "x": 3.848375,
+        "y": 0.568964285714286
       },
       "prevControl": {
-        "x": 6.334845516516445,
-        "y": 0.6823598591128707
-      },
-      "nextControl": {
-        "x": 4.969866116808609,
-        "y": 0.642033959020992
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.631931818181818,
-        "y": 0.6749772727272727
-      },
-      "prevControl": {
-        "x": 4.774321975528396,
-        "y": 0.6809562430057965
+        "x": 4.545574343849214,
+        "y": 0.5689642857142861
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.4968553459119498,
+      "waypointRelativePos": 0.32085561497326215,
       "rotationDegrees": 0.0
     }
   ],
@@ -55,7 +39,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.5,
-    "maxAcceleration": 3.5,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 180.0,
     "maxAngularAcceleration": 270.0,
     "nominalVoltage": 12.0,
@@ -63,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Right Trench Paths",

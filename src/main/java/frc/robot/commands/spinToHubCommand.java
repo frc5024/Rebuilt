@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -12,34 +14,38 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.util.GameUtil;
 
+/**
+ * 
+ */
 public class spinToHubCommand extends Command {
-
+    // Subsystems
     private final TurretSubsystem turretSubsystem;
     private final Supplier<Pose2d> robotPoseSupplier;
     private final Supplier<ChassisSpeeds> chassisSpeedSupplier;
 
-    static ShuffleboardTab tab = Shuffleboard.getTab("spinToHub");
-
-    // CommandXboxController operator = RobotContainer.operator;
-
+    /**
+     * 
+     */
     public spinToHubCommand(TurretSubsystem turretSubsystem, Supplier<Pose2d> robotPoseSupplier,
             Supplier<ChassisSpeeds> chassisSpeedSupplier) {
         this.turretSubsystem = turretSubsystem;
         this.robotPoseSupplier = robotPoseSupplier;
         this.chassisSpeedSupplier = chassisSpeedSupplier;
+
         addRequirements(turretSubsystem);
     }
 
     @Override
     public void initialize() {
+        turretSubsystem.enablePID();
     }
 
     @Override
     public void execute() {
-
         Pose2d robotPose = robotPoseSupplier.get();
 
         double robotX = robotPose.getX();
@@ -64,22 +70,34 @@ public class spinToHubCommand extends Command {
 
         turretSubsystem.setAngle(turretAngle.getDegrees());
 
-        SmartDashboard.putNumber("fieldAngle", fieldAngle.getDegrees());
-        SmartDashboard.putNumber("turretAngle", turretAngle.getDegrees());
-        SmartDashboard.putNumber("robotRotation", robotRotation.getDegrees());
-        SmartDashboard.putNumber("angleToHub", angleToHub.getDegrees());
+        if (RobotConstants.TUNING_MODE) {
+            ShuffleboardTab tab = Shuffleboard.getTab("spinToHub");
 
+            SmartDashboard.putNumber("fieldAngle", fieldAngle.getDegrees());
+            SmartDashboard.putNumber("turretAngle", turretAngle.getDegrees());
+            SmartDashboard.putNumber("robotRotation", robotRotation.getDegrees());
+            SmartDashboard.putNumber("angleToHub", angleToHub.getDegrees());
+        }
+
+        Logger.recordOutput("Turret/Active Command", this.getName());
     }
 
+    @Override
     public boolean isFinished() {
         return false;
     }
 
     @Override
     public void end(boolean interrupted) {
+        turretSubsystem.disablePID();
+
+        Logger.recordOutput("Turret/Active Command", "");
     }
 
-    public Pose2d getTargetPose(Pose2d robotPose) {
+    /**
+     * 
+     */
+    private Pose2d getTargetPose(Pose2d robotPose) {
         boolean isRedAlliance = DriverStation.getAlliance().get() == Alliance.Red;
         boolean isAboveMidLine = GameUtil.isAboveMidLine(robotPose);
 
@@ -89,5 +107,4 @@ public class spinToHubCommand extends Command {
             return FieldConstants.MULE_POSES[isRedAlliance ? 1 : 0][isAboveMidLine ? 1 : 0];
         }
     }
-
 }

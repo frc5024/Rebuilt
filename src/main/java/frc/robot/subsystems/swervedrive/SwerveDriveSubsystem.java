@@ -115,9 +115,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Create drive controller for PathPlanner
         // Using PID + feedforward for smooth path following
         // Position controller: handles XY position tracking
+        // Lower P and add D damping to reduce oscillations during direction changes
         driveController = new PPHolonomicDriveController(
-                new PIDConstants(0.5, 0.0, 0.0),
-                new PIDConstants(0.2, 0.0, 0.0));
+                new PIDConstants(0.45, 0.0, 0.05),
+                new PIDConstants(0.0, 0.0, 0.00));
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configure(

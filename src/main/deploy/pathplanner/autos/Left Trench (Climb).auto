@@ -13,13 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Neutral Trench"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left Trench Climb"
+            "pathName": "Left Neutral Climb"
           }
         },
         {
