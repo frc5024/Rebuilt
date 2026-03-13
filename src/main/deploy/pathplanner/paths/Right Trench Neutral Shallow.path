@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.4299230680803525,
-        "y": 7.625282057523975
+        "x": 3.848375,
+        "y": 0.568964285714286
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.249681316560391,
-        "y": 6.944964213909669
+        "x": 6.229249999999999,
+        "y": 0.8605000000000007
       },
       "isLocked": false,
-      "linkedName": "Left Trench Start"
+      "linkedName": "Right Trench Stop"
     },
     {
       "anchor": {
-        "x": 7.800157657657657,
-        "y": 6.962136363636364
+        "x": 6.407410714285715,
+        "y": 3.4357321428571423
       },
       "prevControl": {
-        "x": 7.68009139811305,
-        "y": 7.181417218521069
-      },
-      "nextControl": {
-        "x": 7.921972429905105,
-        "y": 6.739662144006975
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.775272727272727,
-        "y": 5.075988636363636
-      },
-      "prevControl": {
-        "x": 7.775272727272727,
-        "y": 7.251238434191371
+        "x": 6.439803571428572,
+        "y": 0.0830714285714289
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "End Left Intake"
+      "linkedName": "Right Intake Stop Shallow"
     }
   ],
   "rotationTargets": [],
@@ -50,14 +34,14 @@
   "eventMarkers": [
     {
       "name": "ExtendIntake",
-      "waypointRelativePos": 0.3016157989228007,
+      "waypointRelativePos": 0.24406779661016936,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "Intake",
-      "waypointRelativePos": 0.39497307001795334,
-      "endWaypointRelativePos": 2.0,
+      "waypointRelativePos": 0.3389830508474578,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],
@@ -71,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Left Trench Paths",
+  "folder": "Right Trench Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Trench Neutral"
+            "pathName": "Left Trench Neutral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Right Neutral Trench (No Rotation)"
+            "pathName": "Left Neutral Trench"
           }
         },
         {
@@ -26,6 +26,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Right Trench Autos",
+  "folder": "Left Trench Autos",
   "choreoAuto": false
 }

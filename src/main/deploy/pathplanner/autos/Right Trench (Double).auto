@@ -13,13 +13,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Neutral Trench (No Rotation)"
+            "pathName": "Right Neutral Trench"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "RunEverything"
+            "pathName": "Right Trench Neutral Shallow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Neutral Shallow Trench"
           }
         }
       ]
