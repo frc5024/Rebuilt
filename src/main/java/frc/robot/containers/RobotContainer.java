@@ -100,6 +100,10 @@ abstract public class RobotContainer {
         m_climb.zeroPosition();
     }
 
+    public void autonomousInit() {
+        m_turret.zeroEncoder();
+    }
+
     public abstract void updateVisualizer();
 
     // Methods used by simulation only
