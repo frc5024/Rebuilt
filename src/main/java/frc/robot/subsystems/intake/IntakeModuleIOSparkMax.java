@@ -30,7 +30,8 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     private final RelativeEncoder armEncoder;
 
     private final SparkBaseConfig armMotorConfig = new SparkMaxConfig()
-            .idleMode(IdleMode.kBrake);
+            .idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(40);
 
     private final SparkBaseConfig intakeMotorConfig = new SparkMaxConfig()
             .smartCurrentLimit(40); // 40 Amp current limit for intake motor
