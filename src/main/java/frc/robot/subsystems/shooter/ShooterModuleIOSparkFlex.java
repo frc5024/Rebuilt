@@ -27,10 +27,12 @@ public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
 
     private final SparkBaseConfig flywheel1MotorConfig = new SparkFlexConfig()
             .idleMode(IdleMode.kCoast) // sets the motors to coast mode
-            .inverted(true);
+            .inverted(true)
+            .smartCurrentLimit(40);
     private final SparkBaseConfig flywheel2MotorConfig = new SparkFlexConfig()
             .idleMode(IdleMode.kCoast)
-            .follow(51, true);
+            .follow(51, true)
+            .smartCurrentLimit(40);
 
     private final RelativeEncoder flywheel1Encoder;
     private final RelativeEncoder flywheel2Encoder;
