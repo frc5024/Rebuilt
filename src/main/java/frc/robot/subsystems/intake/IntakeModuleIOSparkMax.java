@@ -32,6 +32,9 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     private final SparkBaseConfig armMotorConfig = new SparkMaxConfig()
             .idleMode(IdleMode.kBrake);
 
+    private final SparkBaseConfig intakeMotorConfig = new SparkMaxConfig()
+            .smartCurrentLimit(40); // 40 Amp current limit for intake motor
+
     private static DigitalInput retractingLimitSwitch = new DigitalInput(7);
     private static DigitalInput extendingLimitSwitch = new DigitalInput(8);
 
@@ -46,6 +49,7 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
         this.armMotor = new SparkMax(armMotorID, SparkLowLevel.MotorType.kBrushless);
 
         armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         this.intakeEncoder = this.intakeMotor.getEncoder();
         this.armEncoder = this.armMotor.getEncoder();
