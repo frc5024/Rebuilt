@@ -94,6 +94,10 @@ abstract public class RobotContainer {
     public Command getAutonomousCommand() {
         return autoChooser.get();
     }
+    
+    public void autoInit() {
+        m_turret.zeroEncoder();
+    }
 
     /** This function is called once when teleop is enabled. */
     public void teleopInit() {
