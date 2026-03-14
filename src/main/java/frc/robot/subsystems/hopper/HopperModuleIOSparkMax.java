@@ -1,8 +1,11 @@
 package frc.robot.subsystems.hopper;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,6 +30,12 @@ public class HopperModuleIOSparkMax implements HopperModuleIO {
      */
     public HopperModuleIOSparkMax() {
         this.hopperMotor = new SparkMax(Constants.HopperConstants.HopperMotorID, SparkLowLevel.MotorType.kBrushless);
+
+        // Configure motor with current limit
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.smartCurrentLimit(30); // 30 Amp smart current limit
+        hopperMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         this.encoder = this.hopperMotor.getEncoder();
         this.connectedDebouncer = new Debouncer(0.5);
     }

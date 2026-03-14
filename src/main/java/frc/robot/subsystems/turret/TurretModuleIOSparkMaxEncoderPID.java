@@ -47,6 +47,9 @@ public class TurretModuleIOSparkMaxEncoderPID implements TurretModuleIO {
                 .reverseSoftLimit(-turretConstants.ANGLE_LIMIT)
                 .reverseSoftLimitEnabled(true);
 
+        // Set current limit
+        config.smartCurrentLimit(20);
+
         // get and set PID constants
         double[] kPIDs = turretConstants.getPIDs();
         config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
