@@ -48,6 +48,11 @@ public class HopperModuleIOSparkMax implements HopperModuleIO {
     }
 
     @Override
+    public double getCurrentDrawAmps() {
+        return hopperMotor.getOutputCurrent();
+    }
+
+    @Override
     public double getPosition() {
         return encoder.getPosition();
     }

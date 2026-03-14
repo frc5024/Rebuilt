@@ -87,6 +87,11 @@ public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
     }
 
     @Override
+    public double getCurrentDrawAmps() {
+        return flywheel1.getOutputCurrent() + flywheel2.getOutputCurrent();
+    }
+
+    @Override
     public double getPosition() {
         return this.flywheel1Encoder.getPosition();
     }

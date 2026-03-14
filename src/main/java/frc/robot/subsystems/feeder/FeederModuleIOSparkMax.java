@@ -47,6 +47,11 @@ public class FeederModuleIOSparkMax implements FeederModuleIO {
     }
 
     @Override
+    public double getCurrentDrawAmps() {
+        return feederMotor.getOutputCurrent();
+    }
+
+    @Override
     public double getPosition() {
         return encoder.getPosition();
     }
