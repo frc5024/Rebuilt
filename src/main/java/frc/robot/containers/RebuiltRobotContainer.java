@@ -181,6 +181,14 @@ public class RebuiltRobotContainer extends RobotContainer {
                 m_shooter.getTangentialVelocity(),
                 swerveDriveSubsystem.getModuleAngles());
 
+        Logger.recordOutput("Subsystem climb amps", m_climb.getCurrentDrawAmps());
+        Logger.recordOutput("Subsystem feeder amps", m_feeder.getCurrentDrawAmps());
+        Logger.recordOutput("Subsystem hopper amps", m_hopper.getCurrentDrawAmps());
+        Logger.recordOutput("Subsystem intake amps", m_intake.getCurrentDrawAmps());
+        Logger.recordOutput("Subsystem shooter amps", m_shooter.getCurrentDrawAmps());
+        Logger.recordOutput("Subsystem swerve amps", swerveDriveSubsystem.getCurrentDrawAmps());
+        Logger.recordOutput("Subsystem turret amps", m_turret.getCurrentDrawAmps());
+
         Logger.recordOutput("Turret/Pose", turretPose);
     }
 
