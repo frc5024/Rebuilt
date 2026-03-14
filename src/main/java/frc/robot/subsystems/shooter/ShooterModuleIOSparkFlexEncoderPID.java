@@ -77,14 +77,14 @@ public class ShooterModuleIOSparkFlexEncoderPID implements ShooterModuleIO {
         }
 
         inputs.data = new ShooterModuleIOData(
-                leadConnectedDebouncer.calculate(leadMotor.getFaults().other),
+                leadConnectedDebouncer.calculate(true),
                 leadMotor.getEncoder().getPosition(),
                 leadMotor.getEncoder().getVelocity(),
                 leadMotor.getAppliedOutput(),
                 leadMotor.getBusVoltage(),
                 leadMotor.getOutputCurrent(),
                 leadMotor.getMotorTemperature(),
-                followerConnectedDebouncer.calculate(followerMotor.getFaults().other),
+                followerConnectedDebouncer.calculate(true),
                 followerMotor.getEncoder().getPosition(),
                 followerMotor.getEncoder().getVelocity(),
                 followerMotor.getAppliedOutput(),

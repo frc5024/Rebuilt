@@ -59,14 +59,14 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
         }
 
         inputs.data = new IntakeModuleIOData(
-                connectedDebouncer.calculate(armMotor.getFaults().other),
+                connectedDebouncer.calculate(true),
                 armEncoder.getPosition(),
                 armEncoder.getVelocity(),
                 armMotor.getAppliedOutput(),
                 0.0,
                 armMotor.getOutputCurrent(),
                 armMotor.getMotorTemperature(),
-                connectedDebouncer.calculate(intakeMotor.getFaults().other),
+                connectedDebouncer.calculate(true),
                 intakeEncoder.getPosition(),
                 intakeEncoder.getVelocity(),
                 intakeMotor.getAppliedOutput(),

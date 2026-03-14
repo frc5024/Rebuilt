@@ -38,7 +38,7 @@ public class HopperModuleIOSparkMax implements HopperModuleIO {
         }
 
         inputs.data = new HopperModuleIOData(
-                connectedDebouncer.calculate(hopperMotor.getFaults().other),
+                connectedDebouncer.calculate(true),
                 encoder.getPosition(),
                 encoder.getVelocity(),
                 hopperMotor.getAppliedOutput(),
