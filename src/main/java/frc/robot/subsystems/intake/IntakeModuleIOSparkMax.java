@@ -76,6 +76,11 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     }
 
     @Override
+    public double getCurrentDrawAmps() {
+        return armMotor.getOutputCurrent() + intakeMotor.getOutputCurrent();
+    }
+
+    @Override
     public double getPosition() {
         return armEncoder.getPosition();
     }

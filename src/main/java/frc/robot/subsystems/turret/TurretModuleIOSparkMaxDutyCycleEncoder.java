@@ -100,7 +100,7 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
     @Override
     public double getCurrentDrawAmps() {
-        return turretMotor.getAppliedOutput();
+        return turretMotor.getOutputCurrent();
     }
 
     @Override
