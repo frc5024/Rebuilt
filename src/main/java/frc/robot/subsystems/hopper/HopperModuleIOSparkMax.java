@@ -33,7 +33,6 @@ public class HopperModuleIOSparkMax implements HopperModuleIO {
 
         // Configure motor with current limit
         SparkMaxConfig config = new SparkMaxConfig();
-        config.smartCurrentLimit(30); // 30 Amp smart current limit
         hopperMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         this.encoder = this.hopperMotor.getEncoder();

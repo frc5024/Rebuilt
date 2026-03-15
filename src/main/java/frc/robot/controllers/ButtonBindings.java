@@ -131,7 +131,6 @@ public class ButtonBindings {
 
         // Reset climb on X button
         commandXboxController.x().whileTrue(m_climb.resetClimb());
-
         return commandXboxController;
     }
 

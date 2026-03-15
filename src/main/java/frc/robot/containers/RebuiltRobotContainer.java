@@ -84,7 +84,6 @@ public class RebuiltRobotContainer extends RobotContainer {
                 () -> swerveDriveSubsystem.getChassisSpeeds()));
 
         m_turret.zeroEncoder();
-
         configureNamedCommands();
         configureAutoChooser();
         configureButtonBindings();
