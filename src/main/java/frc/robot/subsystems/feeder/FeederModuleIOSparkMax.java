@@ -3,9 +3,9 @@ package frc.robot.subsystems.feeder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,7 +18,7 @@ public class FeederModuleIOSparkMax implements FeederModuleIO {
     protected final double GEAR_RATIO = 1.0;
 
     // Hardware
-    protected final SparkMax feederMotor;
+    protected final SparkFlex feederMotor;
     private final RelativeEncoder encoder;
 
     // Connection debouncers
@@ -28,11 +28,10 @@ public class FeederModuleIOSparkMax implements FeederModuleIO {
      * 
      */
     public FeederModuleIOSparkMax() {
-        this.feederMotor = new SparkMax(6, MotorType.kBrushless);
+        this.feederMotor = new SparkFlex(6, MotorType.kBrushless);
 
         // Configure motor with current limit
-        SparkMaxConfig config = new SparkMaxConfig();
-        config.smartCurrentLimit(20); // 20 Amp smart current limit
+        SparkFlexConfig config = new SparkFlexConfig();
         feederMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         this.encoder = this.feederMotor.getEncoder();

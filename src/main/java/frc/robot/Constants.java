@@ -204,7 +204,7 @@ public final class Constants {
 
         public static final double setVelocity = 3766; // Example set velocity in RPM
         public static final double speed = 0.1;
-        public static final double feederspeed = 0.85;
+        public static final double feederspeed = 0.7;
 
         public static final double WHEEL_DIAMETER_METERS = 0.1016;
 
