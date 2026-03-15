@@ -70,7 +70,7 @@ public class TurretModuleIOSparkMaxEncoderPID implements TurretModuleIO {
         }
 
         inputs.data = new TurretModuleIOData(
-                connectedDebouncer.calculate(turretMotor.getFaults().other),
+                connectedDebouncer.calculate(true),
                 turretMotor.getEncoder().getPosition(),
                 turretMotor.getEncoder().getVelocity(),
                 turretMotor.getAppliedOutput(),

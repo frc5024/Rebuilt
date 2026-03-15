@@ -45,7 +45,7 @@ public class FeederModuleIOSparkMax implements FeederModuleIO {
         }
 
         inputs.data = new FeederModuleIOData(
-                connectedDebouncer.calculate(feederMotor.getFaults().other),
+                connectedDebouncer.calculate(true),
                 encoder.getPosition(),
                 encoder.getVelocity(),
                 feederMotor.getAppliedOutput(),
