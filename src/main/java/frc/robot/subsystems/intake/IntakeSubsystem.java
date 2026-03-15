@@ -15,8 +15,8 @@ import frc.robot.Constants.intakeConstants;
 import frc.robot.commands.Intake.IntakeExtendArm;
 import frc.robot.commands.Intake.IntakeRetractArm;
 import frc.robot.commands.Intake.IntakeSpinMotor;
+import frc.robot.commands.Intake.OuttakeSpinMotor;
 import frc.robot.commands.Intake.PIDExtendArm;
-import frc.robot.commands.Intake.PIDOuttakeSpin;
 import frc.robot.commands.Intake.PIDRetractArm;
 
 /**
@@ -161,7 +161,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command OuttakeCommand() {
-        return new PIDOuttakeSpin(this);
+        return new OuttakeSpinMotor(this);
     }
 
     public Command ExtendArmCommand() {

@@ -10,7 +10,6 @@ import frc.robot.commands.StickRotationCommand;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.spinToHubCommand;
-import frc.robot.commands.turretSweepCommand;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -110,7 +109,7 @@ public class ButtonBindings {
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
 
-        commandXboxController.povLeft().onTrue(new turretSweepCommand(m_turret));
+        // commandXboxController.povLeft().onTrue(new turretSweepCommand(m_turret));
         commandXboxController.povRight().whileTrue(new StickRotationCommand(m_turret, -0.1));
         // commandXboxController.y().onTrue(new InstantCommand(() ->
         // m_turret.zeroEncoder()));
@@ -119,6 +118,8 @@ public class ButtonBindings {
         commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
         commandXboxController.rightBumper()
                 .whileTrue(m_intake.IntakeCommand());
+
+        commandXboxController.back().whileTrue(m_intake.OuttakeCommand());
 
         return commandXboxController;
     }

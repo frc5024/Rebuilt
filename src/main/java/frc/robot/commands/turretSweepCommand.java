@@ -26,19 +26,31 @@ public class turretSweepCommand extends Command {
 
     @Override
     public void initialize() {
-        hitHallEffect = false;
+        // hitHallEffect = false;
     }
 
     @Override
     public void execute() {
         // manually run the turret until it hits the hall effect sensor
-        if (turretSubsystem.getHallEffectValue() && !turretSubsystem.isPIDEnabled()) {
-            turretSubsystem.runTurret(0.5);
-        } else if (!turretSubsystem.getHallEffectValue()) {
-            // now use pid to center the turret
+        // if (turretSubsystem.getHallEffectValue() && !turretSubsystem.isPIDEnabled())
+        // {
+        // turretSubsystem.runTurret(0.75);
+        // } else if (!turretSubsystem.getHallEffectValue()) {
+        // // now use pid to center the turret
+        // turretSubsystem.setAngle(0);
+        // turretSubsystem.enablePID();
+        // hitHallEffect = true;
+        // }
+
+        if (!turretSubsystem.getHallEffectValue()) {
+            turretSubsystem.setPosition(135);
             turretSubsystem.setAngle(0);
             turretSubsystem.enablePID();
-            hitHallEffect = true;
+        } else if (turretSubsystem.getHallEffectValue() && !turretSubsystem.isPIDEnabled()) {
+            turretSubsystem.runTurret(0.5);
+            // turretSubsystem.setAngle(0);
+            // turretSubsystem.enablePID();
+            // hitHallEffect = true;
         }
 
         Logger.recordOutput("Turret/Active Command", this.getName());
@@ -46,7 +58,8 @@ public class turretSweepCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return hitHallEffect && turretSubsystem.atGoal();
+        // return hitHallEffect && turretSubsystem.atGoal();
+        return false;
     }
 
     @Override
