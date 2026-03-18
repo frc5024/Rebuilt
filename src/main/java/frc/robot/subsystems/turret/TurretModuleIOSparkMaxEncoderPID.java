@@ -40,8 +40,9 @@ public class TurretModuleIOSparkMaxEncoderPID implements TurretModuleIO {
 
         // set position factor so we can turn turret to specific angle
         double positionFactor = 360.0 / GEAR_RATIO;
-        config.encoder.positionConversionFactor(positionFactor);
-        config.encoder.velocityConversionFactor(positionFactor / 60.0);
+        config.encoder
+                .positionConversionFactor(positionFactor)
+                .velocityConversionFactor(positionFactor / 60.0);
 
         // limit turn angle sue to wiring
         config.softLimit
@@ -114,14 +115,14 @@ public class TurretModuleIOSparkMaxEncoderPID implements TurretModuleIO {
     public void setPID(double kP, double kI, double kD) {
         config.closedLoop.p(kP).i(kI).d(kD);
 
-        this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override
     public void setFF(double kS, double kV, double kA) {
         config.closedLoop.feedForward.kS(kS).kV(kV).kA(kA);
 
-        this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override

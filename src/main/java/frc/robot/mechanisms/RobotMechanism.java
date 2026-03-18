@@ -95,7 +95,7 @@ public class RobotMechanism {
      */
     public void setMechanisms(double intakePosition, double hopperPosition, double turretArmAngle, double climbHeight,
             double feederArmPosition) {
-        intakeArm.setAngle(-Units.radiansToDegrees(intakePosition));
+        intakeArm.setAngle(intakePosition);
         hopperArm.setAngle(Units.radiansToDegrees(hopperPosition));
         turretArm.setAngle(turretArmAngle);
         climbShaft.setLength(Units.inchesToMeters(4.33) - climbHeight);

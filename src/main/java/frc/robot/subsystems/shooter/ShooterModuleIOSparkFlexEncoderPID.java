@@ -28,8 +28,9 @@ public class ShooterModuleIOSparkFlexEncoderPID implements ShooterModuleIO {
     protected final SparkFlex leadMotor;
     private final SparkFlex followerMotor;
     private final SparkClosedLoopController pidController;
-    private final SparkFlexConfig leadConfig;
-    private final SparkFlexConfig followerConfig;
+
+    private SparkFlexConfig leadConfig;
+    private SparkFlexConfig followerConfig;
 
     // Connection debouncers
     private final Debouncer leadConnectedDebouncer;
@@ -94,6 +95,11 @@ public class ShooterModuleIOSparkFlexEncoderPID implements ShooterModuleIO {
     }
 
     @Override
+    public double getCurrentDrawAmps() {
+        return leadMotor.getOutputCurrent() + followerMotor.getOutputCurrent();
+    }
+
+    @Override
     public double getSetpoint() {
         return pidController.getSetpoint();
     }
@@ -112,14 +118,14 @@ public class ShooterModuleIOSparkFlexEncoderPID implements ShooterModuleIO {
     public void setPID(double kP, double kI, double kD) {
         leadConfig.closedLoop.p(kP).i(kI).d(kD);
 
-        this.leadMotor.configure(leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        leadMotor.configure(leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override
     public void setFF(double kS, double kV, double kA) {
         leadConfig.closedLoop.feedForward.kS(kS).kV(kV).kA(kA);
 
-        this.leadMotor.configure(leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        leadMotor.configure(leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override

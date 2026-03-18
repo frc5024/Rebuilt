@@ -35,7 +35,7 @@ public final class Constants {
      */
     public static class RobotConstants {
         // used to show/hide shuffleboard entries for PID tuning
-        public static final boolean TUNING_MODE = false;
+        public static final boolean TUNING_MODE = true;
 
         public static final double LOOP_PERIOD_SECS = 0.02;
 
@@ -186,8 +186,67 @@ public final class Constants {
         public static final double kRollD = 0.0;
 
         public static final double kRollS = 0.0;
+        public static final double kRollG = 0.0;
         public static final double kRollA = 0.0;
         public static final double kRollV = 0.0;
+
+        public static class ArmConstants {
+            public static final double EXTENDED_ANGLE = 130.0;
+            public static final double RETRACTED_ANGLE = 0.0;
+
+            public static final double kP = 0.1;
+            public static final double kI = 0.0;
+            public static final double kD = 0.0;
+
+            public static final double sim_kP = 0.05;
+            public static final double sim_kI = 0.0;
+            public static final double sim_kD = 0.0;
+
+            public static double[] getPIDs() {
+                if (Robot.isReal()) {
+                    return new double[] { kP, kI, kD };
+                } else {
+                    return new double[] { sim_kP, sim_kI, sim_kD };
+                }
+            }
+        }
+
+        public static class RollerConstants {
+            public static final double INTAKE_RPM = 2800.0;
+            public static final double OUTTAKE_RPM = -2000.0;
+
+            public static final double kP = 0.0;
+            public static final double kI = 0.0;
+            public static final double kD = 0.0;
+
+            public static final double kS = 0.0;
+            public static final double kV = 0.0;
+            public static final double kA = 0.0;
+
+            public static final double sim_kP = 5.0;
+            public static final double sim_kI = 0.0;
+            public static final double sim_kD = 0.005;
+
+            public static final double sim_kS = 0.0;
+            public static final double sim_kV = 0.002;
+            public static final double sim_kA = 0.0;
+
+            public static double[] getPIDs() {
+                if (Robot.isReal()) {
+                    return new double[] { kP, kI, kD };
+                } else {
+                    return new double[] { sim_kP, sim_kI, sim_kD };
+                }
+            }
+
+            public static double[] getSVAs() {
+                if (Robot.isReal()) {
+                    return new double[] { kS, kV, kA };
+                } else {
+                    return new double[] { sim_kS, sim_kV, sim_kA };
+                }
+            }
+        }
     }
 
     /**

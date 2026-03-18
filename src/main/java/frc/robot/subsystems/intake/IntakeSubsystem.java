@@ -156,30 +156,6 @@ public class IntakeSubsystem extends SubsystemBase {
         this.rollerDesiredSpeed = speed;
     }
 
-    public Command IntakeCommand() {
-        return new IntakeSpinMotor(this);
-    }
-
-    public Command OuttakeCommand() {
-        return new OuttakeSpinMotor(this);
-    }
-
-    public Command ExtendArmCommand() {
-        return new IntakeExtendArm(this);
-    }
-
-    public Command RetractArmCommand() {
-        return new IntakeRetractArm(this);
-    }
-
-    public Command retractArmPIDCommand() {
-        return new PIDRetractArm(this);
-    }
-
-    public Command extendArmPIDCommand() {
-        return new PIDExtendArm(this);
-    }
-
     public boolean isIntakeRetracted() {
         return intakeModuleIO.isIntakeRetracted();
     }
@@ -232,6 +208,22 @@ public class IntakeSubsystem extends SubsystemBase {
         rollerVEntry = rollerTab.add("Set kV", intakeConstants.kRollV).getEntry();
         rollerAEntry = rollerTab.add("Set kA", intakeConstants.kRollA).getEntry();
 
+        armPEntry.setDouble(intakeConstants.kArmP);
+        armIEntry.setDouble(intakeConstants.kArmI);
+        armDEntry.setDouble(intakeConstants.kArmD);
+
+        armSEntry.setDouble(intakeConstants.kArmS);
+        armVEntry.setDouble(intakeConstants.kArmV);
+        armAEntry.setDouble(intakeConstants.kArmA);
+
+        rollerPEntry.setDouble(intakeConstants.kRollP);
+        rollerIEntry.setDouble(intakeConstants.kRollI);
+        rollerDEntry.setDouble(intakeConstants.kRollD);
+
+        rollerSEntry.setDouble(intakeConstants.kRollS);
+        rollerVEntry.setDouble(intakeConstants.kRollV);
+        rollerAEntry.setDouble(intakeConstants.kRollA);
+
         armTab.addBoolean("Extended?", () -> intakeModuleIO.isIntakeExtended());
         armTab.addBoolean("Retracted?", () -> intakeModuleIO.isIntakeRetracted());
 
@@ -250,5 +242,32 @@ public class IntakeSubsystem extends SubsystemBase {
         rollerSEntry.setDouble(intakeConstants.kRollS);
         rollerVEntry.setDouble(intakeConstants.kRollV);
         rollerAEntry.setDouble(intakeConstants.kRollA);
+    }
+
+    /**
+     * Commands
+     */
+    public Command IntakeCommand() {
+        return new IntakeSpinMotor(this);
+    }
+
+    public Command OuttakeCommand() {
+        return new OuttakeSpinMotor(this);
+    }
+
+    public Command ExtendArmCommand() {
+        return new IntakeExtendArm(this);
+    }
+
+    public Command RetractArmCommand() {
+        return new IntakeRetractArm(this);
+    }
+
+    public Command retractArmPIDCommand() {
+        return new PIDRetractArm(this);
+    }
+
+    public Command extendArmPIDCommand() {
+        return new PIDExtendArm(this);
     }
 }
