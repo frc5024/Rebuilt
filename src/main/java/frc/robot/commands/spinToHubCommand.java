@@ -50,12 +50,25 @@ public class spinToHubCommand extends Command {
 
         double robotX = robotPose.getX();
         double robotY = robotPose.getY();
+        double robotRotationRad = robotPose.getRotation().getRadians();
+
+        // Turret offset from robot center (in meters)
+        double turretOffsetX = 0.254; // 25.4 cm
+        double turretOffsetY = 0.1778; // 17.78 cm
+
+        // Rotate turret offset by robot rotation to get actual turret position
+        double rotatedOffsetX = turretOffsetX * Math.cos(robotRotationRad) - turretOffsetY * Math.sin(robotRotationRad);
+        double rotatedOffsetY = turretOffsetX * Math.sin(robotRotationRad) + turretOffsetY * Math.cos(robotRotationRad);
+
+        // Calculate turret center position
+        double turretX = robotX + rotatedOffsetX;
+        double turretY = robotY + rotatedOffsetY;
 
         Pose2d targetPose = getTargetPose(robotPose);
         double targetX = targetPose.getX();
         double targetY = targetPose.getY();
 
-        Rotation2d angleToHub = Rotation2d.fromRadians(Math.atan2(targetY - robotY, targetX - robotX))
+        Rotation2d angleToHub = Rotation2d.fromRadians(Math.atan2(targetY - turretY, targetX - turretX))
                 .rotateBy(Rotation2d.k180deg);
 
         Rotation2d fieldAngle = targetPose.getTranslation().getAngle();

@@ -63,9 +63,9 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
         }
 
         // update relative encoder if hall effect is triggered
-        if (!hallEffectSensor.get()) {
-            internalEncoder.setPosition(turretConstants.ANGLE_LIMIT);
-        }
+        // if (!hallEffectSensor.get()) {
+        // internalEncoder.setPosition(turretConstants.ANGLE_LIMIT);
+        // }
 
         inputs.data = new TurretModuleIOData(
                 connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
