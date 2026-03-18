@@ -99,11 +99,11 @@ public class IntakeSubsystem extends SubsystemBase {
             armFeedforward.setKv(armVEntry.getDouble(intakeConstants.kArmV));
             armFeedforward.setKa(armAEntry.getDouble(intakeConstants.kArmA));
 
-            rollerPIDController.setPID(armPEntry.getDouble(intakeConstants.kRollP),
-                    armIEntry.getDouble(intakeConstants.kRollI), armDEntry.getDouble(intakeConstants.kRollD));
-            rollerFeedforward.setKs(armSEntry.getDouble(intakeConstants.kArmS));
-            rollerFeedforward.setKv(armVEntry.getDouble(intakeConstants.kArmV));
-            rollerFeedforward.setKa(armAEntry.getDouble(intakeConstants.kArmA));
+            rollerPIDController.setPID(rollerPEntry.getDouble(intakeConstants.kRollP),
+                    rollerIEntry.getDouble(intakeConstants.kRollI), rollerDEntry.getDouble(intakeConstants.kRollD));
+            rollerFeedforward.setKs(rollerSEntry.getDouble(intakeConstants.kRollS));
+            rollerFeedforward.setKv(rollerVEntry.getDouble(intakeConstants.kRollV));
+            rollerFeedforward.setKa(rollerAEntry.getDouble(intakeConstants.kRollA));
         }
 
         if (armPIDEnabled) {
@@ -213,22 +213,6 @@ public class IntakeSubsystem extends SubsystemBase {
      */
     private void setShuffleboard() {
         armTab = Shuffleboard.getTab("Arm");
-
-        armPEntry.setDouble(intakeConstants.kArmP);
-        armIEntry.setDouble(intakeConstants.kArmI);
-        armDEntry.setDouble(intakeConstants.kArmD);
-
-        armSEntry.setDouble(intakeConstants.kArmS);
-        armVEntry.setDouble(intakeConstants.kArmV);
-        armAEntry.setDouble(intakeConstants.kArmA);
-
-        rollerPEntry.setDouble(intakeConstants.kRollP);
-        rollerIEntry.setDouble(intakeConstants.kRollI);
-        rollerDEntry.setDouble(intakeConstants.kRollD);
-
-        rollerSEntry.setDouble(intakeConstants.kRollS);
-        rollerVEntry.setDouble(intakeConstants.kRollV);
-        rollerAEntry.setDouble(intakeConstants.kRollA);
 
         armPEntry = armTab.add("Set kP", intakeConstants.kArmP).getEntry();
         armIEntry = armTab.add("Set kI", intakeConstants.kArmI).getEntry();

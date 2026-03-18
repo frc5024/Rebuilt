@@ -80,7 +80,8 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_intake = new IntakeSubsystem(new IntakeModuleIOSparkMax());
         this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
         this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxDutyCycleEncoder());
-        this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
+
+        m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
                 () -> swerveDriveSubsystem.getChassisSpeeds()));
 
         m_turret.zeroEncoder();
@@ -154,6 +155,11 @@ public class RebuiltRobotContainer extends RobotContainer {
     @Override
     public Command getAutonomousCommand() {
         return this.autoChooser.get();
+    }
+
+    @Override
+    public void teleopInit() {
+        super.teleopInit();
     }
 
     @Override
