@@ -51,8 +51,6 @@ public class TurretModuleIOSim extends TurretModuleIOSparkMaxDutyCycleEncoder {
         sparkMaxSim.setMotorCurrent(dcMotorSim.getCurrentDrawAmps());
         sparkMaxSim.setBusVoltage(appliedVoltage);
 
-        // double currentAngleDegrees =
-        // Units.radiansToDegrees(turretSim.getAngleRads());
         absoluteEncoderSim.set(getCurrentAngle());
 
         // real hall effect returns false when homed

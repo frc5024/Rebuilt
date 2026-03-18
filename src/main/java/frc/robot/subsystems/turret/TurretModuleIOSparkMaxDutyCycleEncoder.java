@@ -1,8 +1,13 @@
 package frc.robot.subsystems.turret;
 
+import org.littletonrobotics.junction.Logger;
+
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -19,7 +24,7 @@ import frc.robot.Constants.turretConstants;
  */
 public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
     // Constants
-    protected final double GEAR_RATIO = 28.6667 * 12;
+    protected final double GEAR_RATIO = 28.6667; // 129 ring gear, 18 pinion, 4:1 internal = (129.0 / 18.0) * 4
 
     // Hardware
     protected final SparkMax turretMotor;
@@ -29,8 +34,9 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
     // PID
     private final ProfiledPIDController pidController;
+    private TrapezoidProfile.Constraints constraints;
+
     private final SimpleMotorFeedforward feedforward;
-    private TrapezoidProfile.Constraints feedForwardConstraints;
 
     // Connection debouncers
     private final Debouncer connectedDebouncer;
@@ -45,13 +51,22 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
         this.absoluteEncoder.setDutyCycleRange(0.1, 0.9);
         this.internalEncoder = this.turretMotor.getEncoder();
 
-        this.feedForwardConstraints = new TrapezoidProfile.Constraints(turretConstants.turretMaxSpeed,
+        this.constraints = new TrapezoidProfile.Constraints(turretConstants.turretMaxSpeed,
                 turretConstants.turretMaxAccel);
         this.pidController = new ProfiledPIDController(turretConstants.kP, turretConstants.kI, turretConstants.kD,
-                feedForwardConstraints);
-        this.pidController.setConstraints(feedForwardConstraints);
+                constraints);
+        this.pidController.setConstraints(constraints);
         this.pidController.setTolerance(turretConstants.turretTolerance);
+
         this.feedforward = new SimpleMotorFeedforward(turretConstants.kS, turretConstants.kV, turretConstants.kA);
+
+        // set position factor so we can turn turret to specific angle
+        SparkMaxConfig config = new SparkMaxConfig();
+        double positionFactor = 360.0 / GEAR_RATIO;
+        config.encoder
+                .positionConversionFactor(positionFactor)
+                .velocityConversionFactor(positionFactor / 60.0);
+        this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         this.connectedDebouncer = new Debouncer(0.5);
     }
@@ -85,17 +100,7 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
     @Override
     public double getCurrentAngle() {
-        // double motorRotations = turretModuleIO.getPosition();
-        double turretRotations = internalEncoder.getPosition() / GEAR_RATIO;
-        // returns degrees normalized to [-180, 180)
-        double angle = turretRotations * 360.0;
-        while (angle >= 180.0) {
-            angle -= 360.0;
-        }
-        while (angle < -180.0) {
-            angle += 360.0;
-        }
-        return angle;
+        return internalEncoder.getPosition();
     }
 
     @Override
@@ -120,22 +125,7 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
     @Override
     public double getVelocity() {
-        // double currentVelocity = turretMotor.getEncoder().getVelocity();
-        // double DegPerSec = currentVelocity * 360/60;
-        // return DegPerSec;
-
-        // turretMotor.getEncoder().getVelocity() returns motor RPM (rotations per
-        // minute)
-
-        // double motorRPM = turretModuleIO.getVelocity();
-        double motorRPM = internalEncoder.getVelocity();
-
-        // Convert motor RPM -> turret rotations per second by dividing by gear ratio
-        // and 60
-        double turretRPS = (motorRPM / GEAR_RATIO) / 60.0;
-        // Convert rotations per second -> degrees per second
-        double degPerSec = turretRPS * 360.0;
-        return degPerSec;
+        return internalEncoder.getVelocity();
     }
 
     @Override
@@ -145,8 +135,8 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
     @Override
     public void setConstraints(double maxVelocity, double maxAcceleration, double tolerance) {
-        feedForwardConstraints = new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration);
-        pidController.setConstraints(feedForwardConstraints);
+        constraints = new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration);
+        pidController.setConstraints(constraints);
         pidController.setTolerance(tolerance);
     }
 
@@ -174,6 +164,9 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
         double voltageRequest = MathUtil.clamp(pValue + fValue, -12.0, 12.0);
 
         turretMotor.setVoltage(voltageRequest);
+
+        Logger.recordOutput("Turret/pValue", pValue);
+        Logger.recordOutput("Turret/fValue", fValue);
     }
 
     @Override
@@ -183,6 +176,6 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
     @Override
     public void stop() {
-        turretMotor.set(0.0);
+        turretMotor.stopMotor();
     }
 }

@@ -34,6 +34,7 @@ public class TurretSubsystem extends SubsystemBase {
     private GenericEntry maxSpeedEntry;
     private GenericEntry maxAccelEntry;
     private GenericEntry toleranceEntry;
+    private GenericEntry angleEntry;
 
     /**
      * 
@@ -71,6 +72,8 @@ public class TurretSubsystem extends SubsystemBase {
             turretModuleIO.setConstraints(maxSpeedEntry.getDouble(turretConstants.turretMaxSpeed),
                     maxAccelEntry.getDouble(turretConstants.turretMaxAccel),
                     toleranceEntry.getDouble(turretConstants.turretTolerance));
+
+            setAngle(angleEntry.getDouble(getCurrentAngle()));
         }
 
         if (pidEnabled) {
@@ -89,13 +92,11 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void disablePID() {
         pidEnabled = false;
-        turretModuleIO.set(0);
-        System.out.println("PID disabled for turret");
+        turretModuleIO.stop();
     }
 
     public void enablePID() {
         pidEnabled = true;
-        System.out.println("PID enabled for turret");
     }
 
     public double getCurrentDrawAmps() {
@@ -115,12 +116,13 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     public void runTurret(double speed) {
-        pidEnabled = false;
+        disablePID();
         turretModuleIO.set(speed);
     }
 
     public void setAngle(double degrees) {
         turretModuleIO.setAngle(degrees);
+        enablePID();
     }
 
     public void setPosition(double position) {
@@ -149,42 +151,35 @@ public class TurretSubsystem extends SubsystemBase {
      */
     private void setShuffleboard() {
         tab = Shuffleboard.getTab("Turret");
-        pEntry = tab.add("SET P", turretConstants.kP).getEntry();
-        iEntry = tab.add("SET I", turretConstants.kI).getEntry();
-        dEntry = tab.add("SET D", turretConstants.kD).getEntry();
 
-        sEntry = tab.add("SET S", turretConstants.kS).getEntry();
-        vEntry = tab.add("SET V", turretConstants.kV).getEntry();
-        aEntry = tab.add("SET A", turretConstants.kA).getEntry();
+        double[] kPIDs = turretConstants.getPIDs();
+        pEntry = tab.add("SET P", kPIDs[0]).getEntry();
+        iEntry = tab.add("SET I", kPIDs[1]).getEntry();
+        dEntry = tab.add("SET D", kPIDs[2]).getEntry();
+
+        double[] kSVAs = turretConstants.getSVAs();
+        sEntry = tab.add("SET S", kSVAs[0]).getEntry();
+        vEntry = tab.add("SET V", kSVAs[1]).getEntry();
+        aEntry = tab.add("SET A", kSVAs[2]).getEntry();
 
         maxSpeedEntry = tab.add("SET max speed", turretConstants.turretMaxSpeed).getEntry();
         maxAccelEntry = tab.add("SET max accel", turretConstants.turretMaxAccel).getEntry();
         toleranceEntry = tab.add("SET TOLERANCE", turretConstants.turretTolerance).getEntry();
+        angleEntry = tab.add("SET ANGLE", 0.0).getEntry();
 
-        double[] kPIDs = turretConstants.getPIDs();
         pEntry.setDouble(kPIDs[0]);
         iEntry.setDouble(kPIDs[1]);
         dEntry.setDouble(kPIDs[2]);
 
-        vEntry.setDouble(Constants.turretConstants.kV);
+        sEntry.setDouble(kSVAs[0]);
+        vEntry.setDouble(kSVAs[1]);
+        aEntry.setDouble(kSVAs[2]);
 
         maxSpeedEntry.setDouble(Constants.turretConstants.turretMaxSpeed);
         maxAccelEntry.setDouble(Constants.turretConstants.turretMaxAccel);
         toleranceEntry.setDouble(Constants.turretConstants.turretTolerance);
+        angleEntry.setDouble(0.0);
 
-        // tab.addDouble("current angle", () -> getCurrentAngle());
-        // tab.addDouble("goal", () -> pidController.getGoal().position);
-        // tab.addDouble("current velocity", () -> getCurrentVelocity());
-        // tab.addBoolean("pid enabled", () -> pidEnabled);
-        // tab.addBoolean("hall effect", () -> getHallEffect());
-        // tab.addDouble("voltage value", () -> voltageValue);
-        // tab.addDouble("pid value", () -> pValue);
-        // tab.addDouble("ff value", () -> fValue);
-        // tab.addDouble("encoder value", () -> getEncoderValues());
-        // tab.addBoolean("at target", () -> isAtTargetAngle());
-        // tab.addDouble("Estimated Velocity", () ->
-        // pidController.getSetpoint().velocity);
-        // tab.addDouble("Estimated Position", () ->
-        // pidController.getSetpoint().position);
+        enablePID();
     }
 }

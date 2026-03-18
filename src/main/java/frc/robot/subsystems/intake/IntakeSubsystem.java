@@ -234,5 +234,21 @@ public class IntakeSubsystem extends SubsystemBase {
 
         armTab.addBoolean("Extended?", () -> intakeModuleIO.isIntakeExtended());
         armTab.addBoolean("Retracted?", () -> intakeModuleIO.isIntakeRetracted());
+
+        armPEntry.setDouble(intakeConstants.kArmP);
+        armIEntry.setDouble(intakeConstants.kArmI);
+        armDEntry.setDouble(intakeConstants.kArmD);
+
+        armSEntry.setDouble(intakeConstants.kArmS);
+        armVEntry.setDouble(intakeConstants.kArmV);
+        armAEntry.setDouble(intakeConstants.kArmA);
+
+        rollerPEntry.setDouble(intakeConstants.kRollP);
+        rollerIEntry.setDouble(intakeConstants.kRollI);
+        rollerDEntry.setDouble(intakeConstants.kRollD);
+
+        rollerSEntry.setDouble(intakeConstants.kRollS);
+        rollerVEntry.setDouble(intakeConstants.kRollV);
+        rollerAEntry.setDouble(intakeConstants.kRollA);
     }
 }

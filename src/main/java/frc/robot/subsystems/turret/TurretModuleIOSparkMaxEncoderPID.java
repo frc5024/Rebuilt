@@ -10,20 +10,22 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.turretConstants;
 
 public class TurretModuleIOSparkMaxEncoderPID implements TurretModuleIO {
-    /* Constants */
-    protected final double GEAR_RATIO = 28.6667;
+    // Constants
+    protected final double GEAR_RATIO = 28.6667; // 129 ring gear, 18 pinion, 4:1 internal = (129.0 / 18.0) * 4
 
-    /* Hardware */
+    // Hardware
     protected final SparkMax turretMotor;
+    protected final DigitalInput hallEffectSensor;
     protected final SparkClosedLoopController pidController;
 
     private final SparkMaxConfig config;
 
-    /* Connection debouncers */
+    // Connection debouncers
     private final Debouncer connectedDebouncer;
 
     /**
@@ -31,6 +33,7 @@ public class TurretModuleIOSparkMaxEncoderPID implements TurretModuleIO {
      */
     public TurretModuleIOSparkMaxEncoderPID() {
         this.turretMotor = new SparkMax(turretConstants.turretMotorChannel, SparkLowLevel.MotorType.kBrushless);
+        this.hallEffectSensor = new DigitalInput(turretConstants.hallEffectChannel);
         this.pidController = this.turretMotor.getClosedLoopController();
         this.config = new SparkMaxConfig();
         this.connectedDebouncer = new Debouncer(0.5);
@@ -52,13 +55,14 @@ public class TurretModuleIOSparkMaxEncoderPID implements TurretModuleIO {
 
         // get and set PID constants
         double[] kPIDs = turretConstants.getPIDs();
+        double[] kSVAs = turretConstants.getSVAs();
         config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 .p(kPIDs[0])
                 .i(kPIDs[1])
                 .d(kPIDs[2]).feedForward
-                .kS(turretConstants.kS)
-                .kV(turretConstants.kV)
-                .kA(turretConstants.kA);
+                .kS(kSVAs[0])
+                .kV(kSVAs[1])
+                .kA(kSVAs[2]);
 
         this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
