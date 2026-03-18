@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 3.6525454545454545,
-        "y": 7.61146590909091
+        "x": 3.6619856887298745,
+        "y": 7.531574239713775
       },
       "prevControl": {
-        "x": 3.8935974657405943,
-        "y": 7.545179199270779
+        "x": 3.9030376999250143,
+        "y": 7.465287529893644
       },
       "nextControl": null,
       "isLocked": false,
@@ -58,7 +58,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -74.7895737835979
   },
   "reversed": false,
   "folder": "Left Trench Paths",
