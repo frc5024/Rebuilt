@@ -92,6 +92,11 @@ public class spinToHubCommand extends Command {
             SmartDashboard.putNumber("angleToHub", angleToHub.getDegrees());
         }
 
+        Logger.recordOutput("Turret/SpinToHub/RobotPoseDeg", robotPose.getRotation().getDegrees());
+        Logger.recordOutput("Turret/SpinToHub/AngleToHub", angleToHub.getDegrees());
+        Logger.recordOutput("Turret/SpinToHub/RobotRotation", robotRotation.getDegrees());
+        Logger.recordOutput("Turret/SpinToHub/TargetSetPointDeg", turretAngle.getDegrees());
+
         Logger.recordOutput("Turret/Active Command", this.getName());
     }
 

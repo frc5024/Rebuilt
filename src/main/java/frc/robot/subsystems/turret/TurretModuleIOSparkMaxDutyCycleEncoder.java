@@ -17,7 +17,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import frc.robot.Constants.turretConstants;
+import frc.robot.Constants.TurretConstants;
 
 /**
  * 
@@ -45,20 +45,20 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
      * 
      */
     public TurretModuleIOSparkMaxDutyCycleEncoder() {
-        this.turretMotor = new SparkMax(turretConstants.turretMotorChannel, SparkLowLevel.MotorType.kBrushless);
-        this.hallEffectSensor = new DigitalInput(turretConstants.hallEffectChannel);
-        this.absoluteEncoder = new DutyCycleEncoder(turretConstants.turretEncoderChannel, 1, 0);
+        this.turretMotor = new SparkMax(TurretConstants.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
+        this.hallEffectSensor = new DigitalInput(TurretConstants.hallEffectChannel);
+        this.absoluteEncoder = new DutyCycleEncoder(TurretConstants.turretEncoderChannel, 1, 0);
         this.absoluteEncoder.setDutyCycleRange(0.1, 0.9);
         this.internalEncoder = this.turretMotor.getEncoder();
 
-        this.constraints = new TrapezoidProfile.Constraints(turretConstants.turretMaxSpeed,
-                turretConstants.turretMaxAccel);
-        this.pidController = new ProfiledPIDController(turretConstants.kP, turretConstants.kI, turretConstants.kD,
+        this.constraints = new TrapezoidProfile.Constraints(TurretConstants.turretMaxSpeed,
+                TurretConstants.turretMaxAccel);
+        this.pidController = new ProfiledPIDController(TurretConstants.kP, TurretConstants.kI, TurretConstants.kD,
                 constraints);
         this.pidController.setConstraints(constraints);
-        this.pidController.setTolerance(turretConstants.turretTolerance);
+        this.pidController.setTolerance(TurretConstants.turretTolerance);
 
-        this.feedforward = new SimpleMotorFeedforward(turretConstants.kS, turretConstants.kV, turretConstants.kA);
+        this.feedforward = new SimpleMotorFeedforward(TurretConstants.kS, TurretConstants.kV, TurretConstants.kA);
 
         // set position factor so we can turn turret to specific angle
         SparkMaxConfig config = new SparkMaxConfig();
@@ -130,7 +130,7 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
     @Override
     public void setAngle(double degrees) {
-        pidController.setGoal(MathUtil.clamp(degrees, -turretConstants.ANGLE_LIMIT, turretConstants.ANGLE_LIMIT));
+        pidController.setGoal(MathUtil.clamp(degrees, -TurretConstants.ANGLE_LIMIT, TurretConstants.ANGLE_LIMIT));
     }
 
     @Override

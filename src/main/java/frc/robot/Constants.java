@@ -35,7 +35,7 @@ public final class Constants {
      */
     public static class RobotConstants {
         // used to show/hide shuffleboard entries for PID tuning
-        public static final boolean TUNING_MODE = true;
+        public static final boolean TUNING_MODE = false;
 
         public static final double LOOP_PERIOD_SECS = 0.02;
 
@@ -44,9 +44,9 @@ public final class Constants {
         public static final double fullLength = Units.inchesToMeters(34.5);
 
         // PathPlanner config constants
-        private static final double MASS_KG = 74.088;
+        private static final double MASS_KG = 55.66;
         private static final double MOI = 6.883;
-        private static final double WHEEL_COF = 1.2;
+        private static final double WHEEL_COF = 1.8;
         public static final RobotConfig PP_CONFIG = new RobotConfig(
                 MASS_KG,
                 MOI,
@@ -73,7 +73,44 @@ public final class Constants {
     /**
      * 
      */
-    public static class climbConstants {
+    public static class AutoBuilderConstants {
+        public static final double translation_kP = 6.0;
+        public static final double translation_kI = 0.0;
+        public static final double translation_kD = 0.0;
+
+        public static final double rotation_kP = 6.0;
+        public static final double rotation_kI = 0.0;
+        public static final double rotation_kD = 0.0;
+
+        public static final double sim_translation_kP = 9.5;
+        public static final double sim_translation_kI = 0.0;
+        public static final double sim_translation_kD = 0.0;
+
+        public static final double sim_rotation_kP = 6.0;
+        public static final double sim_rotation_kI = 0.0;
+        public static final double sim_rotation_kD = 0.0;
+
+        public static double[] getTranslationPIDs() {
+            if (Robot.isReal()) {
+                return new double[] { translation_kP, translation_kI, translation_kD };
+            } else {
+                return new double[] { sim_translation_kP, sim_translation_kI, sim_translation_kD };
+            }
+        }
+
+        public static double[] getRotationPIDs() {
+            if (Robot.isReal()) {
+                return new double[] { rotation_kP, rotation_kI, rotation_kD };
+            } else {
+                return new double[] { sim_rotation_kP, sim_rotation_kI, sim_rotation_kD };
+            }
+        }
+    }
+
+    /**
+     * 
+     */
+    public static class ClimbConstants {
         // Speed for extending the arm
         public static final double extendSpeed = 0.75;
         // Speed for contracting the arm
@@ -90,15 +127,22 @@ public final class Constants {
     }
 
     /**
+     * 
+     */
+    public static class FeederConstants {
+        public static double feederSpeed = 0.7;
+    }
+
+    /**
      * Field Constants
      */
     public static class FieldConstants {
         public static final Pose2d[][] SIMULATION_START_POSES = new Pose2d[][] {
                 // Blue Alliance
                 {
-                        new Pose2d(3.500, 5.900, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(3.500, 4.000, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(3.500, 0.600, Rotation2d.fromDegrees(0.0))
+                        new Pose2d(3.600, 7.500, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(3.600, 4.000, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(3.600, 0.600, Rotation2d.fromDegrees(0.0))
                 },
                 // Red Alliance
                 {
@@ -157,14 +201,13 @@ public final class Constants {
      */
     public static class HopperConstants {
         public static final int CAPACITY = 20;
-        public static double hopperSpeed = 0.85;
-        public static int HopperMotorID = 8;
+        public static double hopperSpeed = -0.1;
     }
 
     /**
      * 
      */
-    public static class intakeConstants {
+    public static class IntakeConstants {
         public static final double INTAKE_SPEED = 0.55;
         public static final double OUTTAKE_SPEED = -0.4;
         public static final double EXTENDING_SPEED = -0.15;
@@ -252,7 +295,7 @@ public final class Constants {
     /**
      * 
      */
-    public static class shooterConstants {
+    public static class ShooterConstants {
         public static final double kP = 0.0006;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
@@ -261,10 +304,35 @@ public final class Constants {
         public static final double kV = 0.001764; // Velocity constant
         public static final double kA = 0.01; // Acceleration constant
 
+        public static final double sim_kP = 0.0;
+        public static final double sim_kI = 0.0;
+        public static final double sim_kD = 0.0;
+
+        public static final double sim_kS = 0.0;
+        public static final double sim_kV = 0.00174;
+        public static final double sim_kA = 0.0;
+
+        public static double[] getPIDs() {
+            if (Robot.isReal()) {
+                return new double[] { kP, kI, kD };
+            } else {
+                return new double[] { sim_kP, sim_kI, sim_kD };
+            }
+        }
+
+        public static double[] getSVAs() {
+            if (Robot.isReal()) {
+                return new double[] { kS, kV, kA };
+            } else {
+                return new double[] { sim_kS, sim_kV, sim_kA };
+            }
+        }
+
         public static final double setVelocity = 3766; // Example set velocity in RPM
         public static final double speed = 0.1;
         public static final double feederspeed = 0.7;
 
+        public static final double IDLE_SPEED_RPM = 1000.0;
         public static final double WHEEL_DIAMETER_METERS = 0.1016;
 
         public static InterpolatingDoubleTreeMap velocityToRPMMap = new InterpolatingDoubleTreeMap();
@@ -316,14 +384,13 @@ public final class Constants {
                             TunerConstants.BackRight.LocationY)
             };
         }
-
     }
 
     /**
      * 
      */
     public static class TeleopConstants {
-        public static final PathConstraints CONSTRAINTS = new PathConstraints(4.5, 4.0, Units.degreesToRadians(540),
+        public static final PathConstraints CONSTRAINTS = new PathConstraints(5.54, 8.0, Units.degreesToRadians(540),
                 Units.degreesToRadians(720));
 
         public static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(
@@ -340,10 +407,13 @@ public final class Constants {
     /**
      * 
      */
-    public static final class turretConstants {
+    public static final class TurretConstants {
+        public static final int MOTOR_ID = 3;
+        public static final double OFFSET_X = -0.165;
+        public static final double OFFSET_Y = 0.165;
+        public static final double OFFSET_Z = 0.40;
         public static final double ANGLE_LIMIT = 135.0;
-        public static final double speed = 0.3;
-        public static final int turretMotorChannel = 3;
+
         public static final double turretTolerance = 0.5;
 
         public static final double kP = 0.055;
@@ -354,12 +424,12 @@ public final class Constants {
         public static final double kV = 0.005;
         public static final double kA = 0.0;
 
-        public static final double sim_kP = 0.09;
+        public static final double sim_kP = 0.02;
         public static final double sim_kI = 0.0;
-        public static final double sim_kD = 0.09;
+        public static final double sim_kD = 0.02;
 
-        public static final double sim_kS = 0.05;
-        public static final double sim_kV = 0.001;
+        public static final double sim_kS = 0.0;
+        public static final double sim_kV = 0.0;
         public static final double sim_kA = 0.0;
 
         public static double[] getPIDs() {
@@ -384,7 +454,7 @@ public final class Constants {
         public static final double turretMaxSpeed = 720; // deg/s
         public static final double turretMaxAccel = 1440; // deg/s^2
 
-        public static final double verticalLaunchAngle = 65;
+        public static final double verticalLaunchAngle = -65.0;
     }
 
     /**
@@ -428,5 +498,4 @@ public final class Constants {
         public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
         public static double angularStdDevMegatag2Factor = Double.POSITIVE_INFINITY; // No rotation data available
     }
-
 }

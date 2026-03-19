@@ -42,19 +42,32 @@ public class FeederSubsystem extends SubsystemBase {
         return feederModuleIO.getPosition();
     }
 
+    public boolean isRunning() {
+        return feederModuleIO.isRunning();
+    }
+
+    public void start() {
+        feederModuleIO.start();
+    }
+
+    public void stop() {
+        feederModuleIO.stop();
+    }
+
+    // TODO: remove and use stop instead
     public void setIdle() {
         feederModuleIO.set(0);
     }
 
+    // TODO: remove and use start instead
     public void setFeederSpeed(double feederspeed) {
         feederModuleIO.set(feederspeed);
     }
 
+    /**
+     * Commands
+     */
     public Command feederCommand() {
         return new feederCommand(this);
     }
-
-    // public Command jammedCommand() {
-    // return new feederJamCommand(this);
-    // }
 }

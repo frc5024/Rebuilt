@@ -6,7 +6,7 @@ package frc.robot.commands.ClimbCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.climbConstants;
+import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -31,7 +31,7 @@ public class ResetCommand extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_Climb.setSpeed(climbConstants.resetSpeed);
+        m_Climb.setSpeed(ClimbConstants.resetSpeed);
     }
 
     // Called once the command ends or is interrupted.

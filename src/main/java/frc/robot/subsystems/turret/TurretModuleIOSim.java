@@ -9,18 +9,17 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.DIOSim;
-import edu.wpi.first.wpilibj.simulation.DutyCycleEncoderSim;
-import frc.robot.Constants.turretConstants;
+import frc.robot.Constants.TurretConstants;
 
 /**
  * 
  */
-public class TurretModuleIOSim extends TurretModuleIOSparkMaxDutyCycleEncoder {
+public class TurretModuleIOSim extends TurretModuleIOSparkMaxClosedLoopEncoder {
     // Hardware objects
     private final DCMotor dcMotor;
     private final DCMotorSim dcMotorSim;
     private final SparkMaxSim sparkMaxSim;
-    private final DutyCycleEncoderSim absoluteEncoderSim;
+    // private final DutyCycleEncoderSim absoluteEncoderSim;
     private final DIOSim hallEffectSim;
 
     /**
@@ -31,7 +30,7 @@ public class TurretModuleIOSim extends TurretModuleIOSparkMaxDutyCycleEncoder {
         this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, 4.0), dcMotor);
         this.sparkMaxSim = new SparkMaxSim(this.turretMotor, this.dcMotor);
 
-        this.absoluteEncoderSim = new DutyCycleEncoderSim(absoluteEncoder);
+        // this.absoluteEncoderSim = new DutyCycleEncoderSim(absoluteEncoder);
         this.hallEffectSim = new DIOSim(hallEffectSensor);
     }
 
@@ -51,10 +50,10 @@ public class TurretModuleIOSim extends TurretModuleIOSparkMaxDutyCycleEncoder {
         sparkMaxSim.setMotorCurrent(dcMotorSim.getCurrentDrawAmps());
         sparkMaxSim.setBusVoltage(appliedVoltage);
 
-        absoluteEncoderSim.set(getCurrentAngle());
+        // absoluteEncoderSim.set(getCurrentAngle());
 
         // real hall effect returns false when homed
-        boolean isNearHome = Math.abs(getCurrentAngle() - turretConstants.ANGLE_LIMIT) < 2.0;
+        boolean isNearHome = Math.abs(getCurrentAngle() - TurretConstants.ANGLE_LIMIT) < 2.0;
         hallEffectSim.setValue(!isNearHome);
 
         inputs.data = new TurretModuleIOData(

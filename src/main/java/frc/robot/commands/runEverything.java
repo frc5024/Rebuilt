@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.HopperConstants;
 //import frc.robot.Constants.intakeConstants;
-import frc.robot.Constants.shooterConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -29,9 +29,9 @@ public class runEverything extends SequentialCommandGroup {
     // private final Intake intakeSubsystem;
 
     static ShuffleboardTab tab1 = Shuffleboard.getTab("feederallMotor");
-    static GenericEntry feederEntry = tab1.add("SET allFEEDSPEED", shooterConstants.feederspeed).getEntry();
+    static GenericEntry feederEntry = tab1.add("SET allFEEDSPEED", ShooterConstants.feederspeed).getEntry();
     static ShuffleboardTab tab2 = Shuffleboard.getTab("shooterallMotor");
-    static GenericEntry shooterEntry = tab2.add("SET allSPEED", shooterConstants.speed).getEntry();
+    static GenericEntry shooterEntry = tab2.add("SET allSPEED", ShooterConstants.speed).getEntry();
     static ShuffleboardTab tab3 = Shuffleboard.getTab("HopperallMotor");
     static GenericEntry hopperEntry = tab3.add("SET allHOPPERSPEED", HopperConstants.hopperSpeed).getEntry();
     static ShuffleboardTab tab4 = Shuffleboard.getTab("intakeallMotor");

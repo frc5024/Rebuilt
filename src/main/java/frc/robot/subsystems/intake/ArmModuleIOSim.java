@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.DIOSim;
-import frc.robot.Constants.intakeConstants.ArmConstants;
+import frc.robot.Constants.IntakeConstants.ArmConstants;
 
 /**
  * 

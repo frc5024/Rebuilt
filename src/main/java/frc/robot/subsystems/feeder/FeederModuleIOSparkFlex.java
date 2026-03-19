@@ -9,12 +9,14 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Constants.FeederConstants;
 
 /**
  * 
  */
-public class FeederModuleIOSparkMax implements FeederModuleIO {
+public class FeederModuleIOSparkFlex implements FeederModuleIO {
     // Constants
+    private final int MOTOR_ID = 6;
     protected final double GEAR_RATIO = 1.0;
 
     // Hardware
@@ -27,8 +29,8 @@ public class FeederModuleIOSparkMax implements FeederModuleIO {
     /**
      * 
      */
-    public FeederModuleIOSparkMax() {
-        this.feederMotor = new SparkFlex(6, MotorType.kBrushless);
+    public FeederModuleIOSparkFlex() {
+        this.feederMotor = new SparkFlex(MOTOR_ID, MotorType.kBrushless);
 
         // Configure motor with current limit
         SparkFlexConfig config = new SparkFlexConfig();
@@ -65,7 +67,22 @@ public class FeederModuleIOSparkMax implements FeederModuleIO {
     }
 
     @Override
+    public boolean isRunning() {
+        return feederMotor.getAppliedOutput() != 0.0;
+    }
+
+    @Override
     public void set(double feederspeed) {
         feederMotor.set(-feederspeed);
+    }
+
+    @Override
+    public void start() {
+        feederMotor.set(FeederConstants.feederSpeed);
+    }
+
+    @Override
+    public void stop() {
+        feederMotor.stopMotor();
     }
 }

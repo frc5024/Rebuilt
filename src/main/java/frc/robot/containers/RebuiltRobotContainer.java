@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FuelCellConstants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants.turretConstants;
 import frc.robot.commands.TuningCommands;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
@@ -28,15 +28,16 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.subsystems.climb.ClimbModuleIOTalonFX;
 import frc.robot.subsystems.climb.ClimbSubsystem;
-import frc.robot.subsystems.feeder.FeederModuleIOSparkMax;
+import frc.robot.subsystems.feeder.FeederModuleIOSparkFlex;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperModuleIOSparkMax;
 import frc.robot.subsystems.hopper.HopperSubsystem;
-import frc.robot.subsystems.intake.IntakeModuleIOSparkMax;
+import frc.robot.subsystems.intake.ArmModuleIOSparkMax;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intake.RollerModuleIOSparkFlex;
 import frc.robot.subsystems.shooter.ShooterModuleIOSparkFlex;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.swervedrive.GyroIOPigeon2;
+import frc.robot.subsystems.swervedrive.GyroModuleIOPigeon2;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOTalonFX;
 import frc.robot.subsystems.turret.TurretModuleIOSparkMaxDutyCycleEncoder;
@@ -48,7 +49,6 @@ import frc.robot.subsystems.vision.VisionSubsystem;
  * 
  */
 public class RebuiltRobotContainer extends RobotContainer {
-
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -60,7 +60,7 @@ public class RebuiltRobotContainer extends RobotContainer {
 
         // Real robot, instantiate hardware IO implementations
         this.swerveDriveSubsystem = new SwerveDriveSubsystem(
-                new GyroIOPigeon2(),
+                new GyroModuleIOPigeon2(),
                 new SwerveModuleIOTalonFX(TunerConstants.FrontLeft),
                 new SwerveModuleIOTalonFX(TunerConstants.FrontRight),
                 new SwerveModuleIOTalonFX(TunerConstants.BackLeft),
@@ -75,14 +75,16 @@ public class RebuiltRobotContainer extends RobotContainer {
                 new VisionIOLimelight(VisionConstants.rearCamera, swerveDriveSubsystem::getRotation));
 
         this.m_climb = new ClimbSubsystem(new ClimbModuleIOTalonFX());
-        this.m_feeder = new FeederSubsystem(new FeederModuleIOSparkMax());
+        this.m_feeder = new FeederSubsystem(new FeederModuleIOSparkFlex());
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSparkMax());
-        this.m_intake = new IntakeSubsystem(new IntakeModuleIOSparkMax());
+        this.m_intake = new IntakeSubsystem(new ArmModuleIOSparkMax(), new RollerModuleIOSparkFlex());
         this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
         this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxDutyCycleEncoder());
 
-        m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
-                () -> swerveDriveSubsystem.getChassisSpeeds()));
+        if (!RobotConstants.TUNING_MODE) {
+            m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
+                    () -> swerveDriveSubsystem.getChassisSpeeds()));
+        }
 
         m_turret.zeroEncoder();
         configureNamedCommands();
@@ -172,7 +174,7 @@ public class RebuiltRobotContainer extends RobotContainer {
                 FuelCellConstants.DIAMETER * 2.7,
                 new Rotation3d(
                         0.0,
-                        Units.degreesToRadians(-180.0 + turretConstants.verticalLaunchAngle), // launch angle
+                        Units.degreesToRadians(-180.0 + TurretConstants.verticalLaunchAngle), // launch angle
                         robotPose.getRotation().getRadians() + Math.toRadians(m_turret.getCurrentAngle())));
         Pose3d turretPose = new Pose3d(robotPose).transformBy(transform3d);
 
@@ -186,13 +188,13 @@ public class RebuiltRobotContainer extends RobotContainer {
                 m_shooter.getTangentialVelocity(),
                 swerveDriveSubsystem.getModuleAngles());
 
-        Logger.recordOutput("Subsystem climb amps", m_climb.getCurrentDrawAmps());
-        Logger.recordOutput("Subsystem feeder amps", m_feeder.getCurrentDrawAmps());
-        Logger.recordOutput("Subsystem hopper amps", m_hopper.getCurrentDrawAmps());
-        Logger.recordOutput("Subsystem intake amps", m_intake.getCurrentDrawAmps());
-        Logger.recordOutput("Subsystem shooter amps", m_shooter.getCurrentDrawAmps());
-        Logger.recordOutput("Subsystem swerve amps", swerveDriveSubsystem.getCurrentDrawAmps());
-        Logger.recordOutput("Subsystem turret amps", m_turret.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Climb", m_climb.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Feeder", m_feeder.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Hopper", m_hopper.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Intake", m_intake.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Shooter", m_shooter.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Swerve", swerveDriveSubsystem.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Turret", m_turret.getCurrentDrawAmps());
 
         Logger.recordOutput("Turret/Pose", turretPose);
     }

@@ -13,7 +13,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants.intakeConstants.ArmConstants;
+import frc.robot.Constants.IntakeConstants.ArmConstants;
 
 /**
  * 

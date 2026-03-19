@@ -2,13 +2,13 @@ package frc.robot.controllers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ShootCommand;
 import frc.robot.commands.StickRotationCommand;
-import frc.robot.commands.distanceShooterCommand;
-import frc.robot.commands.runEverything;
 import frc.robot.commands.turretSweepCommand;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
@@ -23,6 +23,7 @@ import frc.robot.util.GameUtil;
  * 
  */
 public class ButtonsBindingsSim {
+    // Constants
     private final int DRIVER_PORT = 0;
     private final int OPERATOR_PORT = 1;
     private final int TEST_PORT = 2;
@@ -40,6 +41,9 @@ public class ButtonsBindingsSim {
     private IntakeSubsystem m_intake;
     private ShooterSubsystem m_shooter;
     private TurretSubsystem m_turret;
+
+    // Variables
+    private boolean intakeToggleState;
 
     /**
      * Define button commands when running the simulator
@@ -61,6 +65,8 @@ public class ButtonsBindingsSim {
         // Set this to whichever button bindings you want to test
         // this.buttonTestController = setLEDTestBindingsController();
         this.testController = setTuningBindings();
+
+        this.intakeToggleState = false;
     }
 
     /**
@@ -68,6 +74,7 @@ public class ButtonsBindingsSim {
      */
     private CommandXboxController setDriverBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(DRIVER_PORT);
+
         // Default command, normal field-relative drive
         swerveDriveSubsystem.setDefaultCommand(
                 DriveCommands.joystickDrive(
@@ -95,16 +102,27 @@ public class ButtonsBindingsSim {
                             return Rotation2d.fromRadians(angleToHub);
                         }));
 
-        commandXboxController.y().onTrue(m_intake.RetractArmCommand());
+        commandXboxController.rightBumper().onTrue(m_intake.ExtendArmCommand());
+        commandXboxController.leftBumper().onTrue(m_intake.RetractArmCommand());
+        // commandXboxController.rightBumper().whileTrue(m_intake.IntakeCommand());
+        commandXboxController.back().onTrue(
+                Commands.runOnce(() -> {
+                    if (!intakeToggleState) {
+                        CommandScheduler.getInstance().schedule(m_intake.OuttakeCommand());
+                    } else {
+                        CommandScheduler.getInstance().schedule(m_intake.IntakeCommand());
+                    }
 
-        commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
-        commandXboxController.rightBumper().whileTrue((m_intake.IntakeCommand()));
+                    intakeToggleState = !intakeToggleState;
+                }, m_intake));
 
+        // commandXboxController.leftTrigger()
+        // .whileTrue(
+        // Commands.parallel(
+        // new runEverything(m_feeder, m_shooter, m_hopper),
+        // new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
         commandXboxController.leftTrigger()
-                .whileTrue(
-                        Commands.parallel(
-                                new runEverything(m_feeder, m_shooter, m_hopper),
-                                new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
+                .whileTrue(new ShootCommand(m_shooter, m_hopper, m_feeder, () -> swerveDriveSubsystem.getPose()));
 
         commandXboxController.rightTrigger()
                 .whileTrue(

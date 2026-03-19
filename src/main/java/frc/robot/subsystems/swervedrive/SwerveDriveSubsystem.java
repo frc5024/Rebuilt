@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.AutoBuilderConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.generated.TunerConstants;
@@ -47,7 +48,7 @@ import frc.robot.util.PhoenixOdometryThread;
  */
 public class SwerveDriveSubsystem extends SubsystemBase {
     // TunerConstants doesn't include these constants, so they are declared locally
-    private final GyroIO gyroIO;
+    private final GyroModuleIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final SwerveModule[] modules = new SwerveModule[4]; // FL, FR, BL, BR
     private final SysIdRoutine sysId;
@@ -83,8 +84,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // Feedforward gain for rotation
     double kVTheta = 12.0 / maxAngularVelocity;
 
-    private PPHolonomicDriveController driveController;
-
     public double getSpeedModifier() {
         if (isSlowMode) {
             return speedModifier * 0.3;
@@ -93,10 +92,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         }
     }
 
+    // used to track robot rotation in simulated gyro
+    private double simulatedYaw;
+
     /**
      * 
      */
-    public SwerveDriveSubsystem(GyroIO gyroIO, SwerveModuleIO flModuleIO, SwerveModuleIO frModuleIO,
+    public SwerveDriveSubsystem(GyroModuleIO gyroIO, SwerveModuleIO flModuleIO, SwerveModuleIO frModuleIO,
             SwerveModuleIO blModuleIO, SwerveModuleIO brModuleIO,
             Consumer<Pose2d> resetSimulationPoseCallBack) {
         this.gyroIO = gyroIO;
@@ -116,9 +118,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Using PID + feedforward for smooth path following
         // Position controller: handles XY position tracking
         // Lower P and add D damping to reduce oscillations during direction changes
-        driveController = new PPHolonomicDriveController(
-                new PIDConstants(0.45, 0.0, 0.05),
-                new PIDConstants(0.0, 0.0, 0.00));
+
+        double[] translationPIDs = AutoBuilderConstants.getTranslationPIDs();
+        double[] rotationPIDs = AutoBuilderConstants.getRotationPIDs();
+        PPHolonomicDriveController driveController = new PPHolonomicDriveController(
+                new PIDConstants(translationPIDs[0], translationPIDs[1], translationPIDs[2]),
+                new PIDConstants(rotationPIDs[0], rotationPIDs[1], rotationPIDs[2]));
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configure(
@@ -156,6 +161,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                         (state) -> Logger.recordOutput("SwerveDrive/SysIdState", state.toString())),
                 new SysIdRoutine.Mechanism(
                         (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+
+        // Set initial simulated yaw
+        this.simulatedYaw = 0.0;
     }
 
     @Override
@@ -480,5 +488,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                 modulePositions[3].distanceMeters
         });
         Logger.recordOutput("SwerveDrive/Debug/ModuleSteerAngles", normalizedSteerAngles);
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        ChassisSpeeds robotRelativeSpeeds = getChassisSpeeds();
+
+        double angleIncrease = robotRelativeSpeeds.omegaRadiansPerSecond * 0.2;
+        simulatedYaw += angleIncrease;
+
+        if (gyroIO instanceof GyroModuleIOSim gyroModuleIOSim) {
+            gyroModuleIOSim.setRawYaw(angleIncrease);
+        }
     }
 }

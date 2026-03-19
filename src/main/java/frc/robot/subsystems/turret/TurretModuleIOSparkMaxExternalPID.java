@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants;
-import frc.robot.Constants.turretConstants;
+import frc.robot.Constants.TurretConstants;
 
 /**
  * 
@@ -42,22 +42,22 @@ public class TurretModuleIOSparkMaxExternalPID implements TurretModuleIO {
      * 
      */
     public TurretModuleIOSparkMaxExternalPID() {
-        this.turretMotor = new SparkMax(Constants.turretConstants.turretMotorChannel,
+        this.turretMotor = new SparkMax(Constants.TurretConstants.MOTOR_ID,
                 SparkLowLevel.MotorType.kBrushless);
-        this.hallEffectSensor = new DigitalInput(turretConstants.hallEffectChannel);
-        this.absoluteEncoder = new DutyCycleEncoder(turretConstants.turretEncoderChannel, 1, 0);
+        this.hallEffectSensor = new DigitalInput(TurretConstants.hallEffectChannel);
+        this.absoluteEncoder = new DutyCycleEncoder(TurretConstants.turretEncoderChannel, 1, 0);
         this.absoluteEncoder.setDutyCycleRange(0.1, 0.9);
         this.internalEncoder = this.turretMotor.getEncoder();
 
-        this.feedForwardConstraints = new TrapezoidProfile.Constraints(turretConstants.turretMaxSpeed,
-                turretConstants.turretMaxAccel);
-        this.pidController = new ProfiledPIDController(Constants.turretConstants.kP,
-                Constants.turretConstants.kI, Constants.turretConstants.kD, feedForwardConstraints);
+        this.feedForwardConstraints = new TrapezoidProfile.Constraints(TurretConstants.turretMaxSpeed,
+                TurretConstants.turretMaxAccel);
+        this.pidController = new ProfiledPIDController(Constants.TurretConstants.kP,
+                Constants.TurretConstants.kI, Constants.TurretConstants.kD, feedForwardConstraints);
         this.pidController.setConstraints(feedForwardConstraints);
-        this.pidController.setTolerance(Constants.turretConstants.turretTolerance);
+        this.pidController.setTolerance(Constants.TurretConstants.turretTolerance);
 
-        this.feedforward = new SimpleMotorFeedforward(turretConstants.kS,
-                turretConstants.kV, turretConstants.kA);
+        this.feedforward = new SimpleMotorFeedforward(TurretConstants.kS,
+                TurretConstants.kV, TurretConstants.kA);
 
         this.connectedDebouncer = new Debouncer(0.5);
     }
@@ -70,7 +70,7 @@ public class TurretModuleIOSparkMaxExternalPID implements TurretModuleIO {
 
         // update relative encoder if hall effect is triggered
         if (!hallEffectSensor.get()) {
-            internalEncoder.setPosition(turretConstants.ANGLE_LIMIT);
+            internalEncoder.setPosition(TurretConstants.ANGLE_LIMIT);
         }
 
         inputs.data = new TurretModuleIOData(
@@ -146,7 +146,7 @@ public class TurretModuleIOSparkMaxExternalPID implements TurretModuleIO {
 
     @Override
     public void setAngle(double degrees) {
-        pidController.setGoal(MathUtil.clamp(degrees, -turretConstants.ANGLE_LIMIT, turretConstants.ANGLE_LIMIT));
+        pidController.setGoal(MathUtil.clamp(degrees, -TurretConstants.ANGLE_LIMIT, TurretConstants.ANGLE_LIMIT));
     }
 
     @Override

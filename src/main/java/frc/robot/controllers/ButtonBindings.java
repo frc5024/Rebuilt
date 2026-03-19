@@ -117,9 +117,7 @@ public class ButtonBindings {
 
         commandXboxController.y().onTrue(m_intake.RetractArmCommand());
         commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
-        commandXboxController.rightBumper()
-                .whileTrue(m_intake.IntakeCommand());
-
+        commandXboxController.rightBumper().whileTrue(m_intake.IntakeCommand());
         commandXboxController.back().whileTrue(m_intake.OuttakeCommand());
 
         return commandXboxController;

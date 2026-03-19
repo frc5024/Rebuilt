@@ -4,11 +4,13 @@
   "holonomicMode": true,
   "pathFolders": [
     "Left Trench Paths",
-    "Right Trench Paths"
+    "Right Trench Paths",
+    "Test Paths"
   ],
   "autoFolders": [
-    "Left Trench Autos",
     "Drive Back Autos",
+    "Left Trench Autos",
+    "Test Autos",
     "Right Trench Autos"
   ],
   "defaultMaxVel": 2.5,

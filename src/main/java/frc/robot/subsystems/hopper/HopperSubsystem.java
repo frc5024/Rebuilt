@@ -42,14 +42,27 @@ public class HopperSubsystem extends SubsystemBase {
         return hopperModuleIO.getPosition();
     }
 
+    public void start() {
+        hopperModuleIO.start();
+    }
+
+    public void stop() {
+        hopperModuleIO.stop();
+    }
+
+    // TODO: remove and use start instead
     public void setSpeed(double speed) {
         hopperModuleIO.set(-speed);
     }
 
+    // TODO: remove and use stop instead
     public void setIdle() {
         hopperModuleIO.set(0);
     }
 
+    /**
+     * Commands
+     */
     public Command SpinCommand() {
         return new Spin(this);
     }

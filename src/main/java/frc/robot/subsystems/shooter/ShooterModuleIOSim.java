@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 /**
  * 
  */
-public class ShooterModuleIOSim extends ShooterModuleIOSparkFlex {
+public class ShooterModuleIOSim extends ShooterModuleIOSparkFlexClosedLoopEncoder {
     private final DCMotor dcMotor;
     private final SparkFlexSim sparkFlexSim;
     private final FlywheelSim flywheelSim;
@@ -24,7 +24,7 @@ public class ShooterModuleIOSim extends ShooterModuleIOSparkFlex {
         this.dcMotor = DCMotor.getNeoVortex(1);
         this.flywheelSim = new FlywheelSim(
                 LinearSystemId.createFlywheelSystem(DCMotor.getNeoVortex(2), 0.003, GEAR_RATIO), dcMotor);
-        this.sparkFlexSim = new SparkFlexSim(this.flywheel1, this.dcMotor);
+        this.sparkFlexSim = new SparkFlexSim(this.leadMotor, this.dcMotor);
     }
 
     @Override

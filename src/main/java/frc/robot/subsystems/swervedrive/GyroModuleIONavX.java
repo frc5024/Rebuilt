@@ -1,21 +1,22 @@
 package frc.robot.subsystems.swervedrive;
 
+import java.util.Queue;
+
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.util.PhoenixOdometryThread;
 
-import java.util.Queue;
-
 /** IO implementation for NavX. */
-public class GyroIONavX implements GyroIO {
+public class GyroModuleIONavX implements GyroModuleIO {
     private final AHRS navX = new AHRS(NavXComType.kMXP_SPI, (byte) SwerveDriveConstants.ODOMETRY_FREQUENCY);
     private final Queue<Double> yawPositionQueue;
     private final Queue<Double> yawTimestampQueue;
 
-    public GyroIONavX() {
+    public GyroModuleIONavX() {
         yawTimestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
         yawPositionQueue = PhoenixOdometryThread.getInstance().registerSignal(navX::getYaw);
     }

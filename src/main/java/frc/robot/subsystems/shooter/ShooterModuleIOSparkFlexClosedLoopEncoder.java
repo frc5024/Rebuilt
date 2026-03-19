@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -12,22 +13,23 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants.shooterConstants;
+import frc.robot.Constants.ShooterConstants;
 
 /**
  * 
  */
-public class ShooterModuleIOSparkFlexEncoderPID implements ShooterModuleIO {
+public class ShooterModuleIOSparkFlexClosedLoopEncoder implements ShooterModuleIO {
     // Constants
     private final int LEAD_MOTOR_ID = 51;
     private final int FOLLOWER_MOTOR_ID = 52;
-    public final double GEAR_RATIO = 1.0;
-    private final double VELOCITY_TOLERANCE_RPM = 50.0; // Acceptable error range
+    protected final double GEAR_RATIO = 1.0;
+    private final double RPM_TOLERANCE = 200.0;
 
     // Hardware
     protected final SparkFlex leadMotor;
     private final SparkFlex followerMotor;
     private final SparkClosedLoopController pidController;
+    protected final RelativeEncoder internalEncoder;
 
     private SparkFlexConfig leadConfig;
     private SparkFlexConfig followerConfig;
@@ -39,10 +41,11 @@ public class ShooterModuleIOSparkFlexEncoderPID implements ShooterModuleIO {
     /**
      * 
      */
-    public ShooterModuleIOSparkFlexEncoderPID() {
+    public ShooterModuleIOSparkFlexClosedLoopEncoder() {
         this.leadMotor = new SparkFlex(LEAD_MOTOR_ID, MotorType.kBrushless);
         this.followerMotor = new SparkFlex(FOLLOWER_MOTOR_ID, MotorType.kBrushless);
         this.pidController = this.leadMotor.getClosedLoopController();
+        this.internalEncoder = this.leadMotor.getEncoder();
 
         this.leadConnectedDebouncer = new Debouncer(0.5);
         this.followerConnectedDebouncer = new Debouncer(0.5);
@@ -56,12 +59,12 @@ public class ShooterModuleIOSparkFlexEncoderPID implements ShooterModuleIO {
 
         leadConfig.closedLoop
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .p(shooterConstants.kP)
-                .i(shooterConstants.kI)
-                .d(shooterConstants.kD).feedForward
-                .kS(shooterConstants.kS)
-                .kV(shooterConstants.kV)
-                .kA(shooterConstants.kA);
+                .p(ShooterConstants.kP)
+                .i(ShooterConstants.kI)
+                .d(ShooterConstants.kD).feedForward
+                .kS(ShooterConstants.kS)
+                .kV(ShooterConstants.kV)
+                .kA(ShooterConstants.kA);
 
         followerConfig.follow(LEAD_MOTOR_ID)
                 .smartCurrentLimit(60)
@@ -79,8 +82,8 @@ public class ShooterModuleIOSparkFlexEncoderPID implements ShooterModuleIO {
 
         inputs.data = new ShooterModuleIOData(
                 leadConnectedDebouncer.calculate(true),
-                leadMotor.getEncoder().getPosition(),
-                leadMotor.getEncoder().getVelocity(),
+                internalEncoder.getPosition(),
+                internalEncoder.getVelocity(),
                 leadMotor.getAppliedOutput(),
                 leadMotor.getBusVoltage(),
                 leadMotor.getOutputCurrent(),
@@ -100,18 +103,23 @@ public class ShooterModuleIOSparkFlexEncoderPID implements ShooterModuleIO {
     }
 
     @Override
+    public double getGoalVelocity() {
+        return pidController.getSetpoint();
+    }
+
+    @Override
     public double getSetpoint() {
         return pidController.getSetpoint();
     }
 
     @Override
     public double getVelocity() {
-        return leadMotor.getEncoder().getVelocity();
+        return internalEncoder.getVelocity();
     }
 
     @Override
     public boolean isAtSetpoint() {
-        return Math.abs(getVelocity() - pidController.getSetpoint()) < VELOCITY_TOLERANCE_RPM;
+        return Math.abs(getVelocity() - pidController.getSetpoint()) < RPM_TOLERANCE;
     }
 
     @Override
@@ -131,5 +139,10 @@ public class ShooterModuleIOSparkFlexEncoderPID implements ShooterModuleIO {
     @Override
     public void setVelocity(double rpm) {
         pidController.setSetpoint(rpm, ControlType.kVelocity);
+    }
+
+    @Override
+    public void stop() {
+        leadMotor.stopMotor();
     }
 }

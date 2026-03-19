@@ -33,6 +33,14 @@ public interface ShooterModuleIO {
         return 0.0;
     }
 
+    default double getGoalPosition() {
+        return 0.0;
+    }
+
+    default double getGoalVelocity() {
+        return 0.0;
+    }
+
     default double getPosition() {
         return 0.0;
     }

@@ -23,7 +23,7 @@ public class shooterCommand extends Command {
     public void initialize() {
         // setVelocity = shooterConstants.setVelocity;
 
-        shootersubsystem.setEnabled(true);
+        shootersubsystem.setPidEnabled(true);
 
     }
 
@@ -36,7 +36,7 @@ public class shooterCommand extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        shootersubsystem.setEnabled(false);
+        shootersubsystem.setPidEnabled(false);
     }
 
     // Returns true when the command should end.

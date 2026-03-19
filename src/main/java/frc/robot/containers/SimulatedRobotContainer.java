@@ -11,8 +11,6 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -21,12 +19,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.FuelCellConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants.turretConstants;
+import frc.robot.commands.LockTurretOnTarget;
 import frc.robot.commands.TuningCommands;
-import frc.robot.commands.spinToHubCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.simulation.ShooterSubsystemSim;
@@ -36,10 +32,11 @@ import frc.robot.subsystems.feeder.FeederModuleIOSim;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperModuleIOSim;
 import frc.robot.subsystems.hopper.HopperSubsystem;
-import frc.robot.subsystems.intake.IntakeModuleIOSim;
+import frc.robot.subsystems.intake.ArmModuleIOSim;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intake.RollerModuleIOSim;
 import frc.robot.subsystems.shooter.ShooterModuleIOSim;
-import frc.robot.subsystems.swervedrive.GyroIO;
+import frc.robot.subsystems.swervedrive.GyroModuleIO;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOSim;
 import frc.robot.subsystems.turret.TurretModuleIOSim;
@@ -68,7 +65,8 @@ public class SimulatedRobotContainer extends RobotContainer {
 
         // simulated subsystems
         this.swerveDriveSubsystem = new SwerveDriveSubsystem(
-                new GyroIO() {
+                // new GyroModuleIOSim(),
+                new GyroModuleIO() {
                 },
                 new SwerveModuleIOSim(TunerConstants.FrontLeft),
                 new SwerveModuleIOSim(TunerConstants.FrontRight),
@@ -86,11 +84,19 @@ public class SimulatedRobotContainer extends RobotContainer {
         this.m_feeder = new FeederSubsystem(new FeederModuleIOSim());
         this.m_climb = new ClimbSubsystem(new ClimbModuleIOSim());
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSim());
-        this.m_intake = new IntakeSubsystem(new IntakeModuleIOSim());
-        this.m_shooter = new ShooterSubsystemSim(new ShooterModuleIOSim(), fuelSim, fuelSimCount);
+        this.m_intake = new IntakeSubsystem(new ArmModuleIOSim(), new RollerModuleIOSim());
         this.m_turret = new TurretSubsystem(new TurretModuleIOSim());
-        this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
-                () -> swerveDriveSubsystem.getChassisSpeeds()));
+        this.m_shooter = new ShooterSubsystemSim(new ShooterModuleIOSim(), () -> m_turret.getCurrentAngle(),
+                () -> m_feeder.isRunning(), fuelSim,
+                fuelSimCount);
+
+        if (!RobotConstants.TUNING_MODE) {
+            this.m_turret.setDefaultCommand(new LockTurretOnTarget(m_turret, () -> swerveDriveSubsystem.getPose(),
+                    () -> swerveDriveSubsystem.getChassisSpeeds(), () -> m_shooter.getTangentialVelocity()));
+            // this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () ->
+            // swerveDriveSubsystem.getPose(),
+            // () -> swerveDriveSubsystem.getChassisSpeeds()));
+        }
 
         configureNamedCommands();
         configureAutoChooser();
@@ -140,7 +146,7 @@ public class SimulatedRobotContainer extends RobotContainer {
         fuelSim.registerIntake(RobotConstants.fullWidth / 2.0,
                 RobotConstants.fullWidth / 2.0 + Units.inchesToMeters(8.0),
                 -RobotConstants.fullLength / 2.0, RobotConstants.fullLength / 2.0,
-                () -> m_intake.isIntakeExtended(),
+                () -> m_intake.isExtended(),
                 () -> fuelSimCount
                         .setFuelStored(Math.min(fuelSimCount.getFuelStored() + 1, fuelSimCount.getCapacity())));
 
@@ -208,15 +214,7 @@ public class SimulatedRobotContainer extends RobotContainer {
     public void updateVisualizer() {
         // calulate pose of the turret
         Pose2d robotPose = swerveDriveSubsystem.getPose();
-        Transform3d transform3d = new Transform3d(
-                -FuelCellConstants.DIAMETER * 1.1,
-                FuelCellConstants.DIAMETER * 1.1,
-                FuelCellConstants.DIAMETER * 2.7,
-                new Rotation3d(
-                        0.0,
-                        Units.degreesToRadians(-180.0 + turretConstants.verticalLaunchAngle), // launch angle
-                        robotPose.getRotation().getRadians() + Math.toRadians(m_turret.getCurrentAngle())));
-        Pose3d turretPose = new Pose3d(robotPose).transformBy(transform3d);
+        Pose3d turretPose = m_turret.getPose(robotPose);
 
         mechanismVisualizer.update(
                 m_intake.getPosition(),
@@ -244,6 +242,14 @@ public class SimulatedRobotContainer extends RobotContainer {
                         m_shooter.getCurrentDrawAmps(),
                         swerveDriveSubsystem.getCurrentDrawAmps(),
                         m_turret.getCurrentDrawAmps()));
+
+        Logger.recordOutput("Current Draw/Climb", m_climb.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Feeder", m_feeder.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Hopper", m_hopper.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Intake", m_intake.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Shooter", m_shooter.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Swerve", swerveDriveSubsystem.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Turret", m_turret.getCurrentDrawAmps());
 
         Logger.recordOutput("FuelSim/FuelInRobot", fuelSimCount.getFuelInRobotPoses(swerveDriveSubsystem.getPose()));
         Logger.recordOutput("FuelSim/BlueHubScore", FuelSim.Hub.BLUE_HUB.getScore());

@@ -30,7 +30,7 @@ public class distanceShooterCommand extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        shootersubsystem.setEnabled(true);
+        shootersubsystem.setPidEnabled(true);
 
     }
 
@@ -39,7 +39,7 @@ public class distanceShooterCommand extends Command {
         Pose2d hubPose = GameUtil.getHubPose();
 
         double distance = (swerveDriveSubsystem.getPose().getTranslation().getDistance(hubPose.getTranslation()));
-        double RPM = Constants.shooterConstants.velocityToRPMMap.get(distance);
+        double RPM = Constants.ShooterConstants.velocityToRPMMap.get(distance);
         // TESTING RPM IN LIBRARY
         // RPM *= 0.5;
         SmartDashboard.putNumber("Distance", distance);
@@ -53,7 +53,7 @@ public class distanceShooterCommand extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        shootersubsystem.setEnabled(false);
+        shootersubsystem.setPidEnabled(false);
     }
 
     // Returns true when the command should end.

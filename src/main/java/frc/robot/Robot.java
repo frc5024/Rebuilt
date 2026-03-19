@@ -160,12 +160,15 @@ public class Robot extends LoggedRobot {
     @Override
     public void autonomousInit() {
         checkDriverStationUpdate();
+
         autonomousCommand = robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(autonomousCommand);
         }
+
+        robotContainer.autonomousInit();
     }
 
     /** This function is called periodically during autonomous. */
@@ -185,7 +188,6 @@ public class Robot extends LoggedRobot {
         }
 
         robotContainer.teleopInit();
-
     }
 
     /** This function is called periodically during operator control. */

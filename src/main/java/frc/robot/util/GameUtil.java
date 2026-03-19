@@ -193,6 +193,20 @@ public class GameUtil {
     /**
      * 
      */
+    public static Pose2d getTargetPose(Pose2d robotPose) {
+        boolean isRedAlliance = DriverStation.getAlliance().get() == Alliance.Red;
+        boolean isAboveMidLine = GameUtil.isAboveMidLine(robotPose);
+
+        if (GameUtil.inAllianceZone(robotPose)) {
+            return GameUtil.getHubPose();
+        } else {
+            return FieldConstants.MULE_POSES[isRedAlliance ? 1 : 0][isAboveMidLine ? 1 : 0];
+        }
+    }
+
+    /**
+     * 
+     */
     public static boolean inNeutralZone(Pose2d robotPose) {
         return robotPose.getX() >= FieldConstants.NEUTRAL_ZONE[0].getX() &&
                 robotPose.getX() <= FieldConstants.NEUTRAL_ZONE[1].getX() &&

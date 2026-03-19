@@ -12,7 +12,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants.intakeConstants.RollerConstants;
+import frc.robot.Constants.IntakeConstants.RollerConstants;
 
 /**
  * 

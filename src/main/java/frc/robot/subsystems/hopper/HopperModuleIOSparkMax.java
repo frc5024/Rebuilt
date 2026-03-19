@@ -9,13 +9,14 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants;
+import frc.robot.Constants.HopperConstants;
 
 /**
  * 
  */
 public class HopperModuleIOSparkMax implements HopperModuleIO {
     // Constants
+    private final int MOTOR_ID = 8;
     protected final double GEAR_RATIO = 9.0;
 
     // Hardware
@@ -29,7 +30,7 @@ public class HopperModuleIOSparkMax implements HopperModuleIO {
      * 
      */
     public HopperModuleIOSparkMax() {
-        this.hopperMotor = new SparkMax(Constants.HopperConstants.HopperMotorID, SparkLowLevel.MotorType.kBrushless);
+        this.hopperMotor = new SparkMax(MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
 
         // Configure motor with current limit
         SparkMaxConfig config = new SparkMaxConfig();
@@ -67,6 +68,16 @@ public class HopperModuleIOSparkMax implements HopperModuleIO {
 
     @Override
     public void set(double hopperspeed) {
-        this.hopperMotor.set(-hopperspeed);
+        hopperMotor.set(-hopperspeed);
+    }
+
+    @Override
+    public void start() {
+        hopperMotor.set(HopperConstants.hopperSpeed);
+    }
+
+    @Override
+    public void stop() {
+        hopperMotor.stopMotor();
     }
 }
