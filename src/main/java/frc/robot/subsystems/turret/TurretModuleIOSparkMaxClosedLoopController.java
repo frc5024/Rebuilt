@@ -18,7 +18,7 @@ import frc.robot.Constants.TurretConstants;
 
 public class TurretModuleIOSparkMaxClosedLoopController implements TurretModuleIO {
     // Constants
-    protected final double GEAR_RATIO = 28.6667 * 42.0; // 129 ring gear, 18 pinion, 4:1 internal = (129.0 / 18.0) * 4
+    protected final double GEAR_RATIO = 28.6667; // 129 ring gear, 18 pinion, 4:1 internal = (129.0 / 18.0) * 4. .
 
     // Hardware
     protected final SparkMax turretMotor;
