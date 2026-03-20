@@ -25,6 +25,10 @@ public interface RollerModuleIO {
         return 0.0;
     }
 
+    default double getFFCharacterizationVelocity() {
+        return 0.0;
+    }
+
     default double getGoalVelocity() {
         return 0.0;
     }
@@ -45,6 +49,9 @@ public interface RollerModuleIO {
     }
 
     default void outtake() {
+    }
+
+    default void runCharacterization(double voltage) {
     }
 
     default void setFF(double kS, double kV, double kA) {

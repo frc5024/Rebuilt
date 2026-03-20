@@ -18,11 +18,11 @@ import frc.robot.Constants.IntakeConstants.ArmConstants;
 /**
  * 
  */
-public class ArmModuleIOSparkMax implements ArmModuleIO {
+public class ArmModuleIOSparkMaxClosedLoopController implements ArmModuleIO {
     // Constants
-    protected final int MOTOR_ID = 500;
-    protected final int RETRACTED_ID = 9;
-    protected final int EXTENDED_ID = 10;
+    protected final int MOTOR_ID = 5;
+    protected final int RETRACTED_ID = 7;
+    protected final int EXTENDED_ID = 8;
 
     protected final double GEAR_RATIO = 9.0;
 
@@ -42,7 +42,7 @@ public class ArmModuleIOSparkMax implements ArmModuleIO {
     /**
      * 
      */
-    public ArmModuleIOSparkMax() {
+    public ArmModuleIOSparkMaxClosedLoopController() {
         this.armMotor = new SparkMax(MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
         this.pidController = this.armMotor.getClosedLoopController();
         this.armEncoder = this.armMotor.getEncoder();
@@ -51,10 +51,10 @@ public class ArmModuleIOSparkMax implements ArmModuleIO {
         config.idleMode(SparkMaxConfig.IdleMode.kBrake);
 
         // set position factor so we can set arm to specific angle
-        double positionFactor = 360.0 / GEAR_RATIO;
+        double positionConversionFactor = 360.0 / GEAR_RATIO;
         config.encoder
-                .positionConversionFactor(positionFactor)
-                .velocityConversionFactor(positionFactor / 60.0);
+                .positionConversionFactor(positionConversionFactor)
+                .velocityConversionFactor(positionConversionFactor / 60.0);
 
         // set the arm limits by degree
         config.softLimit

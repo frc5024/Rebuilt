@@ -8,7 +8,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.Constants.FuelCellConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.shooter.ShooterModuleIO;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -59,9 +58,9 @@ public class ShooterSubsystemSim extends ShooterSubsystem {
 
         if (fuelSimCount.getFuelStored() > 0) {
             fuelSim.launchFuel(MetersPerSecond.of(getTangentialVelocity()),
-                    Degree.of(TurretConstants.verticalLaunchAngle),
+                    Degree.of(Math.abs(TurretConstants.verticalLaunchAngle)),
                     Degree.of(turretYawSupplier.getAsDouble()),
-                    Meters.of(FuelCellConstants.DIAMETER * 2.7));
+                    Meters.of(TurretConstants.OFFSET_Z));
             fuelSimCount.setFuelStored(fuelSimCount.getFuelStored() - 1);
         }
     }

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 /**
  * 
  */
-public class ShooterModuleIOSim extends ShooterModuleIOSparkFlexClosedLoopEncoder {
+public class ShooterModuleIOSim extends ShooterModuleIOSparkFlexClosedLoopController {
     private final DCMotor dcMotor;
     private final SparkFlexSim sparkFlexSim;
     private final FlywheelSim flywheelSim;

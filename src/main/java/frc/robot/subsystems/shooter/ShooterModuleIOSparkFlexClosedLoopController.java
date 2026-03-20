@@ -18,7 +18,7 @@ import frc.robot.Constants.ShooterConstants;
 /**
  * 
  */
-public class ShooterModuleIOSparkFlexClosedLoopEncoder implements ShooterModuleIO {
+public class ShooterModuleIOSparkFlexClosedLoopController implements ShooterModuleIO {
     // Constants
     private final int LEAD_MOTOR_ID = 51;
     private final int FOLLOWER_MOTOR_ID = 52;
@@ -41,7 +41,7 @@ public class ShooterModuleIOSparkFlexClosedLoopEncoder implements ShooterModuleI
     /**
      * 
      */
-    public ShooterModuleIOSparkFlexClosedLoopEncoder() {
+    public ShooterModuleIOSparkFlexClosedLoopController() {
         this.leadMotor = new SparkFlex(LEAD_MOTOR_ID, MotorType.kBrushless);
         this.followerMotor = new SparkFlex(FOLLOWER_MOTOR_ID, MotorType.kBrushless);
         this.pidController = this.leadMotor.getClosedLoopController();
@@ -53,9 +53,9 @@ public class ShooterModuleIOSparkFlexClosedLoopEncoder implements ShooterModuleI
         this.leadConfig = new SparkFlexConfig();
         this.followerConfig = new SparkFlexConfig();
 
-        leadConfig.smartCurrentLimit(60)
-                .idleMode(IdleMode.kCoast)
-                .inverted(true);
+        leadConfig.idleMode(IdleMode.kCoast)
+                .inverted(true)
+                .smartCurrentLimit(60);
 
         leadConfig.closedLoop
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)

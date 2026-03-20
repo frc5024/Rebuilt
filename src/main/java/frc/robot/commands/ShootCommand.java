@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
@@ -25,6 +26,7 @@ public class ShootCommand extends Command {
 
     // Variables
     private Pose2d targetPose;
+    private Timer runTimer;
 
     /**
      * 
@@ -36,11 +38,17 @@ public class ShootCommand extends Command {
         this.feederSubsystem = feederSubsystem;
         this.robotPoseSupplier = robotPoseSupplier;
 
+        this.runTimer = new Timer();
+
         addRequirements(shooterSubsystem, hopperSubsystem, feederSubsystem);
     }
 
     @Override
     public void initialize() {
+        // reset and start timer
+        runTimer.reset();
+        runTimer.start();
+
         // get the target we want to shoot at
         Pose2d robotPose = robotPoseSupplier.get();
         targetPose = GameUtil.getTargetPose(robotPose);
@@ -68,6 +76,7 @@ public class ShootCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        runTimer.stop();
         feederSubsystem.stop();
         hopperSubsystem.stop();
         shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM);
@@ -77,6 +86,8 @@ public class ShootCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        // since we don't know when all the fuel has been launched we end the command
+        // after 5 seconds
+        return runTimer.isRunning() && runTimer.hasElapsed(5);
     }
 }

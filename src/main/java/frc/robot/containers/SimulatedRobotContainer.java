@@ -6,6 +6,7 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -22,7 +23,9 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.LockTurretOnTarget;
-import frc.robot.commands.TuningCommands;
+import frc.robot.commands.ShootCommand;
+import frc.robot.commands.TuningCommandsDrive;
+import frc.robot.commands.TuningCommandsIntake;
 import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.simulation.ShooterSubsystemSim;
@@ -117,10 +120,10 @@ public class SimulatedRobotContainer extends RobotContainer {
             // Set up SysId routines
             this.autoChooser.addOption(
                     "Drive Wheel Radius Characterization",
-                    TuningCommands.wheelRadiusCharacterization(this.swerveDriveSubsystem));
+                    TuningCommandsDrive.wheelRadiusCharacterization(swerveDriveSubsystem));
             this.autoChooser.addOption(
                     "Drive Simple FF Characterization",
-                    TuningCommands.feedforwardCharacterization(this.swerveDriveSubsystem));
+                    TuningCommandsDrive.feedforwardCharacterization(swerveDriveSubsystem));
             this.autoChooser.addOption(
                     "Drive SysId (Quasistatic Forward)",
                     this.swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
@@ -133,6 +136,9 @@ public class SimulatedRobotContainer extends RobotContainer {
             this.autoChooser.addOption(
                     "Drive SysId (Dynamic Reverse)",
                     this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+            this.autoChooser.addOption(
+                    "Intake Roller Simple FF Characterization",
+                    TuningCommandsIntake.feedforwardCharacterization(m_intake));
         }
     }
 
@@ -168,34 +174,44 @@ public class SimulatedRobotContainer extends RobotContainer {
 
     @Override
     public void configureNamedCommands() {
-
         new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmCommand());
-        new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
-        new EventTrigger("RetractIntake").onTrue(m_intake.RetractArmCommand());
-        new EventTrigger("AimTurret").whileTrue(
-                Commands.runOnce(() -> m_turret.setAngle(0), m_turret));
-        new EventTrigger("Climb").whileTrue(m_climb.contractclimb());
-        new EventTrigger("Declimb").whileTrue(m_climb.extendclimb());
 
-        // NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
-        // NamedCommands.registerCommand("DistanceShooter", new
-        // distanceShooterCommand(m_shooter, swerveDriveSubsystem));
-        // NamedCommands.registerCommand("Feeder", m_feeder.feederCommand());
-        // NamedCommands.registerCommand("Intake", m_intake.IntakeCommand());
-        // NamedCommands.registerCommand("ExtendIntake", m_intake.ExtendArmCommand());
-        // NamedCommands.registerCommand("RetractIntake", m_intake.RetractArmCommand());
-        // NamedCommands.registerCommand("Outtake", m_intake.OuttakeCommand());
-        // NamedCommands.registerCommand("Climb", m_climb.contractclimb());
-        // NamedCommands.registerCommand("Declimb", m_climb.extendclimb());
-        // NamedCommands.registerCommand("Dontdeclimb", m_climb.dontdeclimb());
-        // NamedCommands.registerCommand("ExtendClimb", m_climb.extendclimb());
-        // NamedCommands.registerCommand("ContractClimb", m_climb.contractclimb());
-        // NamedCommands.registerCommand("SpinHopper", m_hopper.SpinCommand());
-        // NamedCommands.registerCommand("RunEverything",
-        // Commands.parallel(new distanceShooterCommand(m_shooter,
-        // swerveDriveSubsystem),
-        // new runEverything(m_feeder, m_shooter, m_hopper),
-        // Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
+        /**
+         * new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
+         * new EventTrigger("RetractIntake").onTrue(m_intake.RetractArmCommand());
+         * new EventTrigger("AimTurret").whileTrue(
+         * Commands.runOnce(() -> m_turret.setAngle(0), m_turret));
+         * new EventTrigger("Climb").whileTrue(m_climb.contractclimb());
+         * new EventTrigger("Declimb").whileTrue(m_climb.extendclimb());
+         * 
+         * // NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
+         * // NamedCommands.registerCommand("DistanceShooter", new
+         * // distanceShooterCommand(m_shooter, swerveDriveSubsystem));
+         * // NamedCommands.registerCommand("Feeder", m_feeder.feederCommand());
+         * // NamedCommands.registerCommand("Intake", m_intake.IntakeCommand());
+         * // NamedCommands.registerCommand("ExtendIntake",
+         * m_intake.ExtendArmCommand());
+         * // NamedCommands.registerCommand("RetractIntake",
+         * m_intake.RetractArmCommand());
+         * // NamedCommands.registerCommand("Outtake", m_intake.OuttakeCommand());
+         * // NamedCommands.registerCommand("Climb", m_climb.contractclimb());
+         * // NamedCommands.registerCommand("Declimb", m_climb.extendclimb());
+         * // NamedCommands.registerCommand("Dontdeclimb", m_climb.dontdeclimb());
+         * // NamedCommands.registerCommand("ExtendClimb", m_climb.extendclimb());
+         * // NamedCommands.registerCommand("ContractClimb", m_climb.contractclimb());
+         * // NamedCommands.registerCommand("SpinHopper", m_hopper.SpinCommand());
+         */
+        NamedCommands.registerCommand("RunEverything",
+                Commands.parallel(
+                        new ShootCommand(m_shooter, m_hopper, m_feeder, () -> swerveDriveSubsystem.getPose()),
+                        Commands.waitSeconds(2).andThen(Commands.runOnce(() -> m_intake.retractArm()))));
+
+        NamedCommands.registerCommand("RunEverythings",
+                Commands.parallel(
+                        new ShootCommand(m_shooter, m_hopper, m_feeder, () -> swerveDriveSubsystem.getPose()),
+                        // new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
+                        // new runEverything(m_feeder, m_shooter, m_hopper),
+                        Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
     }
 
     @Override
@@ -251,6 +267,7 @@ public class SimulatedRobotContainer extends RobotContainer {
         Logger.recordOutput("Current Draw/Swerve", swerveDriveSubsystem.getCurrentDrawAmps());
         Logger.recordOutput("Current Draw/Turret", m_turret.getCurrentDrawAmps());
 
+        Logger.recordOutput("FuelSim/FuelInRobotCount", fuelSimCount.getFuelStored());
         Logger.recordOutput("FuelSim/FuelInRobot", fuelSimCount.getFuelInRobotPoses(swerveDriveSubsystem.getPose()));
         Logger.recordOutput("FuelSim/BlueHubScore", FuelSim.Hub.BLUE_HUB.getScore());
         Logger.recordOutput("FuelSim/RedHubScore", FuelSim.Hub.RED_HUB.getScore());

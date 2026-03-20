@@ -14,7 +14,7 @@ import frc.robot.Constants.IntakeConstants.ArmConstants;
 /**
  * 
  */
-public class ArmModuleIOSim extends ArmModuleIOSparkMax {
+public class ArmModuleIOSim extends ArmModuleIOSparkMaxClosedLoopController {
     // Hardware objects
     private final DCMotor armDcMotor;
     private final DCMotorSim dcMotorSim;

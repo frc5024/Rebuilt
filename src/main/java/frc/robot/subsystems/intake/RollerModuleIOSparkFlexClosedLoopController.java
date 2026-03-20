@@ -10,16 +10,18 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.IntakeConstants.RollerConstants;
 
 /**
  * 
  */
-public class RollerModuleIOSparkFlex implements RollerModuleIO {
+public class RollerModuleIOSparkFlexClosedLoopController implements RollerModuleIO {
     // Constants
-    protected final int MOTOR_ID = 160;
+    protected final int MOTOR_ID = 60;
     protected final double GEAR_RATIO = 1.33;
 
     // Hardware
@@ -35,7 +37,7 @@ public class RollerModuleIOSparkFlex implements RollerModuleIO {
     /**
      * 
      */
-    public RollerModuleIOSparkFlex() {
+    public RollerModuleIOSparkFlexClosedLoopController() {
         this.rollerMotor = new SparkFlex(MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
         this.rollerEncoder = this.rollerMotor.getEncoder();
         this.pidController = this.rollerMotor.getClosedLoopController();
@@ -43,6 +45,12 @@ public class RollerModuleIOSparkFlex implements RollerModuleIO {
         this.config = new SparkFlexConfig();
         config.idleMode(SparkFlexConfig.IdleMode.kCoast);
 
+        // set velocity factor
+        double velocityConversionFactor = 1 / GEAR_RATIO;
+        config.encoder
+                .velocityConversionFactor(velocityConversionFactor);
+
+        // set PIDs and kSVAs
         double[] kPIDs = RollerConstants.getPIDs();
         double[] kSVAs = RollerConstants.getSVAs();
         config.closedLoop
@@ -51,6 +59,10 @@ public class RollerModuleIOSparkFlex implements RollerModuleIO {
                 .kS(kSVAs[0])
                 .kV(kSVAs[1])
                 .kA(kSVAs[2]);
+
+        // Set current limit
+        config.smartCurrentLimit(20);
+
         this.rollerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         this.connectedDebouncer = new Debouncer(0.5);
@@ -78,6 +90,11 @@ public class RollerModuleIOSparkFlex implements RollerModuleIO {
     }
 
     @Override
+    public double getFFCharacterizationVelocity() {
+        return Units.radiansToRotations(rollerMotor.getAppliedOutput());
+    }
+
+    @Override
     public double getGoalVelocity() {
         return pidController.getSetpoint();
     }
@@ -100,6 +117,12 @@ public class RollerModuleIOSparkFlex implements RollerModuleIO {
     @Override
     public void outtake() {
         pidController.setSetpoint(RollerConstants.OUTTAKE_RPM, ControlType.kVelocity);
+    }
+
+    @Override
+    public void runCharacterization(double voltage) {
+        double voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        rollerMotor.set(voltageRequest);
     }
 
     @Override

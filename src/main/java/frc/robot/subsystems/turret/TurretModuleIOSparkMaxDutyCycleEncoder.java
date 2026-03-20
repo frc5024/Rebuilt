@@ -7,6 +7,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
@@ -51,21 +52,38 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
         this.absoluteEncoder.setDutyCycleRange(0.1, 0.9);
         this.internalEncoder = this.turretMotor.getEncoder();
 
+        // get and set constraints and PID constants
+        double[] kPIDs = TurretConstants.getPIDs();
         this.constraints = new TrapezoidProfile.Constraints(TurretConstants.turretMaxSpeed,
                 TurretConstants.turretMaxAccel);
-        this.pidController = new ProfiledPIDController(TurretConstants.kP, TurretConstants.kI, TurretConstants.kD,
-                constraints);
+
+        this.pidController = new ProfiledPIDController(kPIDs[0], kPIDs[1], kPIDs[2], constraints);
         this.pidController.setConstraints(constraints);
         this.pidController.setTolerance(TurretConstants.turretTolerance);
 
-        this.feedforward = new SimpleMotorFeedforward(TurretConstants.kS, TurretConstants.kV, TurretConstants.kA);
+        // get and set feedforward SVA constants
+        double[] kSVAs = TurretConstants.getSVAs();
+        this.feedforward = new SimpleMotorFeedforward(kSVAs[0], kSVAs[1], kSVAs[2]);
 
         // set position factor so we can turn turret to specific angle
         SparkMaxConfig config = new SparkMaxConfig();
+
+        // Set idle mode and current limit
+        config.idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(20);
+
+        // limit turn angle due to wiring
+        config.softLimit
+                .forwardSoftLimit(TurretConstants.ANGLE_LIMIT)
+                .forwardSoftLimitEnabled(true)
+                .reverseSoftLimit(-TurretConstants.ANGLE_LIMIT)
+                .reverseSoftLimitEnabled(true);
+
         double positionFactor = 360.0 / GEAR_RATIO;
         config.encoder
                 .positionConversionFactor(positionFactor)
                 .velocityConversionFactor(positionFactor / 60.0);
+
         this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         this.connectedDebouncer = new Debouncer(0.5);
@@ -76,11 +94,6 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
         if (DriverStation.isDisabled()) {
             stop();
         }
-
-        // update relative encoder if hall effect is triggered
-        // if (!hallEffectSensor.get()) {
-        // internalEncoder.setPosition(turretConstants.ANGLE_LIMIT);
-        // }
 
         inputs.data = new TurretModuleIOData(
                 connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection

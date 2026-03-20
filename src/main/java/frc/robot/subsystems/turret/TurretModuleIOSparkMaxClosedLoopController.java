@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
@@ -15,9 +16,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.TurretConstants;
 
-public class TurretModuleIOSparkMaxClosedLoopEncoder implements TurretModuleIO {
+public class TurretModuleIOSparkMaxClosedLoopController implements TurretModuleIO {
     // Constants
-    protected final double GEAR_RATIO = 28.6667; // 129 ring gear, 18 pinion, 4:1 internal = (129.0 / 18.0) * 4
+    protected final double GEAR_RATIO = 28.6667 * 42.0; // 129 ring gear, 18 pinion, 4:1 internal = (129.0 / 18.0) * 4
 
     // Hardware
     protected final SparkMax turretMotor;
@@ -33,14 +34,17 @@ public class TurretModuleIOSparkMaxClosedLoopEncoder implements TurretModuleIO {
     /**
      * 
      */
-    public TurretModuleIOSparkMaxClosedLoopEncoder() {
+    public TurretModuleIOSparkMaxClosedLoopController() {
         this.turretMotor = new SparkMax(TurretConstants.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
         this.hallEffectSensor = new DigitalInput(TurretConstants.hallEffectChannel);
         this.pidController = this.turretMotor.getClosedLoopController();
         this.internalEncoder = this.turretMotor.getEncoder();
+
         this.config = new SparkMaxConfig();
 
-        this.connectedDebouncer = new Debouncer(0.5);
+        // Set idle mode and current limit
+        config.idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(20);
 
         // set position factor so we can turn turret to specific angle
         double positionFactor = 360.0 / GEAR_RATIO;
@@ -48,15 +52,12 @@ public class TurretModuleIOSparkMaxClosedLoopEncoder implements TurretModuleIO {
                 .positionConversionFactor(positionFactor)
                 .velocityConversionFactor(positionFactor / 60.0);
 
-        // limit turn angle sue to wiring
+        // limit turn angle due to wiring
         config.softLimit
                 .forwardSoftLimit(TurretConstants.ANGLE_LIMIT)
                 .forwardSoftLimitEnabled(true)
                 .reverseSoftLimit(-TurretConstants.ANGLE_LIMIT)
                 .reverseSoftLimitEnabled(true);
-
-        // Set current limit
-        config.smartCurrentLimit(20);
 
         // get and set PID constants
         double[] kPIDs = TurretConstants.getPIDs();
@@ -70,6 +71,8 @@ public class TurretModuleIOSparkMaxClosedLoopEncoder implements TurretModuleIO {
                 .kA(kSVAs[2]);
 
         this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        this.connectedDebouncer = new Debouncer(0.5);
     }
 
     @Override
@@ -126,6 +129,13 @@ public class TurretModuleIOSparkMaxClosedLoopEncoder implements TurretModuleIO {
     }
 
     @Override
+    public void setFF(double kS, double kV, double kA) {
+        config.closedLoop.feedForward.kS(kS).kV(kV).kA(kA);
+
+        turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
+
+    @Override
     public void setPID(double kP, double kI, double kD) {
         config.closedLoop.p(kP).i(kI).d(kD);
 
@@ -133,10 +143,8 @@ public class TurretModuleIOSparkMaxClosedLoopEncoder implements TurretModuleIO {
     }
 
     @Override
-    public void setFF(double kS, double kV, double kA) {
-        config.closedLoop.feedForward.kS(kS).kV(kV).kA(kA);
-
-        turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    public void setPosition(double position) {
+        internalEncoder.setPosition(position);
     }
 
     @Override

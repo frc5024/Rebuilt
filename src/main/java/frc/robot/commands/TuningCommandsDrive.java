@@ -18,14 +18,17 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 
-public class TuningCommands {
+public class TuningCommandsDrive {
     private static final double DEADBAND = 0.1;
     private static final double FF_START_DELAY = 2.0; // Secs
     private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
     private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
     private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
 
-    private TuningCommands() {
+    /**
+     * 
+     */
+    private TuningCommandsDrive() {
     }
 
     @SuppressWarnings("unused")

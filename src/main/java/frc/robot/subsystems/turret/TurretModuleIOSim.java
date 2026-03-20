@@ -14,7 +14,7 @@ import frc.robot.Constants.TurretConstants;
 /**
  * 
  */
-public class TurretModuleIOSim extends TurretModuleIOSparkMaxClosedLoopEncoder {
+public class TurretModuleIOSim extends TurretModuleIOSparkMaxClosedLoopController {
     // Hardware objects
     private final DCMotor dcMotor;
     private final DCMotorSim dcMotorSim;

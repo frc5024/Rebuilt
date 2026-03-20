@@ -132,6 +132,13 @@ public class IntakeSubsystem extends SubsystemBase {
         return armModuleIO.getCurrentDrawAmps();
     }
 
+    /**
+     * Returns the average velocity in rotations/sec
+     */
+    public double getFFCharacterizationVelocity() {
+        return rollerModuleIO.getFFCharacterizationVelocity();
+    }
+
     public double getPosition() {
         return armModuleIO.getPosition();
     }
@@ -165,10 +172,17 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     /**
+     * Runs the roller with the specified output.
+     */
+    public void runCharacterization(double output) {
+        rollerModuleIO.runCharacterization(output);
+    }
+
+    /**
      * 
      */
     private void setShuffleboard() {
-        armTab = Shuffleboard.getTab("New Arm");
+        armTab = Shuffleboard.getTab("Intake/Arm");
         armPEntry = armTab.add("Set kP", kArmPIDs[0]).getEntry();
         armIEntry = armTab.add("Set kI", kArmPIDs[1]).getEntry();
         armDEntry = armTab.add("Set kD", kArmPIDs[2]).getEntry();
@@ -184,7 +198,7 @@ public class IntakeSubsystem extends SubsystemBase {
                 .withWidget("Toggle Button")
                 .getEntry();
 
-        rollerTab = Shuffleboard.getTab("New Roller");
+        rollerTab = Shuffleboard.getTab("Intake/Roller");
         rollerPEntry = rollerTab.add("Set kP", kRollerPIDs[0]).getEntry();
         rollerIEntry = rollerTab.add("Set kI", kRollerPIDs[1]).getEntry();
         rollerDEntry = rollerTab.add("Set kD", kRollerPIDs[2]).getEntry();

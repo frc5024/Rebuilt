@@ -12,7 +12,7 @@ import frc.robot.Constants.FuelCellConstants;
  * 
  */
 public class FuelSimCount {
-    private final int capacity = 60;
+    private final int capacity = 20;
     private final double launchBPS = 4.6;
 
     private int fuelStored;

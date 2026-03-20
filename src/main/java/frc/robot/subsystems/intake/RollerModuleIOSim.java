@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 /**
  * 
  */
-public class RollerModuleIOSim extends RollerModuleIOSparkFlex {
+public class RollerModuleIOSim extends RollerModuleIOSparkFlexClosedLoopController {
     // Hardware objects
     private final DCMotor rollerDcMotor;
     private final DCMotorSim dcMotorSim;

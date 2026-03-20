@@ -62,6 +62,11 @@ public class TurretSubsystem extends SubsystemBase {
         turretModuleIO.updateInputs(inputs);
         Logger.processInputs("Turret", inputs);
 
+        // update relative encoder if hall effect is triggered
+        if (!turretModuleIO.getHallEffectValue()) {
+            turretModuleIO.setPosition(TurretConstants.ANGLE_LIMIT);
+        }
+
         // update pid values if in tuning mode
         if (RobotConstants.TUNING_MODE) {
             turretModuleIO.setPID(

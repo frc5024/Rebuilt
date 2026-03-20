@@ -20,7 +20,7 @@ import frc.robot.Constants.FuelCellConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.commands.TuningCommands;
+import frc.robot.commands.TuningCommandsDrive;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.spinToHubCommand;
@@ -32,9 +32,9 @@ import frc.robot.subsystems.feeder.FeederModuleIOSparkFlex;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperModuleIOSparkMax;
 import frc.robot.subsystems.hopper.HopperSubsystem;
-import frc.robot.subsystems.intake.ArmModuleIOSparkMax;
+import frc.robot.subsystems.intake.ArmModuleIOSparkMaxClosedLoopController;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.intake.RollerModuleIOSparkFlex;
+import frc.robot.subsystems.intake.RollerModuleIOSparkFlexClosedLoopController;
 import frc.robot.subsystems.shooter.ShooterModuleIOSparkFlex;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.GyroModuleIOPigeon2;
@@ -77,7 +77,8 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_climb = new ClimbSubsystem(new ClimbModuleIOTalonFX());
         this.m_feeder = new FeederSubsystem(new FeederModuleIOSparkFlex());
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSparkMax());
-        this.m_intake = new IntakeSubsystem(new ArmModuleIOSparkMax(), new RollerModuleIOSparkFlex());
+        this.m_intake = new IntakeSubsystem(new ArmModuleIOSparkMaxClosedLoopController(),
+                new RollerModuleIOSparkFlexClosedLoopController());
         this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
         this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxDutyCycleEncoder());
 
@@ -104,10 +105,10 @@ public class RebuiltRobotContainer extends RobotContainer {
             // Set up SysId routines
             this.autoChooser.addOption(
                     "Drive Wheel Radius Characterization",
-                    TuningCommands.wheelRadiusCharacterization(this.swerveDriveSubsystem));
+                    TuningCommandsDrive.wheelRadiusCharacterization(this.swerveDriveSubsystem));
             this.autoChooser.addOption(
                     "Drive Simple FF Characterization",
-                    TuningCommands.feedforwardCharacterization(this.swerveDriveSubsystem));
+                    TuningCommandsDrive.feedforwardCharacterization(this.swerveDriveSubsystem));
             this.autoChooser.addOption(
                     "Drive SysId (Quasistatic Forward)",
                     this.swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
