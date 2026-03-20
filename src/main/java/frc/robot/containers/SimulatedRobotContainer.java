@@ -94,8 +94,7 @@ public class SimulatedRobotContainer extends RobotContainer {
                 fuelSimCount);
 
         if (!RobotConstants.TUNING_MODE) {
-            this.m_turret.setDefaultCommand(new LockTurretOnTarget(m_turret, () -> swerveDriveSubsystem.getPose(),
-                    () -> swerveDriveSubsystem.getChassisSpeeds(), () -> m_shooter.getTangentialVelocity()));
+            this.m_turret.setDefaultCommand(new LockTurretOnTarget(m_turret, () -> swerveDriveSubsystem.getPose()));
             // this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () ->
             // swerveDriveSubsystem.getPose(),
             // () -> swerveDriveSubsystem.getChassisSpeeds()));

@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.commands.LockTurretOnTarget;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TuningCommandsDrive;
 import frc.robot.commands.TuningCommandsIntake;
@@ -102,14 +101,6 @@ public class ReplayingRobotContainer extends RobotContainer {
         }, () -> m_turret.getCurrentAngle(),
                 () -> m_feeder.isRunning(), fuelSim,
                 fuelSimCount);
-
-        if (!RobotConstants.TUNING_MODE) {
-            this.m_turret.setDefaultCommand(new LockTurretOnTarget(m_turret, () -> swerveDriveSubsystem.getPose(),
-                    () -> swerveDriveSubsystem.getChassisSpeeds(), () -> m_shooter.getTangentialVelocity()));
-            // this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () ->
-            // swerveDriveSubsystem.getPose(),
-            // () -> swerveDriveSubsystem.getChassisSpeeds()));
-        }
 
         configureNamedCommands();
         configureAutoChooser();
