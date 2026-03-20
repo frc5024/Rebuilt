@@ -65,6 +65,7 @@ public class LockTurretOnTarget extends Command {
 
         turretSubsystem.setAngle(turretAngle.getDegrees());
 
+        Logger.recordOutput("Turret/LockTurretOnTarget/DistanceToTarget", distanceToTarget);
         Logger.recordOutput("Turret/LockTurretOnTarget/RobotPoseDeg", robotPose.getRotation().getDegrees());
         Logger.recordOutput("Turret/LockTurretOnTarget/TargetPose", virtualTarget);
         Logger.recordOutput("Turret/LockTurretOnTarget/TargetPoseDeg", virtualTarget.getAngle().getDegrees());
