@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 4.971633771929825,
-        "y": 7.467993421052631
+        "y": 7.564155701754386
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.3849561403536415,
-        "y": 7.487225877190218
+        "x": 2.4130664658122347,
+        "y": 7.564155701754386
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.932993421049868,
-        "y": 6.737160087722061
+        "x": 2.1059978070175442,
+        "y": 6.573684210526316
       },
       "prevControl": {
-        "x": 3.23109649122807,
-        "y": 7.266052631578947
+        "x": 2.4041008771957464,
+        "y": 7.102576754383201
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -53.13010235415599
+    "rotation": -43.15238973400548
   },
   "reversed": false,
   "folder": "Test Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

@@ -162,7 +162,7 @@ public final class Constants {
         };
 
         public static final Pose2d[] TRENCH_POSES = new Pose2d[] {
-                new Pose2d(4.972, 7.468, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(4.972, 7.564, Rotation2d.fromDegrees(0.0)),
                 new Pose2d(4.972, 0.621, Rotation2d.fromDegrees(0.0))
         };
 

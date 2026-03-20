@@ -26,6 +26,7 @@ import frc.robot.containers.RobotContainer;
 import frc.robot.containers.SimulatedRobotContainer;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.GameUtil;
+import frc.robot.util.MatchSim;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -220,6 +221,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void simulationPeriodic() {
         robotContainer.updateSimulation();
+        MatchSim.update();
     }
 
     /**
