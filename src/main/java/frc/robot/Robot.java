@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.containers.RebuiltRobotContainer;
+import frc.robot.containers.ReplayingRobotContainer;
 import frc.robot.containers.RobotContainer;
 import frc.robot.containers.SimulatedRobotContainer;
 import frc.robot.generated.TunerConstants;
@@ -76,6 +77,7 @@ public class Robot extends LoggedRobot {
 
             case SIM:
                 // Running a physics simulator, log to NT
+                // Logger.addDataReceiver(new WPILOGWriter());
                 Logger.addDataReceiver(new NT4Publisher());
 
                 robotContainer = new SimulatedRobotContainer();
@@ -85,8 +87,10 @@ public class Robot extends LoggedRobot {
                 // Replaying a log, set up replay source
                 setUseTiming(false); // Run as fast as possible
                 String logPath = LogFileUtil.findReplayLog();
-                Logger.setReplaySource(new WPILOGReader(logPath));
+                Logger.setReplaySource(new WPILOGReader(logPath + "/logs/akit_26-03-20_11-54-03.wpilog"));
                 Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+
+                robotContainer = new ReplayingRobotContainer();
                 break;
         }
 

@@ -67,7 +67,8 @@ public final class Constants {
             REPLAY // Replaying from a log file
         }
 
-        public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;;
+        // change SIM to REPLAY for log replay
+        public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
     }
 
     /**
