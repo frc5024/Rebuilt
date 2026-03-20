@@ -185,7 +185,7 @@ public final class Constants {
                 // Blue Alliance
                 {
                         new Pose2d(2.0, 2.0, Rotation2d.fromDegrees(180.0)),
-                        new Pose2d(2.04, 6.0, Rotation2d.fromDegrees(180.0))
+                        new Pose2d(2.0, 6.0, Rotation2d.fromDegrees(180.0))
 
                 },
                 // Red Alliance
