@@ -9,8 +9,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.AutoBuilderConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.TeleopConstants;
 import frc.robot.util.AllianceFlipUtil;
 
 /**
@@ -68,7 +68,7 @@ public class DriveNearestTrenchCommand extends Command {
         try {
             PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile(getNearestTrenchPath());
 
-            return AutoBuilder.pathfindThenFollowPath(pathPlannerPath, TeleopConstants.CONSTRAINTS);
+            return AutoBuilder.pathfindThenFollowPath(pathPlannerPath, AutoBuilderConstants.CONSTRAINTS);
         } catch (Exception e) {
             return null;
         }

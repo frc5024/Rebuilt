@@ -271,42 +271,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         }
     }
 
-    /**
-     * Runs the drive with PathPlanner PID output plus feedforward.
-     * 
-     * @param pidSpeeds         ChassisSpeeds from PPHolonomicDriveController
-     * @param vxMetersPerSecond desired velocity X
-     * @param vyMetersPerSecond desired velocity Y
-     * @param desiredOmega      desired angular velocity
-     */
-    public void runVelocityWithFeedforward(ChassisSpeeds pidSpeeds, double vxMetersPerSecond, double vyMetersPerSecond,
-            double desiredOmega) {
-        // Translation feedforward
-        double vxFF = driveFF.calculate(vxMetersPerSecond);
-        double vyFF = driveFF.calculate(vyMetersPerSecond);
-
-        // Rotation feedforward
-        double omegaFF = kVTheta * desiredOmega; // simple linear FF
-
-        // Combine PID + feedforward
-        ChassisSpeeds outputSpeeds = new ChassisSpeeds(
-                pidSpeeds.vxMetersPerSecond + vxFF,
-                pidSpeeds.vyMetersPerSecond + vyFF,
-                pidSpeeds.omegaRadiansPerSecond + omegaFF);
-
-        // Convert to module states and run
-        SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(outputSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
-
-        for (int i = 0; i < 4; i++) {
-            modules[i].runSetpoint(setpointStates[i]);
-        }
-
-        // Logging
-        Logger.recordOutput("SwerveDrive/SwerveStates/SetpointsOptimized", setpointStates);
-        Logger.recordOutput("SwerveDrive/SwerveChassisSpeeds/Setpoints", outputSpeeds);
-    }
-
     /** Stops the drive. */
     public void stop() {
         runVelocity(new ChassisSpeeds());

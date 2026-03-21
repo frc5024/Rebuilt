@@ -26,7 +26,7 @@ import frc.robot.commands.LockTurretOnTarget;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TuningCommandsDrive;
 import frc.robot.commands.TuningCommandsIntake;
-import frc.robot.generated.TunerConstants;
+import frc.robot.generated.TunerConstantsSim;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.simulation.ShooterSubsystemSim;
 import frc.robot.subsystems.climb.ClimbModuleIOSim;
@@ -71,10 +71,10 @@ public class SimulatedRobotContainer extends RobotContainer {
                 // new GyroModuleIOSim(),
                 new GyroModuleIO() {
                 },
-                new SwerveModuleIOSim(TunerConstants.FrontLeft),
-                new SwerveModuleIOSim(TunerConstants.FrontRight),
-                new SwerveModuleIOSim(TunerConstants.BackLeft),
-                new SwerveModuleIOSim(TunerConstants.BackRight),
+                new SwerveModuleIOSim(TunerConstantsSim.FrontLeft),
+                new SwerveModuleIOSim(TunerConstantsSim.FrontRight),
+                new SwerveModuleIOSim(TunerConstantsSim.BackLeft),
+                new SwerveModuleIOSim(TunerConstantsSim.BackRight),
                 (robotPose) -> {
                 });
 

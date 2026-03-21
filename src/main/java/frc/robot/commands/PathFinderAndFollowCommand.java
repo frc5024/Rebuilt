@@ -6,14 +6,12 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.TeleopConstants;
-import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
+import frc.robot.Constants.AutoBuilderConstants;
 
 /**
  * A command that runs pathfindThenFollowPath based on the current drive mode.
  */
 public class PathFinderAndFollowCommand extends Command {
-    private final SwerveDriveSubsystem swerveDrive;
     private final String pathName;
 
     private Command commandGroup;
@@ -24,8 +22,7 @@ public class PathFinderAndFollowCommand extends Command {
      *
      * @param stationModeSupplier a supplier for the drive mode type
      */
-    public PathFinderAndFollowCommand(SwerveDriveSubsystem swerveDrive, String pathName) {
-        this.swerveDrive = swerveDrive;
+    public PathFinderAndFollowCommand(String pathName) {
         this.pathName = pathName;
     }
 
@@ -72,9 +69,9 @@ public class PathFinderAndFollowCommand extends Command {
     private Command getfollowPathCommand() {
         try {
 
-            PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile("Pathfind Test Path");
+            PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile(pathName);
 
-            return AutoBuilder.pathfindThenFollowPath(pathPlannerPath, TeleopConstants.CONSTRAINTS);
+            return AutoBuilder.pathfindThenFollowPath(pathPlannerPath, AutoBuilderConstants.CONSTRAINTS);
 
         } catch (Exception e) {
             return null;

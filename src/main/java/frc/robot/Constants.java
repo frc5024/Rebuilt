@@ -19,7 +19,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.lib.camera.Camera;
@@ -29,7 +28,6 @@ import frc.robot.generated.TunerConstants;
  * 
  */
 public final class Constants {
-
     /**
      * 
      */
@@ -75,6 +73,10 @@ public final class Constants {
      * 
      */
     public static class AutoBuilderConstants {
+        // these should match pathplanner constraints
+        public static final PathConstraints CONSTRAINTS = new PathConstraints(5.540, 8.0, Units.degreesToRadians(540),
+                Units.degreesToRadians(720));
+
         public static final double translation_kP = 6.0;
         public static final double translation_kI = 0.0;
         public static final double translation_kD = 0.0;
@@ -83,7 +85,7 @@ public final class Constants {
         public static final double rotation_kI = 0.0;
         public static final double rotation_kD = 0.0;
 
-        public static final double sim_translation_kP = 9.5;
+        public static final double sim_translation_kP = 100.0;
         public static final double sim_translation_kI = 0.0;
         public static final double sim_translation_kD = 0.0;
 
@@ -359,11 +361,6 @@ public final class Constants {
      * 
      */
     public static class SwerveDriveConstants {
-        public static final double maxLinearSpeed = 4.69;
-        public static final double maxLinearAcceleration = 4.0;
-        public static final double maxAngularAcceleration = 20.0;
-        public static final double maxAngularSpeed = 8.0; // 4.69 / driveBaseRadius;
-
         public static final double ODOMETRY_FREQUENCY = new CANBus(
                 TunerConstants.DrivetrainConstants.CANBusName).isNetworkFD() ? 250.0 : 100.0;
         public static final double DRIVE_BASE_RADIUS = Math.max(
@@ -393,24 +390,6 @@ public final class Constants {
                             TunerConstants.BackRight.LocationY)
             };
         }
-    }
-
-    /**
-     * 
-     */
-    public static class TeleopConstants {
-        public static final PathConstraints CONSTRAINTS = new PathConstraints(5.54, 8.0, Units.degreesToRadians(540),
-                Units.degreesToRadians(720));
-
-        public static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(
-                SwerveDriveConstants.maxLinearSpeed,
-                SwerveDriveConstants.maxLinearAcceleration);
-        public static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(
-                SwerveDriveConstants.maxLinearSpeed,
-                SwerveDriveConstants.maxLinearAcceleration);
-        public static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(
-                SwerveDriveConstants.maxAngularSpeed, SwerveDriveConstants.maxLinearAcceleration);
-
     }
 
     /**
