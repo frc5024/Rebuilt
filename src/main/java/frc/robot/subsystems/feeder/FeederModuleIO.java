@@ -29,6 +29,10 @@ public interface FeederModuleIO {
         return 0.0;
     }
 
+    default double getVelocity() {
+        return 0.0;
+    }
+
     default boolean isRunning() {
         return false;
     }

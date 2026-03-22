@@ -32,6 +32,8 @@ public class HopperSubsystem extends SubsystemBase {
         // process hardware inputs
         hopperModuleIO.updateInputs(inputs);
         Logger.processInputs("Hopper", inputs);
+
+        Logger.recordOutput("Hopper/CurrentVelocityRPM", hopperModuleIO.getVelocity());
     }
 
     public double getCurrentDrawAmps() {

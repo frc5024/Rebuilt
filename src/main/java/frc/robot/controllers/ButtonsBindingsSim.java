@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveNearestTrenchCommand;
+import frc.robot.commands.ExitNearestTrenchCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.StickRotationCommand;
 import frc.robot.commands.turretSweepCommand;
@@ -106,6 +107,9 @@ public class ButtonsBindingsSim {
         commandXboxController.x().whileTrue(
                 new DriveNearestTrenchCommand(() -> swerveDriveSubsystem.getPose()));
 
+        commandXboxController.y().whileTrue(
+                new ExitNearestTrenchCommand(() -> swerveDriveSubsystem.getPose()));
+
         commandXboxController.rightBumper().onTrue(m_intake.ExtendArmCommand());
         commandXboxController.leftBumper().onTrue(m_intake.RetractArmCommand());
         // commandXboxController.rightBumper().whileTrue(m_intake.IntakeCommand());
@@ -126,7 +130,8 @@ public class ButtonsBindingsSim {
         // new runEverything(m_feeder, m_shooter, m_hopper),
         // new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
         commandXboxController.leftTrigger()
-                .whileTrue(new ShootCommand(m_shooter, m_hopper, m_feeder, () -> swerveDriveSubsystem.getPose()));
+                .whileTrue(new ShootCommand(m_shooter, m_hopper, m_feeder, m_intake,
+                        () -> swerveDriveSubsystem.getPose()));
 
         commandXboxController.rightTrigger()
                 .whileTrue(

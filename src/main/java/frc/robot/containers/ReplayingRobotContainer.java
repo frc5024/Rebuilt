@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TuningCommandsDrive;
@@ -155,7 +156,7 @@ public class ReplayingRobotContainer extends RobotContainer {
                 -RobotConstants.fullLength / 2.0, RobotConstants.fullLength / 2.0,
                 () -> m_intake.isExtended(),
                 () -> fuelSimCount
-                        .setFuelStored(Math.min(fuelSimCount.getFuelStored() + 1, fuelSimCount.getCapacity())));
+                        .setFuelStored(Math.min(fuelSimCount.getFuelStored() + 1, HopperConstants.CAPACITY)));
 
         fuelSim.setSubticks(1);
         fuelSim.enableAirResistance();
@@ -203,16 +204,15 @@ public class ReplayingRobotContainer extends RobotContainer {
          * // NamedCommands.registerCommand("SpinHopper", m_hopper.SpinCommand());
          */
         NamedCommands.registerCommand("RunEverything",
-                Commands.parallel(
-                        new ShootCommand(m_shooter, m_hopper, m_feeder, () -> swerveDriveSubsystem.getPose()),
-                        Commands.waitSeconds(2).andThen(Commands.runOnce(() -> m_intake.retractArm()))));
+                new ShootCommand(m_shooter, m_hopper, m_feeder, m_intake, () -> swerveDriveSubsystem.getPose()));
 
-        NamedCommands.registerCommand("RunEverythings",
-                Commands.parallel(
-                        new ShootCommand(m_shooter, m_hopper, m_feeder, () -> swerveDriveSubsystem.getPose()),
-                        // new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
-                        // new runEverything(m_feeder, m_shooter, m_hopper),
-                        Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
+        // NamedCommands.registerCommand("RunEverythings",
+        // Commands.parallel(
+        // new ShootCommand(m_shooter, m_hopper, m_feeder, () ->
+        // swerveDriveSubsystem.getPose()),
+        // // new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
+        // // new runEverything(m_feeder, m_shooter, m_hopper),
+        // Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
     }
 
     @Override

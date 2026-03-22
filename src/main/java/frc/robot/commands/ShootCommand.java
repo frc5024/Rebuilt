@@ -11,6 +11,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.GameUtil;
 
@@ -22,6 +23,7 @@ public class ShootCommand extends Command {
     private final ShooterSubsystem shooterSubsystem;
     private final HopperSubsystem hopperSubsystem;
     private final FeederSubsystem feederSubsystem;
+    private final IntakeSubsystem intakeSubsystem;
     private final Supplier<Pose2d> robotPoseSupplier;
 
     // Variables
@@ -32,10 +34,11 @@ public class ShootCommand extends Command {
      * 
      */
     public ShootCommand(ShooterSubsystem shooterSubsystem, HopperSubsystem hopperSubsystem,
-            FeederSubsystem feederSubsystem, Supplier<Pose2d> robotPoseSupplier) {
+            FeederSubsystem feederSubsystem, IntakeSubsystem intakeSubsystem, Supplier<Pose2d> robotPoseSupplier) {
         this.shooterSubsystem = shooterSubsystem;
         this.hopperSubsystem = hopperSubsystem;
         this.feederSubsystem = feederSubsystem;
+        this.intakeSubsystem = intakeSubsystem;
         this.robotPoseSupplier = robotPoseSupplier;
 
         this.runTimer = new Timer();
@@ -69,6 +72,10 @@ public class ShootCommand extends Command {
         if (shooterSubsystem.isAtSetpoint()) {
             feederSubsystem.start();
             hopperSubsystem.start();
+        }
+
+        if (runTimer.hasElapsed(3)) {
+            intakeSubsystem.retractArm();
         }
 
         Logger.recordOutput("Shooter/Active Command", this.getName());

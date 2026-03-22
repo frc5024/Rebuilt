@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
@@ -31,12 +32,17 @@ public class FeederModuleIOSparkFlex implements FeederModuleIO {
      */
     public FeederModuleIOSparkFlex() {
         this.feederMotor = new SparkFlex(MOTOR_ID, MotorType.kBrushless);
+        this.encoder = this.feederMotor.getEncoder();
 
         // Configure motor with current limit
         SparkFlexConfig config = new SparkFlexConfig();
+        config
+                .idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(35)
+                .openLoopRampRate(0.05)
+                .inverted(true);
         feederMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        this.encoder = this.feederMotor.getEncoder();
         this.connectedDebouncer = new Debouncer(0.5);
     }
 
@@ -67,13 +73,18 @@ public class FeederModuleIOSparkFlex implements FeederModuleIO {
     }
 
     @Override
+    public double getVelocity() {
+        return encoder.getVelocity();
+    }
+
+    @Override
     public boolean isRunning() {
         return feederMotor.getAppliedOutput() != 0.0;
     }
 
     @Override
     public void set(double feederspeed) {
-        feederMotor.set(-feederspeed);
+        feederMotor.set(feederspeed);
     }
 
     @Override

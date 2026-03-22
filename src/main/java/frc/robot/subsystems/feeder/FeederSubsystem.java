@@ -32,6 +32,8 @@ public class FeederSubsystem extends SubsystemBase {
         // process hardware inputs
         feederModuleIO.updateInputs(inputs);
         Logger.processInputs("Feeder", inputs);
+
+        Logger.recordOutput("Feeder/CurrentVelocityRPM", feederModuleIO.getVelocity());
     }
 
     public double getCurrentDrawAmps() {

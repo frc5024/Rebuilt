@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
@@ -31,12 +32,17 @@ public class HopperModuleIOSparkMax implements HopperModuleIO {
      */
     public HopperModuleIOSparkMax() {
         this.hopperMotor = new SparkMax(MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
+        this.encoder = this.hopperMotor.getEncoder();
 
         // Configure motor with current limit
         SparkMaxConfig config = new SparkMaxConfig();
+        config
+                .idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(25)
+                .openLoopRampRate(0.15)
+                .inverted(true);
         hopperMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        this.encoder = this.hopperMotor.getEncoder();
         this.connectedDebouncer = new Debouncer(0.5);
     }
 
@@ -67,8 +73,13 @@ public class HopperModuleIOSparkMax implements HopperModuleIO {
     }
 
     @Override
+    public double getVelocity() {
+        return encoder.getVelocity();
+    }
+
+    @Override
     public void set(double hopperspeed) {
-        hopperMotor.set(-hopperspeed);
+        hopperMotor.set(hopperspeed);
     }
 
     @Override

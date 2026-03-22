@@ -212,7 +212,7 @@ public final class Constants {
      */
     public static class HopperConstants {
         public static final int CAPACITY = 20;
-        public static double hopperSpeed = -0.1;
+        public static double hopperSpeed = 0.1;
     }
 
     /**
