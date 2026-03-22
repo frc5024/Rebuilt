@@ -140,16 +140,16 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         PathPlannerLogging.setLogActivePathCallback(
                 (activePath) -> {
                     Logger.recordOutput(
-                            "SwerveDrive/Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+                            "PathPlanner/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
                 });
         PathPlannerLogging.setLogTargetPoseCallback(
                 (targetPose) -> {
-                    Logger.recordOutput("SwerveDrive/Odometry/TrajectorySetpoint", targetPose);
+                    Logger.recordOutput("PathPlanner/TargetPose", targetPose);
                     // Log target heading for debugging
                     double targetHeadingDegrees = targetPose.getRotation().getDegrees();
                     double targetHeadingRadians = targetPose.getRotation().getRadians();
-                    Logger.recordOutput("SwerveDrive/Debug/TargetHeading", targetHeadingDegrees);
-                    Logger.recordOutput("SwerveDrive/Debug/TargetHeadingRadians", targetHeadingRadians);
+                    Logger.recordOutput("PathPlanner/TargetHeading", targetHeadingDegrees);
+                    Logger.recordOutput("PathPlanner/TargetHeadingRadians", targetHeadingRadians);
                 });
 
         // Configure SysId

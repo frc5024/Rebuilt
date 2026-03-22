@@ -1,7 +1,8 @@
 package frc.robot.subsystems.swervedrive;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
  * 
@@ -50,5 +51,8 @@ public interface SwerveModuleIO {
 
     /** Run the turn motor to the specified rotation. */
     public default void setTurnPosition(Rotation2d rotation) {
+    }
+
+    default void stop() {
     }
 }

@@ -3,6 +3,8 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -140,5 +142,42 @@ public class DriveCommands {
 
                 // Reset PID controller when command starts
                 .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()));
+    }
+
+    /**
+     * 
+     */
+    public static Command joystickOpenLoopDrive(
+            SwerveDriveSubsystem drive,
+            DoubleSupplier xSupplier,
+            DoubleSupplier ySupplier,
+            DoubleSupplier omegaSupplier) {
+        return Commands.run(
+                () -> {
+                    // Get linear velocity
+                    Translation2d linearVelocity = getLinearVelocityFromJoysticks(xSupplier.getAsDouble(),
+                            ySupplier.getAsDouble());
+
+                    // Apply rotation deadband
+                    double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
+
+                    // Square rotation value for more precise control
+                    omega = Math.copySign(omega * omega, omega);
+
+                    // Convert to field relative speeds & send command
+                    ChassisSpeeds speeds = new ChassisSpeeds(
+                            linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec() * drive.getSpeedModifier(),
+                            linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec() * drive.getSpeedModifier(),
+                            omega);
+
+                    double outputVoltage = MathUtil.clamp(
+                            (speeds.vxMetersPerSecond / drive.getMaxLinearSpeedMetersPerSec()) * 12.0, -12.0, 12.0);
+
+                    Logger.recordOutput("SwerveDrive/OpenLoop/xv", linearVelocity.getX());
+                    Logger.recordOutput("SwerveDrive/OpenLoop/OutputVoltage", outputVoltage);
+
+                    drive.runCharacterization(outputVoltage);
+                },
+                drive);
     }
 }

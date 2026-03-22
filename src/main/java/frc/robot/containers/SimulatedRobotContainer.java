@@ -26,7 +26,7 @@ import frc.robot.commands.LockTurretOnTarget;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TuningCommandsDrive;
 import frc.robot.commands.TuningCommandsIntake;
-import frc.robot.generated.TunerConstantsSim;
+import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.simulation.ShooterSubsystemSim;
 import frc.robot.subsystems.climb.ClimbModuleIOSim;
@@ -71,10 +71,10 @@ public class SimulatedRobotContainer extends RobotContainer {
                 // new GyroModuleIOSim(),
                 new GyroModuleIO() {
                 },
-                new SwerveModuleIOSim(TunerConstantsSim.FrontLeft),
-                new SwerveModuleIOSim(TunerConstantsSim.FrontRight),
-                new SwerveModuleIOSim(TunerConstantsSim.BackLeft),
-                new SwerveModuleIOSim(TunerConstantsSim.BackRight),
+                new SwerveModuleIOSim(TunerConstants.FrontLeft),
+                new SwerveModuleIOSim(TunerConstants.FrontRight),
+                new SwerveModuleIOSim(TunerConstants.BackLeft),
+                new SwerveModuleIOSim(TunerConstants.BackRight),
                 (robotPose) -> {
                 });
 
@@ -174,9 +174,9 @@ public class SimulatedRobotContainer extends RobotContainer {
     @Override
     public void configureNamedCommands() {
         new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmCommand());
+        new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
 
         /**
-         * new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
          * new EventTrigger("RetractIntake").onTrue(m_intake.RetractArmCommand());
          * new EventTrigger("AimTurret").whileTrue(
          * Commands.runOnce(() -> m_turret.setAngle(0), m_turret));
@@ -205,12 +205,13 @@ public class SimulatedRobotContainer extends RobotContainer {
                         new ShootCommand(m_shooter, m_hopper, m_feeder, () -> swerveDriveSubsystem.getPose()),
                         Commands.waitSeconds(2).andThen(Commands.runOnce(() -> m_intake.retractArm()))));
 
-        NamedCommands.registerCommand("RunEverythings",
-                Commands.parallel(
-                        new ShootCommand(m_shooter, m_hopper, m_feeder, () -> swerveDriveSubsystem.getPose()),
-                        // new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
-                        // new runEverything(m_feeder, m_shooter, m_hopper),
-                        Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
+        // NamedCommands.registerCommand("RunEverythings",
+        // Commands.parallel(
+        // new ShootCommand(m_shooter, m_hopper, m_feeder, () ->
+        // swerveDriveSubsystem.getPose()),
+        // // new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
+        // // new runEverything(m_feeder, m_shooter, m_hopper),
+        // Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
     }
 
     @Override

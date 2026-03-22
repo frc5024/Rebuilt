@@ -52,7 +52,7 @@ public final class Constants {
                         TunerConstants.FrontLeft.WheelRadius,
                         TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
                         WHEEL_COF,
-                        DCMotor.getKrakenX60Foc(1)
+                        DCMotor.getKrakenX60(1)
                                 .withReduction(TunerConstants.FrontLeft.DriveMotorGearRatio),
                         TunerConstants.FrontLeft.SlipCurrent,
                         1),
@@ -85,11 +85,11 @@ public final class Constants {
         public static final double rotation_kI = 0.0;
         public static final double rotation_kD = 0.0;
 
-        public static final double sim_translation_kP = 100.0;
+        public static final double sim_translation_kP = 6.0;
         public static final double sim_translation_kI = 0.0;
         public static final double sim_translation_kD = 0.0;
 
-        public static final double sim_rotation_kP = 6.0;
+        public static final double sim_rotation_kP = 4.0;
         public static final double sim_rotation_kI = 0.0;
         public static final double sim_rotation_kD = 0.0;
 

@@ -9,11 +9,9 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
@@ -44,7 +42,7 @@ import frc.robot.util.PhoenixOdometryThread;
  * Device configuration and other behaviors not exposed by TunerConstants can be
  * customized here.
  */
-public class SwerveModuleIOTalonFX implements SwerveModuleIO {
+public class SwerveModuleIOTalonFXMotionMagic implements SwerveModuleIO {
     protected final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants;
 
     // Hardware objects
@@ -52,15 +50,15 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO {
     protected final TalonFX turnTalon;
     private final CANcoder cancoder;
 
+    // Motion Magic drive controller
+    private final MotionMagicVelocityVoltage driveControl;
+    private final MotionMagicVoltage turnControl;
+
     // Voltage control requests
     private final VoltageOut voltageRequest = new VoltageOut(0);
-    private final PositionVoltage positionVoltageRequest = new PositionVoltage(0.0);
-    private final VelocityVoltage velocityVoltageRequest = new VelocityVoltage(0.0);
 
     // Torque-current control requests
     private final TorqueCurrentFOC torqueCurrentRequest = new TorqueCurrentFOC(0);
-    private final PositionTorqueCurrentFOC positionTorqueCurrentRequest = new PositionTorqueCurrentFOC(0.0);
-    private final VelocityTorqueCurrentFOC velocityTorqueCurrentRequest = new VelocityTorqueCurrentFOC(0.0);
 
     // Timestamp inputs from Phoenix thread
     private final Queue<Double> timestampQueue;
@@ -85,13 +83,15 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO {
     private final Debouncer turnConnectedDebounce = new Debouncer(0.5);
     private final Debouncer turnEncoderConnectedDebounce = new Debouncer(0.5);
 
-    public SwerveModuleIOTalonFX(
+    public SwerveModuleIOTalonFXMotionMagic(
             SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants) {
         this.constants = constants;
         CANBus canBus = new CANBus(TunerConstants.DrivetrainConstants.CANBusName);
-        driveTalon = new TalonFX(constants.DriveMotorId, canBus);
-        turnTalon = new TalonFX(constants.SteerMotorId, canBus);
-        cancoder = new CANcoder(constants.EncoderId, canBus);
+        this.driveTalon = new TalonFX(constants.DriveMotorId, canBus);
+        this.turnTalon = new TalonFX(constants.SteerMotorId, canBus);
+        this.cancoder = new CANcoder(constants.EncoderId, canBus);
+
+        this.driveControl = new MotionMagicVelocityVoltage(0.0);
 
         // Configure drive motor
         var driveConfig = constants.DriveMotorInitialConfigs;
@@ -105,6 +105,12 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO {
         driveConfig.MotorOutput.Inverted = constants.DriveMotorInverted
                 ? InvertedValue.Clockwise_Positive
                 : InvertedValue.CounterClockwise_Positive;
+
+        // configure motion magic for drive motor
+        driveConfig.MotionMagic.MotionMagicCruiseVelocity = 80.0; // Max speed (approx 16+ ft/s)
+        driveConfig.MotionMagic.MotionMagicAcceleration = 160.0; // Reach max speed in 0.5s
+        driveConfig.MotionMagic.MotionMagicJerk = 1600.0; // Smoother start/stop (S-Curve)
+
         tryUntilOk(5, () -> driveTalon.getConfigurator().apply(driveConfig, 0.25));
         tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));
 
@@ -121,8 +127,8 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO {
                     "You are using an unsupported swerve configuration, which this template does not support without manual customization. The 2025 release of Phoenix supports some swerve configurations which were not available during 2025 beta testing, preventing any development and support from the AdvantageKit developers.");
         };
         turnConfig.Feedback.RotorToSensorRatio = constants.SteerMotorGearRatio;
-        turnConfig.MotionMagic.MotionMagicCruiseVelocity = 500.0 / constants.SteerMotorGearRatio;
-        turnConfig.MotionMagic.MotionMagicAcceleration = turnConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100;
+        turnConfig.MotionMagic.MotionMagicCruiseVelocity = 12.0;
+        turnConfig.MotionMagic.MotionMagicAcceleration = 48.0;
         turnConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * constants.SteerMotorGearRatio;
         turnConfig.MotionMagic.MotionMagicExpo_kA = 0.1;
         turnConfig.ClosedLoopGeneral.ContinuousWrap = true;
@@ -131,6 +137,9 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO {
                 : InvertedValue.CounterClockwise_Positive;
         turnConfig.CurrentLimits.StatorCurrentLimit = 40; // 40 amp limit for steering motors
         turnConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+
+        this.turnControl = new MotionMagicVoltage(0.0);
+
         tryUntilOk(5, () -> turnTalon.getConfigurator().apply(turnConfig, 0.25));
 
         // Configure CANCoder
@@ -231,20 +240,11 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO {
     @Override
     public void setDriveVelocity(double velocityRadPerSec) {
         double velocityRotPerSec = Units.radiansToRotations(velocityRadPerSec);
-        driveTalon.setControl(
-                switch (constants.DriveMotorClosedLoopOutput) {
-                    case Voltage -> velocityVoltageRequest.withVelocity(velocityRotPerSec);
-                    case TorqueCurrentFOC -> velocityTorqueCurrentRequest.withVelocity(velocityRotPerSec);
-                });
+        driveTalon.setControl(driveControl.withVelocity(velocityRotPerSec));
     }
 
     @Override
     public void setTurnPosition(Rotation2d rotation) {
-        turnTalon.setControl(
-                switch (constants.SteerMotorClosedLoopOutput) {
-                    case Voltage -> positionVoltageRequest.withPosition(rotation.getRotations());
-                    case TorqueCurrentFOC -> positionTorqueCurrentRequest.withPosition(
-                            rotation.getRotations());
-                });
+        turnTalon.setControl(turnControl.withPosition(rotation.getRotations()));
     }
 }

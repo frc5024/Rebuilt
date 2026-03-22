@@ -39,7 +39,7 @@ import frc.robot.subsystems.shooter.ShooterModuleIOSparkFlex;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.GyroModuleIOPigeon2;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
-import frc.robot.subsystems.swervedrive.SwerveModuleIOTalonFX;
+import frc.robot.subsystems.swervedrive.SwerveModuleIOTalonFXMotionMagic;
 import frc.robot.subsystems.turret.TurretModuleIOSparkMaxDutyCycleEncoder;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -61,10 +61,10 @@ public class RebuiltRobotContainer extends RobotContainer {
         // Real robot, instantiate hardware IO implementations
         this.swerveDriveSubsystem = new SwerveDriveSubsystem(
                 new GyroModuleIOPigeon2(),
-                new SwerveModuleIOTalonFX(TunerConstants.FrontLeft),
-                new SwerveModuleIOTalonFX(TunerConstants.FrontRight),
-                new SwerveModuleIOTalonFX(TunerConstants.BackLeft),
-                new SwerveModuleIOTalonFX(TunerConstants.BackRight),
+                new SwerveModuleIOTalonFXMotionMagic(TunerConstants.FrontLeft),
+                new SwerveModuleIOTalonFXMotionMagic(TunerConstants.FrontRight),
+                new SwerveModuleIOTalonFXMotionMagic(TunerConstants.BackLeft),
+                new SwerveModuleIOTalonFXMotionMagic(TunerConstants.BackRight),
                 (robotPose) -> {
                 });
 

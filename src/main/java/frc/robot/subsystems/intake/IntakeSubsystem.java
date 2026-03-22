@@ -116,12 +116,12 @@ public class IntakeSubsystem extends SubsystemBase {
             }
         }
 
-        Logger.recordOutput("Intake/IsExetended", armModuleIO.isExtended());
-        Logger.recordOutput("Intake/IsRetracted", armModuleIO.isRetracted());
-        Logger.recordOutput("Intake/CurrentAngle", armModuleIO.getPosition());
-        Logger.recordOutput("Intake/SetPointAngle", armModuleIO.getGoalPosition());
-        Logger.recordOutput("Intake/CurrentRPM", rollerModuleIO.getVelocity());
-        Logger.recordOutput("Intake/SetPointRPM", rollerModuleIO.getGoalVelocity());
+        Logger.recordOutput("Intake/Arm/IsExetended", armModuleIO.isExtended());
+        Logger.recordOutput("Intake/Arm/IsRetracted", armModuleIO.isRetracted());
+        Logger.recordOutput("Intake/Arm/CurrentAngle", armModuleIO.getPosition());
+        Logger.recordOutput("Intake/Arm/SetPointAngle", armModuleIO.getGoalPosition());
+        Logger.recordOutput("Intake/Roller/CurrentRPM", rollerModuleIO.getVelocity());
+        Logger.recordOutput("Intake/Roller/SetPointRPM", rollerModuleIO.getGoalVelocity());
     }
 
     public void extendArm() {
