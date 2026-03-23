@@ -21,6 +21,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.TuningCommandsDrive;
+import frc.robot.commands.TuningCommandsIntake;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.spinToHubCommand;
@@ -121,6 +122,9 @@ public class RebuiltRobotContainer extends RobotContainer {
             this.autoChooser.addOption(
                     "Drive SysId (Dynamic Reverse)",
                     this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+            this.autoChooser.addOption(
+                    "Intake Roller Simple FF Characterization",
+                    TuningCommandsIntake.feedforwardCharacterization(m_intake));
         }
     }
 

@@ -245,7 +245,7 @@ public final class Constants {
         public static final double kRollV = 0.0;
 
         public static class ArmConstants {
-            public static final double EXTENDED_ANGLE = 130.0;
+            public static final double EXTENDED_ANGLE = -193.3;
             public static final double RETRACTED_ANGLE = 0.0;
 
             public static final double kP = 0.1;
@@ -273,13 +273,13 @@ public final class Constants {
             public static final double kI = 0.0;
             public static final double kD = 0.0;
 
-            public static final double kS = 0.0;
-            public static final double kV = 0.0;
+            public static final double kS = 0.288;
+            public static final double kV = 3.329;
             public static final double kA = 0.0;
 
-            public static final double sim_kP = 5.0;
+            public static final double sim_kP = 2.0;
             public static final double sim_kI = 0.0;
-            public static final double sim_kD = 0.005;
+            public static final double sim_kD = 0.002;
 
             public static final double sim_kS = 0.0;
             public static final double sim_kV = 0.002;

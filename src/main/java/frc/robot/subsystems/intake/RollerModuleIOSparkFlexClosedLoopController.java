@@ -22,7 +22,7 @@ import frc.robot.Constants.IntakeConstants.RollerConstants;
 public class RollerModuleIOSparkFlexClosedLoopController implements RollerModuleIO {
     // Constants
     protected final int MOTOR_ID = 60;
-    protected final double GEAR_RATIO = 1.33;
+    protected final double GEAR_RATIO = 0.91;
 
     // Hardware
     protected final SparkFlex rollerMotor;
@@ -61,7 +61,7 @@ public class RollerModuleIOSparkFlexClosedLoopController implements RollerModule
                 .kA(kSVAs[2]);
 
         // Set current limit
-        config.smartCurrentLimit(20);
+        // config.smartCurrentLimit(60);
 
         this.rollerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

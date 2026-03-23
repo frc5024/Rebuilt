@@ -18,10 +18,10 @@ import frc.robot.Constants.RobotConstants;
  */
 public class SwerveModuleIOSim implements SwerveModuleIO {
     // Constants
-    private static final double[] DRIVE_PIDs = { 0.2, 0.0, 0.0 };
+    private static final double[] DRIVE_PIDs = { 0.1, 0.0, 0.0 };
     private static final double[] DRIVE_SVAs = { 0.002932, 0.14489, 0.0 };
     // private static final double[] DRIVE_SVAs = { 0.0, 0.0, 0.0 };
-    private static final double[] TURN_PIDs = { 8.0, 0.0, 0.0 };
+    private static final double[] TURN_PIDs = { 6.0, 0.0, 0.0 };
     private static final double[] TURN_SVAs = { 0.0, 0.0, 0.0 };
 
     // Hardware

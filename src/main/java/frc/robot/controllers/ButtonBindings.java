@@ -149,6 +149,9 @@ public class ButtonBindings {
     private CommandXboxController setTuningBindings() {
         CommandXboxController commandXboxController = new CommandXboxController(TEST_PORT);
 
+        commandXboxController.rightBumper().onTrue(Commands.runOnce(() -> m_turret.setAngle(90.0), m_turret));
+        commandXboxController.leftBumper().onTrue(Commands.runOnce(() -> m_turret.setAngle(-90.0), m_turret));
+
         return commandXboxController;
     }
 

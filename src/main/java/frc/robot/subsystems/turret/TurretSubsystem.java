@@ -39,7 +39,6 @@ public class TurretSubsystem extends SubsystemBase {
     private GenericEntry maxSpeedEntry;
     private GenericEntry maxAccelEntry;
     private GenericEntry toleranceEntry;
-    private GenericEntry angleEntry;
 
     /**
      * 
@@ -82,8 +81,6 @@ public class TurretSubsystem extends SubsystemBase {
             turretModuleIO.setConstraints(maxSpeedEntry.getDouble(TurretConstants.turretMaxSpeed),
                     maxAccelEntry.getDouble(TurretConstants.turretMaxAccel),
                     toleranceEntry.getDouble(TurretConstants.turretTolerance));
-
-            setAngle(angleEntry.getDouble(getCurrentAngle()));
         }
 
         if (pidEnabled) {
@@ -192,7 +189,6 @@ public class TurretSubsystem extends SubsystemBase {
         maxSpeedEntry = tab.add("SET max speed", TurretConstants.turretMaxSpeed).getEntry();
         maxAccelEntry = tab.add("SET max accel", TurretConstants.turretMaxAccel).getEntry();
         toleranceEntry = tab.add("SET TOLERANCE", TurretConstants.turretTolerance).getEntry();
-        angleEntry = tab.add("SET ANGLE", 0.0).getEntry();
 
         pEntry.setDouble(kPIDs[0]);
         iEntry.setDouble(kPIDs[1]);
@@ -205,7 +201,6 @@ public class TurretSubsystem extends SubsystemBase {
         maxSpeedEntry.setDouble(Constants.TurretConstants.turretMaxSpeed);
         maxAccelEntry.setDouble(Constants.TurretConstants.turretMaxAccel);
         toleranceEntry.setDouble(Constants.TurretConstants.turretTolerance);
-        angleEntry.setDouble(0.0);
 
         enablePID();
     }
