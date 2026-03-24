@@ -44,6 +44,7 @@ abstract public class RobotContainer {
     /* Controllers */
     public static CommandXboxController driverController;
     public static CommandXboxController operatorController;
+    public static CommandXboxController tuningController;
 
     /* Simulation */
     protected FuelSim fuelSim;
@@ -71,7 +72,7 @@ abstract public class RobotContainer {
 
             driverController = buttonBindings.getDriverController();
             operatorController = buttonBindings.getOperatorController();
-
+            tuningController = buttonBindings.getTuningController();
         } else {
             ButtonsBindingsSim buttonBindings = new ButtonsBindingsSim(swerveDriveSubsystem, m_climb, m_feeder,
                     m_hopper,
@@ -79,6 +80,7 @@ abstract public class RobotContainer {
 
             driverController = buttonBindings.getDriverController();
             operatorController = buttonBindings.getOperatorController();
+            tuningController = buttonBindings.getTuningController();
         }
     }
 

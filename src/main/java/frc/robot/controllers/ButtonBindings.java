@@ -31,7 +31,7 @@ public class ButtonBindings {
     /* Controllers */
     private final CommandXboxController driverController;
     private final CommandXboxController operatorController;
-    private final CommandXboxController testController;
+    private final CommandXboxController tuningController;
 
     /* Subsystems */
     private final SwerveDriveSubsystem swerveDriveSubsystem;
@@ -60,7 +60,7 @@ public class ButtonBindings {
 
         // Set this to whichever button bindpings you want to test
         // this.buttonTestController = setLEDTestBindingsController();
-        this.testController = setTuningBindings();
+        this.tuningController = setTuningBindings();
     }
 
     /**
@@ -172,7 +172,7 @@ public class ButtonBindings {
     /**
      * 
      */
-    public CommandXboxController getTestController() {
-        return this.testController;
+    public CommandXboxController getTuningController() {
+        return this.tuningController;
     }
 }

@@ -33,7 +33,7 @@ public class ButtonsBindingsSim {
     /* Controllers */
     private final CommandXboxController driverController;
     private final CommandXboxController operatorController;
-    private final CommandXboxController testController;
+    private final CommandXboxController tuningController;
 
     /* Subsystems */
     private final SwerveDriveSubsystem swerveDriveSubsystem;
@@ -66,7 +66,7 @@ public class ButtonsBindingsSim {
 
         // Set this to whichever button bindings you want to test
         // this.buttonTestController = setLEDTestBindingsController();
-        this.testController = setTuningBindings();
+        this.tuningController = setTuningBindings();
 
         this.intakeToggleState = false;
     }
@@ -173,6 +173,9 @@ public class ButtonsBindingsSim {
     private CommandXboxController setTuningBindings() {
         CommandXboxController commandXboxController = new CommandXboxController(TEST_PORT);
 
+        commandXboxController.b().onTrue(Commands.runOnce(() -> m_turret.setAngle(90.0), m_turret));
+        commandXboxController.x().onTrue(Commands.runOnce(() -> m_turret.setAngle(-90.0), m_turret));
+
         return commandXboxController;
     }
 
@@ -193,7 +196,7 @@ public class ButtonsBindingsSim {
     /**
      * 
      */
-    public CommandXboxController getTestController() {
-        return this.testController;
+    public CommandXboxController getTuningController() {
+        return this.tuningController;
     }
 }
