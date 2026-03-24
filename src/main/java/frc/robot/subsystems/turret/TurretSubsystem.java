@@ -121,6 +121,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void setAngle(double degrees) {
         turretModuleIO.setAngle(degrees);
+        pidEnabled = true;
     }
 
     public void setPosition(double position) {
@@ -172,19 +173,17 @@ public class TurretSubsystem extends SubsystemBase {
         maxAccelEntry.setDouble(Constants.turretConstants.turretMaxAccel);
         toleranceEntry.setDouble(Constants.turretConstants.turretTolerance);
 
-        // tab.addDouble("current angle", () -> getCurrentAngle());
-        // tab.addDouble("goal", () -> pidController.getGoal().position);
-        // tab.addDouble("current velocity", () -> getCurrentVelocity());
-        // tab.addBoolean("pid enabled", () -> pidEnabled);
+        tab.addDouble("current angle", () -> getCurrentAngle());
+        tab.addDouble("goal", () -> turretModuleIO.getGoalPosition());
+        tab.addDouble("current velocity", () -> turretModuleIO.getVelocity());
+        tab.addBoolean("pid enabled", () -> pidEnabled);
         // tab.addBoolean("hall effect", () -> getHallEffect());
-        // tab.addDouble("voltage value", () -> voltageValue);
+        // tab.addDouble("voltage value", () -> turret);
         // tab.addDouble("pid value", () -> pValue);
         // tab.addDouble("ff value", () -> fValue);
         // tab.addDouble("encoder value", () -> getEncoderValues());
-        // tab.addBoolean("at target", () -> isAtTargetAngle());
-        // tab.addDouble("Estimated Velocity", () ->
-        // pidController.getSetpoint().velocity);
-        // tab.addDouble("Estimated Position", () ->
-        // pidController.getSetpoint().position);
+        tab.addBoolean("at target", () -> turretModuleIO.atGoal());
+        tab.addDouble("Estimated Velocity", () -> turretModuleIO.getGoalVelocity());
+        tab.addDouble("Estimated Position", () -> turretModuleIO.getGoalPosition());
     }
 }

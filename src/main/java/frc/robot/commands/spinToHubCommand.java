@@ -5,16 +5,14 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.util.GameUtil;
 
@@ -47,39 +45,29 @@ public class spinToHubCommand extends Command {
     @Override
     public void execute() {
         Pose2d robotPose = robotPoseSupplier.get();
-
-        double robotX = robotPose.getX();
-        double robotY = robotPose.getY();
-
         Pose2d targetPose = getTargetPose(robotPose);
-        double targetX = targetPose.getX();
-        double targetY = targetPose.getY();
 
-        Rotation2d angleToHub = Rotation2d.fromRadians(Math.atan2(targetY - robotY, targetX - robotX))
-                .rotateBy(Rotation2d.k180deg);
+        // Turret's offset from the robot's center
+        Translation2d turretOffset = new Translation2d(-0.15, 0.1778);
 
-        Rotation2d fieldAngle = targetPose.getTranslation().getAngle();
-        // Rotation2d turretAngle =
-        // fieldAngle.minus(robotPose.getRotation().plus(Rotation2d.fromDegrees(180)));
-        // turretSubsystem.setTargetAngle(-turretAngle.getDegrees());
+        // Calculate the turret's position on the field
+        Translation2d turretFieldPos = robotPose.getTranslation().plus(turretOffset.rotateBy(robotPose.getRotation()));
 
-        // turretAngle = turretAngle.rotateBy(angleToHub.unaryMinus());
-        Rotation2d robotRotation = robotPose.getRotation().rotateBy(Rotation2d.k180deg);
+        // Calculate the vector from the turret to the target
+        Translation2d turretToTarget = targetPose.getTranslation().minus(turretFieldPos);
 
-        Rotation2d turretAngle = robotRotation.plus(angleToHub.unaryMinus());
+        // The turret's desired pose
+        Pose2d turretPose = new Pose2d(turretFieldPos, turretToTarget.getAngle());
+
+        // Calculate the desired turret angle
+        // Robot is CCW+ / Turret is CW+
+        Rotation2d turretAngle = turretPose.getRotation().minus(robotPose.getRotation()).unaryMinus();
 
         turretSubsystem.setAngle(turretAngle.getDegrees());
 
-        if (RobotConstants.TUNING_MODE) {
-            ShuffleboardTab tab = Shuffleboard.getTab("spinToHub");
-
-            SmartDashboard.putNumber("fieldAngle", fieldAngle.getDegrees());
-            SmartDashboard.putNumber("turretAngle", turretAngle.getDegrees());
-            SmartDashboard.putNumber("robotRotation", robotRotation.getDegrees());
-            SmartDashboard.putNumber("angleToHub", angleToHub.getDegrees());
-        }
-
-        Logger.recordOutput("Turret/Active Command", this.getName());
+        Logger.recordOutput("Turret/TargetAngleRad", turretAngle);
+        Logger.recordOutput("Turret/TargetAngleDeg", turretAngle.getDegrees());
+        Logger.recordOutput("Turret/TargetPose", new Pose3d(targetPose));
     }
 
     @Override

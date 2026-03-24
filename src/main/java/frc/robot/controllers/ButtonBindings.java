@@ -1,5 +1,7 @@
 package frc.robot.controllers;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -147,6 +149,12 @@ public class ButtonBindings {
      */
     private CommandXboxController setTuningBindings() {
         CommandXboxController commandXboxController = new CommandXboxController(TEST_PORT);
+
+        commandXboxController.x().whileTrue(new InstantCommand(() -> m_turret.setAngle(90), m_turret));
+        // commandXboxController.b().whileTrue(new InstantCommand(() ->
+        // m_turret.setAngle(-90), m_turret));
+
+        Logger.recordOutput("Turret/Bindings", true);
 
         return commandXboxController;
     }

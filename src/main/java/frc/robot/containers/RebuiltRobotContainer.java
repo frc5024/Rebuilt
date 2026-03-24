@@ -80,8 +80,12 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_intake = new IntakeSubsystem(new IntakeModuleIOSparkMax());
         this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
         this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxDutyCycleEncoder());
-        this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
-                () -> swerveDriveSubsystem.getChassisSpeeds()));
+
+        if (!RobotConstants.TUNING_MODE) {
+            this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
+                    () -> swerveDriveSubsystem.getChassisSpeeds()));
+
+        }
 
         m_turret.zeroEncoder();
 

@@ -1,8 +1,14 @@
 package frc.robot.subsystems.turret;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -19,7 +25,7 @@ import frc.robot.Constants.turretConstants;
  */
 public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
     // Constants
-    protected final double GEAR_RATIO = 28.6667 * 12;
+    protected final double GEAR_RATIO = 28.6667 * 12.558;
 
     // Hardware
     protected final SparkMax turretMotor;
@@ -54,6 +60,11 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
         this.feedforward = new SimpleMotorFeedforward(turretConstants.kS, turretConstants.kV, turretConstants.kA);
 
         this.connectedDebouncer = new Debouncer(0.5);
+
+        SparkMaxConfig config = new SparkMaxConfig();
+
+        config.idleMode(IdleMode.kBrake).smartCurrentLimit(20);
+        this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override
@@ -63,9 +74,9 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
         }
 
         // update relative encoder if hall effect is triggered
-        if (!hallEffectSensor.get()) {
-            internalEncoder.setPosition(turretConstants.ANGLE_LIMIT);
-        }
+        // if (!hallEffectSensor.get()) {
+        // internalEncoder.setPosition(turretConstants.ANGLE_LIMIT);
+        // }
 
         inputs.data = new TurretModuleIOData(
                 connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
@@ -140,7 +151,7 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
     @Override
     public void setAngle(double degrees) {
-        pidController.setGoal(MathUtil.clamp(degrees, -turretConstants.ANGLE_LIMIT, turretConstants.ANGLE_LIMIT));
+        pidController.setGoal(MathUtil.clamp(degrees, -turretConstants.ANGLE_LIMIT, 110));
     }
 
     @Override
@@ -174,6 +185,9 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
         double voltageRequest = MathUtil.clamp(pValue + fValue, -12.0, 12.0);
 
         turretMotor.setVoltage(voltageRequest);
+
+        Logger.recordOutput("Turret/fValue", fValue);
+        Logger.recordOutput("Turret/pValue", pValue);
     }
 
     @Override
