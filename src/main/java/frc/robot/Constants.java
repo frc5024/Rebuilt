@@ -277,12 +277,12 @@ public final class Constants {
             public static final double kV = 3.329;
             public static final double kA = 0.0;
 
-            public static final double sim_kP = 2.0;
+            public static final double sim_kP = 0.0001;
             public static final double sim_kI = 0.0;
-            public static final double sim_kD = 0.002;
+            public static final double sim_kD = 0.02;
 
             public static final double sim_kS = 0.0;
-            public static final double sim_kV = 0.002;
+            public static final double sim_kV = 1.0 / 6784.0;
             public static final double sim_kA = 0.0;
 
             public static double[] getPIDs() {
