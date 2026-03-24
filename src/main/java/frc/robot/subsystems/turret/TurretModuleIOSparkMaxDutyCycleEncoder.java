@@ -151,7 +151,7 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
     @Override
     public void setAngle(double degrees) {
-        pidController.setGoal(MathUtil.clamp(degrees, -turretConstants.ANGLE_LIMIT, 110));
+        pidController.setGoal(MathUtil.clamp(degrees, -turretConstants.ANGLE_LIMIT, turretConstants.ANGLE_LIMIT));
     }
 
     @Override
