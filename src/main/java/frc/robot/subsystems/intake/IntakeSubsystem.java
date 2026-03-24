@@ -29,6 +29,10 @@ public class IntakeSubsystem extends SubsystemBase {
     private GenericEntry armIEntry;
     private GenericEntry armDEntry;
 
+    private GenericEntry armSEntry;
+    private GenericEntry armVEntry;
+    private GenericEntry armAEntry;
+
     private GenericEntry armExtendEntry;
     private GenericEntry armRetractEntry;
 
@@ -51,6 +55,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public boolean rollerPIDEnabled;
 
     private double[] kArmPIDs;
+    private double[] kArmSVAs;
     private double[] kRollerPIDs;
     private double[] kRollerSVAs;
 
@@ -66,6 +71,7 @@ public class IntakeSubsystem extends SubsystemBase {
         // set shuffleboard entries if in tuning mode
         if (RobotConstants.TUNING_MODE) {
             kArmPIDs = ArmConstants.getPIDs();
+            kArmSVAs = ArmConstants.getSVAs();
             kRollerPIDs = RollerConstants.getPIDs();
             kRollerSVAs = RollerConstants.getSVAs();
 
@@ -81,6 +87,9 @@ public class IntakeSubsystem extends SubsystemBase {
         Logger.processInputs("Intake/Arm", armInputs);
         Logger.processInputs("Intake/Roller", rollerInputs);
 
+        // update the arm voltage from pid controller & feedforward
+        armModuleIO.setVoltage();
+
         // reset the relative encoder if retracted
         if (armModuleIO.isRetracted()) {
             armModuleIO.setPosition(0.0);
@@ -88,7 +97,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
         // update pid values if in tuning mode
         if (RobotConstants.TUNING_MODE) {
-            armModuleIO.setPID(armPEntry.getDouble(kArmPIDs[0]), kArmPIDs[1], kArmPIDs[2]);
+            armModuleIO.setPID(armPEntry.getDouble(kArmPIDs[0]), armIEntry.getDouble(kArmPIDs[1]),
+                    armDEntry.getDouble(kArmPIDs[2]));
+            armModuleIO.setFF(armSEntry.getDouble(kArmSVAs[0]), armVEntry.getDouble(kArmSVAs[1]),
+                    armAEntry.getDouble(kArmSVAs[2]));
 
             rollerModuleIO.setPID(rollerPEntry.getDouble(kRollerPIDs[0]), rollerIEntry.getDouble(kRollerPIDs[1]),
                     rollerDEntry.getDouble(kRollerPIDs[2]));
@@ -190,6 +202,14 @@ public class IntakeSubsystem extends SubsystemBase {
         armPEntry.setDouble(kArmPIDs[0]);
         armIEntry.setDouble(kArmPIDs[1]);
         armDEntry.setDouble(kArmPIDs[2]);
+
+        armSEntry = armTab.add("Set kS", kArmSVAs[0]).getEntry();
+        armVEntry = armTab.add("Set kV", kArmSVAs[1]).getEntry();
+        armAEntry = armTab.add("Set kA", kArmSVAs[2]).getEntry();
+
+        armSEntry.setDouble(kArmSVAs[0]);
+        armVEntry.setDouble(kArmSVAs[1]);
+        armAEntry.setDouble(kArmSVAs[2]);
 
         armRetractEntry = armTab.add("Force Retract", false)
                 .withWidget("Toggle Button")

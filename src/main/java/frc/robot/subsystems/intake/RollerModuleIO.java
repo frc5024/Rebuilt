@@ -54,6 +54,9 @@ public interface RollerModuleIO {
     default void runCharacterization(double voltage) {
     }
 
+    default void setConstraints(double maxVelocity, double maxAcceleration, double tolerance) {
+    }
+
     default void setFF(double kS, double kV, double kA) {
     }
 

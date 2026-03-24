@@ -51,8 +51,8 @@
           },
           {
             "title": "Force Extend",
-            "x": 512.0,
-            "y": 128.0,
+            "x": 896.0,
+            "y": 0.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Toggle Switch",
@@ -64,7 +64,7 @@
           },
           {
             "title": "Force Retract",
-            "x": 640.0,
+            "x": 896.0,
             "y": 128.0,
             "width": 128.0,
             "height": 128.0,
@@ -196,6 +196,48 @@
               "topic": "/Shuffleboard/Intake/Roller/Stop Motor",
               "period": 0.06,
               "data_type": "boolean"
+            }
+          },
+          {
+            "title": "Set kS",
+            "x": 512.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Intake/Arm/Set kS",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Set kV",
+            "x": 640.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Intake/Arm/Set kV",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Set kA",
+            "x": 768.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Intake/Arm/Set kA",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
             }
           }
         ]

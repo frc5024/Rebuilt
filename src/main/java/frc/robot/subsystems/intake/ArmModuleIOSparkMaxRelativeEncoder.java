@@ -1,16 +1,19 @@
 package frc.robot.subsystems.intake;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.FeedbackSensor;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.IntakeConstants.ArmConstants;
@@ -18,20 +21,23 @@ import frc.robot.Constants.IntakeConstants.ArmConstants;
 /**
  * 
  */
-public class ArmModuleIOSparkMaxClosedLoopController implements ArmModuleIO {
+public class ArmModuleIOSparkMaxRelativeEncoder implements ArmModuleIO {
     // Constants
     protected final int MOTOR_ID = 5;
     protected final int RETRACTED_ID = 7;
     protected final int EXTENDED_ID = 8;
 
-    protected final double GEAR_RATIO = 9.0;
+    protected final double GEAR_RATIO = 13.57;
 
     // Hardware
     protected final SparkMax armMotor;
     protected final RelativeEncoder armEncoder;
-    private final SparkClosedLoopController pidController;
-
     private SparkMaxConfig config;
+
+    // PID
+    private final ProfiledPIDController pidController;
+    private TrapezoidProfile.Constraints constraints;
+    private final SimpleMotorFeedforward feedforward;
 
     protected final DigitalInput retractedLimit;
     protected final DigitalInput extendedLimit;
@@ -42,13 +48,14 @@ public class ArmModuleIOSparkMaxClosedLoopController implements ArmModuleIO {
     /**
      * 
      */
-    public ArmModuleIOSparkMaxClosedLoopController() {
+    public ArmModuleIOSparkMaxRelativeEncoder() {
         this.armMotor = new SparkMax(MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
-        this.pidController = this.armMotor.getClosedLoopController();
         this.armEncoder = this.armMotor.getEncoder();
 
         this.config = new SparkMaxConfig();
-        config.idleMode(SparkMaxConfig.IdleMode.kBrake);
+        config
+                .idleMode(SparkMaxConfig.IdleMode.kBrake);
+        // .smartCurrentLimit(60);
 
         // set position factor so we can set arm to specific angle
         double positionConversionFactor = 360.0 / GEAR_RATIO;
@@ -61,11 +68,17 @@ public class ArmModuleIOSparkMaxClosedLoopController implements ArmModuleIO {
                 .reverseSoftLimitEnabled(true).reverseSoftLimit(ArmConstants.RETRACTED_ANGLE)
                 .forwardSoftLimitEnabled(true).forwardSoftLimit(ArmConstants.EXTENDED_ANGLE);
 
-        double[] kPIDs = ArmConstants.getPIDs();
-        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .pid(kPIDs[0], kPIDs[1], kPIDs[2]);
-
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        // get and set contraints and pid constants
+        double[] kPIDs = ArmConstants.getPIDs();
+        this.constraints = new TrapezoidProfile.Constraints(ArmConstants.MAX_SPEED, ArmConstants.MAX_ACCEL);
+        this.pidController = new ProfiledPIDController(kPIDs[0], kPIDs[1], kPIDs[2], constraints);
+        this.pidController.setTolerance(ArmConstants.TOLERANCE);
+
+        // get and set feedforward sva constants
+        double[] kSVAs = ArmConstants.getSVAs();
+        this.feedforward = new SimpleMotorFeedforward(kSVAs[0], kSVAs[1], kSVAs[2]);
 
         this.retractedLimit = new DigitalInput(RETRACTED_ID);
         this.extendedLimit = new DigitalInput(EXTENDED_ID);
@@ -91,7 +104,7 @@ public class ArmModuleIOSparkMaxClosedLoopController implements ArmModuleIO {
 
     @Override
     public void extend() {
-        pidController.setSetpoint(ArmConstants.EXTENDED_ANGLE, ControlType.kPosition);
+        pidController.setGoal(ArmConstants.EXTENDED_ANGLE);
     }
 
     @Override
@@ -101,7 +114,7 @@ public class ArmModuleIOSparkMaxClosedLoopController implements ArmModuleIO {
 
     @Override
     public double getGoalPosition() {
-        return pidController.getSetpoint();
+        return pidController.getGoal().position;
     }
 
     @Override
@@ -126,26 +139,43 @@ public class ArmModuleIOSparkMaxClosedLoopController implements ArmModuleIO {
 
     @Override
     public void retract() {
-        pidController.setSetpoint(ArmConstants.RETRACTED_ANGLE, ControlType.kPosition);
+        pidController.setGoal(ArmConstants.RETRACTED_ANGLE);
     }
 
     @Override
-    public void setPID(double kP, double kI, double kD) {
-        config.closedLoop.p(kP).i(kI).d(kD);
-
-        armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    public void setConstraints(double maxVelocity, double maxAcceleration, double tolerance) {
+        constraints = new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration);
+        pidController.setConstraints(constraints);
+        pidController.setTolerance(tolerance);
     }
 
     @Override
     public void setFF(double kS, double kV, double kA) {
-        config.closedLoop.feedForward.kS(kS).kV(kV).kA(kA);
+        feedforward.setKs(kS);
+        feedforward.setKv(kV);
+        feedforward.setKa(kA);
+    }
 
-        armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    @Override
+    public void setPID(double kP, double kI, double kD) {
+        pidController.setPID(kP, kI, kD);
     }
 
     @Override
     public void setPosition(double degrees) {
         armEncoder.setPosition(degrees);
+    }
+
+    @Override
+    public void setVoltage() {
+        double pValue = pidController.calculate(getPosition());
+        double fValue = feedforward.calculate(pidController.getSetpoint().position);
+        double voltageRequest = MathUtil.clamp(pValue + fValue, -12.0, 12.0);
+
+        armMotor.setVoltage(voltageRequest);
+
+        Logger.recordOutput("Intake/Arm/pValue", pValue);
+        Logger.recordOutput("Intake/Arm/fValue", fValue);
     }
 
     @Override

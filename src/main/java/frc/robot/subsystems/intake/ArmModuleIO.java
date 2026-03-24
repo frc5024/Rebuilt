@@ -51,6 +51,9 @@ public interface ArmModuleIO {
     default void retract() {
     }
 
+    default void setConstraints(double maxVelocity, double maxAcceleration, double tolerance) {
+    }
+
     default void setFF(double kS, double kV, double kA) {
     }
 
@@ -58,6 +61,9 @@ public interface ArmModuleIO {
     }
 
     default void setPosition(double degrees) {
+    }
+
+    default void setVoltage() {
     }
 
     default void start() {

@@ -43,7 +43,9 @@ public class RollerModuleIOSparkFlexClosedLoopController implements RollerModule
         this.pidController = this.rollerMotor.getClosedLoopController();
 
         this.config = new SparkFlexConfig();
-        config.idleMode(SparkFlexConfig.IdleMode.kCoast);
+        config
+                .idleMode(SparkFlexConfig.IdleMode.kCoast)
+                .smartCurrentLimit(60);
 
         // set velocity factor
         double velocityConversionFactor = 1 / GEAR_RATIO;

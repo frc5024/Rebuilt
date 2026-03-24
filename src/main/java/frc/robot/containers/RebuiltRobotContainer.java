@@ -33,7 +33,7 @@ import frc.robot.subsystems.feeder.FeederModuleIOSparkFlex;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperModuleIOSparkMax;
 import frc.robot.subsystems.hopper.HopperSubsystem;
-import frc.robot.subsystems.intake.ArmModuleIOSparkMaxClosedLoopController;
+import frc.robot.subsystems.intake.ArmModuleIOSparkMaxRelativeEncoder;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.intake.RollerModuleIOSparkFlexClosedLoopController;
 import frc.robot.subsystems.shooter.ShooterModuleIOSparkFlex;
@@ -78,7 +78,7 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_climb = new ClimbSubsystem(new ClimbModuleIOTalonFX());
         this.m_feeder = new FeederSubsystem(new FeederModuleIOSparkFlex());
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSparkMax());
-        this.m_intake = new IntakeSubsystem(new ArmModuleIOSparkMaxClosedLoopController(),
+        this.m_intake = new IntakeSubsystem(new ArmModuleIOSparkMaxRelativeEncoder(),
                 new RollerModuleIOSparkFlexClosedLoopController());
         this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
         this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxDutyCycleEncoder());

@@ -33,7 +33,7 @@ public final class Constants {
      */
     public static class RobotConstants {
         // used to show/hide shuffleboard entries for PID tuning
-        public static final boolean TUNING_MODE = false;
+        public static final boolean TUNING_MODE = true;
 
         public static final double LOOP_PERIOD_SECS = 0.02;
 
@@ -245,16 +245,27 @@ public final class Constants {
         public static final double kRollV = 0.0;
 
         public static class ArmConstants {
-            public static final double EXTENDED_ANGLE = -193.3;
+            public static final double EXTENDED_ANGLE = -127.59;
             public static final double RETRACTED_ANGLE = 0.0;
+            public static final double MAX_SPEED = 720.0;
+            public static final double MAX_ACCEL = 1440.0;
+            public static final double TOLERANCE = 1.0;
 
-            public static final double kP = 0.1;
+            public static final double kP = 0.0;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
+
+            public static final double kS = 0.0;
+            public static final double kV = 0.0;
+            public static final double kA = 0.0;
 
             public static final double sim_kP = 0.05;
             public static final double sim_kI = 0.0;
             public static final double sim_kD = 0.0;
+
+            public static final double sim_kS = 0.0;
+            public static final double sim_kV = 0.0;
+            public static final double sim_kA = 0.0;
 
             public static double[] getPIDs() {
                 if (Robot.isReal()) {
@@ -263,18 +274,26 @@ public final class Constants {
                     return new double[] { sim_kP, sim_kI, sim_kD };
                 }
             }
+
+            public static double[] getSVAs() {
+                if (Robot.isReal()) {
+                    return new double[] { kS, kV, kA };
+                } else {
+                    return new double[] { sim_kS, sim_kV, sim_kA };
+                }
+            }
         }
 
         public static class RollerConstants {
-            public static final double INTAKE_RPM = 2800.0;
-            public static final double OUTTAKE_RPM = -2000.0;
+            public static final double INTAKE_RPM = 2500.0;
+            public static final double OUTTAKE_RPM = -1500.0;
 
             public static final double kP = 0.0;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
 
-            public static final double kS = 0.288;
-            public static final double kV = 3.329;
+            public static final double kS = 0.22;
+            public static final double kV = 0.00195;
             public static final double kA = 0.0;
 
             public static final double sim_kP = 0.0001;

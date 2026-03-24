@@ -43,7 +43,7 @@ public class RollerModuleIOSparkFlexMaxMotion implements RollerModuleIO {
         this.pidController = this.rollerMotor.getClosedLoopController();
 
         this.config = new SparkFlexConfig();
-        config.idleMode(SparkFlexConfig.IdleMode.kCoast);
+        config.idleMode(SparkFlexConfig.IdleMode.kBrake);
 
         // set Max Motion
         config.closedLoop.maxMotion
