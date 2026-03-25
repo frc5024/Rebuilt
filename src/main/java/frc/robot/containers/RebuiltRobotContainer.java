@@ -177,7 +177,7 @@ public class RebuiltRobotContainer extends RobotContainer {
         Pose3d turretPose = new Pose3d(robotPose).transformBy(transform3d);
 
         mechanismVisualizer.update(
-                m_intake.getPosition(),
+                m_intake.getArmPosition(),
                 m_hopper.getPosition(),
                 m_turret.getCurrentAngle(),
                 m_climb.getPosition(),

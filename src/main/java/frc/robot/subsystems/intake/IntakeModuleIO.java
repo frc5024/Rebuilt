@@ -33,7 +33,7 @@ public interface IntakeModuleIO {
         return 0.0;
     }
 
-    default double getPosition() {
+    default double getArmPosition() {
         return 0.0;
     }
 
@@ -49,16 +49,6 @@ public interface IntakeModuleIO {
         return false;
     }
 
-    // TODO: remove after refactoring - speed is a constant so set it in the
-    // hardware module
-    default void setIntake(double speed) {
-    }
-
-    // TODO: remove after refactoring - speed is a constant so set it in the
-    // hardware module
-    default void setArm(double speed) {
-    }
-
     default boolean isIntakeExtended() {
         return false;
     }
@@ -69,6 +59,12 @@ public interface IntakeModuleIO {
 
     default boolean isIntakeRetracted() {
         return true;
+    }
+
+    default void setArm(double speed) {
+    }
+
+    default void setIntake(double speed) {
     }
 
     default void start() {

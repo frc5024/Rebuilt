@@ -90,6 +90,16 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeModuleIO.updateInputs(inputs);
         Logger.processInputs("Intake", inputs);
 
+        // set arm motor voltage by PID
+        if (armPIDEnabled) {
+            armPIDCalculate();
+        }
+
+        // set intkake motor voltage by PID
+        if (rollerPIDEnabled) {
+            rollerPIDCalculate();
+        }
+
         // update pid values if in tuning mode
         if (RobotConstants.TUNING_MODE) {
             armPIDController.setPID(armPEntry.getDouble(intakeConstants.kArmP),
@@ -106,38 +116,37 @@ public class IntakeSubsystem extends SubsystemBase {
             rollerFeedforward.setKa(rollerAEntry.getDouble(intakeConstants.kRollA));
         }
 
-        if (armPIDEnabled) {
-            armPIDCalculate();
-        } else {
-            intakeModuleIO.setArm(0);
-        }
-
-        if (rollerPIDEnabled) {
-            rollerPIDCalculate();
-        } else {
-            intakeModuleIO.setIntake(0);
-        }
-
-        Logger.recordOutput("Intake/IsExetended", intakeModuleIO.isIntakeExtended());
-        Logger.recordOutput("Intake/IsRetracted", intakeModuleIO.isIntakeRetracted());
-        Logger.recordOutput("Intake/IsIntaking", intakeModuleIO.isIntakeIntaking());
-        Logger.recordOutput("Intake/ArmAngle", Units.radiansToDegrees(intakeModuleIO.getPosition()));
+        Logger.recordOutput("Intake/Arm/IsExetended", intakeModuleIO.isIntakeExtended());
+        Logger.recordOutput("Intake/Arm/IsRetracted", intakeModuleIO.isIntakeRetracted());
+        Logger.recordOutput("Intake/Arm/IsIntaking", intakeModuleIO.isIntakeIntaking());
+        Logger.recordOutput("Intake/Arm/Angle", Units.radiansToDegrees(intakeModuleIO.getArmPosition()));
+        Logger.recordOutput("Intake/Roller/CurrentRPM", intakeModuleIO.getIntakeVelocity());
     }
 
     public double getCurrentDrawAmps() {
         return intakeModuleIO.getCurrentDrawAmps();
     }
 
-    public double getPosition() {
-        return intakeModuleIO.getPosition();
+    public double getArmPosition() {
+        return intakeModuleIO.getArmPosition();
     }
 
     public void setArmPID(boolean armPIDEnabled) {
         this.armPIDEnabled = armPIDEnabled;
+
+        // turn off arm motor if not using PID
+        if (!armPIDEnabled) {
+            intakeModuleIO.setArm(0);
+        }
     }
 
     public void setRollerPID(boolean rollerPIDEnabled) {
         this.rollerPIDEnabled = rollerPIDEnabled;
+
+        // turn off roller motor if not using PID
+        if (!rollerPIDEnabled) {
+            intakeModuleIO.setIntake(0);
+        }
     }
 
     public void setIntakeSpeed(double speed) {
@@ -154,30 +163,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void setRollerSetVelocity(double speed) {
         this.rollerDesiredSpeed = speed;
-    }
-
-    public Command IntakeCommand() {
-        return new IntakeSpinMotor(this);
-    }
-
-    public Command OuttakeCommand() {
-        return new OuttakeSpinMotor(this);
-    }
-
-    public Command ExtendArmCommand() {
-        return new IntakeExtendArm(this);
-    }
-
-    public Command RetractArmCommand() {
-        return new IntakeRetractArm(this);
-    }
-
-    public Command retractArmPIDCommand() {
-        return new PIDRetractArm(this);
-    }
-
-    public Command extendArmPIDCommand() {
-        return new PIDExtendArm(this);
     }
 
     public boolean isIntakeRetracted() {
@@ -213,7 +198,6 @@ public class IntakeSubsystem extends SubsystemBase {
      */
     private void setShuffleboard() {
         armTab = Shuffleboard.getTab("Arm");
-
         armPEntry = armTab.add("Set kP", intakeConstants.kArmP).getEntry();
         armIEntry = armTab.add("Set kI", intakeConstants.kArmI).getEntry();
         armDEntry = armTab.add("Set kD", intakeConstants.kArmD).getEntry();
@@ -234,5 +218,33 @@ public class IntakeSubsystem extends SubsystemBase {
 
         armTab.addBoolean("Extended?", () -> intakeModuleIO.isIntakeExtended());
         armTab.addBoolean("Retracted?", () -> intakeModuleIO.isIntakeRetracted());
+    }
+
+    /**
+     * Commands
+     */
+
+    public Command IntakeCommand() {
+        return new IntakeSpinMotor(this);
+    }
+
+    public Command OuttakeCommand() {
+        return new OuttakeSpinMotor(this);
+    }
+
+    public Command ExtendArmCommand() {
+        return new IntakeExtendArm(this);
+    }
+
+    public Command RetractArmCommand() {
+        return new IntakeRetractArm(this);
+    }
+
+    public Command retractArmPIDCommand() {
+        return new PIDRetractArm(this);
+    }
+
+    public Command extendArmPIDCommand() {
+        return new PIDExtendArm(this);
     }
 }

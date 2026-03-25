@@ -19,23 +19,22 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     // Constants
-    protected final double GEAR_RATIO = 9.0;
-    protected final int intakeMotorID = 60; // ID on prototype board, subject to change
     protected final int armMotorID = 5; // this is a placeholder ID
+    protected final double GEAR_RATIO = 9.0;
+
+    protected final int intakeMotorID = 60; // ID on prototype board, subject to change
 
     // Hardware
-    protected final SparkFlex intakeMotor;
     protected final SparkMax armMotor;
-    private final RelativeEncoder intakeEncoder;
     private final RelativeEncoder armEncoder;
+    private final SparkBaseConfig armMotorConfig;
 
-    private final SparkBaseConfig armMotorConfig = new SparkMaxConfig()
-            .idleMode(IdleMode.kBrake);
+    protected final SparkFlex intakeMotor;
+    private final RelativeEncoder intakeEncoder;
+    private final SparkBaseConfig intakeMotorConfig;
 
-    private final SparkBaseConfig intakeMotorConfig = new SparkMaxConfig();
-
-    private static DigitalInput retractingLimitSwitch = new DigitalInput(7);
-    private static DigitalInput extendingLimitSwitch = new DigitalInput(8);
+    private static DigitalInput retractingLimitSwitch;
+    private static DigitalInput extendingLimitSwitch;
 
     // Connection debouncers
     private final Debouncer connectedDebouncer;
@@ -44,14 +43,23 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
      * 
      */
     public IntakeModuleIOSparkMax() {
-        this.intakeMotor = new SparkFlex(intakeMotorID, SparkLowLevel.MotorType.kBrushless);
         this.armMotor = new SparkMax(armMotorID, SparkLowLevel.MotorType.kBrushless);
-
+        this.armEncoder = this.armMotor.getEncoder();
+        this.armMotorConfig = new SparkMaxConfig();
+        armMotorConfig
+                .idleMode(IdleMode.kBrake);
         armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        this.intakeMotor = new SparkFlex(intakeMotorID, SparkLowLevel.MotorType.kBrushless);
+        this.intakeEncoder = this.intakeMotor.getEncoder();
+        this.intakeMotorConfig = new SparkMaxConfig();
+        intakeMotorConfig
+                .idleMode(IdleMode.kCoast);
         intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        this.intakeEncoder = this.intakeMotor.getEncoder();
-        this.armEncoder = this.armMotor.getEncoder();
+        retractingLimitSwitch = new DigitalInput(7);
+        extendingLimitSwitch = new DigitalInput(8);
+
         this.connectedDebouncer = new Debouncer(0.5);
     }
 
@@ -84,28 +92,18 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     }
 
     @Override
-    public double getPosition() {
+    public double getArmPosition() {
         return armEncoder.getPosition();
     }
 
     @Override
-    public void setArm(double speed) {
-        armMotor.set(speed);
-    }
-
-    @Override
-    public void setIntake(double speed) {
-        intakeMotor.set(speed);
+    public double getArmVelocity() {
+        return armEncoder.getVelocity();
     }
 
     @Override
     public double getIntakeVelocity() {
-        return intakeMotor.getEncoder().getVelocity();
-    }
-
-    @Override
-    public double getArmVelocity() {
-        return armMotor.getEncoder().getVelocity();
+        return intakeEncoder.getVelocity();
     }
 
     @Override
@@ -121,5 +119,15 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     @Override
     public boolean isIntakeRetracted() {
         return !retractingLimitSwitch.get();
+    }
+
+    @Override
+    public void setArm(double speed) {
+        armMotor.set(speed);
+    }
+
+    @Override
+    public void setIntake(double speed) {
+        intakeMotor.set(speed);
     }
 }

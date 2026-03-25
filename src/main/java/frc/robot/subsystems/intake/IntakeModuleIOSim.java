@@ -80,7 +80,7 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
     }
 
     @Override
-    public double getPosition() {
+    public double getArmPosition() {
         return armSparkMaxSim.getPosition();
     }
 
