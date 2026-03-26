@@ -75,6 +75,12 @@ public class GameUtil {
      * @return time remaining in current phase (duration down to 0), or 0 if not in
      *         match
      */
+    static boolean wonAuto = false;
+
+    public static boolean wonAuto() {
+        return wonAuto;
+    }
+
     public static double getTimeRemainingInPhase() {
         // In autonomous - count down from 20 to 0
         if (DriverStation.isAutonomousEnabled()) {
@@ -88,24 +94,40 @@ public class GameUtil {
 
             // Match time values: 2:20 = 140, 2:10 = 130, 1:45 = 105, 1:20 = 80, 0:55 = 55,
             // 0:30 = 30
-            if (matchTime > 130) {
-                // Transition Shift (140 to 130) - 10 seconds
-                return Math.round(matchTime - 130.0);
-            } else if (matchTime > 105) {
-                // Shift 1 (130 to 105) - 25 seconds
-                return Math.round(matchTime - 105.0);
-            } else if (matchTime > 80) {
-                // Shift 2 (105 to 80) - 25 seconds
-                return Math.round(matchTime - 80.0);
-            } else if (matchTime > 55) {
-                // Shift 3 (80 to 55) - 25 seconds
-                return Math.round(matchTime - 55.0);
-            } else if (matchTime > 30) {
-                // Shift 4 (55 to 30) - 25 seconds
-                return Math.round(matchTime - 30.0);
+            if (!wonAuto) {
+                if (matchTime > 105) {
+                    // Transition Shift and Shift 1 (140 to 105) - 35 seconds
+                    return Math.round(matchTime - 105.0);
+                } else if (matchTime > 80) {
+                    // Shift 2 (105 to 80) - 25 seconds
+                    return Math.round(matchTime - 80.0);
+                } else if (matchTime > 55) {
+                    // Shift 3 (80 to 55) - 25 seconds
+                    return Math.round(matchTime - 55.0);
+                } else if (matchTime > 30) {
+                    // Shift 4 (55 to 30) - 25 seconds
+                    return Math.round(matchTime - 30.0);
+                } else {
+                    // End Game (30 to 0) - 30 seconds
+                    return Math.round(matchTime);
+                }
             } else {
-                // End Game (30 to 0) - 30 seconds
-                return Math.round(matchTime);
+                if (matchTime > 130) {
+                    // Transition Shift (140 to 130) - 10 seconds
+                    return Math.round(matchTime - 130.0);
+                } else if (matchTime > 105) {
+                    // Shift 1 (130 to 105) - 25 seconds
+                    return Math.round(matchTime - 105.0);
+                } else if (matchTime > 80) {
+                    // Shift 2 (105 to 80) - 25 seconds
+                    return Math.round(matchTime - 80.0);
+                } else if (matchTime > 55) {
+                    // Shift 3 (80 to 55) - 25 seconds
+                    return Math.round(matchTime - 55.0);
+                } else {
+                    // Shift 4 and End Game (55 to 0) - 55 seconds
+                    return Math.round(matchTime);
+                }
             }
         }
 
