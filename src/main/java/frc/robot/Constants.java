@@ -170,6 +170,9 @@ public final class Constants {
         public static final double EXTENDING_SPEED = -0.15;
         public static final double RETRACTING_SPEED = 0.45;
 
+        public static final double INTAKE_RPM = 3400;
+        public static final double OUTTAKE_RPM = -2500;
+
         public static final double driveCoefficient = 0.1;
 
         public static final double kArmP = 0.0;

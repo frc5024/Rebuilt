@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 /**
  * 
  */
-public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
+public class IntakeModuleIOSim extends IntakeModuleIOSparkMaxFlex {
     // Hardware objects
     private final DCMotor armDcMotor;
     private final DCMotorSim armMotorSim;

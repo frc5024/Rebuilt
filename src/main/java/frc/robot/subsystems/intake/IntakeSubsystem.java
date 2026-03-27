@@ -2,6 +2,7 @@ package frc.robot.subsystems.intake;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
@@ -17,6 +18,8 @@ import frc.robot.commands.Intake.IntakeRetractArm;
 import frc.robot.commands.Intake.IntakeSpinMotor;
 import frc.robot.commands.Intake.OuttakeSpinMotor;
 import frc.robot.commands.Intake.PIDExtendArm;
+import frc.robot.commands.Intake.PIDIntakeSpin;
+import frc.robot.commands.Intake.PIDOuttakeSpin;
 import frc.robot.commands.Intake.PIDRetractArm;
 
 /**
@@ -60,6 +63,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private double armCurrentSpeed;
     private double armDesiredSpeed;
+    private double armCurrentAngle;
+    private double armDesiredAngle;
     private double rollerCurrentSpeed;
     private double rollerDesiredSpeed;
 
@@ -149,7 +154,7 @@ public class IntakeSubsystem extends SubsystemBase {
         }
     }
 
-    public void setIntakeSpeed(double speed) {
+    public void setRollerSpeed(double speed) {
         intakeModuleIO.setIntake(speed);
     }
 
@@ -173,24 +178,32 @@ public class IntakeSubsystem extends SubsystemBase {
         return intakeModuleIO.isIntakeExtended();
     }
 
+    public void setRollerDesiredSpeed(double desiredSpeed) {
+        this.rollerDesiredSpeed = desiredSpeed;
+        this.rollerPIDController.reset();
+        intakeModuleIO.setIntakeEncoderPosition(0.0);
+    }
+
     public void armPIDCalculate() {
         armCurrentSpeed = intakeModuleIO.getArmVelocity();
 
         double armPIDoutput = armPIDController.calculate(armCurrentSpeed, armDesiredSpeed);
-        double armFeedForwardOutput = armFeedforward.calculate(armPIDoutput);
+        double armFeedForwardOutput = armFeedforward.calculate(armCurrentSpeed);
         double totalOutput = armPIDoutput + armFeedForwardOutput;
+        double voltageRequest = MathUtil.clamp(totalOutput, -12.0, 12.0);
 
-        setArmSpeed(totalOutput);
+        setArmSpeed(voltageRequest);
     }
 
     public void rollerPIDCalculate() {
-        rollerCurrentSpeed = intakeModuleIO.getIntakeVelocity();
+        this.rollerCurrentSpeed = intakeModuleIO.getIntakeVelocity();
 
         double rollerPIDoutput = rollerPIDController.calculate(rollerCurrentSpeed, rollerDesiredSpeed);
-        double rollerFeedforwardOutput = rollerFeedforward.calculate(rollerPIDoutput);
+        double rollerFeedforwardOutput = rollerFeedforward.calculate(rollerCurrentSpeed);
         double totalOutput = rollerPIDoutput + rollerFeedforwardOutput;
+        double voltageRequest = MathUtil.clamp(totalOutput, -12.0, 12.0);
 
-        setIntakeSpeed(totalOutput);
+        setRollerSpeed(voltageRequest);
     }
 
     /**
@@ -240,11 +253,19 @@ public class IntakeSubsystem extends SubsystemBase {
         return new IntakeRetractArm(this);
     }
 
-    public Command retractArmPIDCommand() {
+    public Command retractPIDCommand() {
         return new PIDRetractArm(this);
     }
 
-    public Command extendArmPIDCommand() {
+    public Command extendPIDCommand() {
         return new PIDExtendArm(this);
+    }
+
+    public Command intakePIDCommand() {
+        return new PIDIntakeSpin(this);
+    }
+
+    public Command outtakePIDCommand() {
+        return new PIDOuttakeSpin(this);
     }
 }

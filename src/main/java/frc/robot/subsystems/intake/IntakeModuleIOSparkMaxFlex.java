@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 /**
  * 
  */
-public class IntakeModuleIOSparkMax implements IntakeModuleIO {
+public class IntakeModuleIOSparkMaxFlex implements IntakeModuleIO {
     // Constants
     protected final int armMotorID = 5; // this is a placeholder ID
     protected final double GEAR_RATIO = 9.0;
@@ -42,7 +42,7 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     /**
      * 
      */
-    public IntakeModuleIOSparkMax() {
+    public IntakeModuleIOSparkMaxFlex() {
         this.armMotor = new SparkMax(armMotorID, SparkLowLevel.MotorType.kBrushless);
         this.armEncoder = this.armMotor.getEncoder();
         this.armMotorConfig = new SparkMaxConfig();
@@ -54,7 +54,8 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
         this.intakeEncoder = this.intakeMotor.getEncoder();
         this.intakeMotorConfig = new SparkMaxConfig();
         intakeMotorConfig
-                .idleMode(IdleMode.kCoast);
+                .idleMode(IdleMode.kCoast)
+                .inverted(true);
         intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         retractingLimitSwitch = new DigitalInput(7);
@@ -129,5 +130,10 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     @Override
     public void setIntake(double speed) {
         intakeMotor.set(speed);
+    }
+
+    @Override
+    public void setIntakeEncoderPosition(double position) {
+        intakeEncoder.setPosition(position);
     }
 }

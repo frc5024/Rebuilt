@@ -23,7 +23,6 @@ import frc.robot.Constants.turretConstants;
 import frc.robot.commands.TuningCommands;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
-import frc.robot.commands.spinToHubCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.subsystems.climb.ClimbModuleIOTalonFX;
@@ -32,7 +31,7 @@ import frc.robot.subsystems.feeder.FeederModuleIOSparkMax;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperModuleIOSparkMax;
 import frc.robot.subsystems.hopper.HopperSubsystem;
-import frc.robot.subsystems.intake.IntakeModuleIOSparkMax;
+import frc.robot.subsystems.intake.IntakeModuleIOSparkMaxFlex;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterModuleIOSparkFlex;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -77,12 +76,13 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_climb = new ClimbSubsystem(new ClimbModuleIOTalonFX());
         this.m_feeder = new FeederSubsystem(new FeederModuleIOSparkMax());
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSparkMax());
-        this.m_intake = new IntakeSubsystem(new IntakeModuleIOSparkMax());
+        this.m_intake = new IntakeSubsystem(new IntakeModuleIOSparkMaxFlex());
         this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
         this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxDutyCycleEncoder());
 
-        m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
-                () -> swerveDriveSubsystem.getChassisSpeeds()));
+        // m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () ->
+        // swerveDriveSubsystem.getPose(),
+        // () -> swerveDriveSubsystem.getChassisSpeeds()));
 
         m_turret.zeroEncoder();
         configureNamedCommands();
