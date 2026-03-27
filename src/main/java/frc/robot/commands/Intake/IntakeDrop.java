@@ -21,16 +21,16 @@ public class IntakeDrop extends SequentialCommandGroup {
                     @Override
                     public void initialize() {
                         s_Intake.setArmSpeed(0);
-                        s_Intake.setIntakeSpeed(0);
+                        s_Intake.setRollerSpeed(0);
                     }
                 },
 
                 new InstantCommand(() -> s_Intake.setArmSpeed(-0.1)),
                 new WaitCommand(0.5),
-                new InstantCommand(() -> s_Intake.setIntakeSpeed(0.5)),
+                new InstantCommand(() -> s_Intake.setRollerSpeed(0.5)),
                 new StartEndCommand(() -> {
                 }, () -> {
-                    s_Intake.setIntakeSpeed(0);
+                    s_Intake.setRollerSpeed(0);
                     s_Intake.setArmSpeed(0);
                 })
 

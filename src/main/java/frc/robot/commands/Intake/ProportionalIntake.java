@@ -40,12 +40,12 @@ public class ProportionalIntake extends Command {
         double proportionalSpeed = intakeEntry.getDouble(intakeConstants.INTAKE_SPEED) * coefficient;
         tab.add("proportional speed", proportionalSpeed);
 
-        s_Intake.setIntakeSpeed(proportionalSpeed);
+        s_Intake.setRollerSpeed(proportionalSpeed);
     }
 
     @Override
     public void end(boolean interrupted) {
-        s_Intake.setIntakeSpeed(0.0);
+        s_Intake.setRollerSpeed(0.0);
     }
 
     @Override
