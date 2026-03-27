@@ -78,7 +78,8 @@ public class TurretSubsystem extends SubsystemBase {
         }
 
         Logger.recordOutput("Turret/CurrentAngle", getCurrentAngle());
-        Logger.recordOutput("Turret/SetPointAngle", turretModuleIO.getGoalPosition());
+        Logger.recordOutput("Turret/Velocity", turretModuleIO.getVelocity());
+        Logger.recordOutput("Turret/GoalAngle", turretModuleIO.getGoalPosition());
         Logger.recordOutput("Turret/AtTarget", isAtTarget());
         Logger.recordOutput("Turret/PIDEnabled", isPIDEnabled());
     }

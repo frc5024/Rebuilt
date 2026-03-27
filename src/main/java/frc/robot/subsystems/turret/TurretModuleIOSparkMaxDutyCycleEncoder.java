@@ -1,5 +1,7 @@
 package frc.robot.subsystems.turret;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
@@ -13,6 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants.turretConstants;
+import frc.robot.Robot;
 
 /**
  * 
@@ -47,12 +50,17 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
         this.feedForwardConstraints = new TrapezoidProfile.Constraints(turretConstants.turretMaxSpeed,
                 turretConstants.turretMaxAccel);
-        this.pidController = new ProfiledPIDController(turretConstants.kP, turretConstants.kI, turretConstants.kD,
-                feedForwardConstraints);
-        this.pidController.setConstraints(feedForwardConstraints);
+        if (Robot.isReal()) {
+            this.pidController = new ProfiledPIDController(turretConstants.kP, turretConstants.kI, turretConstants.kD,
+                    feedForwardConstraints);
+            this.feedforward = new SimpleMotorFeedforward(turretConstants.kS, turretConstants.kV, turretConstants.kA);
+        } else {
+            this.pidController = new ProfiledPIDController(turretConstants.sim_kP, turretConstants.sim_kI,
+                    turretConstants.sim_kD, feedForwardConstraints);
+            this.feedforward = new SimpleMotorFeedforward(turretConstants.sim_kS, turretConstants.sim_kV,
+                    turretConstants.sim_kA);
+        }
         this.pidController.setTolerance(turretConstants.turretTolerance);
-        this.feedforward = new SimpleMotorFeedforward(turretConstants.kS, turretConstants.kV, turretConstants.kA);
-
         this.connectedDebouncer = new Debouncer(0.5);
     }
 
@@ -106,6 +114,21 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
     @Override
     public double getGoalPosition() {
         return pidController.getGoal().position;
+    }
+
+    @Override
+    public double getGoalVelocity() {
+        return pidController.getGoal().velocity;
+    }
+
+    @Override
+    public double getSetpointPosition() {
+        return pidController.getSetpoint().position;
+    }
+
+    @Override
+    public double getSetpointVelocity() {
+        return pidController.getSetpoint().velocity;
     }
 
     @Override
@@ -172,7 +195,9 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
         double pValue = pidController.calculate(getCurrentAngle());
         double fValue = feedforward.calculate(pidController.getSetpoint().velocity);
         double voltageRequest = MathUtil.clamp(pValue + fValue, -12.0, 12.0);
-
+        Logger.recordOutput("Turret/SetPoint/Position", getSetpointPosition());
+        Logger.recordOutput("Turret/SetPoint/Velocity", getSetpointVelocity());
+        Logger.recordOutput("Turret/Voltage", voltageRequest);
         turretMotor.setVoltage(voltageRequest);
     }
 

@@ -42,6 +42,14 @@ public interface TurretModuleIO {
         return 0.0;
     }
 
+    default double getSetpointPosition() {
+        return 0.0;
+    }
+
+    default double getSetpointVelocity() {
+        return 0.0;
+    }
+
     default boolean getHallEffectValue() {
         return false;
     }
