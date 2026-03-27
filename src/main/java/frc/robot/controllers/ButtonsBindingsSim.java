@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.FeederConstants;
+import frc.robot.Constants.HopperConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveNearestTrenchCommand;
 import frc.robot.commands.ExitNearestTrenchCommand;
@@ -183,23 +185,22 @@ public class ButtonsBindingsSim {
         // commandXboxController.x().onTrue(Commands.runOnce(() ->
         // m_intake.retractArm(), m_intake));
 
-        commandXboxController.b().onTrue(Commands.runOnce(() -> m_shooter.setVelocity(0), m_shooter));
-        commandXboxController.x().onTrue(Commands.runOnce(() -> m_shooter.setVelocity(2800), m_shooter));
+        // commandXboxController.b().onTrue(Commands.runOnce(() ->
+        // m_shooter.setVelocity(0), m_shooter));
+        // commandXboxController.x().onTrue(Commands.runOnce(() ->
+        // m_shooter.setVelocity(2800), m_shooter));
 
-        commandXboxController.leftTrigger()
-                .whileTrue(new ShootCommand(swerveDriveSubsystem, m_shooter, m_hopper, m_feeder,
-                        () -> swerveDriveSubsystem.getPose()));
+        // commandXboxController.leftTrigger()
+        // .whileTrue(new ShootCommand(swerveDriveSubsystem, m_shooter, m_hopper,
+        // m_feeder,
+        // () -> swerveDriveSubsystem.getPose()));
 
-        // commandXboxController.a().onTrue(Commands.runOnce(() ->
-        // m_hopper.setVelocity(0.0),
-        // m_hopper));
-        // commandXboxController.y().onTrue(Commands.runOnce(() ->
-        // m_hopper.setVelocity(HopperConstants.RPM), m_hopper));
+        commandXboxController.a().onTrue(Commands.runOnce(() -> m_hopper.setVelocity(0.0),
+                m_hopper));
+        commandXboxController.y().onTrue(Commands.runOnce(() -> m_hopper.setVelocity(HopperConstants.RPM), m_hopper));
 
-        // commandXboxController.a().onTrue(Commands.runOnce(() ->
-        // m_feeder.setVelocity(0.0), m_feeder));
-        // commandXboxController.y().onTrue(Commands.runOnce(() ->
-        // m_feeder.setVelocity(FeederConstants.RPM), m_feeder));
+        commandXboxController.a().onTrue(Commands.runOnce(() -> m_feeder.setVelocity(0.0), m_feeder));
+        commandXboxController.y().onTrue(Commands.runOnce(() -> m_feeder.setVelocity(FeederConstants.RPM), m_feeder));
 
         // commandXboxController.y().onTrue(Commands.runOnce(() ->
         // m_intake.intakeRoller(), m_intake));

@@ -32,6 +32,7 @@ public class FeederSubsystem extends SubsystemBase {
     private Timer jamTimer;
     private Timer unjamActionTimer;
     private boolean isUnjamming;
+    private boolean hasBeenCalled;
 
     // Shuffleboard entries
     private ShuffleboardTab tab;
@@ -43,6 +44,8 @@ public class FeederSubsystem extends SubsystemBase {
     private GenericEntry pEntry;
     private GenericEntry dEntry;
     private GenericEntry iEntry;
+
+    private GenericEntry simulateJamEntry;
 
     /**
      * 
@@ -58,6 +61,7 @@ public class FeederSubsystem extends SubsystemBase {
         this.jamTimer = new Timer();
         this.unjamActionTimer = new Timer();
         this.isUnjamming = false;
+        this.hasBeenCalled = false;
 
         // set shuffleboard entries if in tuning mode
         if (RobotConstants.TUNING_MODE) {
@@ -98,6 +102,15 @@ public class FeederSubsystem extends SubsystemBase {
     }
 
     public double getCurrentDrawAmps() {
+        if (RobotConstants.TUNING_MODE) {
+            if (simulateJamEntry.getBoolean(false) && !hasBeenCalled) {
+                hasBeenCalled = true;
+                return JAM_CURRENT_THRESHOLD + 10.0;
+            } else {
+                hasBeenCalled = false;
+            }
+        }
+
         return feederModuleIO.getCurrentDrawAmps();
     }
 
@@ -172,5 +185,9 @@ public class FeederSubsystem extends SubsystemBase {
         pEntry.setDouble(kPIDs[0]);
         iEntry.setDouble(kPIDs[1]);
         dEntry.setDouble(kPIDs[2]);
+
+        simulateJamEntry = tab.add("SIMULATE JAM", false)
+                .withWidget("Toggle Switch")
+                .getEntry();
     }
 }

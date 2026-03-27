@@ -33,7 +33,7 @@ public final class Constants {
      */
     public static class RobotConstants {
         // used to show/hide shuffleboard entries for PID tuning
-        public static final boolean TUNING_MODE = false;
+        public static final boolean TUNING_MODE = true;
 
         public static final double LOOP_PERIOD_SECS = 0.02;
 
