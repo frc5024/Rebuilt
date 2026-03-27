@@ -67,6 +67,10 @@ public interface IntakeModuleIO {
     default void setIntake(double speed) {
     }
 
+    default void setIntakeEncoderPosition(double position) {
+
+    }
+
     default void start() {
     }
 
