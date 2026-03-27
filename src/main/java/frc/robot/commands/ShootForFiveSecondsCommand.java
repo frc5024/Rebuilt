@@ -5,87 +5,97 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.util.GameUtil;
 
 /**
  * 
  */
-public class ShootCommand extends Command {
+public class ShootForFiveSecondsCommand extends Command {
     // Subsystems
-    private final SwerveDriveSubsystem swerveDriveSubsystem;
     private final ShooterSubsystem shooterSubsystem;
     private final HopperSubsystem hopperSubsystem;
     private final FeederSubsystem feederSubsystem;
+    private final IntakeSubsystem intakeSubsystem;
     private final Supplier<Pose2d> robotPoseSupplier;
 
     // Variables
     private Pose2d targetPose;
+    private Timer runTimer;
 
     /**
      * 
      */
-    public ShootCommand(SwerveDriveSubsystem swerveDriveSubsystem, ShooterSubsystem shooterSubsystem,
-            HopperSubsystem hopperSubsystem, FeederSubsystem feederSubsystem, Supplier<Pose2d> robotPoseSupplier) {
-        this.swerveDriveSubsystem = swerveDriveSubsystem;
+    public ShootForFiveSecondsCommand(ShooterSubsystem shooterSubsystem, HopperSubsystem hopperSubsystem,
+            FeederSubsystem feederSubsystem, IntakeSubsystem intakeSubsystem, Supplier<Pose2d> robotPoseSupplier) {
         this.shooterSubsystem = shooterSubsystem;
         this.hopperSubsystem = hopperSubsystem;
         this.feederSubsystem = feederSubsystem;
+        this.intakeSubsystem = intakeSubsystem;
         this.robotPoseSupplier = robotPoseSupplier;
+
+        this.runTimer = new Timer();
 
         addRequirements(shooterSubsystem, hopperSubsystem, feederSubsystem);
     }
 
     @Override
     public void initialize() {
-        // Only allow slow driving
-        swerveDriveSubsystem.setSlowMode(true);
-    }
+        // reset and start timer
+        runTimer.reset();
+        runTimer.start();
 
-    @Override
-    public void execute() {
         // get the target we want to shoot at
         Pose2d robotPose = robotPoseSupplier.get();
         targetPose = GameUtil.getTargetPose(robotPose);
 
         // get distance to target and cooresponding RPM
-        // double distance =
-        // robotPose.getTranslation().getDistance(targetPose.getTranslation());
-        // double rpm = ShooterConstants.velocityToRPMMap.get(distance);
+        double distance = robotPose.getTranslation().getDistance(targetPose.getTranslation());
+        double rpm = ShooterConstants.velocityToRPMMap.get(distance);
 
         // set the shooter RPM
-        // shooterSubsystem.setVelocity(rpm);
+        shooterSubsystem.setVelocity(rpm);
 
+        Logger.recordOutput("Shooter/DistanceToTarget", distance);
+    }
+
+    @Override
+    public void execute() {
         // spin up hooper and feeder if shooter is ready
         if (shooterSubsystem.isAtSetpoint()) {
             feederSubsystem.setVelocity(FeederConstants.RPM);
             hopperSubsystem.setVelocity(HopperConstants.RPM);
         }
 
+        if (runTimer.hasElapsed(3)) {
+            intakeSubsystem.retractArm();
+        }
+
         Logger.recordOutput("Shooter/Active Command", this.getName());
-        // Logger.recordOutput("Shooter/DistanceToTarget", distance);
     }
 
     @Override
     public void end(boolean interrupted) {
+        runTimer.stop();
         feederSubsystem.setVelocity(0.0);
         hopperSubsystem.setVelocity(0.0);
         shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM);
-        swerveDriveSubsystem.setSlowMode(false);
 
         Logger.recordOutput("Shooter/Active Command", "");
     }
 
     @Override
     public boolean isFinished() {
-        // run until the trigger is released
-        return false;
+        // since we don't know when all the fuel has been launched we end the command
+        // after 5 seconds
+        return runTimer.isRunning() && runTimer.hasElapsed(5);
     }
 }

@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -76,6 +77,17 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.recordOutput("Shooter/CurrentVelocityRPM", getVelocity());
         Logger.recordOutput("Shooter/SetpointRPM", shooterModuleIO.getGoalVelocity());
         Logger.recordOutput("Shooter/VelocityTangential", getTangentialVelocity());
+    }
+
+    /**
+     * Called from the SpinToHub to set RPM
+     */
+    public void addDistanceMeasurement(double distanceToTarget) {
+        Command currentCommand = getCurrentCommand();
+
+        if (currentCommand != null && currentCommand.getName().equalsIgnoreCase("ShootCommand")) {
+            targetRPM = ShooterConstants.velocityToRPMMap.get(distanceToTarget);
+        }
     }
 
     public double getCurrentDrawAmps() {

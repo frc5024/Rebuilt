@@ -20,7 +20,7 @@ import frc.robot.Constants.FuelCellConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.commands.ShootCommand;
+import frc.robot.commands.ShootForFiveSecondsCommand;
 import frc.robot.commands.SpinToHubCommand;
 import frc.robot.commands.TuningCommandsDrive;
 import frc.robot.commands.TuningCommandsIntake;
@@ -83,7 +83,9 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxRelativeEncoder());
 
         if (!RobotConstants.TUNING_MODE) {
-            m_turret.setDefaultCommand(new SpinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose()));
+            m_turret.setDefaultCommand(new SpinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
+                    () -> swerveDriveSubsystem.getChassisSpeeds(), () -> m_shooter.getTangentialVelocity(),
+                    m_shooter::addDistanceMeasurement));
         }
 
         m_turret.zeroEncoder();
@@ -137,7 +139,8 @@ public class RebuiltRobotContainer extends RobotContainer {
         new EventTrigger("Declimb").whileTrue(m_climb.extendclimb());
 
         NamedCommands.registerCommand("RunEverything",
-                new ShootCommand(m_shooter, m_hopper, m_feeder, m_intake, () -> swerveDriveSubsystem.getPose()));
+                new ShootForFiveSecondsCommand(m_shooter, m_hopper, m_feeder, m_intake,
+                        () -> swerveDriveSubsystem.getPose()));
     }
 
     @Override

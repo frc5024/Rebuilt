@@ -130,15 +130,15 @@ public class ButtonsBindingsSim {
         // new runEverything(m_feeder, m_shooter, m_hopper),
         // new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
         commandXboxController.leftTrigger()
-                .whileTrue(new ShootCommand(m_shooter, m_hopper, m_feeder, m_intake,
+                .whileTrue(new ShootCommand(swerveDriveSubsystem, m_shooter, m_hopper, m_feeder,
                         () -> swerveDriveSubsystem.getPose()));
 
         commandXboxController.rightTrigger()
                 .whileTrue(
-                        new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = true));
+                        new InstantCommand(() -> swerveDriveSubsystem.setSlowMode(true)));
         commandXboxController.rightTrigger()
                 .onFalse(
-                        new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = false));
+                        new InstantCommand(() -> swerveDriveSubsystem.setSlowMode(false)));
 
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
@@ -187,7 +187,7 @@ public class ButtonsBindingsSim {
         commandXboxController.x().onTrue(Commands.runOnce(() -> m_shooter.setVelocity(2800), m_shooter));
 
         commandXboxController.leftTrigger()
-                .whileTrue(new ShootCommand(m_shooter, m_hopper, m_feeder, m_intake,
+                .whileTrue(new ShootCommand(swerveDriveSubsystem, m_shooter, m_hopper, m_feeder,
                         () -> swerveDriveSubsystem.getPose()));
 
         // commandXboxController.a().onTrue(Commands.runOnce(() ->

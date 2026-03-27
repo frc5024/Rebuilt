@@ -18,7 +18,6 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -68,29 +67,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             lastModulePositions, new Pose2d());
     private final Consumer<Pose2d> resetSimulationPoseCallBack;
 
-    private static double speedModifier = 1.0;
-    public boolean isSlowMode = false;
-
-    // Voltage feedforward for drive translation
-    private final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(
-            0.14786, // kS from your driveGains
-            0.68343, // kV from your driveGains
-            0.0 // kA if you have acceleration info; can also tune later
-    );
+    private double speedModifier = 1.0;
+    private boolean slowMode = false;
 
     // Maximum angular velocity robot can reach (rad/s)
     double maxAngularVelocity = getMaxAngularSpeedRadPerSec();
 
     // Feedforward gain for rotation
     double kVTheta = 12.0 / maxAngularVelocity;
-
-    public double getSpeedModifier() {
-        if (isSlowMode) {
-            return speedModifier * 0.3;
-        } else {
-            return speedModifier;
-        }
-    }
 
     // used to track robot rotation in simulated gyro
     private double simulatedYaw;
@@ -241,6 +225,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     /**
+     * 
+     */
+    public double getSpeedModifier() {
+        return speedModifier * (slowMode ? 0.1 : 1.0);
+    }
+
+    public boolean isSlowMode() {
+        return slowMode;
+    }
+
+    /**
      * Runs the drive at the desired velocity.
      *
      * @param speeds Speeds in meters/sec
@@ -269,6 +264,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         for (int i = 0; i < 4; i++) {
             modules[i].runCharacterization(output);
         }
+    }
+
+    public void setSlowMode(boolean slowMode) {
+        this.slowMode = slowMode;
     }
 
     /** Stops the drive. */
