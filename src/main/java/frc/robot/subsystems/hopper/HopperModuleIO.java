@@ -37,9 +37,11 @@ public interface HopperModuleIO {
         return false;
     }
 
+    // used in tuning mode
     default void setFF(double kS, double kV, double kA) {
     }
 
+    // used in tuning mode
     default void setPID(double kP, double kI, double kD) {
     }
 

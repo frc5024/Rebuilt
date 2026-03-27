@@ -48,12 +48,15 @@ public interface RollerModuleIO {
     default void runCharacterization(double voltage) {
     }
 
+    // used in tuning mode
     default void setConstraints(double maxVelocity, double maxAcceleration, double tolerance) {
     }
 
+    // used in tuning mode
     default void setFF(double kS, double kV, double kA) {
     }
 
+    // used in tuning mode
     default void setPID(double kP, double kI, double kD) {
     }
 

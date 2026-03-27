@@ -32,7 +32,6 @@ public class FeederSubsystem extends SubsystemBase {
     private Timer jamTimer;
     private Timer unjamActionTimer;
     private boolean isUnjamming;
-    private boolean hasBeenCalled;
 
     // Shuffleboard entries
     private ShuffleboardTab tab;
@@ -55,13 +54,13 @@ public class FeederSubsystem extends SubsystemBase {
         this.feederModuleIO = feederModuleIO;
         this.inputs = new FeederModuleIOInputsAutoLogged();
 
+        // initial speed
         this.targetRPM = 0.0;
 
         // setup for jam detection
         this.jamTimer = new Timer();
         this.unjamActionTimer = new Timer();
         this.isUnjamming = false;
-        this.hasBeenCalled = false;
 
         // set shuffleboard entries if in tuning mode
         if (RobotConstants.TUNING_MODE) {
@@ -103,11 +102,8 @@ public class FeederSubsystem extends SubsystemBase {
 
     public double getCurrentDrawAmps() {
         if (RobotConstants.TUNING_MODE) {
-            if (simulateJamEntry.getBoolean(false) && !hasBeenCalled) {
-                hasBeenCalled = true;
+            if (simulateJamEntry.getBoolean(false) && !isUnjamming) {
                 return JAM_CURRENT_THRESHOLD + 10.0;
-            } else {
-                hasBeenCalled = false;
             }
         }
 
@@ -137,7 +133,7 @@ public class FeederSubsystem extends SubsystemBase {
         // check if we are currently unjamming
         if (isUnjamming) {
             if (unjamActionTimer.hasElapsed(UNJAM_DURATION)) {
-                isUnjamming = true;
+                isUnjamming = false;
                 unjamActionTimer.stop();
                 targetRPM = 0.0;
                 stop();
@@ -149,7 +145,6 @@ public class FeederSubsystem extends SubsystemBase {
 
         // check if current is high and motor should be moving
         if (getCurrentDrawAmps() > JAM_CURRENT_THRESHOLD && targetRPM != 0.0) {
-            jamTimer.reset();
             jamTimer.start();
         } else {
             jamTimer.stop();
