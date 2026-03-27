@@ -17,27 +17,27 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants.TurretConstants;
 
 /**
  * 
  */
-public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
+public class TurretModuleIOSparkMaxRelativeEncoder implements TurretModuleIO {
     // Constants
+    private final int MOTOR_ID = 3;
+    private final int HALLEFFECT_CHANNEL = 3;
+    private final int ENCODER_CHANNEL = 0;
     protected final double GEAR_RATIO = 28.6667; // 129 ring gear, 18 pinion, 4:1 internal = (129.0 / 18.0) * 4
 
     // Hardware
     protected final SparkMax turretMotor;
+    protected final RelativeEncoder encoder;
     protected final DigitalInput hallEffectSensor;
-    protected final DutyCycleEncoder absoluteEncoder;
-    protected final RelativeEncoder internalEncoder;
 
     // PID
+    private final SimpleMotorFeedforward feedforward;
     private final ProfiledPIDController pidController;
     private TrapezoidProfile.Constraints constraints;
-
-    private final SimpleMotorFeedforward feedforward;
 
     // Connection debouncers
     private final Debouncer connectedDebouncer;
@@ -45,32 +45,16 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
     /**
      * 
      */
-    public TurretModuleIOSparkMaxDutyCycleEncoder() {
-        this.turretMotor = new SparkMax(TurretConstants.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
-        this.hallEffectSensor = new DigitalInput(TurretConstants.hallEffectChannel);
-        this.absoluteEncoder = new DutyCycleEncoder(TurretConstants.turretEncoderChannel, 1, 0);
-        this.absoluteEncoder.setDutyCycleRange(0.1, 0.9);
-        this.internalEncoder = this.turretMotor.getEncoder();
+    public TurretModuleIOSparkMaxRelativeEncoder() {
+        this.turretMotor = new SparkMax(MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
+        this.hallEffectSensor = new DigitalInput(HALLEFFECT_CHANNEL);
+        this.encoder = this.turretMotor.getEncoder();
 
-        // get and set constraints and PID constants
-        double[] kPIDs = TurretConstants.getPIDs();
-        this.constraints = new TrapezoidProfile.Constraints(TurretConstants.turretMaxSpeed,
-                TurretConstants.turretMaxAccel);
-
-        this.pidController = new ProfiledPIDController(kPIDs[0], kPIDs[1], kPIDs[2], constraints);
-        this.pidController.setConstraints(constraints);
-        this.pidController.setTolerance(TurretConstants.turretTolerance);
-
-        // get and set feedforward SVA constants
-        double[] kSVAs = TurretConstants.getSVAs();
-        this.feedforward = new SimpleMotorFeedforward(kSVAs[0], kSVAs[1], kSVAs[2]);
-
-        // set position factor so we can turn turret to specific angle
         SparkMaxConfig config = new SparkMaxConfig();
-
-        // Set idle mode and current limit
-        config.idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(20);
+        config
+                .idleMode(IdleMode.kBrake)
+                .inverted(false)
+                .smartCurrentLimit(40);
 
         // limit turn angle due to wiring
         config.softLimit
@@ -79,12 +63,24 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
                 .reverseSoftLimit(-TurretConstants.ANGLE_LIMIT)
                 .reverseSoftLimitEnabled(true);
 
-        double positionFactor = 360.0 / GEAR_RATIO;
+        // set position factor so we can turn turret to specific angle
+        double positionConversionFactor = 360.0 / GEAR_RATIO;
         config.encoder
-                .positionConversionFactor(positionFactor)
-                .velocityConversionFactor(positionFactor / 60.0);
+                .positionConversionFactor(positionConversionFactor)
+                .velocityConversionFactor(positionConversionFactor / 60.0);
 
         this.turretMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        // get and set feedforward SVA constants
+        double[] kSVAs = TurretConstants.getSVAs();
+        this.feedforward = new SimpleMotorFeedforward(kSVAs[0], kSVAs[1], kSVAs[2]);
+
+        // get and set constraints and PID constants
+        double[] kPIDs = TurretConstants.getPIDs();
+        this.constraints = new TrapezoidProfile.Constraints(TurretConstants.MAX_SPEED,
+                TurretConstants.MAX_ACCEL);
+        this.pidController = new ProfiledPIDController(kPIDs[0], kPIDs[1], kPIDs[2], constraints);
+        this.pidController.setTolerance(TurretConstants.TOLERANCE);
 
         this.connectedDebouncer = new Debouncer(0.5);
     }
@@ -112,18 +108,8 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
     }
 
     @Override
-    public double getCurrentAngle() {
-        return internalEncoder.getPosition();
-    }
-
-    @Override
     public double getCurrentDrawAmps() {
         return turretMotor.getAppliedOutput();
-    }
-
-    @Override
-    public double getGoalPosition() {
-        return pidController.getGoal().position;
     }
 
     @Override
@@ -133,17 +119,33 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
     @Override
     public double getPosition() {
-        return internalEncoder.getPosition();
+        return encoder.getPosition();
     }
 
     @Override
     public double getVelocity() {
-        return internalEncoder.getVelocity();
+        return encoder.getVelocity();
     }
 
     @Override
-    public void setAngle(double degrees) {
-        pidController.setGoal(MathUtil.clamp(degrees, -TurretConstants.ANGLE_LIMIT, TurretConstants.ANGLE_LIMIT));
+    public void setAngle(double targetAngle) {
+        // calculate for targetAngle
+        double currentAngle = encoder.getPosition();
+
+        double pidVoltage = pidController.calculate(currentAngle, targetAngle);
+        double ffVoltage = feedforward.calculate(pidController.getSetpoint().velocity);
+
+        double voltageRequest = MathUtil.clamp(ffVoltage + pidVoltage, -12.0, 12.0);
+
+        if (targetAngle == currentAngle) {
+            turretMotor.setVoltage(0.0);
+            pidController.reset(currentAngle);
+        } else {
+            turretMotor.setVoltage(voltageRequest);
+        }
+
+        Logger.recordOutput("Turret/ffVoltage", ffVoltage);
+        Logger.recordOutput("Turret/pidVoltage", pidVoltage);
     }
 
     @Override
@@ -167,19 +169,7 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
     @Override
     public void setPosition(double position) {
-        internalEncoder.setPosition(position);
-    }
-
-    @Override
-    public void setVoltage() {
-        double pValue = pidController.calculate(getCurrentAngle());
-        double fValue = feedforward.calculate(pidController.getSetpoint().velocity);
-        double voltageRequest = MathUtil.clamp(pValue + fValue, -12.0, 12.0);
-
-        turretMotor.setVoltage(voltageRequest);
-
-        Logger.recordOutput("Turret/pValue", pValue);
-        Logger.recordOutput("Turret/fValue", fValue);
+        encoder.setPosition(position);
     }
 
     @Override

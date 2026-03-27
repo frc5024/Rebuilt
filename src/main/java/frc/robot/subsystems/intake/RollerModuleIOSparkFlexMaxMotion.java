@@ -4,7 +4,6 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel;
@@ -113,19 +112,6 @@ public class RollerModuleIOSparkFlexMaxMotion implements RollerModuleIO {
     @Override
     public double getVelocity() {
         return rollerEncoder.getVelocity();
-    }
-
-    @Override
-    public void intake() {
-        pidController.setSetpoint(RollerConstants.INTAKE_RPM, ControlType.kMAXMotionVelocityControl);
-        // pidController.setSetpoint(RollerConstants.INTAKE_RPM, ControlType.kVelocity);
-    }
-
-    @Override
-    public void outtake() {
-        pidController.setSetpoint(RollerConstants.OUTTAKE_RPM, ControlType.kMAXMotionVelocityControl);
-        // pidController.setSetpoint(RollerConstants.OUTTAKE_RPM,
-        // ControlType.kVelocity);
     }
 
     @Override

@@ -20,28 +20,27 @@ import frc.robot.Constants.FuelCellConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.commands.ShootCommand;
+import frc.robot.commands.SpinToHubCommand;
 import frc.robot.commands.TuningCommandsDrive;
 import frc.robot.commands.TuningCommandsIntake;
-import frc.robot.commands.distanceShooterCommand;
-import frc.robot.commands.runEverything;
-import frc.robot.commands.spinToHubCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.subsystems.climb.ClimbModuleIOTalonFX;
 import frc.robot.subsystems.climb.ClimbSubsystem;
-import frc.robot.subsystems.feeder.FeederModuleIOSparkFlex;
+import frc.robot.subsystems.feeder.FeederModuleIOSparkFlexRelativeEncoder;
 import frc.robot.subsystems.feeder.FeederSubsystem;
-import frc.robot.subsystems.hopper.HopperModuleIOSparkMax;
+import frc.robot.subsystems.hopper.HopperModuleIOSparkMaxRelativeEncoder;
 import frc.robot.subsystems.hopper.HopperSubsystem;
 import frc.robot.subsystems.intake.ArmModuleIOSparkMaxRelativeEncoder;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.intake.RollerModuleIOSparkFlexClosedLoopController;
-import frc.robot.subsystems.shooter.ShooterModuleIOSparkFlex;
+import frc.robot.subsystems.shooter.ShooterModuleIOSparkFlexClosedLoopController;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.GyroModuleIOPigeon2;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOTalonFXMotionMagic;
-import frc.robot.subsystems.turret.TurretModuleIOSparkMaxDutyCycleEncoder;
+import frc.robot.subsystems.turret.TurretModuleIOSparkMaxRelativeEncoder;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -76,16 +75,15 @@ public class RebuiltRobotContainer extends RobotContainer {
                 new VisionIOLimelight(VisionConstants.rearCamera, swerveDriveSubsystem::getRotation));
 
         this.m_climb = new ClimbSubsystem(new ClimbModuleIOTalonFX());
-        this.m_feeder = new FeederSubsystem(new FeederModuleIOSparkFlex());
-        this.m_hopper = new HopperSubsystem(new HopperModuleIOSparkMax());
+        this.m_feeder = new FeederSubsystem(new FeederModuleIOSparkFlexRelativeEncoder());
+        this.m_hopper = new HopperSubsystem(new HopperModuleIOSparkMaxRelativeEncoder());
         this.m_intake = new IntakeSubsystem(new ArmModuleIOSparkMaxRelativeEncoder(),
                 new RollerModuleIOSparkFlexClosedLoopController());
-        this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
-        this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxDutyCycleEncoder());
+        this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlexClosedLoopController());
+        this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxRelativeEncoder());
 
         if (!RobotConstants.TUNING_MODE) {
-            m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
-                    () -> swerveDriveSubsystem.getChassisSpeeds()));
+            m_turret.setDefaultCommand(new SpinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose()));
         }
 
         m_turret.zeroEncoder();
@@ -134,29 +132,12 @@ public class RebuiltRobotContainer extends RobotContainer {
         new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmCommand());
         new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
         new EventTrigger("RetractIntake").onTrue(m_intake.RetractArmCommand());
-        new EventTrigger("AimTurret").whileTrue(
-                Commands.runOnce(() -> m_turret.setAngle(0), m_turret));
+        new EventTrigger("AimTurret").whileTrue(Commands.runOnce(() -> m_turret.setAngle(0), m_turret));
         new EventTrigger("Climb").whileTrue(m_climb.contractclimb());
         new EventTrigger("Declimb").whileTrue(m_climb.extendclimb());
 
-        NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
-        NamedCommands.registerCommand("DistanceShooter", new distanceShooterCommand(m_shooter, swerveDriveSubsystem));
-        NamedCommands.registerCommand("Feeder", m_feeder.feederCommand());
-        // NamedCommands.registerCommand("SetTurretToHub", m_turret.setAngle(0));
-        // NamedCommands.registerCommand("Intake", m_intake.IntakeCommand());
-        // NamedCommands.registerCommand("ExtendIntake", m_intake.ExtendArmCommand());
-        // NamedCommands.registerCommand("RetractIntake", m_intake.RetractArmCommand());
-        NamedCommands.registerCommand("Outtake", m_intake.OuttakeCommand());
-        // NamedCommands.registerCommand("Climb", m_climb.contractclimb());
-        // NamedCommands.registerCommand("Declimb", m_climb.extendclimb());
-        NamedCommands.registerCommand("Dontdeclimb", m_climb.dontdeclimb());
-        NamedCommands.registerCommand("ExtendClimb", m_climb.extendclimb());
-        NamedCommands.registerCommand("ContractClimb", m_climb.contractclimb());
-        NamedCommands.registerCommand("SpinHopper", m_hopper.SpinCommand());
         NamedCommands.registerCommand("RunEverything",
-                Commands.parallel(new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
-                        new runEverything(m_feeder, m_shooter, m_hopper),
-                        Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
+                new ShootCommand(m_shooter, m_hopper, m_feeder, m_intake, () -> swerveDriveSubsystem.getPose()));
     }
 
     @Override
@@ -180,13 +161,13 @@ public class RebuiltRobotContainer extends RobotContainer {
                 new Rotation3d(
                         0.0,
                         Units.degreesToRadians(-180.0 + TurretConstants.verticalLaunchAngle), // launch angle
-                        robotPose.getRotation().getRadians() + Math.toRadians(m_turret.getCurrentAngle())));
+                        robotPose.getRotation().getRadians() + Math.toRadians(m_turret.getPosition())));
         Pose3d turretPose = new Pose3d(robotPose).transformBy(transform3d);
 
         mechanismVisualizer.update(
                 m_intake.getPosition(),
                 m_hopper.getPosition(),
-                m_turret.getCurrentAngle(),
+                m_turret.getPosition(),
                 m_climb.getPosition(),
                 m_feeder.getPosition(),
                 turretPose,

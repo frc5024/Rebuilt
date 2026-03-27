@@ -99,7 +99,7 @@ public class ReplayingRobotContainer extends RobotContainer {
         this.m_turret = new TurretSubsystem(new TurretModuleIO() {
         });
         this.m_shooter = new ShooterSubsystemSim(new ShooterModuleIO() {
-        }, () -> m_turret.getCurrentAngle(),
+        }, () -> m_turret.getPosition(),
                 () -> m_feeder.isRunning(), fuelSim,
                 fuelSimCount);
 
@@ -236,7 +236,7 @@ public class ReplayingRobotContainer extends RobotContainer {
         mechanismVisualizer.update(
                 m_intake.getPosition(),
                 m_hopper.getPosition(),
-                m_turret.getCurrentAngle(),
+                m_turret.getPosition(),
                 m_climb.getPosition(),
                 m_feeder.getPosition(),
                 turretPose,

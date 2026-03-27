@@ -33,19 +33,11 @@ public interface ShooterModuleIO {
         return 0.0;
     }
 
-    default double getGoalPosition() {
-        return 0.0;
-    }
-
     default double getGoalVelocity() {
         return 0.0;
     }
 
     default double getPosition() {
-        return 0.0;
-    }
-
-    default double getSetpoint() {
         return 0.0;
     }
 
@@ -61,11 +53,6 @@ public interface ShooterModuleIO {
         return false;
     }
 
-    // TODO: remove after refactoring - speed is a constant so set it in the
-    // hardware module
-    default void set(double speed) {
-    }
-
     default void setPID(double kP, double kI, double kD) {
     }
 
@@ -73,14 +60,6 @@ public interface ShooterModuleIO {
     }
 
     default void setVelocity(double rpm) {
-    }
-
-    // TODO: remove after refactoring - speed is a constant so set it in the
-    // hardware module
-    default void setVoltage(double voltage) {
-    }
-
-    default void start() {
     }
 
     default void stop() {

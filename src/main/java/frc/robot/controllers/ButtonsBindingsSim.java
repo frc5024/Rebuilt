@@ -173,8 +173,38 @@ public class ButtonsBindingsSim {
     private CommandXboxController setTuningBindings() {
         CommandXboxController commandXboxController = new CommandXboxController(TEST_PORT);
 
-        commandXboxController.b().onTrue(Commands.runOnce(() -> m_turret.setAngle(90.0), m_turret));
-        commandXboxController.x().onTrue(Commands.runOnce(() -> m_turret.setAngle(-90.0), m_turret));
+        // commandXboxController.b().onTrue(Commands.runOnce(() ->
+        // m_turret.setAngle(90.0), m_turret));
+        // commandXboxController.x().onTrue(Commands.runOnce(() ->
+        // m_turret.setAngle(-90.0), m_turret));
+
+        // commandXboxController.b().onTrue(Commands.runOnce(() -> m_intake.extendArm(),
+        // m_intake));
+        // commandXboxController.x().onTrue(Commands.runOnce(() ->
+        // m_intake.retractArm(), m_intake));
+
+        commandXboxController.b().onTrue(Commands.runOnce(() -> m_shooter.setVelocity(0), m_shooter));
+        commandXboxController.x().onTrue(Commands.runOnce(() -> m_shooter.setVelocity(2800), m_shooter));
+
+        commandXboxController.leftTrigger()
+                .whileTrue(new ShootCommand(m_shooter, m_hopper, m_feeder, m_intake,
+                        () -> swerveDriveSubsystem.getPose()));
+
+        // commandXboxController.a().onTrue(Commands.runOnce(() ->
+        // m_hopper.setVelocity(0.0),
+        // m_hopper));
+        // commandXboxController.y().onTrue(Commands.runOnce(() ->
+        // m_hopper.setVelocity(HopperConstants.RPM), m_hopper));
+
+        // commandXboxController.a().onTrue(Commands.runOnce(() ->
+        // m_feeder.setVelocity(0.0), m_feeder));
+        // commandXboxController.y().onTrue(Commands.runOnce(() ->
+        // m_feeder.setVelocity(FeederConstants.RPM), m_feeder));
+
+        // commandXboxController.y().onTrue(Commands.runOnce(() ->
+        // m_intake.intakeRoller(), m_intake));
+        // commandXboxController.a().onTrue(Commands.runOnce(() ->
+        // m_intake.stopRoller(), m_intake));
 
         return commandXboxController;
     }

@@ -7,6 +7,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
@@ -31,16 +32,14 @@ public class ArmModuleIOSparkMaxRelativeEncoder implements ArmModuleIO {
 
     // Hardware
     protected final SparkMax armMotor;
-    protected final RelativeEncoder armEncoder;
-    private SparkMaxConfig config;
-
-    // PID
-    private final ProfiledPIDController pidController;
-    private TrapezoidProfile.Constraints constraints;
-    private final SimpleMotorFeedforward feedforward;
-
+    protected final RelativeEncoder encoder;
     protected final DigitalInput retractedLimit;
     protected final DigitalInput extendedLimit;
+
+    // PID
+    private final SimpleMotorFeedforward feedforward;
+    private final ProfiledPIDController pidController;
+    private TrapezoidProfile.Constraints constraints;
 
     // Connection debouncers
     private final Debouncer connectedDebouncer;
@@ -50,12 +49,22 @@ public class ArmModuleIOSparkMaxRelativeEncoder implements ArmModuleIO {
      */
     public ArmModuleIOSparkMaxRelativeEncoder() {
         this.armMotor = new SparkMax(MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
-        this.armEncoder = this.armMotor.getEncoder();
+        this.retractedLimit = new DigitalInput(RETRACTED_ID);
+        this.extendedLimit = new DigitalInput(EXTENDED_ID);
+        this.encoder = this.armMotor.getEncoder();
 
-        this.config = new SparkMaxConfig();
+        SparkMaxConfig config = new SparkMaxConfig();
         config
-                .idleMode(SparkMaxConfig.IdleMode.kBrake);
-        // .smartCurrentLimit(60);
+                .idleMode(IdleMode.kBrake)
+                .inverted(true)
+                .smartCurrentLimit(60);
+
+        // set the arm limits by degree
+        config.softLimit
+                .forwardSoftLimit(ArmConstants.EXTENDED_ANGLE)
+                .forwardSoftLimitEnabled(true)
+                .reverseSoftLimit(ArmConstants.RETRACTED_ANGLE)
+                .reverseSoftLimitEnabled(true);
 
         // set position factor so we can set arm to specific angle
         double positionConversionFactor = 360.0 / GEAR_RATIO;
@@ -63,25 +72,17 @@ public class ArmModuleIOSparkMaxRelativeEncoder implements ArmModuleIO {
                 .positionConversionFactor(positionConversionFactor)
                 .velocityConversionFactor(positionConversionFactor / 60.0);
 
-        // set the arm limits by degree
-        config.softLimit
-                .reverseSoftLimitEnabled(true).reverseSoftLimit(ArmConstants.RETRACTED_ANGLE)
-                .forwardSoftLimitEnabled(true).forwardSoftLimit(ArmConstants.EXTENDED_ANGLE);
+        this.armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        // get and set feedforward sva constants
+        double[] kSVAs = ArmConstants.getSVAs();
+        this.feedforward = new SimpleMotorFeedforward(kSVAs[0], kSVAs[1], kSVAs[2]);
 
         // get and set contraints and pid constants
         double[] kPIDs = ArmConstants.getPIDs();
         this.constraints = new TrapezoidProfile.Constraints(ArmConstants.MAX_SPEED, ArmConstants.MAX_ACCEL);
         this.pidController = new ProfiledPIDController(kPIDs[0], kPIDs[1], kPIDs[2], constraints);
         this.pidController.setTolerance(ArmConstants.TOLERANCE);
-
-        // get and set feedforward sva constants
-        double[] kSVAs = ArmConstants.getSVAs();
-        this.feedforward = new SimpleMotorFeedforward(kSVAs[0], kSVAs[1], kSVAs[2]);
-
-        this.retractedLimit = new DigitalInput(RETRACTED_ID);
-        this.extendedLimit = new DigitalInput(EXTENDED_ID);
 
         this.connectedDebouncer = new Debouncer(0.5);
     }
@@ -94,17 +95,12 @@ public class ArmModuleIOSparkMaxRelativeEncoder implements ArmModuleIO {
 
         inputs.data = new ArmModuleIOData(
                 connectedDebouncer.calculate(true),
-                armEncoder.getPosition(),
-                armEncoder.getVelocity(),
+                getPosition(),
+                getVelocity(),
                 armMotor.getAppliedOutput(),
                 0.0,
                 armMotor.getOutputCurrent(),
                 armMotor.getMotorTemperature());
-    }
-
-    @Override
-    public void extend() {
-        pidController.setGoal(ArmConstants.EXTENDED_ANGLE);
     }
 
     @Override
@@ -119,12 +115,12 @@ public class ArmModuleIOSparkMaxRelativeEncoder implements ArmModuleIO {
 
     @Override
     public double getPosition() {
-        return armEncoder.getPosition();
+        return encoder.getPosition();
     }
 
     @Override
     public double getVelocity() {
-        return armEncoder.getVelocity();
+        return encoder.getVelocity();
     }
 
     @Override
@@ -138,8 +134,24 @@ public class ArmModuleIOSparkMaxRelativeEncoder implements ArmModuleIO {
     }
 
     @Override
-    public void retract() {
-        pidController.setGoal(ArmConstants.RETRACTED_ANGLE);
+    public void setAngle(double targetAngle) {
+        // calculate for targetAngle
+        double currentAngle = encoder.getPosition();
+
+        double pidVoltage = pidController.calculate(currentAngle, targetAngle);
+        double ffVoltage = feedforward.calculate(pidController.getSetpoint().velocity);
+
+        double voltageRequest = MathUtil.clamp(ffVoltage + pidVoltage, -12.0, 12.0);
+
+        if (targetAngle == currentAngle) {
+            armMotor.setVoltage(0.0);
+            pidController.reset(currentAngle);
+        } else {
+            armMotor.setVoltage(voltageRequest);
+        }
+
+        Logger.recordOutput("Intake/Arm/ffVoltage", ffVoltage);
+        Logger.recordOutput("Intake/Arm/pidVoltage", pidVoltage);
     }
 
     @Override
@@ -162,20 +174,8 @@ public class ArmModuleIOSparkMaxRelativeEncoder implements ArmModuleIO {
     }
 
     @Override
-    public void setPosition(double degrees) {
-        armEncoder.setPosition(degrees);
-    }
-
-    @Override
-    public void setVoltage() {
-        double pValue = pidController.calculate(getPosition());
-        double fValue = feedforward.calculate(pidController.getSetpoint().position);
-        double voltageRequest = MathUtil.clamp(pValue + fValue, -12.0, 12.0);
-
-        armMotor.setVoltage(voltageRequest);
-
-        Logger.recordOutput("Intake/Arm/pValue", pValue);
-        Logger.recordOutput("Intake/Arm/fValue", fValue);
+    public void setPosition(double position) {
+        encoder.setPosition(position);
     }
 
     @Override

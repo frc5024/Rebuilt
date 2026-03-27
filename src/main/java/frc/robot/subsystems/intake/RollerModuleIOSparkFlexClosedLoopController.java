@@ -26,7 +26,7 @@ public class RollerModuleIOSparkFlexClosedLoopController implements RollerModule
 
     // Hardware
     protected final SparkFlex rollerMotor;
-    protected final RelativeEncoder rollerEncoder;
+    protected final RelativeEncoder encoder;
     private final SparkClosedLoopController pidController;
 
     private SparkFlexConfig config;
@@ -39,7 +39,7 @@ public class RollerModuleIOSparkFlexClosedLoopController implements RollerModule
      */
     public RollerModuleIOSparkFlexClosedLoopController() {
         this.rollerMotor = new SparkFlex(MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
-        this.rollerEncoder = this.rollerMotor.getEncoder();
+        this.encoder = this.rollerMotor.getEncoder();
         this.pidController = this.rollerMotor.getClosedLoopController();
 
         this.config = new SparkFlexConfig();
@@ -50,6 +50,7 @@ public class RollerModuleIOSparkFlexClosedLoopController implements RollerModule
         // set velocity factor
         double velocityConversionFactor = 1 / GEAR_RATIO;
         config.encoder
+                .positionConversionFactor(velocityConversionFactor)
                 .velocityConversionFactor(velocityConversionFactor);
 
         // set PIDs and kSVAs
@@ -61,9 +62,6 @@ public class RollerModuleIOSparkFlexClosedLoopController implements RollerModule
                 .kS(kSVAs[0])
                 .kV(kSVAs[1])
                 .kA(kSVAs[2]);
-
-        // Set current limit
-        // config.smartCurrentLimit(60);
 
         this.rollerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -78,8 +76,8 @@ public class RollerModuleIOSparkFlexClosedLoopController implements RollerModule
 
         inputs.data = new RollerModuleIOData(
                 connectedDebouncer.calculate(true),
-                rollerEncoder.getPosition(),
-                rollerEncoder.getVelocity(),
+                encoder.getPosition(),
+                encoder.getVelocity(),
                 rollerMotor.getAppliedOutput(),
                 0.0,
                 rollerMotor.getOutputCurrent(),
@@ -103,22 +101,12 @@ public class RollerModuleIOSparkFlexClosedLoopController implements RollerModule
 
     @Override
     public double getPosition() {
-        return rollerEncoder.getPosition();
+        return encoder.getPosition();
     }
 
     @Override
     public double getVelocity() {
-        return rollerEncoder.getVelocity();
-    }
-
-    @Override
-    public void intake() {
-        pidController.setSetpoint(RollerConstants.INTAKE_RPM, ControlType.kVelocity);
-    }
-
-    @Override
-    public void outtake() {
-        pidController.setSetpoint(RollerConstants.OUTTAKE_RPM, ControlType.kVelocity);
+        return encoder.getVelocity();
     }
 
     @Override
@@ -139,6 +127,11 @@ public class RollerModuleIOSparkFlexClosedLoopController implements RollerModule
         config.closedLoop.feedForward.kS(kS).kV(kV).kA(kA);
 
         rollerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
+
+    @Override
+    public void setVelocity(double rpm) {
+        pidController.setSetpoint(rpm, ControlType.kVelocity);
     }
 
     @Override

@@ -22,58 +22,55 @@ public class IntakeSubsystem extends SubsystemBase {
     protected final ArmModuleIOInputsAutoLogged armInputs;
     protected final RollerModuleIOInputsAutoLogged rollerInputs;
 
+    // Variables
+    private double targetAngle;
+    private double targetRPM;
+
+    private double[] kArmSVAs;
+    private double[] kArmPIDs;
+    private double[] kRollerSVAs;
+    private double[] kRollerPIDs;
+
     // Shuffleboard entries
     private ShuffleboardTab armTab;
-
-    private GenericEntry armPEntry;
-    private GenericEntry armIEntry;
-    private GenericEntry armDEntry;
 
     private GenericEntry armSEntry;
     private GenericEntry armVEntry;
     private GenericEntry armAEntry;
 
-    private GenericEntry armExtendEntry;
-    private GenericEntry armRetractEntry;
+    private GenericEntry armPEntry;
+    private GenericEntry armIEntry;
+    private GenericEntry armDEntry;
 
     private ShuffleboardTab rollerTab;
-
-    private GenericEntry rollerPEntry;
-    private GenericEntry rollerIEntry;
-    private GenericEntry rollerDEntry;
 
     private GenericEntry rollerSEntry;
     private GenericEntry rollerVEntry;
     private GenericEntry rollerAEntry;
 
-    private GenericEntry rollerIntakeEntry;
-    private GenericEntry rollerOuttakeEntry;
-    private GenericEntry rollerStopEntry;
-
-    // Variables
-    public boolean armPIDEnabled;
-    public boolean rollerPIDEnabled;
-
-    private double[] kArmPIDs;
-    private double[] kArmSVAs;
-    private double[] kRollerPIDs;
-    private double[] kRollerSVAs;
+    private GenericEntry rollerPEntry;
+    private GenericEntry rollerIEntry;
+    private GenericEntry rollerDEntry;
 
     /**
      * 
      */
     public IntakeSubsystem(ArmModuleIO armModuleIO, RollerModuleIO rollerModuleIO) {
+        // set advantage kit IO logging
         this.armModuleIO = armModuleIO;
         this.rollerModuleIO = rollerModuleIO;
         this.armInputs = new ArmModuleIOInputsAutoLogged();
         this.rollerInputs = new RollerModuleIOInputsAutoLogged();
+        this.targetAngle = 0.0;
+        this.targetRPM = 0.0;
 
         // set shuffleboard entries if in tuning mode
         if (RobotConstants.TUNING_MODE) {
-            kArmPIDs = ArmConstants.getPIDs();
             kArmSVAs = ArmConstants.getSVAs();
-            kRollerPIDs = RollerConstants.getPIDs();
+            kArmPIDs = ArmConstants.getPIDs();
+
             kRollerSVAs = RollerConstants.getSVAs();
+            kRollerPIDs = RollerConstants.getPIDs();
 
             setShuffleboard();
         }
@@ -88,7 +85,8 @@ public class IntakeSubsystem extends SubsystemBase {
         Logger.processInputs("Intake/Roller", rollerInputs);
 
         // update the arm voltage from pid controller & feedforward
-        armModuleIO.setVoltage();
+        armModuleIO.setAngle(targetAngle);
+        rollerModuleIO.setVelocity(targetRPM);
 
         // reset the relative encoder if retracted
         if (armModuleIO.isRetracted()) {
@@ -97,35 +95,24 @@ public class IntakeSubsystem extends SubsystemBase {
 
         // update pid values if in tuning mode
         if (RobotConstants.TUNING_MODE) {
-            armModuleIO.setPID(armPEntry.getDouble(kArmPIDs[0]), armIEntry.getDouble(kArmPIDs[1]),
-                    armDEntry.getDouble(kArmPIDs[2]));
-            armModuleIO.setFF(armSEntry.getDouble(kArmSVAs[0]), armVEntry.getDouble(kArmSVAs[1]),
+            armModuleIO.setFF(
+                    armSEntry.getDouble(kArmSVAs[0]),
+                    armVEntry.getDouble(kArmSVAs[1]),
                     armAEntry.getDouble(kArmSVAs[2]));
 
-            rollerModuleIO.setPID(rollerPEntry.getDouble(kRollerPIDs[0]), rollerIEntry.getDouble(kRollerPIDs[1]),
-                    rollerDEntry.getDouble(kRollerPIDs[2]));
-            rollerModuleIO.setFF(rollerSEntry.getDouble(kRollerSVAs[0]), rollerVEntry.getDouble(kRollerSVAs[1]),
+            armModuleIO.setPID(
+                    armPEntry.getDouble(kArmPIDs[0]),
+                    armIEntry.getDouble(kArmPIDs[1]),
+                    armDEntry.getDouble(kArmPIDs[2]));
+
+            rollerModuleIO.setFF(
+                    rollerSEntry.getDouble(kRollerSVAs[0]),
+                    rollerVEntry.getDouble(kRollerSVAs[1]),
                     rollerAEntry.getDouble(kRollerSVAs[2]));
-
-            if (armExtendEntry.getBoolean(false)) {
-                armModuleIO.extend();
-            }
-
-            if (armRetractEntry.getBoolean(false)) {
-                armModuleIO.retract();
-            }
-
-            if (rollerIntakeEntry.getBoolean(false)) {
-                rollerModuleIO.intake();
-            }
-
-            if (rollerOuttakeEntry.getBoolean(false)) {
-                rollerModuleIO.outtake();
-            }
-
-            if (rollerStopEntry.getBoolean(false)) {
-                rollerModuleIO.stop();
-            }
+            rollerModuleIO.setPID(
+                    rollerPEntry.getDouble(kRollerPIDs[0]),
+                    rollerIEntry.getDouble(kRollerPIDs[1]),
+                    rollerDEntry.getDouble(kRollerPIDs[2]));
         }
 
         Logger.recordOutput("Intake/Arm/IsExetended", armModuleIO.isExtended());
@@ -137,7 +124,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void extendArm() {
-        armModuleIO.extend();
+        targetAngle = ArmConstants.EXTENDED_ANGLE;
     }
 
     public double getCurrentDrawAmps() {
@@ -156,23 +143,15 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void intakeRoller() {
-        rollerModuleIO.intake();
+        targetRPM = RollerConstants.INTAKE_RPM;
     }
 
     public void outtakeRoller() {
-        rollerModuleIO.outtake();
+        targetRPM = RollerConstants.OUTTAKE_RPM;
     }
 
     public void retractArm() {
-        armModuleIO.retract();
-    }
-
-    public void setArmPID(boolean armPIDEnabled) {
-        this.armPIDEnabled = armPIDEnabled;
-    }
-
-    public void setRollerPID(boolean rollerPIDEnabled) {
-        this.rollerPIDEnabled = rollerPIDEnabled;
+        targetAngle = ArmConstants.RETRACTED_ANGLE;
     }
 
     public boolean isRetracted() {
@@ -190,19 +169,16 @@ public class IntakeSubsystem extends SubsystemBase {
         rollerModuleIO.runCharacterization(output);
     }
 
+    public void stopRoller() {
+        targetRPM = 0.0;
+        rollerModuleIO.stop();
+    }
+
     /**
      * 
      */
     private void setShuffleboard() {
         armTab = Shuffleboard.getTab("Intake/Arm");
-        armPEntry = armTab.add("Set kP", kArmPIDs[0]).getEntry();
-        armIEntry = armTab.add("Set kI", kArmPIDs[1]).getEntry();
-        armDEntry = armTab.add("Set kD", kArmPIDs[2]).getEntry();
-
-        armPEntry.setDouble(kArmPIDs[0]);
-        armIEntry.setDouble(kArmPIDs[1]);
-        armDEntry.setDouble(kArmPIDs[2]);
-
         armSEntry = armTab.add("Set kS", kArmSVAs[0]).getEntry();
         armVEntry = armTab.add("Set kV", kArmSVAs[1]).getEntry();
         armAEntry = armTab.add("Set kA", kArmSVAs[2]).getEntry();
@@ -211,22 +187,15 @@ public class IntakeSubsystem extends SubsystemBase {
         armVEntry.setDouble(kArmSVAs[1]);
         armAEntry.setDouble(kArmSVAs[2]);
 
-        armRetractEntry = armTab.add("Force Retract", false)
-                .withWidget("Toggle Button")
-                .getEntry();
-        armExtendEntry = armTab.add("Force Extend", false)
-                .withWidget("Toggle Button")
-                .getEntry();
+        armPEntry = armTab.add("Set kP", kArmPIDs[0]).getEntry();
+        armIEntry = armTab.add("Set kI", kArmPIDs[1]).getEntry();
+        armDEntry = armTab.add("Set kD", kArmPIDs[2]).getEntry();
+
+        armPEntry.setDouble(kArmPIDs[0]);
+        armIEntry.setDouble(kArmPIDs[1]);
+        armDEntry.setDouble(kArmPIDs[2]);
 
         rollerTab = Shuffleboard.getTab("Intake/Roller");
-        rollerPEntry = rollerTab.add("Set kP", kRollerPIDs[0]).getEntry();
-        rollerIEntry = rollerTab.add("Set kI", kRollerPIDs[1]).getEntry();
-        rollerDEntry = rollerTab.add("Set kD", kRollerPIDs[2]).getEntry();
-
-        rollerPEntry.setDouble(kRollerPIDs[0]);
-        rollerIEntry.setDouble(kRollerPIDs[1]);
-        rollerDEntry.setDouble(kRollerPIDs[2]);
-
         rollerSEntry = rollerTab.add("Set kS", kRollerSVAs[0]).getEntry();
         rollerVEntry = rollerTab.add("Set kV", kRollerSVAs[1]).getEntry();
         rollerAEntry = rollerTab.add("Set kA", kRollerSVAs[2]).getEntry();
@@ -235,15 +204,13 @@ public class IntakeSubsystem extends SubsystemBase {
         rollerVEntry.setDouble(kRollerSVAs[1]);
         rollerAEntry.setDouble(kRollerSVAs[2]);
 
-        rollerIntakeEntry = rollerTab.add("Force Intake", false)
-                .withWidget("Toggle Switch")
-                .getEntry();
-        rollerOuttakeEntry = rollerTab.add("Force Outtake", false)
-                .withWidget("Toggle Switch")
-                .getEntry();
-        rollerStopEntry = rollerTab.add("Stop Motor", false)
-                .withWidget("Toggle Switch")
-                .getEntry();
+        rollerPEntry = rollerTab.add("Set kP", kRollerPIDs[0]).getEntry();
+        rollerIEntry = rollerTab.add("Set kI", kRollerPIDs[1]).getEntry();
+        rollerDEntry = rollerTab.add("Set kD", kRollerPIDs[2]).getEntry();
+
+        rollerPEntry.setDouble(kRollerPIDs[0]);
+        rollerIEntry.setDouble(kRollerPIDs[1]);
+        rollerDEntry.setDouble(kRollerPIDs[2]);
     }
 
     /**

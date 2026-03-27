@@ -14,7 +14,7 @@ public interface FeederModuleIO {
     record FeederModuleIOData(
             boolean connected,
             double positionRads,
-            double velocityRadsPerSec,
+            double velocityRPM,
             double appliedVoltage,
             double torqueCurrentAmps,
             double supplyCurrentAmps,
@@ -22,6 +22,10 @@ public interface FeederModuleIO {
     }
 
     default double getCurrentDrawAmps() {
+        return 0.0;
+    }
+
+    default double getGoalVelocity() {
         return 0.0;
     }
 
@@ -37,12 +41,13 @@ public interface FeederModuleIO {
         return false;
     }
 
-    // TODO: remove after refactoring - speed is a constant so set it in the
-    // hardware module
-    default void set(double speed) {
+    default void setFF(double kS, double kV, double kA) {
     }
 
-    default void start() {
+    default void setPID(double kP, double kI, double kD) {
+    }
+
+    default void setVoltage(double targetRPM) {
     }
 
     default void stop() {

@@ -14,14 +14,11 @@ public interface ArmModuleIO {
     record ArmModuleIOData(
             boolean connected,
             double positionRads,
-            double velocityRadsPerSec,
+            double velocityRPM,
             double appliedVoltage,
             double torqueCurrentAmps,
             double supplyCurrentAmps,
             double tempCelsius) {
-    }
-
-    default void extend() {
     }
 
     default double getCurrentDrawAmps() {
@@ -48,7 +45,7 @@ public interface ArmModuleIO {
         return true;
     }
 
-    default void retract() {
+    default void setAngle(double degrees) {
     }
 
     default void setConstraints(double maxVelocity, double maxAcceleration, double tolerance) {
@@ -60,13 +57,7 @@ public interface ArmModuleIO {
     default void setPID(double kP, double kI, double kD) {
     }
 
-    default void setPosition(double degrees) {
-    }
-
-    default void setVoltage() {
-    }
-
-    default void start() {
+    default void setPosition(double position) {
     }
 
     default void stop() {

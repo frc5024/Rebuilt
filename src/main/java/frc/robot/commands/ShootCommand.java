@@ -7,7 +7,8 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.Constants.FeederConstants;
+import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -58,7 +59,7 @@ public class ShootCommand extends Command {
 
         // get distance to target and cooresponding RPM
         double distance = robotPose.getTranslation().getDistance(targetPose.getTranslation());
-        double rpm = Constants.ShooterConstants.velocityToRPMMap.get(distance);
+        double rpm = ShooterConstants.velocityToRPMMap.get(distance);
 
         // set the shooter RPM
         shooterSubsystem.setVelocity(rpm);
@@ -70,8 +71,8 @@ public class ShootCommand extends Command {
     public void execute() {
         // spin up hooper and feeder if shooter is ready
         if (shooterSubsystem.isAtSetpoint()) {
-            feederSubsystem.start();
-            hopperSubsystem.start();
+            feederSubsystem.setVelocity(FeederConstants.RPM);
+            hopperSubsystem.setVelocity(HopperConstants.RPM);
         }
 
         if (runTimer.hasElapsed(3)) {
@@ -84,8 +85,8 @@ public class ShootCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         runTimer.stop();
-        feederSubsystem.stop();
-        hopperSubsystem.stop();
+        feederSubsystem.setVelocity(0.0);
+        hopperSubsystem.setVelocity(0.0);
         shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM);
 
         Logger.recordOutput("Shooter/Active Command", "");

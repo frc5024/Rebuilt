@@ -14,12 +14,11 @@ import frc.robot.Constants.TurretConstants;
 /**
  * 
  */
-public class TurretModuleIOSim extends TurretModuleIOSparkMaxDutyCycleEncoder {
+public class TurretModuleIOSim extends TurretModuleIOSparkMaxRelativeEncoder {
     // Hardware objects
     private final DCMotor dcMotor;
     private final DCMotorSim dcMotorSim;
     private final SparkMaxSim sparkMaxSim;
-    // private final DutyCycleEncoderSim absoluteEncoderSim;
     private final DIOSim hallEffectSim;
 
     /**
@@ -27,10 +26,9 @@ public class TurretModuleIOSim extends TurretModuleIOSparkMaxDutyCycleEncoder {
      */
     public TurretModuleIOSim() {
         this.dcMotor = DCMotor.getNeo550(1);
-        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, 4.0), dcMotor);
+        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, GEAR_RATIO), dcMotor);
         this.sparkMaxSim = new SparkMaxSim(this.turretMotor, this.dcMotor);
 
-        // this.absoluteEncoderSim = new DutyCycleEncoderSim(absoluteEncoder);
         this.hallEffectSim = new DIOSim(hallEffectSensor);
     }
 
@@ -45,15 +43,13 @@ public class TurretModuleIOSim extends TurretModuleIOSparkMaxDutyCycleEncoder {
         dcMotorSim.update(0.02);
 
         double velocityRPM = Units.radiansPerSecondToRotationsPerMinute(dcMotorSim.getAngularVelocityRadPerSec());
-        sparkMaxSim.iterate(velocityRPM, RobotController.getBatteryVoltage(), 0.020);
+        sparkMaxSim.iterate(velocityRPM, RobotController.getBatteryVoltage(), 0.02);
 
         sparkMaxSim.setMotorCurrent(dcMotorSim.getCurrentDrawAmps());
         sparkMaxSim.setBusVoltage(appliedVoltage);
 
-        // absoluteEncoderSim.set(getCurrentAngle());
-
         // real hall effect returns false when homed
-        boolean isNearHome = Math.abs(getCurrentAngle() - TurretConstants.ANGLE_LIMIT) < 2.0;
+        boolean isNearHome = Math.abs(getPosition() - TurretConstants.ANGLE_LIMIT) < 2.0;
         hallEffectSim.setValue(!isNearHome);
 
         inputs.data = new TurretModuleIOData(

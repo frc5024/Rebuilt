@@ -14,7 +14,7 @@ public interface HopperModuleIO {
     record HopperModuleIOData(
             boolean connected,
             double positionRads,
-            double velocityRadsPerSec,
+            double velocityRPM,
             double appliedVoltage,
             double torqueCurrentAmps,
             double supplyCurrentAmps,
@@ -37,12 +37,13 @@ public interface HopperModuleIO {
         return false;
     }
 
-    // TODO: remove after refactoring - speed is a constant so set it in the
-    // hardware module
-    default void set(double speed) {
+    default void setFF(double kS, double kV, double kA) {
     }
 
-    default void start() {
+    default void setPID(double kP, double kI, double kD) {
+    }
+
+    default void setVoltage(double targetRPM) {
     }
 
     default void stop() {

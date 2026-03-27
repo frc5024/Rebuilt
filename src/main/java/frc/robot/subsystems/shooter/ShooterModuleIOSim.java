@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import com.revrobotics.sim.SparkFlexSim;
+import com.revrobotics.sim.SparkRelativeEncoderSim;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -14,8 +15,9 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
  */
 public class ShooterModuleIOSim extends ShooterModuleIOSparkFlexClosedLoopController {
     private final DCMotor dcMotor;
-    private final SparkFlexSim sparkFlexSim;
     private final FlywheelSim flywheelSim;
+    private final SparkFlexSim sparkFlexSim;
+    private final SparkRelativeEncoderSim rollerEncoderSim;
 
     /**
      * 
@@ -23,8 +25,9 @@ public class ShooterModuleIOSim extends ShooterModuleIOSparkFlexClosedLoopContro
     public ShooterModuleIOSim() {
         this.dcMotor = DCMotor.getNeoVortex(1);
         this.flywheelSim = new FlywheelSim(
-                LinearSystemId.createFlywheelSystem(DCMotor.getNeoVortex(2), 0.003, GEAR_RATIO), dcMotor);
+                LinearSystemId.createFlywheelSystem(DCMotor.getNeoVortex(2), 0.01, GEAR_RATIO), dcMotor);
         this.sparkFlexSim = new SparkFlexSim(this.leadMotor, this.dcMotor);
+        this.rollerEncoderSim = new SparkRelativeEncoderSim(leadMotor);
     }
 
     @Override

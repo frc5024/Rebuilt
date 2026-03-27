@@ -16,7 +16,7 @@ import frc.robot.Constants.IntakeConstants.ArmConstants;
  */
 public class ArmModuleIOSim extends ArmModuleIOSparkMaxRelativeEncoder {
     // Hardware objects
-    private final DCMotor armDcMotor;
+    private final DCMotor dcMotor;
     private final DCMotorSim dcMotorSim;
     private final SparkMaxSim sparkMaxSim;
     private final DIOSim extendedLimitSim;
@@ -26,9 +26,9 @@ public class ArmModuleIOSim extends ArmModuleIOSparkMaxRelativeEncoder {
      * 
      */
     public ArmModuleIOSim() {
-        this.armDcMotor = DCMotor.getNEO(1);
-        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(armDcMotor, 0.01, 16.0), armDcMotor);
-        this.sparkMaxSim = new SparkMaxSim(this.armMotor, this.armDcMotor);
+        this.dcMotor = DCMotor.getNeo550(1);
+        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, GEAR_RATIO), dcMotor);
+        this.sparkMaxSim = new SparkMaxSim(this.armMotor, this.dcMotor);
 
         this.extendedLimitSim = new DIOSim(extendedLimit);
         this.retractedLimitSim = new DIOSim(retractedLimit);
@@ -71,10 +71,5 @@ public class ArmModuleIOSim extends ArmModuleIOSparkMaxRelativeEncoder {
     @Override
     public double getCurrentDrawAmps() {
         return sparkMaxSim.getMotorCurrent();
-    }
-
-    @Override
-    public double getPosition() {
-        return sparkMaxSim.getPosition();
     }
 }

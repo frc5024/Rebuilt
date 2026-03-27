@@ -2,10 +2,8 @@ package frc.robot.subsystems.hopper;
 
 import com.revrobotics.sim.SparkMaxSim;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
@@ -13,7 +11,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 /**
  * 
  */
-public class HopperModuleIOSim extends HopperModuleIOSparkMax {
+public class HopperModuleIOSim extends HopperModuleIOSparkMaxRelativeEncoder {
     // Hardware objects
     private final DCMotor dcMotor;
     private final DCMotorSim dcMotorSim;
@@ -26,10 +24,8 @@ public class HopperModuleIOSim extends HopperModuleIOSparkMax {
      */
     public HopperModuleIOSim() {
         this.dcMotor = DCMotor.getNEO(1);
-        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, GEAR_RATIO), dcMotor);
+        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.001, GEAR_RATIO), dcMotor);
         this.sparkMaxSim = new SparkMaxSim(this.hopperMotor, this.dcMotor);
-
-        this.voltageRequest = 0.0;
     }
 
     @Override
@@ -42,8 +38,7 @@ public class HopperModuleIOSim extends HopperModuleIOSparkMax {
         dcMotorSim.setInput(appliedVoltage);
         dcMotorSim.update(0.02);
 
-        double velocityRPM = Units.radiansPerSecondToRotationsPerMinute(dcMotorSim.getAngularVelocityRadPerSec());
-        sparkMaxSim.iterate(velocityRPM, RobotController.getBatteryVoltage(), 0.02);
+        sparkMaxSim.iterate(dcMotorSim.getAngularVelocityRPM(), RobotController.getBatteryVoltage(), 0.02);
 
         sparkMaxSim.setMotorCurrent(dcMotorSim.getCurrentDrawAmps());
         sparkMaxSim.setBusVoltage(appliedVoltage);
@@ -51,8 +46,8 @@ public class HopperModuleIOSim extends HopperModuleIOSparkMax {
         inputs.data = new HopperModuleIOData(
                 true,
                 sparkMaxSim.getPosition(),
-                sparkMaxSim.getVelocity(),
-                voltageRequest,
+                sparkMaxSim.getVelocity() * GEAR_RATIO,
+                appliedVoltage,
                 0.0,
                 sparkMaxSim.getMotorCurrent(),
                 0.0);
@@ -66,11 +61,5 @@ public class HopperModuleIOSim extends HopperModuleIOSparkMax {
     @Override
     public double getPosition() {
         return sparkMaxSim.getPosition();
-    }
-
-    @Override
-    public void set(double voltage) {
-        voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
-        dcMotorSim.setInputVoltage(voltageRequest);
     }
 }

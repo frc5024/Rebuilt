@@ -2,10 +2,8 @@ package frc.robot.subsystems.feeder;
 
 import com.revrobotics.sim.SparkFlexSim;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
@@ -13,7 +11,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 /**
  * 
  */
-public class FeederModuleIOSim extends FeederModuleIOSparkFlex {
+public class FeederModuleIOSim extends FeederModuleIOSparkFlexRelativeEncoder {
     // Hardware objects
     private final DCMotor dcMotor;
     private final DCMotorSim dcMotorSim;
@@ -38,8 +36,7 @@ public class FeederModuleIOSim extends FeederModuleIOSparkFlex {
         dcMotorSim.setInput(appliedVoltage);
         dcMotorSim.update(0.02);
 
-        double velocityRPM = Units.radiansPerSecondToRotationsPerMinute(dcMotorSim.getAngularVelocityRadPerSec());
-        sparkFlexSim.iterate(velocityRPM, RobotController.getBatteryVoltage(), 0.02);
+        sparkFlexSim.iterate(dcMotorSim.getAngularVelocityRPM(), RobotController.getBatteryVoltage(), 0.02);
 
         sparkFlexSim.setMotorCurrent(dcMotorSim.getCurrentDrawAmps());
         sparkFlexSim.setBusVoltage(appliedVoltage);
@@ -47,7 +44,7 @@ public class FeederModuleIOSim extends FeederModuleIOSparkFlex {
         inputs.data = new FeederModuleIOData(
                 true,
                 sparkFlexSim.getPosition(),
-                sparkFlexSim.getVelocity(),
+                sparkFlexSim.getVelocity() * GEAR_RATIO,
                 appliedVoltage,
                 0.0,
                 sparkFlexSim.getMotorCurrent(),
@@ -62,11 +59,5 @@ public class FeederModuleIOSim extends FeederModuleIOSparkFlex {
     @Override
     public double getPosition() {
         return sparkFlexSim.getPosition();
-    }
-
-    @Override
-    public void set(double voltage) {
-        double voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
-        dcMotorSim.setInputVoltage(voltageRequest);
     }
 }

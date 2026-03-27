@@ -139,6 +139,7 @@ public class Robot extends LoggedRobot {
 
         // Publish game state to SmartDashboard
         SmartDashboard.putBoolean("Hub/Active", GameUtil.isHubActive());
+        SmartDashboard.putBoolean("Hub/WonAuto", GameUtil.wonAuto());
         SmartDashboard.putNumber("Hub/TimeRemainingInPhase", GameUtil.getTimeRemainingInPhase());
 
         // Return to non-RT thread priority (do not modify the first argument)

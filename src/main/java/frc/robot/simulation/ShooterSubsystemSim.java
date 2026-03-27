@@ -59,7 +59,7 @@ public class ShooterSubsystemSim extends ShooterSubsystem {
         if (fuelSimCount.getFuelStored() > 0) {
             fuelSim.launchFuel(MetersPerSecond.of(getTangentialVelocity()),
                     Degree.of(Math.abs(TurretConstants.verticalLaunchAngle)),
-                    Degree.of(turretYawSupplier.getAsDouble()),
+                    Degree.of(-turretYawSupplier.getAsDouble()),
                     Meters.of(TurretConstants.OFFSET_Z));
             fuelSimCount.setFuelStored(fuelSimCount.getFuelStored() - 1);
         }

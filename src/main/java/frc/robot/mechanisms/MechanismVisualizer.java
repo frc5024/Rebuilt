@@ -38,7 +38,7 @@ public class MechanismVisualizer {
                                         0.0)), // intake
                         new Pose3d(-0.29, -0.05, robotMechanism.getClimbShaftLength(), new Rotation3d(0.0, 0.0, 0.0)), // climber
                         new Pose3d(-0.15, 0.16, 0.37,
-                                new Rotation3d(0.0, 0.0, Units.degreesToRadians(robotMechanism.getTurretArmAngle()))), // turret
+                                new Rotation3d(0.0, 0.0, -Units.degreesToRadians(robotMechanism.getTurretArmAngle()))), // turret
                         new Pose3d(0.09, 0.0, 0.055, new Rotation3d(0.0, 0.0, robotMechanism.getHopperArmAngle())), // spindexer
                         new Pose3d(-0.09, 0.0, 0.275, new Rotation3d(0.0, robotMechanism.getFeederArmAngle(), 0.0)), // feeder
 

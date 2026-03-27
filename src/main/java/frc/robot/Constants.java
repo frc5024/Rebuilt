@@ -33,7 +33,7 @@ public final class Constants {
      */
     public static class RobotConstants {
         // used to show/hide shuffleboard entries for PID tuning
-        public static final boolean TUNING_MODE = true;
+        public static final boolean TUNING_MODE = false;
 
         public static final double LOOP_PERIOD_SECS = 0.02;
 
@@ -133,7 +133,40 @@ public final class Constants {
      * 
      */
     public static class FeederConstants {
-        public static double feederSpeed = 0.7;
+        public static final double RPM = 427.0;
+        public static final double UNJAM_RPM = -222.22;
+
+        public static final double kS = 0.0;
+        public static final double kV = 0.0;
+        public static final double kA = 0.0;
+
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+        public static final double sim_kS = 0.01;
+        public static final double sim_kV = 0.0187;
+        public static final double sim_kA = 0.0;
+
+        public static final double sim_kP = 0.0;
+        public static final double sim_kI = 0.0;
+        public static final double sim_kD = 0.0;
+
+        public static double[] getPIDs() {
+            if (Robot.isReal()) {
+                return new double[] { kP, kI, kD };
+            } else {
+                return new double[] { sim_kP, sim_kI, sim_kD };
+            }
+        }
+
+        public static double[] getSVAs() {
+            if (Robot.isReal()) {
+                return new double[] { kS, kV, kA };
+            } else {
+                return new double[] { sim_kS, sim_kV, sim_kA };
+            }
+        }
     }
 
     /**
@@ -211,8 +244,41 @@ public final class Constants {
      * 
      */
     public static class HopperConstants {
-        public static final int CAPACITY = 20;
-        public static double hopperSpeed = 0.1;
+        public static final int CAPACITY = 25;
+        public static final double RPM = 533.33;
+        public static final double UNJAM_RPM = -222.22;
+
+        public static final double kS = 0.0;
+        public static final double kV = 0.0;
+        public static final double kA = 0.0;
+
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+        public static final double sim_kS = 0.01;
+        public static final double sim_kV = 0.0187;
+        public static final double sim_kA = 0.0;
+
+        public static final double sim_kP = 0.0;
+        public static final double sim_kI = 0.0;
+        public static final double sim_kD = 0.0;
+
+        public static double[] getPIDs() {
+            if (Robot.isReal()) {
+                return new double[] { kP, kI, kD };
+            } else {
+                return new double[] { sim_kP, sim_kI, sim_kD };
+            }
+        }
+
+        public static double[] getSVAs() {
+            if (Robot.isReal()) {
+                return new double[] { kS, kV, kA };
+            } else {
+                return new double[] { sim_kS, sim_kV, sim_kA };
+            }
+        }
     }
 
     /**
@@ -245,27 +311,27 @@ public final class Constants {
         public static final double kRollV = 0.0;
 
         public static class ArmConstants {
-            public static final double EXTENDED_ANGLE = -127.59;
+            public static final double EXTENDED_ANGLE = 127.59;
             public static final double RETRACTED_ANGLE = 0.0;
             public static final double MAX_SPEED = 720.0;
             public static final double MAX_ACCEL = 1440.0;
             public static final double TOLERANCE = 1.0;
 
-            public static final double kP = 0.0;
-            public static final double kI = 0.0;
-            public static final double kD = 0.0;
-
             public static final double kS = 0.0;
             public static final double kV = 0.0;
             public static final double kA = 0.0;
 
-            public static final double sim_kP = 0.05;
+            public static final double kP = 0.0;
+            public static final double kI = 0.0;
+            public static final double kD = 0.0;
+
+            public static final double sim_kS = 0.01;
+            public static final double sim_kV = 0.014;
+            public static final double sim_kA = 0.0;
+
+            public static final double sim_kP = 0.006;
             public static final double sim_kI = 0.0;
             public static final double sim_kD = 0.0;
-
-            public static final double sim_kS = 0.0;
-            public static final double sim_kV = 0.0;
-            public static final double sim_kA = 0.0;
 
             public static double[] getPIDs() {
                 if (Robot.isReal()) {
@@ -288,21 +354,21 @@ public final class Constants {
             public static final double INTAKE_RPM = 2500.0;
             public static final double OUTTAKE_RPM = -1500.0;
 
-            public static final double kP = 0.0;
-            public static final double kI = 0.0;
-            public static final double kD = 0.0;
-
             public static final double kS = 0.22;
             public static final double kV = 0.00195;
             public static final double kA = 0.0;
 
-            public static final double sim_kP = 0.0001;
-            public static final double sim_kI = 0.0;
-            public static final double sim_kD = 0.02;
+            public static final double kP = 0.0;
+            public static final double kI = 0.0;
+            public static final double kD = 0.0;
 
-            public static final double sim_kS = 0.0;
-            public static final double sim_kV = 1.0 / 6784.0;
+            public static final double sim_kS = 0.01;
+            public static final double sim_kV = 0.00155;
             public static final double sim_kA = 0.0;
+
+            public static final double sim_kP = 0.01;
+            public static final double sim_kI = 0.0;
+            public static final double sim_kD = 0.0;
 
             public static double[] getPIDs() {
                 if (Robot.isReal()) {
@@ -326,21 +392,34 @@ public final class Constants {
      * 
      */
     public static class ShooterConstants {
-        public static final double kP = 0.0006;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
+        public static final double IDLE_SPEED_RPM = 1000.0;
+        public static final double WHEEL_DIAMETER_METERS = 0.1016;
+
+        public static InterpolatingDoubleTreeMap velocityToRPMMap = new InterpolatingDoubleTreeMap();
+        static {
+            velocityToRPMMap.put(2.4384, 2800.0);
+            velocityToRPMMap.put(3.048, 3100.0);
+            velocityToRPMMap.put(4.2672, 3650.0);
+            velocityToRPMMap.put(5.4864, 4200.0);
+            velocityToRPMMap.put(6.7056, 4575.0);
+            velocityToRPMMap.put(7.9248, 5100.0);
+        }
 
         public static final double kS = 0.2; // Static friction voltage
         public static final double kV = 0.001764; // Velocity constant
         public static final double kA = 0.01; // Acceleration constant
 
-        public static final double sim_kP = 0.0;
+        public static final double kP = 0.0006;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+        public static final double sim_kS = 0.01;
+        public static final double sim_kV = 0.001;
+        public static final double sim_kA = 0.0;
+
+        public static final double sim_kP = 0.01;
         public static final double sim_kI = 0.0;
         public static final double sim_kD = 0.0;
-
-        public static final double sim_kS = 0.0;
-        public static final double sim_kV = 0.00174;
-        public static final double sim_kA = 0.0;
 
         public static double[] getPIDs() {
             if (Robot.isReal()) {
@@ -356,23 +435,6 @@ public final class Constants {
             } else {
                 return new double[] { sim_kS, sim_kV, sim_kA };
             }
-        }
-
-        public static final double setVelocity = 3766; // Example set velocity in RPM
-        public static final double speed = 0.1;
-        public static final double feederspeed = 0.7;
-
-        public static final double IDLE_SPEED_RPM = 1000.0;
-        public static final double WHEEL_DIAMETER_METERS = 0.1016;
-
-        public static InterpolatingDoubleTreeMap velocityToRPMMap = new InterpolatingDoubleTreeMap();
-        static {
-            velocityToRPMMap.put(2.4384, 2800.0);
-            velocityToRPMMap.put(3.048, 3100.0);
-            velocityToRPMMap.put(4.2672, 3650.0);
-            velocityToRPMMap.put(5.4864, 4200.0);
-            velocityToRPMMap.put(6.7056, 4575.0);
-            velocityToRPMMap.put(7.9248, 5100.0);
         }
     }
 
@@ -415,29 +477,33 @@ public final class Constants {
      * 
      */
     public static final class TurretConstants {
-        public static final int MOTOR_ID = 3;
         public static final double OFFSET_X = -0.165; // -0.254
         public static final double OFFSET_Y = 0.165; // 0.1778
         public static final double OFFSET_Z = 0.40;
         public static final double ANGLE_LIMIT = 135.0;
 
-        public static final double turretTolerance = 0.5;
+        public static final double TOLERANCE = 0.5;
 
-        public static final double kP = 0.055;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
+        public static final double MAX_SPEED = 720; // deg/s
+        public static final double MAX_ACCEL = 1440; // deg/s^2
 
-        public static final double kS = 0.1;
-        public static final double kV = 0.005;
+        public static final double verticalLaunchAngle = -65.0;
+
+        public static final double kS = 0.0;
+        public static final double kV = 0.0;
         public static final double kA = 0.0;
 
-        public static final double sim_kP = 0.01;
-        public static final double sim_kI = 0.0;
-        public static final double sim_kD = 0.003;
+        public static final double kP = 0.12;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0012;
 
         public static final double sim_kS = 0.01;
-        public static final double sim_kV = 0.01;
+        public static final double sim_kV = 0.0285;
         public static final double sim_kA = 0.0;
+
+        public static final double sim_kP = 0.1;
+        public static final double sim_kI = 0.0;
+        public static final double sim_kD = 0.0;
 
         public static double[] getPIDs() {
             if (Robot.isReal()) {
@@ -454,14 +520,6 @@ public final class Constants {
                 return new double[] { sim_kS, sim_kV, sim_kA };
             }
         }
-
-        public static final int turretEncoderChannel = 0;
-        public static final int hallEffectChannel = 5;
-
-        public static final double turretMaxSpeed = 720; // deg/s
-        public static final double turretMaxAccel = 1440; // deg/s^2
-
-        public static final double verticalLaunchAngle = -65.0;
     }
 
     /**

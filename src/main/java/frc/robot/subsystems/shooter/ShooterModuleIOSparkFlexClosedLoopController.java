@@ -22,14 +22,15 @@ public class ShooterModuleIOSparkFlexClosedLoopController implements ShooterModu
     // Constants
     private final int LEAD_MOTOR_ID = 51;
     private final int FOLLOWER_MOTOR_ID = 52;
+
     protected final double GEAR_RATIO = 1.0;
     private final double RPM_TOLERANCE = 200.0;
 
     // Hardware
     protected final SparkFlex leadMotor;
     private final SparkFlex followerMotor;
+    protected final RelativeEncoder encoder;
     private final SparkClosedLoopController pidController;
-    protected final RelativeEncoder internalEncoder;
 
     private SparkFlexConfig leadConfig;
     private SparkFlexConfig followerConfig;
@@ -44,11 +45,8 @@ public class ShooterModuleIOSparkFlexClosedLoopController implements ShooterModu
     public ShooterModuleIOSparkFlexClosedLoopController() {
         this.leadMotor = new SparkFlex(LEAD_MOTOR_ID, MotorType.kBrushless);
         this.followerMotor = new SparkFlex(FOLLOWER_MOTOR_ID, MotorType.kBrushless);
+        this.encoder = this.leadMotor.getEncoder();
         this.pidController = this.leadMotor.getClosedLoopController();
-        this.internalEncoder = this.leadMotor.getEncoder();
-
-        this.leadConnectedDebouncer = new Debouncer(0.5);
-        this.followerConnectedDebouncer = new Debouncer(0.5);
 
         this.leadConfig = new SparkFlexConfig();
         this.followerConfig = new SparkFlexConfig();
@@ -57,21 +55,27 @@ public class ShooterModuleIOSparkFlexClosedLoopController implements ShooterModu
                 .inverted(true)
                 .smartCurrentLimit(60);
 
+        // set PIDs and kSVAs
+        double[] kPIDs = ShooterConstants.getPIDs();
+        double[] kSVAs = ShooterConstants.getSVAs();
         leadConfig.closedLoop
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .p(ShooterConstants.kP)
-                .i(ShooterConstants.kI)
-                .d(ShooterConstants.kD).feedForward
-                .kS(ShooterConstants.kS)
-                .kV(ShooterConstants.kV)
-                .kA(ShooterConstants.kA);
+                .pid(kPIDs[0], kPIDs[1], kPIDs[2]).feedForward
+                .kS(kSVAs[0])
+                .kV(kSVAs[1])
+                .kA(kSVAs[2]);
 
-        followerConfig.follow(LEAD_MOTOR_ID)
-                .smartCurrentLimit(60)
-                .idleMode(IdleMode.kCoast);
+        followerConfig
+                .idleMode(IdleMode.kCoast)
+                .inverted(false)
+                .follow(LEAD_MOTOR_ID)
+                .smartCurrentLimit(60);
 
         this.leadMotor.configure(leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         this.followerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        this.leadConnectedDebouncer = new Debouncer(0.5);
+        this.followerConnectedDebouncer = new Debouncer(0.5);
     }
 
     @Override
@@ -82,8 +86,8 @@ public class ShooterModuleIOSparkFlexClosedLoopController implements ShooterModu
 
         inputs.data = new ShooterModuleIOData(
                 leadConnectedDebouncer.calculate(true),
-                internalEncoder.getPosition(),
-                internalEncoder.getVelocity(),
+                encoder.getPosition(),
+                encoder.getVelocity(),
                 leadMotor.getAppliedOutput(),
                 leadMotor.getBusVoltage(),
                 leadMotor.getOutputCurrent(),
@@ -108,13 +112,13 @@ public class ShooterModuleIOSparkFlexClosedLoopController implements ShooterModu
     }
 
     @Override
-    public double getSetpoint() {
-        return pidController.getSetpoint();
+    public double getPosition() {
+        return encoder.getPosition();
     }
 
     @Override
     public double getVelocity() {
-        return internalEncoder.getVelocity();
+        return encoder.getVelocity();
     }
 
     @Override

@@ -41,14 +41,8 @@ public interface RollerModuleIO {
         return 0.0;
     }
 
-    default void intake() {
-    }
-
     default boolean isRunning() {
         return false;
-    }
-
-    default void outtake() {
     }
 
     default void runCharacterization(double voltage) {
@@ -63,10 +57,7 @@ public interface RollerModuleIO {
     default void setPID(double kP, double kI, double kD) {
     }
 
-    default void setVoltage() {
-    }
-
-    default void start() {
+    default void setVelocity(double rpm) {
     }
 
     default void stop() {

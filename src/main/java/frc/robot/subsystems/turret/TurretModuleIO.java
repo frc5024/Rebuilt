@@ -30,18 +30,6 @@ public interface TurretModuleIO {
         return 0.0;
     }
 
-    default double getCurrentAngle() {
-        return 0.0;
-    }
-
-    default double getGoalPosition() {
-        return 0.0;
-    }
-
-    default double getGoalVelocity() {
-        return 0.0;
-    }
-
     default boolean getHallEffectValue() {
         return false;
     }
@@ -74,12 +62,6 @@ public interface TurretModuleIO {
     }
 
     default void setPosition(double position) {
-    }
-
-    default void setVoltage() {
-    }
-
-    default void start() {
     }
 
     default void stop() {

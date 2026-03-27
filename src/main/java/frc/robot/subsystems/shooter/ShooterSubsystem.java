@@ -5,11 +5,9 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.shooterCommand;
 
 /**
  * 
@@ -19,16 +17,21 @@ public class ShooterSubsystem extends SubsystemBase {
     private final ShooterModuleIO shooterModuleIO;
     protected final ShooterModuleIOInputsAutoLogged inputs;
 
+    // Variables
+    private double targetRPM;
+    private double[] kSVAs;
+    private double[] kPIDs;
+
     // Shuffleboard entries
     private ShuffleboardTab tab;
-    private GenericEntry pEntry;
-    private GenericEntry dEntry;
-    private GenericEntry iEntry;
 
     private GenericEntry sEntry;
     private GenericEntry vEntry;
     private GenericEntry aEntry;
-    private GenericEntry rpmEntry;
+
+    private GenericEntry pEntry;
+    private GenericEntry iEntry;
+    private GenericEntry dEntry;
 
     /**
      * 
@@ -37,9 +40,13 @@ public class ShooterSubsystem extends SubsystemBase {
         // set advantage kit IO logging
         this.shooterModuleIO = shooterModuleIO;
         this.inputs = new ShooterModuleIOInputsAutoLogged();
+        this.targetRPM = 0.0;
 
         // set shuffleboard entries if in tuning mode
         if (RobotConstants.TUNING_MODE) {
+            kSVAs = ShooterConstants.getSVAs();
+            kPIDs = ShooterConstants.getPIDs();
+
             setShuffleboard();
         }
     }
@@ -50,19 +57,19 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterModuleIO.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
 
+        shooterModuleIO.setVelocity(targetRPM);
+
         // update pid values if in tuning mode
         if (RobotConstants.TUNING_MODE) {
-            shooterModuleIO.setPID(
-                    pEntry.getDouble(ShooterConstants.kP),
-                    iEntry.getDouble(ShooterConstants.kI),
-                    dEntry.getDouble(ShooterConstants.kD));
-
             shooterModuleIO.setFF(
-                    sEntry.getDouble(ShooterConstants.kS),
-                    vEntry.getDouble(ShooterConstants.kV),
-                    aEntry.getDouble(ShooterConstants.kA));
+                    sEntry.getDouble(kSVAs[0]),
+                    vEntry.getDouble(kSVAs[1]),
+                    aEntry.getDouble(kSVAs[2]));
 
-            setVelocity(rpmEntry.getDouble(getVelocity()));
+            shooterModuleIO.setPID(
+                    pEntry.getDouble(kPIDs[0]),
+                    iEntry.getDouble(kPIDs[1]),
+                    dEntry.getDouble(kPIDs[2]));
         }
 
         Logger.recordOutput("Shooter/AtSetpoint", shooterModuleIO.isAtSetpoint());
@@ -94,14 +101,8 @@ public class ShooterSubsystem extends SubsystemBase {
         return shooterModuleIO.isAtSetpoint();
     }
 
-    public void setShooterPID(double setVelocity) {
-    }
-
-    public void setPidEnabled(boolean enabled) {
-    }
-
-    public void setVelocity(double rpm) {
-        shooterModuleIO.setVelocity(rpm);
+    public void setVelocity(double targetRPM) {
+        this.targetRPM = targetRPM;
     }
 
     /**
@@ -110,34 +111,20 @@ public class ShooterSubsystem extends SubsystemBase {
     private void setShuffleboard() {
         tab = Shuffleboard.getTab("Shooter");
 
-        double[] kPIDs = ShooterConstants.getPIDs();
-        pEntry = tab.add("SET P", kPIDs[0]).getEntry();
-        iEntry = tab.add("SET I", kPIDs[1]).getEntry();
-        dEntry = tab.add("SET D", kPIDs[2]).getEntry();
-
-        double[] kSVAs = ShooterConstants.getSVAs();
         sEntry = tab.add("SET S", kSVAs[0]).getEntry();
         vEntry = tab.add("SET V", kSVAs[1]).getEntry();
         aEntry = tab.add("SET A", kSVAs[2]).getEntry();
-
-        rpmEntry = tab.add("SET RPM", 0.0).getEntry();
-
-        pEntry.setDouble(kPIDs[0]);
-        iEntry.setDouble(kPIDs[1]);
-        dEntry.setDouble(kPIDs[2]);
 
         sEntry.setDouble(kSVAs[0]);
         vEntry.setDouble(kSVAs[1]);
         aEntry.setDouble(kSVAs[2]);
 
-        rpmEntry.setDouble(0.0);
-    }
+        pEntry = tab.add("SET P", kPIDs[0]).getEntry();
+        iEntry = tab.add("SET I", kPIDs[1]).getEntry();
+        dEntry = tab.add("SET D", kPIDs[2]).getEntry();
 
-    /**
-     * Commands
-     */
-
-    public Command shooterCommand() {
-        return new shooterCommand(this, ShooterConstants.setVelocity);
+        pEntry.setDouble(kPIDs[0]);
+        iEntry.setDouble(kPIDs[1]);
+        dEntry.setDouble(kPIDs[2]);
     }
 }

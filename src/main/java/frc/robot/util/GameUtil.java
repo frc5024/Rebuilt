@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -17,6 +19,9 @@ import frc.robot.Constants.VisionConstants;
  * Helpful functions when playing the game
  */
 public class GameUtil {
+    // Variables
+    private static boolean wonAuto = false;
+
     /**
      * Determines if the alliance hub is active based on match time and game data.
      * Hub activation cycles through shifts in teleop based on autonomous outcome.
@@ -75,6 +80,11 @@ public class GameUtil {
      * @return time remaining in current phase (duration down to 0), or 0 if not in
      *         match
      */
+
+    public static boolean wonAuto() {
+        return wonAuto;
+    }
+
     public static double getTimeRemainingInPhase() {
         // In autonomous - count down from 20 to 0
         if (DriverStation.isAutonomousEnabled()) {
@@ -88,24 +98,40 @@ public class GameUtil {
 
             // Match time values: 2:20 = 140, 2:10 = 130, 1:45 = 105, 1:20 = 80, 0:55 = 55,
             // 0:30 = 30
-            if (matchTime > 130) {
-                // Transition Shift (140 to 130) - 10 seconds
-                return Math.round(matchTime - 130.0);
-            } else if (matchTime > 105) {
-                // Shift 1 (130 to 105) - 25 seconds
-                return Math.round(matchTime - 105.0);
-            } else if (matchTime > 80) {
-                // Shift 2 (105 to 80) - 25 seconds
-                return Math.round(matchTime - 80.0);
-            } else if (matchTime > 55) {
-                // Shift 3 (80 to 55) - 25 seconds
-                return Math.round(matchTime - 55.0);
-            } else if (matchTime > 30) {
-                // Shift 4 (55 to 30) - 25 seconds
-                return Math.round(matchTime - 30.0);
+            if (!wonAuto) {
+                if (matchTime > 105) {
+                    // Transition Shift and Shift 1 (140 to 105) - 35 seconds
+                    return Math.round(matchTime - 105.0);
+                } else if (matchTime > 80) {
+                    // Shift 2 (105 to 80) - 25 seconds
+                    return Math.round(matchTime - 80.0);
+                } else if (matchTime > 55) {
+                    // Shift 3 (80 to 55) - 25 seconds
+                    return Math.round(matchTime - 55.0);
+                } else if (matchTime > 30) {
+                    // Shift 4 (55 to 30) - 25 seconds
+                    return Math.round(matchTime - 30.0);
+                } else {
+                    // End Game (30 to 0) - 30 seconds
+                    return Math.round(matchTime);
+                }
             } else {
-                // End Game (30 to 0) - 30 seconds
-                return Math.round(matchTime);
+                if (matchTime > 130) {
+                    // Transition Shift (140 to 130) - 10 seconds
+                    return Math.round(matchTime - 130.0);
+                } else if (matchTime > 105) {
+                    // Shift 1 (130 to 105) - 25 seconds
+                    return Math.round(matchTime - 105.0);
+                } else if (matchTime > 80) {
+                    // Shift 2 (105 to 80) - 25 seconds
+                    return Math.round(matchTime - 80.0);
+                } else if (matchTime > 55) {
+                    // Shift 3 (80 to 55) - 25 seconds
+                    return Math.round(matchTime - 55.0);
+                } else {
+                    // Shift 4 and End Game (55 to 0) - 55 seconds
+                    return Math.round(matchTime);
+                }
             }
         }
 
@@ -157,10 +183,12 @@ public class GameUtil {
 
         Rotation3d rotation3d = turretPose.getRotation();
         double vx = velocityMetersPerSec * Math.cos(rotation3d.getY()) * Math.cos(rotation3d.getZ());
-        double vy = velocityMetersPerSec * Math.cos(rotation3d.getY()) * Math.sin(rotation3d.getZ());
+        double vy = velocityMetersPerSec * Math.cos(-rotation3d.getY()) * Math.sin(rotation3d.getZ());
         double vz = velocityMetersPerSec * Math.sin(-rotation3d.getY());
 
         double dt = 0.02; // 20ms steps for higher precision
+
+        Logger.recordOutput("Mechanism/TurretAngle", rotation3d.getAngle());
 
         for (double t = 0; t < 2.0; t += dt) {
             double v = Math.sqrt(vx * vx + vy * vy + vz * vz);

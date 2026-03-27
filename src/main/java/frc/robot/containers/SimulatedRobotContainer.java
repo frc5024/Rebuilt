@@ -23,8 +23,8 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.commands.LockTurretOnTarget;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.SpinToHubCommand;
 import frc.robot.commands.TuningCommandsDrive;
 import frc.robot.commands.TuningCommandsIntake;
 import frc.robot.generated.TunerConstants;
@@ -90,15 +90,12 @@ public class SimulatedRobotContainer extends RobotContainer {
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSim());
         this.m_intake = new IntakeSubsystem(new ArmModuleIOSim(), new RollerModuleIOSim());
         this.m_turret = new TurretSubsystem(new TurretModuleIOSim());
-        this.m_shooter = new ShooterSubsystemSim(new ShooterModuleIOSim(), () -> m_turret.getCurrentAngle(),
+        this.m_shooter = new ShooterSubsystemSim(new ShooterModuleIOSim(), () -> m_turret.getPosition(),
                 () -> m_feeder.isRunning(), fuelSim,
                 fuelSimCount);
 
         if (!RobotConstants.TUNING_MODE) {
-            this.m_turret.setDefaultCommand(new LockTurretOnTarget(m_turret, () -> swerveDriveSubsystem.getPose()));
-            // this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () ->
-            // swerveDriveSubsystem.getPose(),
-            // () -> swerveDriveSubsystem.getChassisSpeeds()));
+            this.m_turret.setDefaultCommand(new SpinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose()));
         }
 
         configureNamedCommands();
@@ -177,40 +174,8 @@ public class SimulatedRobotContainer extends RobotContainer {
         new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmCommand());
         new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
 
-        /**
-         * new EventTrigger("RetractIntake").onTrue(m_intake.RetractArmCommand());
-         * new EventTrigger("AimTurret").whileTrue(
-         * Commands.runOnce(() -> m_turret.setAngle(0), m_turret));
-         * new EventTrigger("Climb").whileTrue(m_climb.contractclimb());
-         * new EventTrigger("Declimb").whileTrue(m_climb.extendclimb());
-         * 
-         * // NamedCommands.registerCommand("Shooter", m_shooter.shooterCommand());
-         * // NamedCommands.registerCommand("DistanceShooter", new
-         * // distanceShooterCommand(m_shooter, swerveDriveSubsystem));
-         * // NamedCommands.registerCommand("Feeder", m_feeder.feederCommand());
-         * // NamedCommands.registerCommand("Intake", m_intake.IntakeCommand());
-         * // NamedCommands.registerCommand("ExtendIntake",
-         * m_intake.ExtendArmCommand());
-         * // NamedCommands.registerCommand("RetractIntake",
-         * m_intake.RetractArmCommand());
-         * // NamedCommands.registerCommand("Outtake", m_intake.OuttakeCommand());
-         * // NamedCommands.registerCommand("Climb", m_climb.contractclimb());
-         * // NamedCommands.registerCommand("Declimb", m_climb.extendclimb());
-         * // NamedCommands.registerCommand("Dontdeclimb", m_climb.dontdeclimb());
-         * // NamedCommands.registerCommand("ExtendClimb", m_climb.extendclimb());
-         * // NamedCommands.registerCommand("ContractClimb", m_climb.contractclimb());
-         * // NamedCommands.registerCommand("SpinHopper", m_hopper.SpinCommand());
-         */
         NamedCommands.registerCommand("RunEverything",
                 new ShootCommand(m_shooter, m_hopper, m_feeder, m_intake, () -> swerveDriveSubsystem.getPose()));
-
-        // NamedCommands.registerCommand("RunEverythings",
-        // Commands.parallel(
-        // new ShootCommand(m_shooter, m_hopper, m_feeder, () ->
-        // swerveDriveSubsystem.getPose()),
-        // // new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
-        // // new runEverything(m_feeder, m_shooter, m_hopper),
-        // Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
     }
 
     @Override
@@ -234,7 +199,7 @@ public class SimulatedRobotContainer extends RobotContainer {
         mechanismVisualizer.update(
                 m_intake.getPosition(),
                 m_hopper.getPosition(),
-                m_turret.getCurrentAngle(),
+                m_turret.getPosition(),
                 m_climb.getPosition(),
                 m_feeder.getPosition(),
                 turretPose,

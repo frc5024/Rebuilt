@@ -1,7 +1,6 @@
 package frc.robot.subsystems.intake;
 
 import com.revrobotics.sim.SparkFlexSim;
-import com.revrobotics.sim.SparkRelativeEncoderSim;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -15,20 +14,18 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
  */
 public class RollerModuleIOSim extends RollerModuleIOSparkFlexClosedLoopController {
     // Hardware objects
-    private final DCMotor rollerDcMotor;
+    private final DCMotor dcMotor;
     private final DCMotorSim dcMotorSim;
     private final SparkFlexSim sparkFlexSim;
-    private final SparkRelativeEncoderSim rollerEncoderSim;
 
     /**
      * 
      */
     public RollerModuleIOSim() {
-        this.rollerDcMotor = DCMotor.getNeoVortex(1);
-        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(rollerDcMotor, 0.01, GEAR_RATIO),
-                rollerDcMotor);
-        this.sparkFlexSim = new SparkFlexSim(this.rollerMotor, this.rollerDcMotor);
-        this.rollerEncoderSim = new SparkRelativeEncoderSim(rollerMotor);
+        this.dcMotor = DCMotor.getNeoVortex(1);
+        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, GEAR_RATIO),
+                dcMotor);
+        this.sparkFlexSim = new SparkFlexSim(this.rollerMotor, this.dcMotor);
     }
 
     @Override
@@ -44,10 +41,10 @@ public class RollerModuleIOSim extends RollerModuleIOSparkFlexClosedLoopControll
         double velocityRPM = Units.radiansPerSecondToRotationsPerMinute(dcMotorSim.getAngularVelocityRadPerSec());
         sparkFlexSim.iterate(velocityRPM, RobotController.getBatteryVoltage(), 0.020);
 
-        rollerEncoderSim.setVelocity(velocityRPM);
+        // rollerEncoderSim.setVelocity(velocityRPM);
 
-        // sparkFlexSim.setMotorCurrent(dcMotorSim.getCurrentDrawAmps());
-        // sparkFlexSim.setBusVoltage(appliedVoltage);
+        sparkFlexSim.setMotorCurrent(dcMotorSim.getCurrentDrawAmps());
+        sparkFlexSim.setBusVoltage(appliedVoltage);
 
         inputs.data = new RollerModuleIOData(
                 true,
@@ -67,10 +64,5 @@ public class RollerModuleIOSim extends RollerModuleIOSparkFlexClosedLoopControll
     @Override
     public double getPosition() {
         return sparkFlexSim.getPosition();
-    }
-
-    @Override
-    public double getVelocity() {
-        return rollerEncoderSim.getVelocity();
     }
 }
