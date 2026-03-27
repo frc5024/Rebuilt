@@ -32,6 +32,8 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     private final SparkBaseConfig armMotorConfig = new SparkMaxConfig()
             .idleMode(IdleMode.kBrake);
 
+    private final SparkBaseConfig intakeMotorConfig = new SparkMaxConfig();
+
     private static DigitalInput retractingLimitSwitch = new DigitalInput(7);
     private static DigitalInput extendingLimitSwitch = new DigitalInput(8);
 
@@ -46,6 +48,7 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
         this.armMotor = new SparkMax(armMotorID, SparkLowLevel.MotorType.kBrushless);
 
         armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         this.intakeEncoder = this.intakeMotor.getEncoder();
         this.armEncoder = this.armMotor.getEncoder();
@@ -59,20 +62,25 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
         }
 
         inputs.data = new IntakeModuleIOData(
-                connectedDebouncer.calculate(armMotor.getFaults().other),
+                connectedDebouncer.calculate(true),
                 armEncoder.getPosition(),
                 armEncoder.getVelocity(),
                 armMotor.getAppliedOutput(),
                 0.0,
                 armMotor.getOutputCurrent(),
                 armMotor.getMotorTemperature(),
-                connectedDebouncer.calculate(intakeMotor.getFaults().other),
+                connectedDebouncer.calculate(true),
                 intakeEncoder.getPosition(),
                 intakeEncoder.getVelocity(),
                 intakeMotor.getAppliedOutput(),
                 0.0,
                 intakeMotor.getOutputCurrent(),
                 intakeMotor.getMotorTemperature());
+    }
+
+    @Override
+    public double getCurrentDrawAmps() {
+        return armMotor.getOutputCurrent() + intakeMotor.getOutputCurrent();
     }
 
     @Override

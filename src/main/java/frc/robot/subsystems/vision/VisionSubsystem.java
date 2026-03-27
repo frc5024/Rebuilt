@@ -64,10 +64,10 @@ public class VisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // // Disable vision during autonomous to prevent interference with PathPlanner
-        // if (DriverStation.isAutonomous()) {
-        // return;
-        // }
+        // Disable vision during autonomous to prevent interference with PathPlanner
+        if (DriverStation.isAutonomous()) {
+            return;
+        }
 
         for (int i = 0; i < this.visionIO.length; i++) {
             this.visionIO[i].updateInputs(this.inputs[i]);

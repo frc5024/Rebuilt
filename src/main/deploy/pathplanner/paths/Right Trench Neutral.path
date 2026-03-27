@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.421521281849145,
-        "y": 0.43729692398316156
+        "x": 4.102299434634729,
+        "y": 0.44144323345857517
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.200123860809257,
-        "y": 0.6946588931192994
+        "x": 4.880902013594841,
+        "y": 0.698805202594713
       },
       "isLocked": false,
       "linkedName": "Right Trench Start"
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 7.795886363639276,
-        "y": 3.0249318181791636
+        "x": 7.783237924865832,
+        "y": 2.225867620751342
       },
       "prevControl": {
-        "x": 7.81333225419749,
-        "y": 1.5010560512334656
+        "x": 7.800683815424045,
+        "y": 0.701991853805644
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,8 +62,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.5,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 180.0,
     "maxAngularAcceleration": 270.0,
     "nominalVoltage": 12.0,
@@ -81,5 +81,3 @@
   },
   "useDefaultConstraints": true
 }
-
-

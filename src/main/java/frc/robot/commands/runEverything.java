@@ -63,7 +63,7 @@ public class runEverything extends SequentialCommandGroup {
                 // new WaitCommand(1),
                 // new shooterCommand(shooterSubsystem),
                 new WaitCommand(0.5),
-                new InstantCommand(() -> feederSubsystem.setFeederSpeed(feederEntry.getDouble(0.1))),
+                new InstantCommand(() -> feederSubsystem.setFeederSpeed(feederEntry.getDouble(0.7))),
                 // new WaitCommand(1),
                 new InstantCommand(() -> hopperSubsystem.setSpeed(hopperEntry.getDouble(0.1))),
 

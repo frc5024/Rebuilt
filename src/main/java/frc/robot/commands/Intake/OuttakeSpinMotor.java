@@ -8,10 +8,10 @@ import frc.robot.Constants.intakeConstants;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class OuttakeSpinMotor extends Command {
-    private IntakeSubsystem s_Intake;
+    private final IntakeSubsystem s_Intake;
 
     static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
-    static GenericEntry pEntry = tab.add("SET OUTTAKESPEED", intakeConstants.OUTTAKE_SPEED).getEntry();
+    static GenericEntry intakeEntry = tab.add("SET Outtake SPeed", intakeConstants.OUTTAKE_SPEED).getEntry();
 
     public OuttakeSpinMotor(IntakeSubsystem s_Intake) {
         this.s_Intake = s_Intake;
@@ -19,7 +19,12 @@ public class OuttakeSpinMotor extends Command {
 
     @Override
     public void initialize() {
-        s_Intake.setIntakeSpeed(pEntry.getDouble(intakeConstants.OUTTAKE_SPEED));
+        s_Intake.setIntakeSpeed(intakeEntry.getDouble(intakeConstants.OUTTAKE_SPEED));
+    }
+
+    @Override
+    public void execute() {
+        s_Intake.setIntakeSpeed(intakeEntry.getDouble(intakeConstants.OUTTAKE_SPEED));
     }
 
     @Override

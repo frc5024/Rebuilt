@@ -76,6 +76,11 @@ public class ClimbModuleIOTalonFX implements ClimbModuleIO {
     }
 
     @Override
+    public double getCurrentDrawAmps() {
+        return current.getValueAsDouble();
+    }
+
+    @Override
     public double getPosition() {
         return position.getValueAsDouble();
     }
