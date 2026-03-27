@@ -25,7 +25,7 @@ import frc.robot.Constants.turretConstants;
  */
 public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
     // Constants
-    protected final double GEAR_RATIO = 28.6667 * 12.558;
+    protected final double GEAR_RATIO = 28.6667;
 
     // Hardware
     protected final SparkMax turretMotor;
