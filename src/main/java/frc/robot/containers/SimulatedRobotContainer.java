@@ -23,8 +23,8 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.commands.RenameCommand;
 import frc.robot.commands.ShootForFiveSecondsCommand;
+import frc.robot.commands.SpinToHubCommand;
 import frc.robot.commands.TuningCommandsDrive;
 import frc.robot.commands.TuningCommandsIntake;
 import frc.robot.generated.TunerConstants;
@@ -95,7 +95,7 @@ public class SimulatedRobotContainer extends RobotContainer {
                 fuelSimCount);
 
         if (!RobotConstants.TUNING_MODE) {
-            this.m_turret.setDefaultCommand(new RenameCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
+            this.m_turret.setDefaultCommand(new SpinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
                     () -> swerveDriveSubsystem.getChassisSpeeds(), () -> m_shooter.getTangentialVelocity(),
                     m_shooter::addDistanceMeasurement));
         }

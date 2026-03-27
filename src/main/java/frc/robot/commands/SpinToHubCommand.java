@@ -19,7 +19,7 @@ import frc.robot.util.GameUtil;
 /**
  * 
  */
-public class RenameCommand extends Command {
+public class SpinToHubCommand extends Command {
     // Subsystems
     private final TurretSubsystem turretSubsystem;
     private final Supplier<Pose2d> robotPoseSupplier;
@@ -30,7 +30,7 @@ public class RenameCommand extends Command {
     /**
      * 
      */
-    public RenameCommand(TurretSubsystem turretSubsystem, Supplier<Pose2d> robotPoseSupplier,
+    public SpinToHubCommand(TurretSubsystem turretSubsystem, Supplier<Pose2d> robotPoseSupplier,
             Supplier<ChassisSpeeds> robotVelocitySupplier, DoubleSupplier ballVelocitySupplier,
             DistanceConsumer distanceConsumer) {
         this.turretSubsystem = turretSubsystem;

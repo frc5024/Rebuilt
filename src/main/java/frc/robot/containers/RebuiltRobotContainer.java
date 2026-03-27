@@ -20,8 +20,8 @@ import frc.robot.Constants.FuelCellConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.commands.RenameCommand;
 import frc.robot.commands.ShootForFiveSecondsCommand;
+import frc.robot.commands.SpinToHubCommand;
 import frc.robot.commands.TuningCommandsDrive;
 import frc.robot.commands.TuningCommandsIntake;
 import frc.robot.generated.TunerConstants;
@@ -83,7 +83,7 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxRelativeEncoder());
 
         if (!RobotConstants.TUNING_MODE) {
-            m_turret.setDefaultCommand(new RenameCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
+            m_turret.setDefaultCommand(new SpinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
                     () -> swerveDriveSubsystem.getChassisSpeeds(), () -> m_shooter.getTangentialVelocity(),
                     m_shooter::addDistanceMeasurement));
         }
