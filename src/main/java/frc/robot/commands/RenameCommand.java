@@ -19,7 +19,7 @@ import frc.robot.util.GameUtil;
 /**
  * 
  */
-public class SpinToHubCommand extends Command {
+public class RenameCommand extends Command {
     // Subsystems
     private final TurretSubsystem turretSubsystem;
     private final Supplier<Pose2d> robotPoseSupplier;
@@ -30,7 +30,7 @@ public class SpinToHubCommand extends Command {
     /**
      * 
      */
-    public SpinToHubCommand(TurretSubsystem turretSubsystem, Supplier<Pose2d> robotPoseSupplier,
+    public RenameCommand(TurretSubsystem turretSubsystem, Supplier<Pose2d> robotPoseSupplier,
             Supplier<ChassisSpeeds> robotVelocitySupplier, DoubleSupplier ballVelocitySupplier,
             DistanceConsumer distanceConsumer) {
         this.turretSubsystem = turretSubsystem;
@@ -69,7 +69,8 @@ public class SpinToHubCommand extends Command {
 
         // Calculate the vector from the turret to the target
         Translation2d turretToVirtualTarget = virtualTarget.minus(turretFieldPos);
-        double shootDistance = turretToVirtualTarget.getDistance(virtualTarget);
+        // double shootDistance = turretToVirtualTarget.getDistance(virtualTarget);
+        double shootDistance = turretFieldPos.getDistance(virtualTarget);
         distanceConsumer.accept(shootDistance);
 
         // Calculate the desired turret angle Robot is CCW+ / Turret is CW+
