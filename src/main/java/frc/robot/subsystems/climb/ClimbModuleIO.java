@@ -21,9 +21,15 @@ public interface ClimbModuleIO {
             double tempCelsius) {
     }
 
+    default double getCurrentDrawAmps() {
+        return 0.0;
+    }
+
     default double getPosition() {
         return 0.0;
     }
+
+    public void zeroPosition();
 
     default boolean isRunning() {
         return false;

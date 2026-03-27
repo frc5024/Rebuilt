@@ -1,16 +1,24 @@
 package frc.robot.subsystems.swervedrive;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
+import java.util.function.Consumer;
+
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
+
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,10 +41,6 @@ import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.PhoenixOdometryThread;
-
-import java.util.function.Consumer;
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
 
 /**
  * 
@@ -63,10 +67,37 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             lastModulePositions, new Pose2d());
     private final Consumer<Pose2d> resetSimulationPoseCallBack;
 
+    private static double speedModifier = 1.0;
+    public boolean isSlowMode = false;
+
+    // Voltage feedforward for drive translation
+    private final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(
+            0.14786, // kS from your driveGains
+            0.68343, // kV from your driveGains
+            0.0 // kA if you have acceleration info; can also tune later
+    );
+
+    // Maximum angular velocity robot can reach (rad/s)
+    double maxAngularVelocity = getMaxAngularSpeedRadPerSec();
+
+    // Feedforward gain for rotation
+    double kVTheta = 12.0 / maxAngularVelocity;
+
+    private PPHolonomicDriveController driveController;
+
+    public double getSpeedModifier() {
+        if (isSlowMode) {
+            return speedModifier * 0.3;
+        } else {
+            return speedModifier;
+        }
+    }
+
     /**
      * 
      */
-    public SwerveDriveSubsystem(GyroIO gyroIO, SwerveModuleIO flModuleIO, SwerveModuleIO frModuleIO, SwerveModuleIO blModuleIO, SwerveModuleIO brModuleIO,
+    public SwerveDriveSubsystem(GyroIO gyroIO, SwerveModuleIO flModuleIO, SwerveModuleIO frModuleIO,
+            SwerveModuleIO blModuleIO, SwerveModuleIO brModuleIO,
             Consumer<Pose2d> resetSimulationPoseCallBack) {
         this.gyroIO = gyroIO;
         this.resetSimulationPoseCallBack = resetSimulationPoseCallBack;
@@ -81,17 +112,25 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Start odometry thread
         PhoenixOdometryThread.getInstance().start();
 
+        // Create drive controller for PathPlanner
+        // Using PID + feedforward for smooth path following
+        // Position controller: handles XY position tracking
+        // Lower P and add D damping to reduce oscillations during direction changes
+        driveController = new PPHolonomicDriveController(
+                new PIDConstants(0.45, 0.0, 0.05),
+                new PIDConstants(0.0, 0.0, 0.00));
+
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configure(
                 this::getPose,
                 this::setPose,
                 this::getChassisSpeeds,
                 this::runVelocity,
-                new PPHolonomicDriveController(
-                        new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+                driveController,
                 RobotConstants.PP_CONFIG,
                 () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
                 this);
+
         Pathfinding.setPathfinder(new LocalADStarAK());
         PathPlannerLogging.setLogActivePathCallback(
                 (activePath) -> {
@@ -101,6 +140,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         PathPlannerLogging.setLogTargetPoseCallback(
                 (targetPose) -> {
                     Logger.recordOutput("SwerveDrive/Odometry/TrajectorySetpoint", targetPose);
+                    // Log target heading for debugging
+                    double targetHeadingDegrees = targetPose.getRotation().getDegrees();
+                    double targetHeadingRadians = targetPose.getRotation().getRadians();
+                    Logger.recordOutput("SwerveDrive/Debug/TargetHeading", targetHeadingDegrees);
+                    Logger.recordOutput("SwerveDrive/Debug/TargetHeadingRadians", targetHeadingRadians);
                 });
 
         // Configure SysId
@@ -169,6 +213,23 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         // Update gyro alert
         gyroDisconnectedAlert.set(!gyroInputs.connected && RobotConstants.currentMode != RobotConstants.Mode.SIM);
+
+        // Log heading debug info
+        logHeadingDebug();
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public double getCurrentDrawAmps() {
+        double getCurrentDrawAmps = 0.0;
+
+        for (int i = 0; i < 4; i++) {
+            getCurrentDrawAmps += modules[i].getCurrentDrawAmps();
+        }
+
+        return getCurrentDrawAmps;
     }
 
     /**
@@ -200,6 +261,42 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         for (int i = 0; i < 4; i++) {
             modules[i].runCharacterization(output);
         }
+    }
+
+    /**
+     * Runs the drive with PathPlanner PID output plus feedforward.
+     * 
+     * @param pidSpeeds         ChassisSpeeds from PPHolonomicDriveController
+     * @param vxMetersPerSecond desired velocity X
+     * @param vyMetersPerSecond desired velocity Y
+     * @param desiredOmega      desired angular velocity
+     */
+    public void runVelocityWithFeedforward(ChassisSpeeds pidSpeeds, double vxMetersPerSecond, double vyMetersPerSecond,
+            double desiredOmega) {
+        // Translation feedforward
+        double vxFF = driveFF.calculate(vxMetersPerSecond);
+        double vyFF = driveFF.calculate(vyMetersPerSecond);
+
+        // Rotation feedforward
+        double omegaFF = kVTheta * desiredOmega; // simple linear FF
+
+        // Combine PID + feedforward
+        ChassisSpeeds outputSpeeds = new ChassisSpeeds(
+                pidSpeeds.vxMetersPerSecond + vxFF,
+                pidSpeeds.vyMetersPerSecond + vyFF,
+                pidSpeeds.omegaRadiansPerSecond + omegaFF);
+
+        // Convert to module states and run
+        SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(outputSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
+
+        for (int i = 0; i < 4; i++) {
+            modules[i].runSetpoint(setpointStates[i]);
+        }
+
+        // Logging
+        Logger.recordOutput("SwerveDrive/SwerveStates/SetpointsOptimized", setpointStates);
+        Logger.recordOutput("SwerveDrive/SwerveChassisSpeeds/Setpoints", outputSpeeds);
     }
 
     /** Stops the drive. */
@@ -234,12 +331,30 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
     }
 
+    /** Returns a command that aligns all wheels forward and stops */
+    public Command alignWheelsForward() {
+        return run(() -> {
+            // Create setpoint where all wheels point forward (0 degrees)
+            SwerveModuleState[] forwardStates = new SwerveModuleState[] {
+                    new SwerveModuleState(0, new Rotation2d(0)),
+                    new SwerveModuleState(0, new Rotation2d(0)),
+                    new SwerveModuleState(0, new Rotation2d(0)),
+                    new SwerveModuleState(0, new Rotation2d(0))
+            };
+
+            // Send to modules
+            for (int i = 0; i < 4; i++) {
+                modules[i].runSetpoint(forwardStates[i]);
+            }
+        }).withTimeout(1.0).finallyDo(() -> stop());
+    }
+
     /**
      * Returns the module states (turn angles and drive velocities) for all of the
      * modules.
      */
     @AutoLogOutput(key = "SwerveDrive/SwerveStates/Measured")
-    private SwerveModuleState[] getModuleStates() {
+    public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (int i = 0; i < 4; i++) {
             states[i] = modules[i].getState();
@@ -259,9 +374,20 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         return states;
     }
 
+    /**
+     * 
+     */
+    public Rotation2d[] getModuleAngles() {
+        Rotation2d[] angles = new Rotation2d[4];
+        for (int i = 0; i < 4; i++) {
+            angles[i] = modules[i].getAngle();
+        }
+        return angles;
+    }
+
     /** Returns the measured chassis speeds of the robot. */
     @AutoLogOutput(key = "SwerveDrive/SwerveChassisSpeeds/Measured")
-    private ChassisSpeeds getChassisSpeeds() {
+    public ChassisSpeeds getChassisSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
     }
 
@@ -320,5 +446,39 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     /** Returns the maximum angular speed in radians per sec. */
     public double getMaxAngularSpeedRadPerSec() {
         return getMaxLinearSpeedMetersPerSec() / SwerveDriveConstants.DRIVE_BASE_RADIUS;
+    }
+
+    /** Logs the current actual heading and target heading from PathPlanner */
+    public void logHeadingDebug() {
+        Rotation2d actualHeading = getRotation();
+        Pose2d currentPose = getPose();
+
+        // Get module positions for diagnostics
+        SwerveModulePosition[] modulePositions = getModulePositions();
+        SwerveModuleState[] moduleStates = getModuleStates();
+
+        // Normalize steer angles to -180 to 180 range
+        double[] normalizedSteerAngles = new double[4];
+        for (int i = 0; i < 4; i++) {
+            double angle = moduleStates[i].angle.getDegrees();
+            // Normalize to -180 to 180
+            while (angle > 180)
+                angle -= 360;
+            while (angle < -180)
+                angle += 360;
+            normalizedSteerAngles[i] = angle;
+        }
+
+        Logger.recordOutput("SwerveDrive/Debug/ActualHeading", actualHeading.getDegrees());
+        Logger.recordOutput("SwerveDrive/Debug/ActualHeadingRadians", actualHeading.getRadians());
+        Logger.recordOutput("SwerveDrive/Debug/PoseX", currentPose.getX());
+        Logger.recordOutput("SwerveDrive/Debug/PoseY", currentPose.getY());
+        Logger.recordOutput("SwerveDrive/Debug/ModuleDistances", new double[] {
+                modulePositions[0].distanceMeters,
+                modulePositions[1].distanceMeters,
+                modulePositions[2].distanceMeters,
+                modulePositions[3].distanceMeters
+        });
+        Logger.recordOutput("SwerveDrive/Debug/ModuleSteerAngles", normalizedSteerAngles);
     }
 }

@@ -5,47 +5,44 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.shooterConstants;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class shooterCommand extends Command {
 
-  public final ShooterSubsystem shootersubsystem;
-  //public final SwerveDriveSubsystem swerveDriveSubsystem;
+    public final ShooterSubsystem shootersubsystem;
+    public final double setVelocity;
 
-  public double setVelocity;
+    public shooterCommand(ShooterSubsystem shootersubsystem, double setVelocity) {
+        this.shootersubsystem = shootersubsystem;
+        this.setVelocity = setVelocity;
+    }
 
-  public shooterCommand (ShooterSubsystem shootersubsystem, double setVelocity) {  //SwerveDriveSubsystem swerveDriveSubsystem,
-    this.shootersubsystem = shootersubsystem;
-    this.setVelocity = setVelocity;
-    //this.swerveDriveSubsystem = swerveDriveSubsystem;
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        // setVelocity = shooterConstants.setVelocity;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    //setVelocity = shooterConstants.setVelocity;
-    shootersubsystem.setShooterPID(setVelocity);
-    shootersubsystem.setEnabled(true);
+        shootersubsystem.setEnabled(true);
 
-  }
+    }
 
-  @Override
-  public void execute() {
-     
-  }
+    @Override
+    public void execute() {
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    shootersubsystem.setEnabled(false);
-  }
+        shootersubsystem.setShooterPID(setVelocity);
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        shootersubsystem.setEnabled(false);
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
 }

@@ -1,16 +1,17 @@
 package frc.robot.subsystems.swervedrive;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-
-import org.littletonrobotics.junction.Logger;
 
 /**
  * 
@@ -20,6 +21,10 @@ public class SwerveModule {
     private final SwerveModuleIOInputsAutoLogged inputs = new SwerveModuleIOInputsAutoLogged();
     private final int index;
     private final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> constants;
+
+    // Wheel slip correction factors per module (to compensate for wheel slip/wear)
+    // Index: 0=FL, 1=FR, 2=BL, 3=BR
+    private static final double[] WHEEL_SLIP_CORRECTION = { 1.0, 1.0, 1.0, 1.0 };
 
     private final Alert driveDisconnectedAlert;
     private final Alert turnDisconnectedAlert;
@@ -57,7 +62,8 @@ public class SwerveModule {
         int sampleCount = inputs.odometryTimestamps.length; // All signals are sampled together
         odometryPositions = new SwerveModulePosition[sampleCount];
         for (int i = 0; i < sampleCount; i++) {
-            double positionMeters = inputs.odometryDrivePositionsRad[i] * constants.WheelRadius;
+            double positionMeters = inputs.odometryDrivePositionsRad[i] * constants.WheelRadius
+                    * WHEEL_SLIP_CORRECTION[index];
             Rotation2d angle = inputs.odometryTurnPositions[i];
             odometryPositions[i] = new SwerveModulePosition(positionMeters, angle);
         }
@@ -66,6 +72,13 @@ public class SwerveModule {
         driveDisconnectedAlert.set(!inputs.driveConnected);
         turnDisconnectedAlert.set(!inputs.turnConnected);
         turnEncoderDisconnectedAlert.set(!inputs.turnEncoderConnected);
+    }
+
+    /**
+     * 
+     */
+    public double getCurrentDrawAmps() {
+        return io.getCurrentDrawAmps();
     }
 
     /**

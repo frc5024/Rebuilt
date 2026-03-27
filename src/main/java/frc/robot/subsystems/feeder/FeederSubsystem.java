@@ -14,6 +14,7 @@ import frc.robot.commands.feederCommand;
  * 
  */
 public class FeederSubsystem extends SubsystemBase {
+    // Advantagekit logging
     private final FeederModuleIO feederModuleIO;
     protected final FeederModuleIOInputsAutoLogged inputs;
 
@@ -21,15 +22,24 @@ public class FeederSubsystem extends SubsystemBase {
      * 
      */
     public FeederSubsystem(FeederModuleIO feederModuleIO) {
+        // set advantage kit IO logging
         this.feederModuleIO = feederModuleIO;
         this.inputs = new FeederModuleIOInputsAutoLogged();
     }
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
+        // process hardware inputs
         feederModuleIO.updateInputs(inputs);
         Logger.processInputs("Feeder", inputs);
+    }
+
+    public double getCurrentDrawAmps() {
+        return feederModuleIO.getCurrentDrawAmps();
+    }
+
+    public double getPosition() {
+        return feederModuleIO.getPosition();
     }
 
     public void setIdle() {

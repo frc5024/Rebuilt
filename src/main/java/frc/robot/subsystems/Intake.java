@@ -14,68 +14,61 @@
 // import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 // public class Intake extends SubsystemBase {
-//     SparkMax intakeMotor;
-//     SparkMax armMotor;
-//     int intakeMotorID = 60;
-//     int armMotorID = 5;
-    
+// SparkFlex intakeMotor;
+// SparkFlex armMotor;
+// int intakeMotorID = 60;
+// int armMotorID = 5;
+
 // private static DigitalInput retractingLimitSwitch = new DigitalInput(7);
 // private static DigitalInput extendingLimitSwitch = new DigitalInput(8);
 
-//  static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
+// static ShuffleboardTab tab = Shuffleboard.getTab("intakeMotor");
 
-     
-//     private static Intake mInstance;
-//      public static Intake getInstance() {
-//         if (mInstance == null) {
-//             mInstance = new Intake();
-//         }
-//         return mInstance;
-//      }
-    
-
-//     private Intake() {
-//         intakeMotor = new SparkMax(intakeMotorID, SparkMax.MotorType.kBrushless);
-//         armMotor = new SparkMax(armMotorID, SparkMax.MotorType.kBrushless);
-
-//         tab.addBoolean("Extending",() -> extendingLimitSwitch.get());
-//         tab.addBoolean("Retracting",() -> retractingLimitSwitch.get());
-//     }
-
-
-
-        
-//     public void setIntakeSpeed(double speed) {
-//         intakeMotor.set(speed);
-//     }
-
-//     public void setArmSpeed(double speed) {
-//         armMotor.set(speed);
-//     }
-
-//     // public Command IntakeSpin() {
-//     //     return new IntakeSpinMotor(this);
-//     // }
-
-//     // public Command OuttakeSpin() {
-//     //     return new OuttakeSpinMotor(this);
-//     // }
-
-//     // public Command ExtendSpin() {
-//     //     return new IntakeExtendArm(this);
-//     // }
-
-//     // public Command RetractSpin() {
-//     //     return new IntakeRetractArm(this);
-//     // }
-
-//      public boolean isIntakeRetracted() {
-//         return !retractingLimitSwitch.get();
-//     }
-
-//     public boolean isIntakeExtended() {
-//         return !extendingLimitSwitch.get();
-//     }
+// private static Intake mInstance;
+// public static Intake getInstance() {
+// if (mInstance == null) {
+// mInstance = new Intake();
+// }
+// return mInstance;
 // }
 
+// private Intake() {
+// intakeMotor = new SparkMax(intakeMotorID, SparkFlex.MotorType.kBrushless);
+// armMotor = new SparkMax(armMotorID, SparkFlex.MotorType.kBrushless);
 
+// tab.addBoolean("Extending",() -> extendingLimitSwitch.get());
+// tab.addBoolean("Retracting",() -> retractingLimitSwitch.get());
+// }
+
+// public void setIntakeSpeed(double speed) {
+// intakeMotor.set(speed);
+// }
+
+// public void setArmSpeed(double speed) {
+// armMotor.set(speed);
+// }
+
+// // public Command IntakeSpin() {
+// // return new IntakeSpinMotor(this);
+// // }
+
+// // public Command OuttakeSpin() {
+// // return new OuttakeSpinMotor(this);
+// // }
+
+// // public Command ExtendSpin() {
+// // return new IntakeExtendArm(this);
+// // }
+
+// // public Command RetractSpin() {
+// // return new IntakeRetractArm(this);
+// // }
+
+// public boolean isIntakeRetracted() {
+// return !retractingLimitSwitch.get();
+// }
+
+// public boolean isIntakeExtended() {
+// return !extendingLimitSwitch.get();
+// }
+// }

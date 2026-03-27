@@ -29,11 +29,19 @@ public interface IntakeModuleIO {
             double intakeTempCelsius) {
     }
 
+    default double getCurrentDrawAmps() {
+        return 0.0;
+    }
+
     default double getPosition() {
         return 0.0;
     }
 
-    default double getCurrentDrawAmps() {
+    default double getArmVelocity() {
+        return 0.0;
+    }
+
+    default double getIntakeVelocity() {
         return 0.0;
     }
 

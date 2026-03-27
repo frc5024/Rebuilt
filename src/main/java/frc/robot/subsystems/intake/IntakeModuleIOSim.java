@@ -1,5 +1,6 @@
 package frc.robot.subsystems.intake;
 
+import com.revrobotics.sim.SparkFlexSim;
 import com.revrobotics.sim.SparkMaxSim;
 
 import edu.wpi.first.math.MathUtil;
@@ -19,7 +20,7 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
     private final SparkMaxSim armSparkMaxSim;
     private final DCMotor intakeDcMotor;
     private final DCMotorSim intakeMotorSim;
-    private final SparkMaxSim intakeSparkMaxSim;
+    private final SparkFlexSim intakeSparkFlexSim;
 
     private double armVoltageRequest;
     private double intakeVoltageRequest;
@@ -35,15 +36,47 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
         this.intakeDcMotor = DCMotor.getNEO(1);
         this.intakeMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(intakeDcMotor, 0.01, 4.0),
                 intakeDcMotor);
-        this.intakeSparkMaxSim = new SparkMaxSim(this.intakeMotor, this.intakeDcMotor);
+        this.intakeSparkFlexSim = new SparkFlexSim(this.intakeMotor, this.intakeDcMotor);
 
         this.armVoltageRequest = 0.0;
         this.intakeVoltageRequest = 0.0;
     }
 
     @Override
+    public void updateInputs(IntakeModuleIOInputs inputs) {
+        if (DriverStation.isDisabled()) {
+            stop();
+        }
+
+        armMotorSim.update(0.02);
+        intakeMotorSim.update(0.02);
+
+        armSparkMaxSim.setPosition(armMotorSim.getAngularPositionRotations());
+        armSparkMaxSim.setVelocity(armMotorSim.getAngularVelocityRPM());
+
+        intakeSparkFlexSim.setPosition(intakeMotorSim.getAngularPositionRotations());
+        intakeSparkFlexSim.setVelocity(intakeMotorSim.getAngularVelocityRPM());
+
+        inputs.data = new IntakeModuleIOData(
+                true,
+                armSparkMaxSim.getPosition(),
+                armSparkMaxSim.getVelocity(),
+                armVoltageRequest,
+                0.0,
+                armSparkMaxSim.getMotorCurrent(),
+                0.0,
+                true,
+                intakeSparkFlexSim.getPosition(),
+                intakeSparkFlexSim.getVelocity(),
+                intakeVoltageRequest,
+                0.0,
+                intakeSparkFlexSim.getMotorCurrent(),
+                0.0);
+    }
+
+    @Override
     public double getCurrentDrawAmps() {
-        return 0.0;
+        return armSparkMaxSim.getMotorCurrent() + intakeSparkFlexSim.getMotorCurrent();
     }
 
     @Override
@@ -76,37 +109,5 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
     public void setIntake(double voltage) {
         intakeVoltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
         intakeMotorSim.setInputVoltage(intakeVoltageRequest);
-    }
-
-    @Override
-    public void updateInputs(IntakeModuleIOInputs inputs) {
-        if (DriverStation.isDisabled()) {
-            stop();
-        }
-
-        armMotorSim.update(0.02);
-        intakeMotorSim.update(0.02);
-
-        armSparkMaxSim.setPosition(armMotorSim.getAngularPositionRotations());
-        armSparkMaxSim.setVelocity(armMotorSim.getAngularVelocityRPM());
-
-        intakeSparkMaxSim.setPosition(intakeMotorSim.getAngularPositionRotations());
-        intakeSparkMaxSim.setVelocity(intakeMotorSim.getAngularVelocityRPM());
-
-        inputs.data = new IntakeModuleIOData(
-                true,
-                armSparkMaxSim.getPosition(),
-                armSparkMaxSim.getVelocity(),
-                armVoltageRequest,
-                0.0,
-                armSparkMaxSim.getMotorCurrent(),
-                0.0,
-                true,
-                intakeSparkMaxSim.getPosition(),
-                intakeSparkMaxSim.getVelocity(),
-                intakeVoltageRequest,
-                0.0,
-                intakeSparkMaxSim.getMotorCurrent(),
-                0.0);
     }
 }

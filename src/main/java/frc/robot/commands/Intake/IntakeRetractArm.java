@@ -23,6 +23,11 @@ public class IntakeRetractArm extends Command {
     }
 
     @Override
+    public void execute() {
+        s_Intake.setArmSpeed(pEntry.getDouble(intakeConstants.RETRACTING_SPEED));
+    }
+
+    @Override
     public void end(boolean interrupted) {
         s_Intake.setArmSpeed(0.0);
     }

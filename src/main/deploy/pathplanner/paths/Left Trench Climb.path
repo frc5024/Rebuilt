@@ -1,0 +1,77 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.799785714285714,
+        "y": 7.598214285714285
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.1334544231848804,
+        "y": 7.522861366521985
+      },
+      "isLocked": false,
+      "linkedName": "Left Trench End (Rotation)"
+    },
+    {
+      "anchor": {
+        "x": 2.219897727272727,
+        "y": 7.137352272727274
+      },
+      "prevControl": {
+        "x": 2.3596598618557922,
+        "y": 7.344636005173371
+      },
+      "nextControl": {
+        "x": 1.4756415593448358,
+        "y": 6.033532580474122
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.045,
+        "y": 4.923897721740112
+      },
+      "prevControl": {
+        "x": 1.638281556092752,
+        "y": 5.920081400053318
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Left Climb"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Declimb",
+      "waypointRelativePos": 1.8025134649910188,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 2.5,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 270.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "Left Trench Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

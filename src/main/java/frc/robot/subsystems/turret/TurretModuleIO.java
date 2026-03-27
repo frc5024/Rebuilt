@@ -8,7 +8,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface TurretModuleIO {
     @AutoLog
     class TurretModuleIOInputs {
-        public TurretModuleIOData data = new TurretModuleIOData(false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        public TurretModuleIOData data = new TurretModuleIOData(false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false);
     }
 
     record TurretModuleIOData(
@@ -18,7 +18,32 @@ public interface TurretModuleIO {
             double appliedVoltage,
             double torqueCurrentAmps,
             double supplyCurrentAmps,
-            double tempCelsius) {
+            double tempCelsius,
+            boolean hallEffectValue) {
+    }
+
+    default boolean atGoal() {
+        return false;
+    }
+
+    default double getCurrentDrawAmps() {
+        return 0.0;
+    }
+
+    default double getCurrentAngle() {
+        return 0.0;
+    }
+
+    default double getGoalPosition() {
+        return 0.0;
+    }
+
+    default double getGoalVelocity() {
+        return 0.0;
+    }
+
+    default boolean getHallEffectValue() {
+        return false;
     }
 
     default double getPosition() {
@@ -33,14 +58,25 @@ public interface TurretModuleIO {
         return false;
     }
 
-    // TODO: remove after refactoring - speed is a constant so set it in the hardware module
     default void set(double speed) {
+    }
+
+    default void setAngle(double degrees) {
+    }
+
+    default void setConstraints(double maxVelocity, double maxAcceleration, double tolerance) {
+    }
+
+    default void setFF(double kS, double kV, double kA) {
+    }
+
+    default void setPID(double kP, double kI, double kD) {
     }
 
     default void setPosition(double position) {
     }
 
-    default void setVoltage(double voltage) {
+    default void setVoltage() {
     }
 
     default void start() {

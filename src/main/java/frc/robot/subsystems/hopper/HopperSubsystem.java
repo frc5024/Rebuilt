@@ -10,9 +10,11 @@ import frc.robot.commands.Hopper.Spin;
  * 
  */
 public class HopperSubsystem extends SubsystemBase {
+    // Advantagekit logging
     private final HopperModuleIO hopperModuleIO;
     protected final HopperModuleIOInputsAutoLogged inputs;
 
+    // Variables
     public double speed;
     public boolean direction;
 
@@ -20,13 +22,14 @@ public class HopperSubsystem extends SubsystemBase {
      * 
      */
     public HopperSubsystem(HopperModuleIO hopperModuleIO) {
+        // set advantage kit IO logging
         this.hopperModuleIO = hopperModuleIO;
         this.inputs = new HopperModuleIOInputsAutoLogged();
     }
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
+        // process hardware inputs
         hopperModuleIO.updateInputs(inputs);
         Logger.processInputs("Hopper", inputs);
     }
@@ -50,9 +53,4 @@ public class HopperSubsystem extends SubsystemBase {
     public Command SpinCommand() {
         return new Spin(this);
     }
-
-    // public Command SpinEntryCommand() {
-    // return new Spin(this,
-    // speedEntry.getDouble(Constants.HopperConstants.hopperSpeed));
-    // }
 }

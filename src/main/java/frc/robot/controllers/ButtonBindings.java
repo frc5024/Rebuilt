@@ -1,11 +1,17 @@
 package frc.robot.controllers;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.lib.leds.LEDPreset;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.PathFinderAndFollowCommand;
+import frc.robot.commands.StickRotationCommand;
+import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
+import frc.robot.commands.spinToHubCommand;
+import frc.robot.commands.zeroTurret;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
@@ -14,6 +20,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.util.GameUtil;
 
 /**
  * Define button commands when running the real robot
@@ -56,7 +63,7 @@ public class ButtonBindings {
         this.driverController = setDriverBindingsController();
         this.operatorController = setOperatorBindingsController();
 
-        // Set this to whichever button bindings you want to test
+        // Set this to whichever button bindpings you want to test
         // this.buttonTestController = setLEDTestBindingsController();
         this.testController = setTuningBindings();
     }
@@ -64,6 +71,7 @@ public class ButtonBindings {
     /**
      * 
      */
+
     private CommandXboxController setDriverBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(DRIVER_PORT);
         // Default command, normal field-relative drive
@@ -74,23 +82,51 @@ public class ButtonBindings {
                         () -> -commandXboxController.getLeftX(),
                         () -> -commandXboxController.getRightX()));
 
-        // driverController.b().whileTrue(m_hopper.SpinEntryCommand());
-        commandXboxController.a().whileTrue(m_hopper.SpinCommand());
-        commandXboxController.b().whileTrue(m_intake.OuttakeSpin());
-        commandXboxController.leftTrigger().whileTrue(new runEverything(m_feeder, m_shooter, m_hopper));
-        // commandXboxController.y().whileTrue(m_feeder.feederCommand());
-        commandXboxController.y().onTrue(m_intake.RetractSpin());
-        commandXboxController.rightBumper().whileTrue(m_shooter.shooterCommand());
+        commandXboxController.leftTrigger()
+                .whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter, m_hopper),
+                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
+                        Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
+        commandXboxController.leftBumper().whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter, m_hopper),
+                new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
+        commandXboxController.rightTrigger()
+                .whileTrue(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = true));
+        commandXboxController.rightTrigger().onFalse(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = false));
+        commandXboxController.a().whileTrue(
+                DriveCommands.joystickDriveAtAngle(
+                        swerveDriveSubsystem,
+                        () -> -commandXboxController.getLeftY(),
+                        () -> -commandXboxController.getLeftX(),
+                        () -> {
+                            Pose2d robotPose = swerveDriveSubsystem.getPose();
+                            double robotX = robotPose.getX();
+                            double robotY = robotPose.getY();
 
-        commandXboxController.rightTrigger().onTrue((m_intake.ExtendSpin()));
-        commandXboxController.rightTrigger().whileTrue((m_intake.IntakeSpin()));
+                            Pose2d hubPose = GameUtil.getHubPose();
+                            double hubX = hubPose.getX();
+                            double hubY = hubPose.getY();
+
+                            double angleToHub = Math.atan2(hubY - robotY, hubX - robotX);
+                            return Rotation2d.fromRadians(angleToHub);
+                        }));
+
+        commandXboxController.x().whileTrue(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
+                () -> swerveDriveSubsystem.getChassisSpeeds()));
+
+        commandXboxController.povUp().whileTrue(m_climb.extendclimb());
+        commandXboxController.povDown().whileTrue(m_climb.contractclimb());
+
+        commandXboxController.povLeft().whileTrue(new zeroTurret(m_turret));
+        commandXboxController.povRight().whileTrue(new StickRotationCommand(m_turret, -0.1));
         commandXboxController.rightTrigger().onTrue((m_leds.setCommand(LEDPreset.Solid.kRed)));
+        // commandXboxController.y().onTrue(new InstantCommand(() ->
+        // m_turret.zeroEncoder()));
 
-        // commandXboxController.leftTrigger().onTrue(m_intake.RetractSpin());
-        commandXboxController.povUp().whileTrue(m_climb.climb());
-        commandXboxController.povDown().whileTrue(m_climb.declimb());
-        commandXboxController.povLeft().whileTrue(m_turret.stickRotation(-0.15));
-        commandXboxController.povRight().whileTrue(m_turret.stickRotation(0.15));
+        commandXboxController.y().onTrue(m_intake.RetractArmCommand());
+        commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
+        commandXboxController.rightBumper()
+                .whileTrue(m_intake.IntakeCommand());
+
+        commandXboxController.back().whileTrue(m_intake.OuttakeCommand());
 
         return commandXboxController;
     }
@@ -101,10 +137,8 @@ public class ButtonBindings {
     private CommandXboxController setOperatorBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(OPERATOR_PORT);
 
-        // For testing pathfinding
-        commandXboxController.y().whileTrue(
-                Commands.runOnce(() -> new PathFinderAndFollowCommand(swerveDriveSubsystem, "Pathfind Test Path")));
-
+        // Reset climb on X button
+        commandXboxController.x().whileTrue(m_climb.resetClimb());
         return commandXboxController;
     }
 

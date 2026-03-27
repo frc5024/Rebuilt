@@ -1,10 +1,12 @@
 package frc.robot.subsystems.feeder;
 
-import com.revrobotics.sim.SparkMaxSim;
+import com.revrobotics.sim.SparkFlexSim;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 /**
  * 
@@ -12,7 +14,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class FeederModuleIOSim extends FeederModuleIOSparkMax {
     // Hardware objects
     private final DCMotor dcMotor;
-    private final SparkMaxSim sparkMaxSim;
+    private final DCMotorSim dcMotorSim;
+    private final SparkFlexSim sparkFlexSim;
 
     private double voltageRequest;
 
@@ -21,15 +24,10 @@ public class FeederModuleIOSim extends FeederModuleIOSparkMax {
      */
     public FeederModuleIOSim() {
         this.dcMotor = DCMotor.getNEO(1);
-        this.sparkMaxSim = new SparkMaxSim(this.feederMotor, this.dcMotor);
+        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, GEAR_RATIO), dcMotor);
+        this.sparkFlexSim = new SparkFlexSim(this.feederMotor, this.dcMotor);
 
         this.voltageRequest = 0.0;
-    }
-
-    @Override
-    public void set(double voltage) {
-        voltageRequest = MathUtil.clamp(voltage, -12.0, 12.0);
-        sparkMaxSim.setAppliedOutput(voltageRequest);
     }
 
     @Override
@@ -38,13 +36,34 @@ public class FeederModuleIOSim extends FeederModuleIOSparkMax {
             stop();
         }
 
+        dcMotorSim.update(0.02);
+
+        sparkFlexSim.setPosition(dcMotorSim.getAngularPositionRotations());
+        sparkFlexSim.setVelocity(dcMotorSim.getAngularVelocityRPM());
+
         inputs.data = new FeederModuleIOData(
                 true,
-                sparkMaxSim.getPosition(),
-                sparkMaxSim.getVelocity(),
+                sparkFlexSim.getPosition(),
+                sparkFlexSim.getVelocity(),
                 voltageRequest,
                 0.0,
-                sparkMaxSim.getMotorCurrent(),
+                sparkFlexSim.getMotorCurrent(),
                 0.0);
+    }
+
+    @Override
+    public double getCurrentDrawAmps() {
+        return sparkFlexSim.getMotorCurrent();
+    }
+
+    @Override
+    public double getPosition() {
+        return sparkFlexSim.getPosition();
+    }
+
+    @Override
+    public void set(double voltage) {
+        voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        dcMotorSim.setInputVoltage(voltageRequest);
     }
 }

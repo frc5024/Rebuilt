@@ -16,13 +16,15 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.containers.MapleSimRobotContainer;
 import frc.robot.containers.RebuiltRobotContainer;
 import frc.robot.containers.RobotContainer;
+import frc.robot.containers.SimulatedRobotContainer;
 import frc.robot.generated.TunerConstants;
+import frc.robot.util.GameUtil;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -76,8 +78,7 @@ public class Robot extends LoggedRobot {
                 // Running a physics simulator, log to NT
                 Logger.addDataReceiver(new NT4Publisher());
 
-                robotContainer = new MapleSimRobotContainer();
-                // robotContainer = new SimulatedRobotContainer();
+                robotContainer = new SimulatedRobotContainer();
                 break;
 
             case REPLAY:
@@ -131,8 +132,15 @@ public class Robot extends LoggedRobot {
         // the Command-based framework to work.
         CommandScheduler.getInstance().run();
 
+        // Publish game state to SmartDashboard
+        SmartDashboard.putBoolean("Hub/Active", GameUtil.isHubActive());
+        SmartDashboard.putBoolean("Hub/WonAuto", GameUtil.wonAuto());
+        SmartDashboard.putNumber("Hub/TimeRemainingInPhase", GameUtil.getTimeRemainingInPhase());
+
         // Return to non-RT thread priority (do not modify the first argument)
         // Threads.setCurrentThreadPriority(false, 10);
+
+        robotContainer.updateVisualizer();
     }
 
     /** This function is called once when the robot is disabled. */
@@ -148,7 +156,7 @@ public class Robot extends LoggedRobot {
 
     /**
      * This autonomous runs the autonomous command selected by your
-     * {@link MapleSimRobotContainer} class.
+     * {@link RobotContainer} class.
      */
     @Override
     public void autonomousInit() {
@@ -176,6 +184,9 @@ public class Robot extends LoggedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+
+        robotContainer.teleopInit();
+
     }
 
     /** This function is called periodically during operator control. */
@@ -204,7 +215,6 @@ public class Robot extends LoggedRobot {
     @Override
     public void simulationPeriodic() {
         robotContainer.updateSimulation();
-        robotContainer.updateMechanisms();
     }
 
     /**

@@ -18,6 +18,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
  * 
  */
 public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
+    // Constants
+    protected final double GEAR_RATIO = 1.0;
+
+    // Hardware
     protected final SparkFlex flywheel1;
     private final SparkFlex flywheel2;
 
@@ -78,6 +82,11 @@ public class ShooterModuleIOSparkFlex implements ShooterModuleIO {
                 flywheel2.getBusVoltage(),
                 flywheel2.getOutputCurrent(),
                 flywheel2.getMotorTemperature());
+    }
+
+    @Override
+    public double getCurrentDrawAmps() {
+        return flywheel1.getOutputCurrent() + flywheel2.getOutputCurrent();
     }
 
     @Override

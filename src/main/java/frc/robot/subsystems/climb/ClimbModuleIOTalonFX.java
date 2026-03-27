@@ -18,6 +18,10 @@ import edu.wpi.first.wpilibj.DriverStation;
  * 
  */
 public class ClimbModuleIOTalonFX implements ClimbModuleIO {
+    // Constants
+    protected final double GEAR_RATIO = 4.0;
+
+    // Hardward
     protected final TalonFX climbMotor;
 
     // Inputs from climb motor
@@ -25,7 +29,6 @@ public class ClimbModuleIOTalonFX implements ClimbModuleIO {
     private final StatusSignal<AngularVelocity> velocity;
     private final StatusSignal<Voltage> appliedVolts;
     private final StatusSignal<Current> current;
-
     // Connection debouncers
     private final Debouncer connectedDebouncer;
 
@@ -73,18 +76,30 @@ public class ClimbModuleIOTalonFX implements ClimbModuleIO {
     }
 
     @Override
+    public double getCurrentDrawAmps() {
+        return current.getValueAsDouble();
+    }
+
+    @Override
     public double getPosition() {
         return position.getValueAsDouble();
     }
 
     @Override
-    public void set(double speed) {
-        climbMotor.set(speed);
-        System.out.println(speed);
+    public void zeroPosition() {
+        climbMotor.setPosition(0);
     }
 
     @Override
-    public void stop() {
-        climbMotor.setVoltage(0.0);
+    public void set(double speed) {
+        climbMotor.set(speed);
+    }
+
+    /**
+     * 
+     * @return The angle of the motor
+     */
+    public Angle value() {
+        return this.climbMotor.getPosition().getValue();
     }
 }

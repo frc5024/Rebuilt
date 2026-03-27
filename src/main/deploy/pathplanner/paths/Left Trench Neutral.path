@@ -1,0 +1,83 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.4299230680803525,
+        "y": 7.625282057523975
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.249681316560391,
+        "y": 6.944964213909669
+      },
+      "isLocked": false,
+      "linkedName": "Left Trench Start"
+    },
+    {
+      "anchor": {
+        "x": 7.800157657657657,
+        "y": 6.962136363636364
+      },
+      "prevControl": {
+        "x": 7.68009139811305,
+        "y": 7.181417218521069
+      },
+      "nextControl": {
+        "x": 7.921972429905105,
+        "y": 6.739662144006975
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.775272727272727,
+        "y": 5.075988636363636
+      },
+      "prevControl": {
+        "x": 7.775272727272727,
+        "y": 7.251238434191371
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "End Left Intake"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "ExtendIntake",
+      "waypointRelativePos": 0.3016157989228007,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.39497307001795334,
+      "endWaypointRelativePos": 2.0,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 2.5,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 270.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "Left Trench Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

@@ -18,6 +18,8 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.util.FuelSim;
+import frc.robot.util.FuelSimCount;
 
 /**
  * 
@@ -44,8 +46,25 @@ abstract public class RobotContainer {
     public static CommandXboxController driverController;
     public static CommandXboxController operatorController;
 
+    /* Simulation */
+    protected FuelSim fuelSim;
+    protected FuelSimCount fuelSimCount;
+
+    /**
+     * 
+     */
+    public RobotContainer() {
+
+    }
+
+    /**
+     * 
+     */
     abstract protected void configureAutoChooser();
 
+    /**
+     * 
+     */
     protected void configureButtonBindings() {
         if (Robot.isReal()) {
             ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, m_climb, m_feeder, m_hopper,
@@ -65,6 +84,11 @@ abstract public class RobotContainer {
     }
 
     /**
+     * 
+     */
+    abstract protected void configureNamedCommands();
+
+    /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
@@ -73,7 +97,12 @@ abstract public class RobotContainer {
         return autoChooser.get();
     }
 
-    public abstract void updateMechanisms();
+    /** This function is called once when teleop is enabled. */
+    public void teleopInit() {
+        m_climb.zeroPosition();
+    }
+
+    public abstract void updateVisualizer();
 
     // Methods used by simulation only
 
