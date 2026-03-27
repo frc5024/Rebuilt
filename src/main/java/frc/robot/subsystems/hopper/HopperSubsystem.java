@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.RobotConstants;
 
@@ -143,13 +142,14 @@ public class HopperSubsystem extends SubsystemBase {
                 targetRPM = 0.0;
                 stop();
             } else {
-                targetRPM = FeederConstants.UNJAM_RPM;
+                targetRPM = HopperConstants.UNJAM_RPM;
                 return;
             }
         }
 
         // check if current is high and motor should be moving
         if (getCurrentDrawAmps() > JAM_CURRENT_THRESHOLD && targetRPM != 0.0) {
+            jamTimer.reset();
             jamTimer.start();
         } else {
             jamTimer.stop();
@@ -157,7 +157,7 @@ public class HopperSubsystem extends SubsystemBase {
         }
 
         // unjam if threshold is held long enough
-        if (jamTimer.hasElapsed(JAM_TIMEOUT)) {
+        if (jamTimer.isRunning() && jamTimer.hasElapsed(JAM_TIMEOUT)) {
             isUnjamming = true;
             jamTimer.reset();
             unjamActionTimer.reset();

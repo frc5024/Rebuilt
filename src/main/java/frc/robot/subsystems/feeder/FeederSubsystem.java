@@ -149,6 +149,7 @@ public class FeederSubsystem extends SubsystemBase {
 
         // check if current is high and motor should be moving
         if (getCurrentDrawAmps() > JAM_CURRENT_THRESHOLD && targetRPM != 0.0) {
+            jamTimer.reset();
             jamTimer.start();
         } else {
             jamTimer.stop();
@@ -156,7 +157,7 @@ public class FeederSubsystem extends SubsystemBase {
         }
 
         // unjam if threshold is held long enough
-        if (jamTimer.hasElapsed(JAM_TIMEOUT)) {
+        if (jamTimer.isRunning() && jamTimer.hasElapsed(JAM_TIMEOUT)) {
             isUnjamming = true;
             jamTimer.reset();
             unjamActionTimer.reset();
