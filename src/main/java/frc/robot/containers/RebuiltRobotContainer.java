@@ -168,7 +168,7 @@ public class RebuiltRobotContainer extends RobotContainer {
                 new Rotation3d(
                         0.0,
                         Units.degreesToRadians(-180.0 + turretConstants.verticalLaunchAngle), // launch angle
-                        robotPose.getRotation().getRadians() + Math.toRadians(m_turret.getCurrentAngle())));
+                        -Math.toRadians(m_turret.getCurrentAngle())));
         Pose3d turretPose = new Pose3d(robotPose).transformBy(transform3d);
 
         mechanismVisualizer.update(
