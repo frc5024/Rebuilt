@@ -214,21 +214,21 @@ public class IntakeSubsystem extends SubsystemBase {
     private void setShuffleboard() {
         armTab = Shuffleboard.getTab("Arm");
 
-        armPEntry.setDouble(intakeConstants.kArmP);
-        armIEntry.setDouble(intakeConstants.kArmI);
-        armDEntry.setDouble(intakeConstants.kArmD);
+        // armPEntry.setDouble(intakeConstants.kArmP);
+        // armIEntry.setDouble(intakeConstants.kArmI);
+        // armDEntry.setDouble(intakeConstants.kArmD);
 
-        armSEntry.setDouble(intakeConstants.kArmS);
-        armVEntry.setDouble(intakeConstants.kArmV);
-        armAEntry.setDouble(intakeConstants.kArmA);
+        // armSEntry.setDouble(intakeConstants.kArmS);
+        // armVEntry.setDouble(intakeConstants.kArmV);
+        // armAEntry.setDouble(intakeConstants.kArmA);
 
-        rollerPEntry.setDouble(intakeConstants.kRollP);
-        rollerIEntry.setDouble(intakeConstants.kRollI);
-        rollerDEntry.setDouble(intakeConstants.kRollD);
+        // rollerPEntry.setDouble(intakeConstants.kRollP);
+        // rollerIEntry.setDouble(intakeConstants.kRollI);
+        // rollerDEntry.setDouble(intakeConstants.kRollD);
 
-        rollerSEntry.setDouble(intakeConstants.kRollS);
-        rollerVEntry.setDouble(intakeConstants.kRollV);
-        rollerAEntry.setDouble(intakeConstants.kRollA);
+        // rollerSEntry.setDouble(intakeConstants.kRollS);
+        // rollerVEntry.setDouble(intakeConstants.kRollV);
+        // rollerAEntry.setDouble(intakeConstants.kRollA);
 
         armPEntry = armTab.add("Set kP", intakeConstants.kArmP).getEntry();
         armIEntry = armTab.add("Set kI", intakeConstants.kArmI).getEntry();
