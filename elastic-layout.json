@@ -136,6 +136,351 @@
         "layouts": [],
         "containers": []
       }
+    },
+    {
+      "name": "Turret Tuning",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "IsRedAlliance",
+            "x": 128.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/FMSInfo/IsRedAlliance",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "CurrentAngle",
+            "x": 896.0,
+            "y": 0.0,
+            "width": 512.0,
+            "height": 384.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Turret/CurrentAngle",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 10.0,
+              "min_value": -180.0,
+              "max_value": 180.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "Velocity",
+            "x": 1408.0,
+            "y": 0.0,
+            "width": 512.0,
+            "height": 384.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Turret/Velocity",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 10.0,
+              "min_value": -180.0,
+              "max_value": 180.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "GoalAngle",
+            "x": 128.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Turret/GoalAngle",
+              "period": 0.06,
+              "data_type": "double",
+              "start_angle": -180.0,
+              "end_angle": 180.0,
+              "min_value": -180.0,
+              "max_value": 180.0,
+              "number_of_labels": 8,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "SetPoint Pos",
+            "x": 896.0,
+            "y": 384.0,
+            "width": 512.0,
+            "height": 384.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Turret/SetPoint/Position",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 10.0,
+              "min_value": -180.0,
+              "max_value": 180.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "SetPoint Velocity",
+            "x": 1408.0,
+            "y": 384.0,
+            "width": 512.0,
+            "height": 384.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Turret/SetPoint/Velocity",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 10.0,
+              "min_value": -180.0,
+              "max_value": 180.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "AtTarget",
+            "x": 128.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Turret/AtTarget",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "SET max speed",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Turret/SET max speed",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "SET max accel",
+            "x": 0.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Turret/SET max accel",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "SET V",
+            "x": 0.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Turret/SET V",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "SET S",
+            "x": 0.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Turret/SET S",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "SET A",
+            "x": 0.0,
+            "y": 512.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Turret/SET A",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "SET P",
+            "x": 0.0,
+            "y": 640.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Turret/SET P",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "SET D",
+            "x": 0.0,
+            "y": 768.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Turret/SET D",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "SET TOLERANCE",
+            "x": 640.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/Turret/SET TOLERANCE",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
+            }
+          },
+          {
+            "title": "PIDEnabled",
+            "x": 384.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Turret/PIDEnabled",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Setpoint",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Turret/SetPoint/Position",
+              "period": 0.06,
+              "data_type": "double",
+              "start_angle": -180.0,
+              "end_angle": 180.0,
+              "min_value": -180.0,
+              "max_value": 180.0,
+              "number_of_labels": 8,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "CurrentAngle",
+            "x": 640.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Turret/CurrentAngle",
+              "period": 0.06,
+              "data_type": "double",
+              "start_angle": -180.0,
+              "end_angle": 180.0,
+              "min_value": -180.0,
+              "max_value": 180.0,
+              "number_of_labels": 8,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "Voltage",
+            "x": 128.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Turret/Voltage",
+              "period": 0.06,
+              "data_type": "double",
+              "start_angle": -140.0,
+              "end_angle": 140.0,
+              "min_value": -13.0,
+              "max_value": 13.0,
+              "number_of_labels": 8,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "Voltage",
+            "x": 384.0,
+            "y": 384.0,
+            "width": 512.0,
+            "height": 384.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Turret/Voltage",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 10.0,
+              "min_value": -13.0,
+              "max_value": 13.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          }
+        ]
+      }
     }
   ]
 }
