@@ -160,6 +160,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+        Logger.recordOutput("SwerveDrive/slowmode", isSlowMode);
+
         SwerveDriveConstants.odometryLock.lock(); // Prevents odometry updates while reading data
         gyroIO.updateInputs(gyroInputs);
         Logger.processInputs("SwerveDrive/Gyro", gyroInputs);
