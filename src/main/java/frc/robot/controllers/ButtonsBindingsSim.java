@@ -3,7 +3,7 @@ package frc.robot.controllers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.StickRotationCommand;
@@ -106,12 +106,15 @@ public class ButtonsBindingsSim {
                                 new runEverything(m_feeder, m_shooter, m_hopper),
                                 new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
 
+        commandXboxController.leftTrigger()
+                .whileTrue(
+                        new StartEndCommand(() -> swerveDriveSubsystem.isSlowMode = true,
+                                () -> swerveDriveSubsystem.isSlowMode = false));
+
         commandXboxController.rightTrigger()
                 .whileTrue(
-                        new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = true));
-        commandXboxController.rightTrigger()
-                .onFalse(
-                        new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = false));
+                        new StartEndCommand(() -> swerveDriveSubsystem.isSlowMode = true,
+                                () -> swerveDriveSubsystem.isSlowMode = false));
 
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
