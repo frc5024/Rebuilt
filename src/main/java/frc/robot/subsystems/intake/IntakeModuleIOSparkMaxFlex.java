@@ -55,7 +55,7 @@ public class IntakeModuleIOSparkMaxFlex implements IntakeModuleIO {
         this.intakeMotorConfig = new SparkMaxConfig();
         intakeMotorConfig
                 .idleMode(IdleMode.kCoast)
-                .inverted(true);
+                .inverted(false);
         intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         retractingLimitSwitch = new DigitalInput(7);

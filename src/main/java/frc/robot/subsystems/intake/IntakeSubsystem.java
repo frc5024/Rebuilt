@@ -199,7 +199,7 @@ public class IntakeSubsystem extends SubsystemBase {
         this.rollerCurrentSpeed = intakeModuleIO.getIntakeVelocity();
 
         double rollerPIDoutput = rollerPIDController.calculate(rollerCurrentSpeed, rollerDesiredSpeed);
-        double rollerFeedforwardOutput = rollerFeedforward.calculate(rollerCurrentSpeed);
+        double rollerFeedforwardOutput = rollerFeedforward.calculate(rollerDesiredSpeed);
         double totalOutput = rollerPIDoutput + rollerFeedforwardOutput;
         double voltageRequest = MathUtil.clamp(totalOutput, -12.0, 12.0);
 
