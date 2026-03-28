@@ -118,7 +118,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Lower P and add D damping to reduce oscillations during direction changes
         driveController = new PPHolonomicDriveController(
                 new PIDConstants(0.45, 0.0, 0.05),
-                new PIDConstants(3.5, 0.0, 0.1));
+                new PIDConstants(4.5, 0.0, 0.1));
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configure(

@@ -9,12 +9,6 @@
           "data": {
             "pathName": "Drive Back"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Drive Back Test"
-          }
         }
       ]
     }
