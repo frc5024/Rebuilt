@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.326428571428571,
-        "y": 4.569482142857143
+        "x": 2.566219688363408,
+        "y": 4.180306831091252
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.358821428571429,
-        "y": 7.3876607142857145
+        "x": 3.566219688363408,
+        "y": 4.180306831091252
       },
       "isLocked": false,
-      "linkedName": "Left Shallow"
+      "linkedName": "Drive Back Stop"
     },
     {
       "anchor": {
-        "x": 3.799785714285714,
-        "y": 7.598214285714285
+        "x": 3.5975529798947656,
+        "y": 4.180306831091252
       },
       "prevControl": {
-        "x": 6.666553571428572,
-        "y": 7.241892857142857
+        "x": 2.5975529798947656,
+        "y": 4.180306831091252
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Trench End (Rotation)"
+      "linkedName": "Drive Back Start"
     }
   ],
   "rotationTargets": [],
@@ -45,10 +45,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Left Trench Paths",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

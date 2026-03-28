@@ -7,19 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Drive Back"
+            "pathName": "Right Trench Neutral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Drive Back Test"
+            "pathName": "Right Neutral Trench (No Turret)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunEverythingNoArm"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Drive Back Autos",
+  "folder": "Right Trench Autos",
   "choreoAuto": false
 }

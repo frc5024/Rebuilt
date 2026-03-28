@@ -12,7 +12,7 @@
         "y": 4.180306831091252
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Drive Back Start"
     },
     {
       "anchor": {
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Drive Back Stop"
     }
   ],
   "rotationTargets": [],
@@ -42,14 +42,14 @@
   "globalConstraints": {
     "maxVelocity": 2.5,
     "maxAcceleration": 2.5,
-    "maxAngularVelocity": 180.0,
-    "maxAngularAcceleration": 270.0,
+    "maxAngularVelocity": 600.0,
+    "maxAngularAcceleration": 1500.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0.0
+    "velocity": 0.0,
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,

@@ -68,7 +68,6 @@ public class ButtonBindings {
     /**
      * 
      */
-
     private CommandXboxController setDriverBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(DRIVER_PORT);
         // Default command, normal field-relative drive
@@ -90,6 +89,7 @@ public class ButtonBindings {
         commandXboxController.rightTrigger()
                 .whileTrue(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = true));
         commandXboxController.rightTrigger().onFalse(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = false));
+
         commandXboxController.a().whileTrue(
                 DriveCommands.joystickDriveAtAngle(
                         swerveDriveSubsystem,
@@ -121,8 +121,7 @@ public class ButtonBindings {
 
         commandXboxController.y().onTrue(m_intake.RetractArmCommand());
         commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
-        commandXboxController.rightBumper()
-                .whileTrue(m_intake.IntakeCommand());
+        commandXboxController.rightBumper().whileTrue(m_intake.IntakeCommand());
 
         commandXboxController.back().whileTrue(m_intake.OuttakeCommand());
 

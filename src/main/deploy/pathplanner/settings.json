@@ -4,6 +4,7 @@
   "holonomicMode": true,
   "pathFolders": [
     "Left Trench Paths",
+    "Test Paths",
     "Right Trench Paths"
   ],
   "autoFolders": [
@@ -13,8 +14,8 @@
   ],
   "defaultMaxVel": 2.5,
   "defaultMaxAccel": 2.5,
-  "defaultMaxAngVel": 180.0,
-  "defaultMaxAngAccel": 270.0,
+  "defaultMaxAngVel": 600.0,
+  "defaultMaxAngAccel": 1500.0,
   "defaultNominalVoltage": 12.0,
   "robotMass": 55.66,
   "robotMOI": 6.883,

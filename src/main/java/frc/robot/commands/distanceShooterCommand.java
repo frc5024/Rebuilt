@@ -31,7 +31,6 @@ public class distanceShooterCommand extends Command {
     @Override
     public void initialize() {
         shootersubsystem.setEnabled(true);
-
     }
 
     @Override
@@ -61,5 +60,4 @@ public class distanceShooterCommand extends Command {
     public boolean isFinished() {
         return false;
     }
-
 }

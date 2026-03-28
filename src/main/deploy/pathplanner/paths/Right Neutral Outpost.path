@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.783237924865832,
-        "y": 2.225867620751342
+        "x": 7.815688729874777,
+        "y": 3.183166368515206
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.691154092985772,
-        "y": 1.418139543384307
+        "x": 7.723604897994718,
+        "y": 2.375438291148171
       },
       "isLocked": false,
       "linkedName": "Right Intake Stop"
@@ -74,8 +74,8 @@
   "globalConstraints": {
     "maxVelocity": 2.5,
     "maxAcceleration": 2.5,
-    "maxAngularVelocity": 180.0,
-    "maxAngularAcceleration": 270.0,
+    "maxAngularVelocity": 600.0,
+    "maxAngularAcceleration": 1500.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },

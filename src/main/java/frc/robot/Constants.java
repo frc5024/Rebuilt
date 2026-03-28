@@ -37,6 +37,9 @@ public final class Constants {
         // used to show/hide shuffleboard entries for PID tuning
         public static final boolean TUNING_MODE = false;
 
+        // set to true if turret can only shoot straight
+        public static final boolean TURRET_BROKEN = true;
+
         public static final double LOOP_PERIOD_SECS = 0.02;
 
         public static final double frameWidth = Units.inchesToMeters(27);
@@ -87,6 +90,9 @@ public final class Constants {
      * Field Constants
      */
     public static class FieldConstants {
+        public static final double LENGTH_METERS = Units.inchesToMeters(651.22);
+        public static final double WIDTH_METERS = Units.inchesToMeters(317.69);
+
         public static final Pose2d[][] SIMULATION_START_POSES = new Pose2d[][] {
                 // Blue Alliance
                 {
@@ -122,18 +128,21 @@ public final class Constants {
                 new Pose2d(16.541, 8.0693, Rotation2d.fromDegrees(0.0))
         };
 
+        public static final Pose2d[] TRENCH_POSES = new Pose2d[] {
+                new Pose2d(4.972, 7.564, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(4.972, 0.621, Rotation2d.fromDegrees(0.0))
+        };
+
         public static final Pose2d[][] MULE_POSES = new Pose2d[][] {
                 // Blue Alliance
                 {
-                        new Pose2d(2.0, 2.0, Rotation2d.fromDegrees(180.0)),
-                        new Pose2d(2.04, 6.0, Rotation2d.fromDegrees(180.0))
-
+                        new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(0.0, WIDTH_METERS, Rotation2d.fromDegrees(180.0))
                 },
                 // Red Alliance
                 {
-                        new Pose2d(14.5, 2.0, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(14.5, 6.0, Rotation2d.fromDegrees(0.0))
-
+                        new Pose2d(LENGTH_METERS, 0.0, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(LENGTH_METERS, WIDTH_METERS, Rotation2d.fromDegrees(0.0))
                 }
         };
     }
@@ -159,7 +168,7 @@ public final class Constants {
      * 
      */
     public static class intakeConstants {
-        public static final double INTAKE_SPEED = 0.55;
+        public static final double INTAKE_SPEED = 0.65;
         public static final double OUTTAKE_SPEED = -0.4;
         public static final double EXTENDING_SPEED = -0.15;
         public static final double RETRACTING_SPEED = 0.45;

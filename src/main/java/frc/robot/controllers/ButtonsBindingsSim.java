@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveNearestTrenchCommand;
 import frc.robot.commands.StickRotationCommand;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
@@ -94,6 +95,9 @@ public class ButtonsBindingsSim {
                             double angleToHub = Math.atan2(hubY - robotY, hubX - robotX);
                             return Rotation2d.fromRadians(angleToHub);
                         }));
+
+        commandXboxController.x().whileTrue(
+                new DriveNearestTrenchCommand(() -> swerveDriveSubsystem.getPose()));
 
         commandXboxController.y().onTrue(m_intake.RetractArmCommand());
 

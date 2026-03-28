@@ -24,15 +24,11 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     protected final int armMotorID = 5; // this is a placeholder ID
 
     // Hardware
-    protected final SparkFlex intakeMotor;
     protected final SparkMax armMotor;
-    private final RelativeEncoder intakeEncoder;
     private final RelativeEncoder armEncoder;
 
-    private final SparkBaseConfig armMotorConfig = new SparkMaxConfig()
-            .idleMode(IdleMode.kBrake);
-
-    private final SparkBaseConfig intakeMotorConfig = new SparkMaxConfig();
+    protected final SparkFlex intakeMotor;
+    private final RelativeEncoder intakeEncoder;
 
     private static DigitalInput retractingLimitSwitch = new DigitalInput(7);
     private static DigitalInput extendingLimitSwitch = new DigitalInput(8);
@@ -44,14 +40,20 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
      * 
      */
     public IntakeModuleIOSparkMax() {
-        this.intakeMotor = new SparkFlex(intakeMotorID, SparkLowLevel.MotorType.kBrushless);
         this.armMotor = new SparkMax(armMotorID, SparkLowLevel.MotorType.kBrushless);
-
-        armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-        this.intakeEncoder = this.intakeMotor.getEncoder();
         this.armEncoder = this.armMotor.getEncoder();
+        SparkBaseConfig armMotorConfig = new SparkMaxConfig();
+        armMotorConfig
+                .idleMode(IdleMode.kBrake);
+        this.armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        this.intakeMotor = new SparkFlex(intakeMotorID, SparkLowLevel.MotorType.kBrushless);
+        this.intakeEncoder = this.intakeMotor.getEncoder();
+        SparkBaseConfig intakeMotorConfig = new SparkMaxConfig();
+        intakeMotorConfig
+                .idleMode(IdleMode.kCoast);
+        this.intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         this.connectedDebouncer = new Debouncer(0.5);
     }
 
