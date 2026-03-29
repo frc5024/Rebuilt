@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.FuelCellConstants;
 import frc.robot.Constants.turretConstants;
@@ -16,6 +18,7 @@ import frc.robot.util.FuelSimCount;
  * 
  */
 public class ShooterSubsystemSim extends ShooterSubsystem {
+    private final DoubleSupplier turretYawSupplier;
     private final FuelSim fuelSim;
     private final FuelSimCount fuelSimCount;
 
@@ -24,9 +27,11 @@ public class ShooterSubsystemSim extends ShooterSubsystem {
     /**
      * 
      */
-    public ShooterSubsystemSim(ShooterModuleIO shooterModuleIO, FuelSim fuelSim, FuelSimCount fuelSimCount) {
+    public ShooterSubsystemSim(ShooterModuleIO shooterModuleIO, DoubleSupplier turretYawSupplier, FuelSim fuelSim,
+            FuelSimCount fuelSimCount) {
         super(shooterModuleIO);
 
+        this.turretYawSupplier = turretYawSupplier;
         this.fuelSim = fuelSim;
         this.fuelSimCount = fuelSimCount;
 
@@ -50,8 +55,8 @@ public class ShooterSubsystemSim extends ShooterSubsystem {
 
         if (fuelSimCount.getFuelStored() > 0) {
             fuelSim.launchFuel(MetersPerSecond.of(getTangentialVelocity()),
-                    Degree.of(turretConstants.verticalLaunchAngle),
-                    Degree.of(0.0),
+                    Degree.of(Math.abs(turretConstants.verticalLaunchAngle)),
+                    Degree.of(-turretYawSupplier.getAsDouble()),
                     Meters.of(FuelCellConstants.DIAMETER * 2.7));
             fuelSimCount.setFuelStored(fuelSimCount.getFuelStored() - 1);
         }

@@ -8,6 +8,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 /**
@@ -22,24 +23,18 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
     private final DCMotorSim intakeMotorSim;
     private final SparkFlexSim intakeSparkFlexSim;
 
-    private double armVoltageRequest;
-    private double intakeVoltageRequest;
-
     /**
      * 
      */
     public IntakeModuleIOSim() {
-        this.armDcMotor = DCMotor.getNEO(1);
+        this.armDcMotor = DCMotor.getNeo550(1);
         this.armMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(armDcMotor, 0.01, 16.0), armDcMotor);
         this.armSparkMaxSim = new SparkMaxSim(this.armMotor, this.armDcMotor);
 
-        this.intakeDcMotor = DCMotor.getNEO(1);
+        this.intakeDcMotor = DCMotor.getNeoVortex(1);
         this.intakeMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(intakeDcMotor, 0.01, 4.0),
                 intakeDcMotor);
         this.intakeSparkFlexSim = new SparkFlexSim(this.intakeMotor, this.intakeDcMotor);
-
-        this.armVoltageRequest = 0.0;
-        this.intakeVoltageRequest = 0.0;
     }
 
     @Override
@@ -48,27 +43,39 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
             stop();
         }
 
+        double armAppliedVoltage = armSparkMaxSim.getAppliedOutput() * RobotController.getBatteryVoltage();
+        armMotorSim.setInput(armAppliedVoltage);
         armMotorSim.update(0.02);
+
+        double armVelocityRPM = Units.radiansPerSecondToRotationsPerMinute(armMotorSim.getAngularVelocityRadPerSec());
+        armSparkMaxSim.iterate(armVelocityRPM, RobotController.getBatteryVoltage(), 0.02);
+
+        armSparkMaxSim.setMotorCurrent(armMotorSim.getCurrentDrawAmps());
+        armSparkMaxSim.setBusVoltage(armAppliedVoltage);
+
+        double intakeAppliedVoltage = intakeSparkFlexSim.getAppliedOutput() * RobotController.getBatteryVoltage();
+        intakeMotorSim.setInput(intakeAppliedVoltage);
         intakeMotorSim.update(0.02);
 
-        armSparkMaxSim.setPosition(armMotorSim.getAngularPositionRotations());
-        armSparkMaxSim.setVelocity(armMotorSim.getAngularVelocityRPM());
+        double intakeVelocityRPM = Units
+                .radiansPerSecondToRotationsPerMinute(intakeMotorSim.getAngularVelocityRadPerSec());
+        intakeSparkFlexSim.iterate(intakeVelocityRPM, RobotController.getBatteryVoltage(), 0.020);
 
-        intakeSparkFlexSim.setPosition(intakeMotorSim.getAngularPositionRotations());
-        intakeSparkFlexSim.setVelocity(intakeMotorSim.getAngularVelocityRPM());
+        intakeSparkFlexSim.setMotorCurrent(intakeMotorSim.getCurrentDrawAmps());
+        intakeSparkFlexSim.setBusVoltage(intakeAppliedVoltage);
 
         inputs.data = new IntakeModuleIOData(
                 true,
                 armSparkMaxSim.getPosition(),
                 armSparkMaxSim.getVelocity(),
-                armVoltageRequest,
+                armAppliedVoltage,
                 0.0,
                 armSparkMaxSim.getMotorCurrent(),
                 0.0,
                 true,
                 intakeSparkFlexSim.getPosition(),
                 intakeSparkFlexSim.getVelocity(),
-                intakeVoltageRequest,
+                intakeAppliedVoltage,
                 0.0,
                 intakeSparkFlexSim.getMotorCurrent(),
                 0.0);
@@ -77,11 +84,6 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
     @Override
     public double getCurrentDrawAmps() {
         return armSparkMaxSim.getMotorCurrent() + intakeSparkFlexSim.getMotorCurrent();
-    }
-
-    @Override
-    public double getPosition() {
-        return armSparkMaxSim.getPosition();
     }
 
     @Override
@@ -101,13 +103,13 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
 
     @Override
     public void setArm(double voltage) {
-        armVoltageRequest = MathUtil.clamp(-voltage * 12, -12.0, 12.0);
-        armMotorSim.setInputVoltage(armVoltageRequest);
+        double voltageRequest = MathUtil.clamp(-voltage * 12, -12.0, 12.0);
+        armMotorSim.setInputVoltage(voltageRequest);
     }
 
     @Override
     public void setIntake(double voltage) {
-        intakeVoltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
-        intakeMotorSim.setInputVoltage(intakeVoltageRequest);
+        double voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        intakeMotorSim.setInputVoltage(voltageRequest);
     }
 }

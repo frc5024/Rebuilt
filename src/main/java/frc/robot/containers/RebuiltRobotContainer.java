@@ -9,17 +9,12 @@ import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.FuelCellConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants.turretConstants;
 import frc.robot.commands.TuningCommands;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
@@ -160,12 +155,7 @@ public class RebuiltRobotContainer extends RobotContainer {
     public void updateVisualizer() {
         // calulate pose of the turret
         Pose2d robotPose = swerveDriveSubsystem.getPose();
-        Transform3d transform3d = new Transform3d(-FuelCellConstants.DIAMETER * 1.1, FuelCellConstants.DIAMETER * 1.1,
-                FuelCellConstants.DIAMETER * 2.7,
-                new Rotation3d(0.0, Units.degreesToRadians(-180.0 + turretConstants.verticalLaunchAngle), // launch
-                                                                                                          // angle
-                        robotPose.getRotation().getRadians() + Math.toRadians(m_turret.getCurrentAngle())));
-        Pose3d turretPose = new Pose3d(robotPose).transformBy(transform3d);
+        Pose3d turretPose = m_turret.getPose(robotPose);
 
         mechanismVisualizer.update(m_intake.getPosition(), m_hopper.getPosition(), m_turret.getCurrentAngle(),
                 m_climb.getPosition(), m_feeder.getPosition(), turretPose, m_shooter.getTangentialVelocity(),

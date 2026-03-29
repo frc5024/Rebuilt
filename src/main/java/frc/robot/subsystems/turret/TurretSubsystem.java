@@ -2,6 +2,11 @@ package frc.robot.subsystems.turret;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -143,6 +148,23 @@ public class TurretSubsystem extends SubsystemBase {
         double tolerance = turretConstants.turretTolerance;
 
         return Math.abs(currentAngle - goalAngle) <= tolerance;
+    }
+
+    /**
+     * 
+     */
+    public Pose3d getPose(Pose2d robotPose) {
+        Translation3d turretOffset = new Translation3d(turretConstants.OFFSET_X, turretConstants.OFFSET_Y,
+                turretConstants.OFFSET_Z);
+        Rotation3d turretRotation = new Rotation3d(0.0,
+                Math.toRadians(turretConstants.verticalLaunchAngle),
+                Math.toRadians(-turretModuleIO.getCurrentAngle()));
+        Transform3d robotToTurret = new Transform3d(turretOffset, turretRotation);
+
+        Pose3d robotPose3d = new Pose3d(robotPose);
+        Pose3d turretPose = robotPose3d.plus(robotToTurret);
+
+        return turretPose;
     }
 
     /**

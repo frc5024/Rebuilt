@@ -238,7 +238,7 @@ public class GameUtil {
 
         Rotation3d rotation3d = turretPose.getRotation();
         double vx = velocityMetersPerSec * Math.cos(rotation3d.getY()) * Math.cos(rotation3d.getZ());
-        double vy = velocityMetersPerSec * Math.cos(rotation3d.getY()) * Math.sin(rotation3d.getZ());
+        double vy = velocityMetersPerSec * Math.cos(-rotation3d.getY()) * Math.sin(rotation3d.getZ());
         double vz = velocityMetersPerSec * Math.sin(-rotation3d.getY());
 
         double dt = 0.02; // 20ms steps for higher precision
