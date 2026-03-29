@@ -13,7 +13,7 @@ public interface ArmModuleIO {
 
     record ArmModuleIOData(
             boolean connected,
-            double positionRads,
+            double positionRots,
             double velocityRPM,
             double appliedVoltage,
             double torqueCurrentAmps,

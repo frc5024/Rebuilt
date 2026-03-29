@@ -93,8 +93,8 @@ public class TurretModuleIOSparkMaxRelativeEncoder implements TurretModuleIO {
 
         inputs.data = new TurretModuleIOData(
                 connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
-                getPosition(),
-                getVelocity(),
+                encoder.getPosition(),
+                encoder.getVelocity(),
                 turretMotor.getAppliedOutput(),
                 0.0,
                 turretMotor.getOutputCurrent(),

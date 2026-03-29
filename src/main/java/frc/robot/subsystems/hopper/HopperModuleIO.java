@@ -13,7 +13,7 @@ public interface HopperModuleIO {
 
     record HopperModuleIOData(
             boolean connected,
-            double positionRads,
+            double positionRots,
             double velocityRPM,
             double appliedVoltage,
             double torqueCurrentAmps,
