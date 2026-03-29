@@ -21,7 +21,7 @@ public class ClimbModuleIOTalonFX implements ClimbModuleIO {
     // Constants
     protected final double GEAR_RATIO = 4.0;
 
-    // Hardward
+    // Hardware
     protected final TalonFX climbMotor;
 
     // Inputs from climb motor
@@ -29,6 +29,7 @@ public class ClimbModuleIOTalonFX implements ClimbModuleIO {
     private final StatusSignal<AngularVelocity> velocity;
     private final StatusSignal<Voltage> appliedVolts;
     private final StatusSignal<Current> current;
+
     // Connection debouncers
     private final Debouncer connectedDebouncer;
 
