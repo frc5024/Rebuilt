@@ -34,6 +34,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private GenericEntry iEntry;
     private GenericEntry dEntry;
 
+    private GenericEntry rpmEntry;
+
     /**
      * 
      */
@@ -71,6 +73,8 @@ public class ShooterSubsystem extends SubsystemBase {
                     pEntry.getDouble(kPIDs[0]),
                     iEntry.getDouble(kPIDs[1]),
                     dEntry.getDouble(kPIDs[2]));
+
+            shooterModuleIO.setVelocity(rpmEntry.getDouble(ShooterConstants.IDLE_SPEED_RPM));
         }
 
         Logger.recordOutput("Shooter/AtSetpoint", shooterModuleIO.isAtSetpoint());
@@ -138,5 +142,8 @@ public class ShooterSubsystem extends SubsystemBase {
         pEntry.setDouble(kPIDs[0]);
         iEntry.setDouble(kPIDs[1]);
         dEntry.setDouble(kPIDs[2]);
+
+        rpmEntry = tab.add("SET RPM", ShooterConstants.IDLE_SPEED_RPM).getEntry();
+        rpmEntry.setDouble(ShooterConstants.IDLE_SPEED_RPM);
     }
 }

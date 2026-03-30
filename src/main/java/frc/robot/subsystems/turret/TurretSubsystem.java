@@ -44,6 +44,8 @@ public class TurretSubsystem extends SubsystemBase {
     private GenericEntry maxAccelEntry;
     private GenericEntry toleranceEntry;
 
+    private GenericEntry angleEntry;
+
     /**
      * 
      */
@@ -94,6 +96,8 @@ public class TurretSubsystem extends SubsystemBase {
             turretModuleIO.setConstraints(maxSpeedEntry.getDouble(TurretConstants.MAX_SPEED),
                     maxAccelEntry.getDouble(TurretConstants.MAX_ACCEL),
                     toleranceEntry.getDouble(TurretConstants.TOLERANCE));
+
+            turretModuleIO.setAngle(angleEntry.getDouble(0.0));
         }
 
         Logger.recordOutput("Turret/CurrentAngle", getPosition());
@@ -197,13 +201,16 @@ public class TurretSubsystem extends SubsystemBase {
         iEntry.setDouble(kPIDs[1]);
         dEntry.setDouble(kPIDs[2]);
 
-        maxSpeedEntry = tab.add("SET max speed", TurretConstants.MAX_SPEED).getEntry();
-        maxAccelEntry = tab.add("SET max accel", TurretConstants.MAX_ACCEL).getEntry();
+        maxSpeedEntry = tab.add("SET MAXSPEED", TurretConstants.MAX_SPEED).getEntry();
+        maxAccelEntry = tab.add("SET MAXACCEL", TurretConstants.MAX_ACCEL).getEntry();
         toleranceEntry = tab.add("SET TOLERANCE", TurretConstants.TOLERANCE).getEntry();
 
         maxSpeedEntry.setDouble(Constants.TurretConstants.MAX_SPEED);
         maxAccelEntry.setDouble(Constants.TurretConstants.MAX_ACCEL);
         toleranceEntry.setDouble(Constants.TurretConstants.TOLERANCE);
+
+        angleEntry = tab.add("SET ANGLE", 0.0).getEntry();
+        angleEntry.setDouble(0.0);
 
         enablePID();
     }

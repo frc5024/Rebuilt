@@ -122,8 +122,8 @@ public class HopperModuleIOSparkMaxRelativeEncoder implements HopperModuleIO {
     public void setVoltage(double targetRPM) {
         double currentRPM = encoder.getVelocity();
 
-        double ffVoltage = feedforward.calculate(pidController.getSetpoint());
         double pidVoltage = pidController.calculate(currentRPM, targetRPM);
+        double ffVoltage = feedforward.calculate(pidController.getSetpoint());
 
         double voltageRequest = MathUtil.clamp(ffVoltage + pidVoltage, -12.0, 12.0);
 

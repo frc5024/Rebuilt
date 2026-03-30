@@ -42,6 +42,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private GenericEntry armIEntry;
     private GenericEntry armDEntry;
 
+    private GenericEntry armAngleEntry;
+
     private ShuffleboardTab rollerTab;
 
     private GenericEntry rollerSEntry;
@@ -51,6 +53,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private GenericEntry rollerPEntry;
     private GenericEntry rollerIEntry;
     private GenericEntry rollerDEntry;
+
+    private GenericEntry rollerRpmEntry;
 
     /**
      * 
@@ -105,14 +109,20 @@ public class IntakeSubsystem extends SubsystemBase {
                     armIEntry.getDouble(kArmPIDs[1]),
                     armDEntry.getDouble(kArmPIDs[2]));
 
+            armModuleIO.setAngle(armAngleEntry.getDouble(0.0));
+
             rollerModuleIO.setFF(
                     rollerSEntry.getDouble(kRollerSVAs[0]),
                     rollerVEntry.getDouble(kRollerSVAs[1]),
                     rollerAEntry.getDouble(kRollerSVAs[2]));
+
             rollerModuleIO.setPID(
                     rollerPEntry.getDouble(kRollerPIDs[0]),
                     rollerIEntry.getDouble(kRollerPIDs[1]),
                     rollerDEntry.getDouble(kRollerPIDs[2]));
+
+            rollerModuleIO.setVelocity(rollerRpmEntry.getDouble(RollerConstants.INTAKE_RPM));
+
         }
 
         Logger.recordOutput("Intake/Arm/IsExetended", armModuleIO.isExtended());
@@ -179,38 +189,44 @@ public class IntakeSubsystem extends SubsystemBase {
      */
     private void setShuffleboard() {
         armTab = Shuffleboard.getTab("Intake/Arm");
-        armSEntry = armTab.add("Set kS", kArmSVAs[0]).getEntry();
-        armVEntry = armTab.add("Set kV", kArmSVAs[1]).getEntry();
-        armAEntry = armTab.add("Set kA", kArmSVAs[2]).getEntry();
+        armSEntry = armTab.add("SET S", kArmSVAs[0]).getEntry();
+        armVEntry = armTab.add("SET V", kArmSVAs[1]).getEntry();
+        armAEntry = armTab.add("SET A", kArmSVAs[2]).getEntry();
 
         armSEntry.setDouble(kArmSVAs[0]);
         armVEntry.setDouble(kArmSVAs[1]);
         armAEntry.setDouble(kArmSVAs[2]);
 
-        armPEntry = armTab.add("Set kP", kArmPIDs[0]).getEntry();
-        armIEntry = armTab.add("Set kI", kArmPIDs[1]).getEntry();
-        armDEntry = armTab.add("Set kD", kArmPIDs[2]).getEntry();
+        armPEntry = armTab.add("SET P", kArmPIDs[0]).getEntry();
+        armIEntry = armTab.add("SET I", kArmPIDs[1]).getEntry();
+        armDEntry = armTab.add("SET D", kArmPIDs[2]).getEntry();
 
         armPEntry.setDouble(kArmPIDs[0]);
         armIEntry.setDouble(kArmPIDs[1]);
         armDEntry.setDouble(kArmPIDs[2]);
 
+        armAngleEntry = armTab.add("SET ANGLE", 0.0).getEntry();
+        armAngleEntry.setDouble(0.0);
+
         rollerTab = Shuffleboard.getTab("Intake/Roller");
-        rollerSEntry = rollerTab.add("Set kS", kRollerSVAs[0]).getEntry();
-        rollerVEntry = rollerTab.add("Set kV", kRollerSVAs[1]).getEntry();
-        rollerAEntry = rollerTab.add("Set kA", kRollerSVAs[2]).getEntry();
+        rollerSEntry = rollerTab.add("SET S", kRollerSVAs[0]).getEntry();
+        rollerVEntry = rollerTab.add("SET V", kRollerSVAs[1]).getEntry();
+        rollerAEntry = rollerTab.add("SET A", kRollerSVAs[2]).getEntry();
 
         rollerSEntry.setDouble(kRollerSVAs[0]);
         rollerVEntry.setDouble(kRollerSVAs[1]);
         rollerAEntry.setDouble(kRollerSVAs[2]);
 
-        rollerPEntry = rollerTab.add("Set kP", kRollerPIDs[0]).getEntry();
-        rollerIEntry = rollerTab.add("Set kI", kRollerPIDs[1]).getEntry();
-        rollerDEntry = rollerTab.add("Set kD", kRollerPIDs[2]).getEntry();
+        rollerPEntry = rollerTab.add("SET P", kRollerPIDs[0]).getEntry();
+        rollerIEntry = rollerTab.add("SET I", kRollerPIDs[1]).getEntry();
+        rollerDEntry = rollerTab.add("SET D", kRollerPIDs[2]).getEntry();
 
         rollerPEntry.setDouble(kRollerPIDs[0]);
         rollerIEntry.setDouble(kRollerPIDs[1]);
         rollerDEntry.setDouble(kRollerPIDs[2]);
+
+        rollerRpmEntry = rollerTab.add("SET RPM", RollerConstants.INTAKE_RPM).getEntry();
+        rollerRpmEntry.setDouble(RollerConstants.INTAKE_RPM);
     }
 
     /**

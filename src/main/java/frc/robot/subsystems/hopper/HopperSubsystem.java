@@ -44,6 +44,7 @@ public class HopperSubsystem extends SubsystemBase {
     private GenericEntry dEntry;
     private GenericEntry iEntry;
 
+    private GenericEntry rpmEntry;
     private GenericEntry simulateJamEntry;
 
     /**
@@ -94,6 +95,8 @@ public class HopperSubsystem extends SubsystemBase {
                     pEntry.getDouble(kPIDs[0]),
                     iEntry.getDouble(kPIDs[1]),
                     dEntry.getDouble(kPIDs[2]));
+
+            hopperModuleIO.setVoltage(rpmEntry.getDouble(HopperConstants.RPM));
         }
 
         Logger.recordOutput("Hopper/CurrentVelocityRPM", hopperModuleIO.getVelocity());
@@ -181,6 +184,9 @@ public class HopperSubsystem extends SubsystemBase {
         pEntry.setDouble(kPIDs[0]);
         iEntry.setDouble(kPIDs[1]);
         dEntry.setDouble(kPIDs[2]);
+
+        rpmEntry = tab.add("SET RPM", HopperConstants.RPM).getEntry();
+        rpmEntry.setDouble(HopperConstants.RPM);
 
         simulateJamEntry = tab.add("SIMULATE JAM", false)
                 .withWidget("Toggle Switch")
