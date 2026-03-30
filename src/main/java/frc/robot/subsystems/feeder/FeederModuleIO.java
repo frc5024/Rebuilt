@@ -13,7 +13,7 @@ public interface FeederModuleIO {
 
     record FeederModuleIOData(
             boolean connected,
-            double positionRads,
+            double positionRots,
             double velocityRPM,
             double appliedVoltage,
             double torqueCurrentAmps,

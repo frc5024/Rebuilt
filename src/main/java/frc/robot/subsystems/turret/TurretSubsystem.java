@@ -135,7 +135,7 @@ public class TurretSubsystem extends SubsystemBase {
                 TurretConstants.OFFSET_Z);
         Rotation3d turretRotation = new Rotation3d(0.0,
                 Math.toRadians(TurretConstants.verticalLaunchAngle),
-                Math.toRadians(-getPosition()));
+                Math.toRadians(-turretModuleIO.getPosition()));
         Transform3d robotToTurret = new Transform3d(turretOffset, turretRotation);
 
         Pose3d robotPose3d = new Pose3d(robotPose);
