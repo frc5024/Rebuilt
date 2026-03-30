@@ -96,7 +96,7 @@ public class HopperSubsystem extends SubsystemBase {
                     iEntry.getDouble(kPIDs[1]),
                     dEntry.getDouble(kPIDs[2]));
 
-            hopperModuleIO.setVoltage(rpmEntry.getDouble(HopperConstants.RPM));
+            hopperModuleIO.setVoltage(rpmEntry.getDouble(0.0));
         }
 
         Logger.recordOutput("Hopper/CurrentVelocityRPM", hopperModuleIO.getVelocity());
@@ -185,8 +185,8 @@ public class HopperSubsystem extends SubsystemBase {
         iEntry.setDouble(kPIDs[1]);
         dEntry.setDouble(kPIDs[2]);
 
-        rpmEntry = tab.add("SET RPM", HopperConstants.RPM).getEntry();
-        rpmEntry.setDouble(HopperConstants.RPM);
+        rpmEntry = tab.add("SET RPM", 0.0).getEntry();
+        rpmEntry.setDouble(0.0);
 
         simulateJamEntry = tab.add("SIMULATE JAM", false)
                 .withWidget("Toggle Switch")

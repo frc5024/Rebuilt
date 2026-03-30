@@ -74,7 +74,7 @@ public class ShooterSubsystem extends SubsystemBase {
                     iEntry.getDouble(kPIDs[1]),
                     dEntry.getDouble(kPIDs[2]));
 
-            shooterModuleIO.setVelocity(rpmEntry.getDouble(ShooterConstants.IDLE_SPEED_RPM));
+            shooterModuleIO.setVelocity(rpmEntry.getDouble(0.0));
         }
 
         Logger.recordOutput("Shooter/AtSetpoint", shooterModuleIO.isAtSetpoint());
@@ -143,7 +143,7 @@ public class ShooterSubsystem extends SubsystemBase {
         iEntry.setDouble(kPIDs[1]);
         dEntry.setDouble(kPIDs[2]);
 
-        rpmEntry = tab.add("SET RPM", ShooterConstants.IDLE_SPEED_RPM).getEntry();
-        rpmEntry.setDouble(ShooterConstants.IDLE_SPEED_RPM);
+        rpmEntry = tab.add("SET RPM", 0.0).getEntry();
+        rpmEntry.setDouble(0.0);
     }
 }

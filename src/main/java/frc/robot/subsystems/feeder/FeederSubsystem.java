@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FeederConstants;
-import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.RobotConstants;
 
 /**
@@ -97,7 +96,7 @@ public class FeederSubsystem extends SubsystemBase {
                     iEntry.getDouble(kPIDs[1]),
                     dEntry.getDouble(kPIDs[2]));
 
-            feederModuleIO.setVoltage(rpmEntry.getDouble(HopperConstants.RPM));
+            feederModuleIO.setVoltage(rpmEntry.getDouble(0.0));
         }
 
         Logger.recordOutput("Feeder/CurrentVelocityRPM", feederModuleIO.getVelocity());
@@ -186,8 +185,8 @@ public class FeederSubsystem extends SubsystemBase {
         iEntry.setDouble(kPIDs[1]);
         dEntry.setDouble(kPIDs[2]);
 
-        rpmEntry = tab.add("SET RPM", FeederConstants.RPM).getEntry();
-        rpmEntry.setDouble(FeederConstants.RPM);
+        rpmEntry = tab.add("SET RPM", 0.0).getEntry();
+        rpmEntry.setDouble(0.0);
 
         simulateJamEntry = tab.add("SIMULATE JAM", false)
                 .withWidget("Toggle Switch")

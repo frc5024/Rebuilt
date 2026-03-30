@@ -43,6 +43,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private GenericEntry armDEntry;
 
     private GenericEntry armAngleEntry;
+    private GenericEntry armExtendEntry;
 
     private ShuffleboardTab rollerTab;
 
@@ -111,6 +112,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
             armModuleIO.setAngle(armAngleEntry.getDouble(0.0));
 
+            if (armExtendEntry.getBoolean(false)) {
+                armModuleIO.setAngle(ArmConstants.EXTENDED_ANGLE);
+            }
+
             rollerModuleIO.setFF(
                     rollerSEntry.getDouble(kRollerSVAs[0]),
                     rollerVEntry.getDouble(kRollerSVAs[1]),
@@ -121,7 +126,7 @@ public class IntakeSubsystem extends SubsystemBase {
                     rollerIEntry.getDouble(kRollerPIDs[1]),
                     rollerDEntry.getDouble(kRollerPIDs[2]));
 
-            rollerModuleIO.setVelocity(rollerRpmEntry.getDouble(RollerConstants.INTAKE_RPM));
+            rollerModuleIO.setVelocity(rollerRpmEntry.getDouble(0.0));
 
         }
 
@@ -208,6 +213,10 @@ public class IntakeSubsystem extends SubsystemBase {
         armAngleEntry = armTab.add("SET ANGLE", 0.0).getEntry();
         armAngleEntry.setDouble(0.0);
 
+        armExtendEntry = armTab.add("EXTEND", false)
+                .withWidget("Toggle Button")
+                .getEntry();
+
         rollerTab = Shuffleboard.getTab("Intake/Roller");
         rollerSEntry = rollerTab.add("SET S", kRollerSVAs[0]).getEntry();
         rollerVEntry = rollerTab.add("SET V", kRollerSVAs[1]).getEntry();
@@ -225,8 +234,8 @@ public class IntakeSubsystem extends SubsystemBase {
         rollerIEntry.setDouble(kRollerPIDs[1]);
         rollerDEntry.setDouble(kRollerPIDs[2]);
 
-        rollerRpmEntry = rollerTab.add("SET RPM", RollerConstants.INTAKE_RPM).getEntry();
-        rollerRpmEntry.setDouble(RollerConstants.INTAKE_RPM);
+        rollerRpmEntry = rollerTab.add("SET RPM", 0.0).getEntry();
+        rollerRpmEntry.setDouble(0.0);
     }
 
     /**

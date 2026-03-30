@@ -97,11 +97,11 @@ public class TurretSubsystem extends SubsystemBase {
                     maxAccelEntry.getDouble(TurretConstants.MAX_ACCEL),
                     toleranceEntry.getDouble(TurretConstants.TOLERANCE));
 
-            turretModuleIO.setAngle(angleEntry.getDouble(0.0));
+            setAngle(angleEntry.getDouble(0.0));
         }
 
         Logger.recordOutput("Turret/CurrentAngle", getPosition());
-        Logger.recordOutput("Turret/SetPointAngle", targetAngle);
+        Logger.recordOutput("Turret/TargetAngle", targetAngle);
         Logger.recordOutput("Turret/AtTarget", isAtTarget());
         Logger.recordOutput("Turret/PIDEnabled", isPIDEnabled());
     }

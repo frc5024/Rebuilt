@@ -202,6 +202,32 @@
               "data_type": "double",
               "show_submit_button": true
             }
+          },
+          {
+            "title": "Force Extend",
+            "x": 896.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Toggle Switch",
+            "properties": {
+              "topic": "/Shuffleboard/Intake/Arm/Force Extend",
+              "period": 0.06,
+              "data_type": "boolean"
+            }
+          },
+          {
+            "title": "Force Retract",
+            "x": 1024.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Toggle Switch",
+            "properties": {
+              "topic": "/Shuffleboard/Intake/Arm/Force Retract",
+              "period": 0.06,
+              "data_type": "boolean"
+            }
           }
         ]
       }
