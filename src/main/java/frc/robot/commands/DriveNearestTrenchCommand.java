@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoBuilderConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.GameUtil;
 
 /**
  * 
@@ -85,10 +86,19 @@ public class DriveNearestTrenchCommand extends Command {
         double leftTrenchDistance = robotPose.getTranslation().getDistance(leftTrenchPose.getTranslation());
         double rightTrenchDistance = robotPose.getTranslation().getDistance(rightTrenchPose.getTranslation());
 
-        if (AllianceFlipUtil.shouldFlip()) {
-            return leftTrenchDistance < rightTrenchDistance ? "Drive Right Trench Path" : "Drive Left Trench Path";
+        // if in our alliance zone - exit else drive to our zone
+        if (GameUtil.inAllianceZone(robotPose)) {
+            if (AllianceFlipUtil.shouldFlip()) {
+                return leftTrenchDistance < rightTrenchDistance ? "Exit Right Trench Path" : "Exit Left Trench Path";
+            } else {
+                return leftTrenchDistance < rightTrenchDistance ? "Exit Left Trench Path" : "Exit Right Trench Path";
+            }
         } else {
-            return leftTrenchDistance < rightTrenchDistance ? "Drive Left Trench Path" : "Drive Right Trench Path";
+            if (AllianceFlipUtil.shouldFlip()) {
+                return leftTrenchDistance < rightTrenchDistance ? "Drive Right Trench Path" : "Drive Left Trench Path";
+            } else {
+                return leftTrenchDistance < rightTrenchDistance ? "Drive Left Trench Path" : "Drive Right Trench Path";
+            }
         }
     }
 }

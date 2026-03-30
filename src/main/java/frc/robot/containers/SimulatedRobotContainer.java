@@ -175,6 +175,9 @@ public class SimulatedRobotContainer extends RobotContainer {
     public void configureNamedCommands() {
         new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmCommand());
         new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
+        new EventTrigger("RunEverything").whileTrue(
+                new ShootForFiveSecondsCommand(m_shooter, m_hopper, m_feeder, m_intake,
+                        () -> swerveDriveSubsystem.getPose()));
 
         NamedCommands.registerCommand("RunEverything",
                 new ShootForFiveSecondsCommand(m_shooter, m_hopper, m_feeder, m_intake,

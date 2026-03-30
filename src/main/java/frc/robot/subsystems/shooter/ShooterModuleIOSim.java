@@ -23,9 +23,9 @@ public class ShooterModuleIOSim extends ShooterModuleIOSparkFlexClosedLoopContro
      * 
      */
     public ShooterModuleIOSim() {
-        this.dcMotor = DCMotor.getNeoVortex(1);
+        this.dcMotor = DCMotor.getNeoVortex(2);
         this.flywheelSim = new FlywheelSim(
-                LinearSystemId.createFlywheelSystem(DCMotor.getNeoVortex(2), 0.01, GEAR_RATIO), dcMotor);
+                LinearSystemId.createFlywheelSystem(this.dcMotor, 0.001, GEAR_RATIO), dcMotor);
         this.sparkFlexSim = new SparkFlexSim(this.leadMotor, this.dcMotor);
         this.rollerEncoderSim = new SparkRelativeEncoderSim(leadMotor);
     }

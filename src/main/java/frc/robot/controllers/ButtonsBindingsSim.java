@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.HopperConstants;
+import frc.robot.commands.ClearTheWallCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveNearestTrenchCommand;
-import frc.robot.commands.ExitNearestTrenchCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.StickRotationCommand;
 import frc.robot.commands.turretSweepCommand;
@@ -39,12 +39,12 @@ public class ButtonsBindingsSim {
 
     /* Subsystems */
     private final SwerveDriveSubsystem swerveDriveSubsystem;
-    private ClimbSubsystem m_climb;
-    private FeederSubsystem m_feeder;
-    private HopperSubsystem m_hopper;
-    private IntakeSubsystem m_intake;
-    private ShooterSubsystem m_shooter;
-    private TurretSubsystem m_turret;
+    private ClimbSubsystem climbSubsystem;
+    private FeederSubsystem feederSubsystem;
+    private HopperSubsystem hopperSubsystem;
+    private IntakeSubsystem intakeSubsystem;
+    private ShooterSubsystem shooterSubsystem;
+    private TurretSubsystem turretSubsystem;
 
     // Variables
     private boolean intakeToggleState;
@@ -52,16 +52,16 @@ public class ButtonsBindingsSim {
     /**
      * Define button commands when running the simulator
      */
-    public ButtonsBindingsSim(SwerveDriveSubsystem swerveDriveSubsystem, ClimbSubsystem m_climb,
-            FeederSubsystem m_feeder, HopperSubsystem m_hopper, IntakeSubsystem m_intake, ShooterSubsystem m_shooter,
-            TurretSubsystem m_turret) {
+    public ButtonsBindingsSim(SwerveDriveSubsystem swerveDriveSubsystem, ClimbSubsystem climbSubsystem,
+            FeederSubsystem feederSubsystem, HopperSubsystem hopperSubsystem, IntakeSubsystem intakeSubsystem,
+            ShooterSubsystem shooterSubsystem, TurretSubsystem turretSubsystem) {
         this.swerveDriveSubsystem = swerveDriveSubsystem;
-        this.m_climb = m_climb;
-        this.m_feeder = m_feeder;
-        this.m_hopper = m_hopper;
-        this.m_intake = m_intake;
-        this.m_shooter = m_shooter;
-        this.m_turret = m_turret;
+        this.climbSubsystem = climbSubsystem;
+        this.feederSubsystem = feederSubsystem;
+        this.hopperSubsystem = hopperSubsystem;
+        this.intakeSubsystem = intakeSubsystem;
+        this.shooterSubsystem = shooterSubsystem;
+        this.turretSubsystem = turretSubsystem;
 
         this.driverController = setDriverBindingsController();
         this.operatorController = setOperatorBindingsController();
@@ -110,21 +110,22 @@ public class ButtonsBindingsSim {
                 new DriveNearestTrenchCommand(() -> swerveDriveSubsystem.getPose()));
 
         commandXboxController.y().whileTrue(
-                new ExitNearestTrenchCommand(() -> swerveDriveSubsystem.getPose()));
+                new ClearTheWallCommand(swerveDriveSubsystem, intakeSubsystem, shooterSubsystem, hopperSubsystem,
+                        feederSubsystem));
 
-        commandXboxController.rightBumper().onTrue(m_intake.ExtendArmCommand());
-        commandXboxController.leftBumper().onTrue(m_intake.RetractArmCommand());
+        commandXboxController.rightBumper().onTrue(intakeSubsystem.ExtendArmCommand());
+        commandXboxController.leftBumper().onTrue(intakeSubsystem.RetractArmCommand());
         // commandXboxController.rightBumper().whileTrue(m_intake.IntakeCommand());
         commandXboxController.back().onTrue(
                 Commands.runOnce(() -> {
                     if (!intakeToggleState) {
-                        CommandScheduler.getInstance().schedule(m_intake.OuttakeCommand());
+                        CommandScheduler.getInstance().schedule(intakeSubsystem.OuttakeCommand());
                     } else {
-                        CommandScheduler.getInstance().schedule(m_intake.IntakeCommand());
+                        CommandScheduler.getInstance().schedule(intakeSubsystem.IntakeCommand());
                     }
 
                     intakeToggleState = !intakeToggleState;
-                }, m_intake));
+                }, intakeSubsystem));
 
         // commandXboxController.leftTrigger()
         // .whileTrue(
@@ -132,7 +133,7 @@ public class ButtonsBindingsSim {
         // new runEverything(m_feeder, m_shooter, m_hopper),
         // new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
         commandXboxController.leftTrigger()
-                .whileTrue(new ShootCommand(swerveDriveSubsystem, m_shooter, m_hopper, m_feeder,
+                .whileTrue(new ShootCommand(swerveDriveSubsystem, shooterSubsystem, hopperSubsystem, feederSubsystem,
                         () -> swerveDriveSubsystem.getPose()));
 
         commandXboxController.rightTrigger()
@@ -142,11 +143,11 @@ public class ButtonsBindingsSim {
                 .onFalse(
                         new InstantCommand(() -> swerveDriveSubsystem.setSlowMode(false)));
 
-        commandXboxController.povUp().whileTrue(m_climb.extendclimb());
-        commandXboxController.povDown().whileTrue(m_climb.contractclimb());
+        commandXboxController.povUp().whileTrue(climbSubsystem.extendclimb());
+        commandXboxController.povDown().whileTrue(climbSubsystem.contractclimb());
 
-        commandXboxController.povLeft().onTrue(new turretSweepCommand(m_turret));
-        commandXboxController.povRight().whileTrue(new StickRotationCommand(m_turret, -0.1));
+        commandXboxController.povLeft().onTrue(new turretSweepCommand(turretSubsystem));
+        commandXboxController.povRight().whileTrue(new StickRotationCommand(turretSubsystem, -0.1));
 
         return commandXboxController;
     }
@@ -195,12 +196,14 @@ public class ButtonsBindingsSim {
         // m_feeder,
         // () -> swerveDriveSubsystem.getPose()));
 
-        commandXboxController.a().onTrue(Commands.runOnce(() -> m_hopper.setVelocity(0.0),
-                m_hopper));
-        commandXboxController.y().onTrue(Commands.runOnce(() -> m_hopper.setVelocity(HopperConstants.RPM), m_hopper));
+        commandXboxController.a().onTrue(Commands.runOnce(() -> hopperSubsystem.setVelocity(0.0),
+                hopperSubsystem));
+        commandXboxController.y()
+                .onTrue(Commands.runOnce(() -> hopperSubsystem.setVelocity(HopperConstants.RPM), hopperSubsystem));
 
-        commandXboxController.a().onTrue(Commands.runOnce(() -> m_feeder.setVelocity(0.0), m_feeder));
-        commandXboxController.y().onTrue(Commands.runOnce(() -> m_feeder.setVelocity(FeederConstants.RPM), m_feeder));
+        commandXboxController.a().onTrue(Commands.runOnce(() -> feederSubsystem.setVelocity(0.0), feederSubsystem));
+        commandXboxController.y()
+                .onTrue(Commands.runOnce(() -> feederSubsystem.setVelocity(FeederConstants.RPM), feederSubsystem));
 
         // commandXboxController.y().onTrue(Commands.runOnce(() ->
         // m_intake.intakeRoller(), m_intake));

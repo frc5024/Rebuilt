@@ -413,11 +413,11 @@ public final class Constants {
         public static final double kI = 0.0;
         public static final double kD = 0.0;
 
-        public static final double sim_kS = 0.01;
-        public static final double sim_kV = 0.001;
+        public static final double sim_kS = 0.001;
+        public static final double sim_kV = 0.0017;
         public static final double sim_kA = 0.0;
 
-        public static final double sim_kP = 0.01;
+        public static final double sim_kP = 0.001;
         public static final double sim_kI = 0.0;
         public static final double sim_kD = 0.0;
 
