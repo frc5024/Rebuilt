@@ -179,7 +179,12 @@ public class SimulatedRobotContainer extends RobotContainer {
                 new ShootForFiveSecondsCommand(m_shooter, m_hopper, m_feeder, m_intake,
                         () -> swerveDriveSubsystem.getPose()));
 
-        NamedCommands.registerCommand("RunEverything",
+        new EventTrigger("TFS-ExtendAndIntake").onTrue(
+                Commands.sequence(
+                        Commands.runOnce(() -> m_intake.intakeRoller()),
+                        Commands.runOnce(() -> m_intake.extendArm())));
+
+        NamedCommands.registerCommand("ShootFor5Seconds",
                 new ShootForFiveSecondsCommand(m_shooter, m_hopper, m_feeder, m_intake,
                         () -> swerveDriveSubsystem.getPose()));
     }

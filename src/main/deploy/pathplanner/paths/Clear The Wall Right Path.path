@@ -1,0 +1,94 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.5038381410256405,
+        "y": 7.596137820512821
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.733469551282051,
+        "y": 7.596137820512821
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.45070659556788295,
+        "y": 6.625013966591235
+      },
+      "prevControl": {
+        "x": 0.45070659556788295,
+        "y": 7.097633366351344
+      },
+      "nextControl": {
+        "x": 0.45070659556788295,
+        "y": 6.043603710180978
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.451,
+        "y": 0.6
+      },
+      "prevControl": {
+        "x": 0.4437323717948716,
+        "y": 1.3994391025641022
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "CTW-ExtendAndIntake",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "CTW-Shoot",
+      "waypointRelativePos": 0.6034482758620758,
+      "endWaypointRelativePos": 1.4880636604774433,
+      "command": null
+    },
+    {
+      "name": "CTW-Shoot",
+      "waypointRelativePos": 1.763925729442982,
+      "endWaypointRelativePos": 2.0,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.5,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 270.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "Test Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 179.80185056996055
+  },
+  "useDefaultConstraints": false
+}

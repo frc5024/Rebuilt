@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5038381410256405,
-        "y": 7.596137820512821
+        "x": 1.504,
+        "y": 0.4593269230769238
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.733469551282051,
-        "y": 7.596137820512821
+        "x": 0.7336314102564105,
+        "y": 0.4593269230769238
       },
       "isLocked": false,
       "linkedName": null
@@ -17,15 +17,15 @@
     {
       "anchor": {
         "x": 0.45070659556788295,
-        "y": 6.625013966591235
+        "y": 2.189
       },
       "prevControl": {
-        "x": 0.45070659556788295,
-        "y": 7.097633366351344
+        "x": 0.4507065955678829,
+        "y": 1.7163806002398907
       },
       "nextControl": {
-        "x": 0.45070659556788295,
-        "y": 6.043603710180978
+        "x": 0.450706595567883,
+        "y": 2.7704102564102566
       },
       "isLocked": false,
       "linkedName": null
@@ -33,11 +33,11 @@
     {
       "anchor": {
         "x": 0.451,
-        "y": 2.1890224358998207
+        "y": 7.45
       },
       "prevControl": {
-        "x": 0.4437323717948716,
-        "y": 2.988461538463923
+        "x": 0.45099999999999996,
+        "y": 6.650527863444747
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": -90.0
+      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [],
@@ -61,13 +61,13 @@
     },
     {
       "name": "CTW-Shoot",
-      "waypointRelativePos": 1.0013262599469432,
-      "endWaypointRelativePos": 1.4880636604774433,
+      "waypointRelativePos": 0.5530503978779902,
+      "endWaypointRelativePos": 1.282493368700257,
       "command": null
     },
     {
       "name": "CTW-Shoot",
-      "waypointRelativePos": 1.763925729442982,
+      "waypointRelativePos": 1.5371352785145804,
       "endWaypointRelativePos": 2.0,
       "command": null
     }
@@ -82,13 +82,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Test Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.80185056996055
+    "rotation": 180.0
   },
   "useDefaultConstraints": false
 }

@@ -7,14 +7,17 @@ import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
+import frc.robot.util.AllianceFlipUtil;
 
 /**
  * 
@@ -102,11 +105,29 @@ public class ClearTheWallCommand extends Command {
      */
     private Command getFollowPathCommand() {
         try {
-            PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile("Clear The Wall Path");
+            PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile(getNearestWallPath());
 
             return AutoBuilder.pathfindThenFollowPath(pathPlannerPath, CONSTRAINTS);
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    /**
+     * 
+     */
+    private String getNearestWallPath() {
+        Pose2d robotPose = swerveDriveSubsystem.getPose();
+        Pose2d leftTrenchPose = AllianceFlipUtil.apply(FieldConstants.TRENCH_POSES[0]);
+        Pose2d rightTrenchPose = AllianceFlipUtil.apply(FieldConstants.TRENCH_POSES[1]);
+
+        double leftTrenchDistance = robotPose.getTranslation().getDistance(leftTrenchPose.getTranslation());
+        double rightTrenchDistance = robotPose.getTranslation().getDistance(rightTrenchPose.getTranslation());
+
+        if (AllianceFlipUtil.shouldFlip()) {
+            return leftTrenchDistance < rightTrenchDistance ? "Clear The Wall Left Path" : "Clear The Wall Right Path";
+        } else {
+            return leftTrenchDistance < rightTrenchDistance ? "Clear The Wall Right Path" : "Clear The Wall Left Path";
         }
     }
 }
