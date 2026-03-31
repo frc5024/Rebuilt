@@ -17,21 +17,24 @@ import edu.wpi.first.wpilibj.DriverStation;
 /**
  * 
  */
-public class IntakeModuleIOSparkMax implements IntakeModuleIO {
+public class IntakeModuleIOSparkMaxFlex implements IntakeModuleIO {
     // Constants
-    protected final double GEAR_RATIO = 9.0;
-    protected final int intakeMotorID = 60; // ID on prototype board, subject to change
     protected final int armMotorID = 5; // this is a placeholder ID
+    protected final double GEAR_RATIO = 9.0;
+
+    protected final int intakeMotorID = 60; // ID on prototype board, subject to change
 
     // Hardware
     protected final SparkMax armMotor;
     private final RelativeEncoder armEncoder;
+    private final SparkBaseConfig armMotorConfig;
 
     protected final SparkFlex intakeMotor;
     private final RelativeEncoder intakeEncoder;
+    private final SparkBaseConfig intakeMotorConfig;
 
-    private static DigitalInput retractingLimitSwitch = new DigitalInput(7);
-    private static DigitalInput extendingLimitSwitch = new DigitalInput(8);
+    private static DigitalInput retractingLimitSwitch;
+    private static DigitalInput extendingLimitSwitch;
 
     // Connection debouncers
     private final Debouncer connectedDebouncer;
@@ -39,20 +42,24 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     /**
      * 
      */
-    public IntakeModuleIOSparkMax() {
+    public IntakeModuleIOSparkMaxFlex() {
         this.armMotor = new SparkMax(armMotorID, SparkLowLevel.MotorType.kBrushless);
         this.armEncoder = this.armMotor.getEncoder();
-        SparkBaseConfig armMotorConfig = new SparkMaxConfig();
+        this.armMotorConfig = new SparkMaxConfig();
         armMotorConfig
                 .idleMode(IdleMode.kBrake);
-        this.armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         this.intakeMotor = new SparkFlex(intakeMotorID, SparkLowLevel.MotorType.kBrushless);
         this.intakeEncoder = this.intakeMotor.getEncoder();
-        SparkBaseConfig intakeMotorConfig = new SparkMaxConfig();
+        this.intakeMotorConfig = new SparkMaxConfig();
         intakeMotorConfig
-                .idleMode(IdleMode.kCoast);
-        this.intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                .idleMode(IdleMode.kCoast)
+                .inverted(false);
+        intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        retractingLimitSwitch = new DigitalInput(7);
+        extendingLimitSwitch = new DigitalInput(8);
 
         this.connectedDebouncer = new Debouncer(0.5);
     }
@@ -86,28 +93,18 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     }
 
     @Override
-    public double getPosition() {
+    public double getArmPosition() {
         return armEncoder.getPosition();
     }
 
     @Override
-    public void setArm(double speed) {
-        armMotor.set(speed);
-    }
-
-    @Override
-    public void setIntake(double speed) {
-        intakeMotor.set(speed);
+    public double getArmVelocity() {
+        return armEncoder.getVelocity();
     }
 
     @Override
     public double getIntakeVelocity() {
-        return intakeMotor.getEncoder().getVelocity();
-    }
-
-    @Override
-    public double getArmVelocity() {
-        return armMotor.getEncoder().getVelocity();
+        return intakeEncoder.getVelocity();
     }
 
     @Override
@@ -123,5 +120,20 @@ public class IntakeModuleIOSparkMax implements IntakeModuleIO {
     @Override
     public boolean isIntakeRetracted() {
         return !retractingLimitSwitch.get();
+    }
+
+    @Override
+    public void setArm(double speed) {
+        armMotor.set(speed);
+    }
+
+    @Override
+    public void setIntake(double speed) {
+        intakeMotor.set(speed);
+    }
+
+    @Override
+    public void setIntakeEncoderPosition(double position) {
+        intakeEncoder.setPosition(position);
     }
 }

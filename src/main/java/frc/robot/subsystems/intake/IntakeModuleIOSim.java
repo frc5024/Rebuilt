@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 /**
  * 
  */
-public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
+public class IntakeModuleIOSim extends IntakeModuleIOSparkMaxFlex {
     // Hardware objects
     private final DCMotor armDcMotor;
     private final DCMotorSim armMotorSim;
@@ -84,6 +84,11 @@ public class IntakeModuleIOSim extends IntakeModuleIOSparkMax {
     @Override
     public double getCurrentDrawAmps() {
         return armSparkMaxSim.getMotorCurrent() + intakeSparkFlexSim.getMotorCurrent();
+    }
+
+    @Override
+    public double getArmPosition() {
+        return armSparkMaxSim.getPosition();
     }
 
     @Override

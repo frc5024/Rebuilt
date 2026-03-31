@@ -173,6 +173,9 @@ public final class Constants {
         public static final double EXTENDING_SPEED = -0.15;
         public static final double RETRACTING_SPEED = 0.45;
 
+        public static final double INTAKE_RPM = 2000;
+        public static final double OUTTAKE_RPM = 1700;
+
         public static final double driveCoefficient = 0.1;
 
         public static final double kArmP = 0.0;
@@ -180,17 +183,17 @@ public final class Constants {
         public static final double kArmD = 0.0;
 
         public static final double kArmS = 0.0;
+        public static final double kArmV = 0.0;
         public static final double kArmG = 0.0;
         public static final double kArmA = 0.0;
-        public static final double kArmV = 0.0;
 
-        public static final double kRollP = 0.0;
+        public static final double kRollP = 0.00004;
         public static final double kRollI = 0.0;
         public static final double kRollD = 0.0;
 
-        public static final double kRollS = 0.0;
+        public static final double kRollS = 0.22;
+        public static final double kRollV = 0.00009;
         public static final double kRollA = 0.0;
-        public static final double kRollV = 0.0;
     }
 
     /**

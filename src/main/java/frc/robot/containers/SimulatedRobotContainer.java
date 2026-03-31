@@ -208,7 +208,7 @@ public class SimulatedRobotContainer extends RobotContainer {
         Pose3d turretPose = m_turret.getPose(robotPose);
 
         mechanismVisualizer.update(
-                m_intake.getPosition(),
+                m_intake.getArmPosition(),
                 m_hopper.getPosition(),
                 m_turret.getCurrentAngle(),
                 m_climb.getPosition(),

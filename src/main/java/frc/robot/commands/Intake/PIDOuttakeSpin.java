@@ -18,12 +18,13 @@ public class PIDOuttakeSpin extends Command {
 
     @Override
     public void execute() {
-        m_IntakeSubsystem.setRollerSetVelocity(intakeConstants.OUTTAKE_SPEED);
+        m_IntakeSubsystem.setRollerDesiredSpeed(intakeConstants.OUTTAKE_RPM);
         m_IntakeSubsystem.setRollerPID(true);
     }
 
     @Override
     public void end(boolean interrupted) {
         m_IntakeSubsystem.setRollerPID(false);
+        m_IntakeSubsystem.setRollerDesiredSpeed(0);
     }
 }

@@ -102,7 +102,9 @@ public class ButtonsBindingsSim {
         commandXboxController.y().onTrue(m_intake.RetractArmCommand());
 
         commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
-        commandXboxController.rightBumper().whileTrue((m_intake.IntakeCommand()));
+        commandXboxController.rightBumper().whileTrue((m_intake.intakePIDCommand()));
+
+        commandXboxController.back().whileTrue(m_intake.outtakePIDCommand());
 
         commandXboxController.leftTrigger()
                 .whileTrue(

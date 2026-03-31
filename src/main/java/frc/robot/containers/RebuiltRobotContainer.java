@@ -27,7 +27,7 @@ import frc.robot.subsystems.feeder.FeederModuleIOSparkMax;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperModuleIOSparkMax;
 import frc.robot.subsystems.hopper.HopperSubsystem;
-import frc.robot.subsystems.intake.IntakeModuleIOSparkMax;
+import frc.robot.subsystems.intake.IntakeModuleIOSparkMaxFlex;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterModuleIOSparkFlex;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -68,7 +68,7 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_climb = new ClimbSubsystem(new ClimbModuleIOTalonFX());
         this.m_feeder = new FeederSubsystem(new FeederModuleIOSparkMax());
         this.m_hopper = new HopperSubsystem(new HopperModuleIOSparkMax());
-        this.m_intake = new IntakeSubsystem(new IntakeModuleIOSparkMax());
+        this.m_intake = new IntakeSubsystem(new IntakeModuleIOSparkMaxFlex());
         this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlex());
         this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxDutyCycleEncoder());
 
@@ -157,8 +157,14 @@ public class RebuiltRobotContainer extends RobotContainer {
         Pose2d robotPose = swerveDriveSubsystem.getPose();
         Pose3d turretPose = m_turret.getPose(robotPose);
 
-        mechanismVisualizer.update(m_intake.getPosition(), m_hopper.getPosition(), m_turret.getCurrentAngle(),
-                m_climb.getPosition(), m_feeder.getPosition(), turretPose, m_shooter.getTangentialVelocity(),
+        mechanismVisualizer.update(
+                m_intake.getArmPosition(),
+                m_hopper.getPosition(),
+                m_turret.getCurrentAngle(),
+                m_climb.getPosition(),
+                m_feeder.getPosition(),
+                turretPose,
+                m_shooter.getTangentialVelocity(),
                 swerveDriveSubsystem.getModuleAngles());
 
         Logger.recordOutput("CurrentDrawAmps/Climb", m_climb.getCurrentDrawAmps());
