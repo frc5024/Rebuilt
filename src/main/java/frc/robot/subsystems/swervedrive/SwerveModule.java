@@ -10,8 +10,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.SwerveDriveConstants;
 
 /**
  * 
@@ -31,6 +36,19 @@ public class SwerveModule {
     private final Alert turnEncoderDisconnectedAlert;
     private SwerveModulePosition[] odometryPositions = new SwerveModulePosition[] {};
 
+    private double[] kSVAs;
+    private double[] kPIDs;
+
+    // Shuffleboard entries
+    private ShuffleboardTab tab;
+    private GenericEntry pEntry;
+    private GenericEntry dEntry;
+    private GenericEntry iEntry;
+
+    private GenericEntry sEntry;
+    private GenericEntry vEntry;
+    private GenericEntry aEntry;
+
     /**
      * 
      */
@@ -49,6 +67,14 @@ public class SwerveModule {
         turnEncoderDisconnectedAlert = new Alert(
                 "Disconnected turn encoder on module " + Integer.toString(index) + ".",
                 AlertType.kError);
+
+        // set shuffleboard entries if in tuning mode
+        if (RobotConstants.TUNING_MODE) {
+            kSVAs = SwerveDriveConstants.getDriveSVAs();
+            kPIDs = SwerveDriveConstants.getDrivePIDs();
+
+            setShuffleboard();
+        }
     }
 
     /**
@@ -72,6 +98,19 @@ public class SwerveModule {
         driveDisconnectedAlert.set(!inputs.driveConnected);
         turnDisconnectedAlert.set(!inputs.turnConnected);
         turnEncoderDisconnectedAlert.set(!inputs.turnEncoderConnected);
+
+        // update pid values if in tuning mode
+        if (RobotConstants.TUNING_MODE) {
+            io.setFF(
+                    sEntry.getDouble(kSVAs[0]),
+                    vEntry.getDouble(kSVAs[1]),
+                    aEntry.getDouble(kSVAs[2]));
+
+            io.setPID(
+                    pEntry.getDouble(kPIDs[0]),
+                    iEntry.getDouble(kPIDs[1]),
+                    dEntry.getDouble(kPIDs[2]));
+        }
     }
 
     /**
@@ -152,5 +191,28 @@ public class SwerveModule {
     /** Returns the module velocity in rotations/sec (Phoenix native units). */
     public double getFFCharacterizationVelocity() {
         return Units.radiansToRotations(inputs.driveVelocityRadPerSec);
+    }
+
+    /**
+     * 
+     */
+    private void setShuffleboard() {
+        tab = Shuffleboard.getTab("SwerveDrive/SwerveModule[" + Integer.toString(index) + "]");
+
+        sEntry = tab.add("SET S", kSVAs[0]).getEntry();
+        vEntry = tab.add("SET V", kSVAs[1]).getEntry();
+        aEntry = tab.add("SET A", kSVAs[2]).getEntry();
+
+        sEntry.setDouble(kSVAs[0]);
+        vEntry.setDouble(kSVAs[1]);
+        aEntry.setDouble(kSVAs[2]);
+
+        pEntry = tab.add("SET P", kPIDs[0]).getEntry();
+        iEntry = tab.add("SET I", kPIDs[1]).getEntry();
+        dEntry = tab.add("SET D", kPIDs[2]).getEntry();
+
+        pEntry.setDouble(kPIDs[0]);
+        iEntry.setDouble(kPIDs[1]);
+        dEntry.setDouble(kPIDs[2]);
     }
 }

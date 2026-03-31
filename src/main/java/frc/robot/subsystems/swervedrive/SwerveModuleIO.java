@@ -33,20 +33,24 @@ public interface SwerveModuleIO {
         return 0.0;
     }
 
-    /** Updates the set of loggable inputs. */
-    public default void updateInputs(SwerveModuleIOInputs inputs) {
+    // used in tuning mode
+    default void setFF(double kS, double kV, double kA) {
+    }
+
+    // used in tuning mode
+    default void setPID(double kP, double kI, double kD) {
     }
 
     /** Run the drive motor at the specified open loop value. */
     public default void setDriveOpenLoop(double output) {
     }
 
-    /** Run the turn motor at the specified open loop value. */
-    public default void setTurnOpenLoop(double output) {
-    }
-
     /** Run the drive motor at the specified velocity. */
     public default void setDriveVelocity(double velocityRadPerSec) {
+    }
+
+    /** Run the turn motor at the specified open loop value. */
+    public default void setTurnOpenLoop(double output) {
     }
 
     /** Run the turn motor to the specified rotation. */
@@ -54,5 +58,9 @@ public interface SwerveModuleIO {
     }
 
     default void stop() {
+    }
+
+    /** Updates the set of loggable inputs. */
+    public default void updateInputs(SwerveModuleIOInputs inputs) {
     }
 }

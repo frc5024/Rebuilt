@@ -6,27 +6,27 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.SwerveDriveConstants;
 
 /**
  * 
  */
 public class SwerveModuleIOSim implements SwerveModuleIO {
     // Constants
-    private static final double[] DRIVE_PIDs = { 0.01, 0.0, 0.0 };
-    private static final double[] DRIVE_SVAs = { 0.002932, 0.14489, 0.0 };
-    // private static final double[] DRIVE_SVAs = { 0.0, 0.0, 0.0 };
     private static final double[] TURN_PIDs = { 5.0, 0.0, 0.0 };
     private static final double[] TURN_SVAs = { 0.0, 0.0, 0.0 };
 
     // Hardware
     private final DCMotor driveDcMotor;
     private final DCMotorSim driveMotorSim;
+    private SimpleMotorFeedforward driveFeedforward;
     private PIDController driveController;
 
     private final DCMotor turnDcMotor;
@@ -36,7 +36,6 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
     // Variables
     private boolean driveClosedLoop = false;
     private boolean turnClosedLoop = false;
-    private double driveFFVolts = 0.0;
     private double driveAppliedVolts = 0.0;
     private double turnAppliedVolts = 0.0;
 
@@ -50,7 +49,10 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
                 LinearSystemId.createDCMotorSystem(driveDcMotor, constants.DriveInertia, constants.DriveMotorGearRatio),
                 driveDcMotor);
 
-        this.driveController = new PIDController(DRIVE_PIDs[0], DRIVE_PIDs[1], DRIVE_PIDs[2]);
+        double[] kSVAs = SwerveDriveConstants.getDriveSVAs();
+        double[] kPIDs = SwerveDriveConstants.getDrivePIDs();
+        this.driveFeedforward = new SimpleMotorFeedforward(kSVAs[0], kSVAs[1], kSVAs[2]);
+        this.driveController = new PIDController(kPIDs[0], kPIDs[1], kPIDs[2]);
 
         this.turnDcMotor = DCMotor.getFalcon500(1);
         this.turnMotorSim = new DCMotorSim(
@@ -67,7 +69,9 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
     public void updateInputs(SwerveModuleIOInputs inputs) {
         // Run closed-loop control
         if (driveClosedLoop) {
-            driveAppliedVolts = driveFFVolts + driveController.calculate(driveMotorSim.getAngularVelocityRadPerSec());
+            double pidVoltage = driveController.calculate(driveMotorSim.getAngularVelocityRadPerSec());
+            double ffVoltage = driveFeedforward.calculate(driveController.getSetpoint());
+            driveAppliedVolts = ffVoltage + pidVoltage;
         } else {
             driveController.reset();
         }
@@ -111,22 +115,33 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
     }
 
     @Override
+    public void setFF(double kS, double kV, double kA) {
+        driveFeedforward.setKs(kS);
+        driveFeedforward.setKv(kV);
+        driveFeedforward.setKa(kA);
+    }
+
+    @Override
+    public void setPID(double kP, double kI, double kD) {
+        driveController.setPID(kP, kI, kD);
+    }
+
+    @Override
     public void setDriveOpenLoop(double output) {
         driveClosedLoop = false;
         driveAppliedVolts = output;
     }
 
     @Override
-    public void setTurnOpenLoop(double output) {
-        turnClosedLoop = false;
-        turnAppliedVolts = output;
+    public void setDriveVelocity(double velocityRadPerSec) {
+        driveClosedLoop = true;
+        driveController.setSetpoint(velocityRadPerSec);
     }
 
     @Override
-    public void setDriveVelocity(double velocityRadPerSec) {
-        driveClosedLoop = true;
-        driveFFVolts = DRIVE_SVAs[0] * Math.signum(velocityRadPerSec) + DRIVE_SVAs[1] * velocityRadPerSec;
-        driveController.setSetpoint(velocityRadPerSec);
+    public void setTurnOpenLoop(double output) {
+        turnClosedLoop = false;
+        turnAppliedVolts = output;
     }
 
     @Override
