@@ -18,13 +18,10 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.ShootCommand;
-import frc.robot.commands.TuningCommandsDrive;
-import frc.robot.commands.TuningCommandsIntake;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.simulation.ShooterSubsystemSim;
 import frc.robot.subsystems.climb.ClimbModuleIO;
@@ -87,20 +84,20 @@ public class ReplayingRobotContainer extends RobotContainer {
                 new VisionIO() {
                 });
 
-        this.m_feeder = new FeederSubsystem(new FeederModuleIO() {
+        this.feederSubsystem = new FeederSubsystem(new FeederModuleIO() {
         });
-        this.m_climb = new ClimbSubsystem(new ClimbModuleIO() {
+        this.climbSubsystem = new ClimbSubsystem(new ClimbModuleIO() {
         });
-        this.m_hopper = new HopperSubsystem(new HopperModuleIO() {
+        this.hopperSubsystem = new HopperSubsystem(new HopperModuleIO() {
         });
-        this.m_intake = new IntakeSubsystem(new ArmModuleIO() {
+        this.intakeSubsystem = new IntakeSubsystem(new ArmModuleIO() {
         }, new RollerModuleIO() {
         });
-        this.m_turret = new TurretSubsystem(new TurretModuleIO() {
+        this.turretSubsystem = new TurretSubsystem(new TurretModuleIO() {
         });
-        this.m_shooter = new ShooterSubsystemSim(new ShooterModuleIO() {
-        }, () -> m_turret.getPosition(),
-                () -> m_feeder.isRunning(), fuelSim,
+        this.shooterSubsystem = new ShooterSubsystemSim(new ShooterModuleIO() {
+        }, () -> turretSubsystem.getPosition(),
+                () -> feederSubsystem.isRunning(), fuelSim,
                 fuelSimCount);
 
         configureNamedCommands();
@@ -117,31 +114,6 @@ public class ReplayingRobotContainer extends RobotContainer {
     @Override
     protected void configureAutoChooser() {
         this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-        if (RobotConstants.TUNING_MODE) {
-            // Set up SysId routines
-            this.autoChooser.addOption(
-                    "Drive Wheel Radius Characterization",
-                    TuningCommandsDrive.wheelRadiusCharacterization(swerveDriveSubsystem));
-            this.autoChooser.addOption(
-                    "Drive Simple FF Characterization",
-                    TuningCommandsDrive.feedforwardCharacterization(swerveDriveSubsystem));
-            this.autoChooser.addOption(
-                    "Drive SysId (Quasistatic Forward)",
-                    this.swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-            this.autoChooser.addOption(
-                    "Drive SysId (Quasistatic Reverse)",
-                    this.swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-            this.autoChooser.addOption(
-                    "Drive SysId (Dynamic Forward)",
-                    this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
-            this.autoChooser.addOption(
-                    "Drive SysId (Dynamic Reverse)",
-                    this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-            this.autoChooser.addOption(
-                    "Intake Roller Simple FF Characterization",
-                    TuningCommandsIntake.feedforwardCharacterization(m_intake));
-        }
     }
 
     /**
@@ -154,7 +126,7 @@ public class ReplayingRobotContainer extends RobotContainer {
         fuelSim.registerIntake(RobotConstants.fullWidth / 2.0,
                 RobotConstants.fullWidth / 2.0 + Units.inchesToMeters(8.0),
                 -RobotConstants.fullLength / 2.0, RobotConstants.fullLength / 2.0,
-                () -> m_intake.isExtended(),
+                () -> intakeSubsystem.isExtended(),
                 () -> fuelSimCount
                         .setFuelStored(Math.min(fuelSimCount.getFuelStored() + 1, HopperConstants.CAPACITY)));
 
@@ -176,10 +148,10 @@ public class ReplayingRobotContainer extends RobotContainer {
 
     @Override
     public void configureNamedCommands() {
-        new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmCommand());
+        new EventTrigger("ExtendIntake").onTrue(intakeSubsystem.ExtendArmCommand());
 
         NamedCommands.registerCommand("RunEverything",
-                new ShootCommand(swerveDriveSubsystem, m_shooter, m_hopper, m_feeder,
+                new ShootCommand(swerveDriveSubsystem, shooterSubsystem, hopperSubsystem, feederSubsystem,
                         () -> swerveDriveSubsystem.getPose()));
     }
 
@@ -199,16 +171,16 @@ public class ReplayingRobotContainer extends RobotContainer {
     public void updateVisualizer() {
         // calulate pose of the turret
         Pose2d robotPose = swerveDriveSubsystem.getPose();
-        Pose3d turretPose = m_turret.getPose(robotPose);
+        Pose3d turretPose = turretSubsystem.getPose(robotPose);
 
         mechanismVisualizer.update(
-                m_intake.getPosition(),
-                m_hopper.getPosition(),
-                m_turret.getPosition(),
-                m_climb.getPosition(),
-                m_feeder.getPosition(),
+                intakeSubsystem.getPosition(),
+                hopperSubsystem.getPosition(),
+                turretSubsystem.getPosition(),
+                climbSubsystem.getPosition(),
+                feederSubsystem.getPosition(),
                 turretPose,
-                m_shooter.getTangentialVelocity(),
+                shooterSubsystem.getTangentialVelocity(),
                 swerveDriveSubsystem.getModuleAngles());
 
         Logger.recordOutput("Turret/Pose", turretPose);
@@ -220,21 +192,21 @@ public class ReplayingRobotContainer extends RobotContainer {
 
         RoboRioSim.setVInVoltage(
                 BatterySim.calculateDefaultBatteryLoadedVoltage(
-                        m_climb.getCurrentDrawAmps(),
-                        m_feeder.getCurrentDrawAmps(),
-                        m_hopper.getCurrentDrawAmps(),
-                        m_intake.getCurrentDrawAmps(),
-                        m_shooter.getCurrentDrawAmps(),
+                        climbSubsystem.getCurrentDrawAmps(),
+                        feederSubsystem.getCurrentDrawAmps(),
+                        hopperSubsystem.getCurrentDrawAmps(),
+                        intakeSubsystem.getCurrentDrawAmps(),
+                        shooterSubsystem.getCurrentDrawAmps(),
                         swerveDriveSubsystem.getCurrentDrawAmps(),
-                        m_turret.getCurrentDrawAmps()));
+                        turretSubsystem.getCurrentDrawAmps()));
 
-        Logger.recordOutput("Current Draw/Climb", m_climb.getCurrentDrawAmps());
-        Logger.recordOutput("Current Draw/Feeder", m_feeder.getCurrentDrawAmps());
-        Logger.recordOutput("Current Draw/Hopper", m_hopper.getCurrentDrawAmps());
-        Logger.recordOutput("Current Draw/Intake", m_intake.getCurrentDrawAmps());
-        Logger.recordOutput("Current Draw/Shooter", m_shooter.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Climb", climbSubsystem.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Feeder", feederSubsystem.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Hopper", hopperSubsystem.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Intake", intakeSubsystem.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Shooter", shooterSubsystem.getCurrentDrawAmps());
         Logger.recordOutput("Current Draw/Swerve", swerveDriveSubsystem.getCurrentDrawAmps());
-        Logger.recordOutput("Current Draw/Turret", m_turret.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Turret", turretSubsystem.getCurrentDrawAmps());
 
         Logger.recordOutput("FuelSim/FuelInRobotCount", fuelSimCount.getFuelStored());
         Logger.recordOutput("FuelSim/FuelInRobot", fuelSimCount.getFuelInRobotPoses(swerveDriveSubsystem.getPose()));

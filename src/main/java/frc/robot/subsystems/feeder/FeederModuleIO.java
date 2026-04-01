@@ -25,6 +25,10 @@ public interface FeederModuleIO {
         return 0.0;
     }
 
+    default double getFFCharacterizationVelocity() {
+        return 0.0;
+    }
+
     default double getGoalVelocity() {
         return 0.0;
     }
@@ -39,6 +43,9 @@ public interface FeederModuleIO {
 
     default boolean isRunning() {
         return false;
+    }
+
+    default void runCharacterization(double voltage) {
     }
 
     // used in tuning mode

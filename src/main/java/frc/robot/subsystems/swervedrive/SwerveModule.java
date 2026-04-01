@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 
 /**
@@ -67,14 +66,6 @@ public class SwerveModule {
         turnEncoderDisconnectedAlert = new Alert(
                 "Disconnected turn encoder on module " + Integer.toString(index) + ".",
                 AlertType.kError);
-
-        // set shuffleboard entries if in tuning mode
-        if (RobotConstants.TUNING_MODE) {
-            kSVAs = SwerveDriveConstants.getDriveSVAs();
-            kPIDs = SwerveDriveConstants.getDrivePIDs();
-
-            setShuffleboard();
-        }
     }
 
     /**
@@ -98,19 +89,6 @@ public class SwerveModule {
         driveDisconnectedAlert.set(!inputs.driveConnected);
         turnDisconnectedAlert.set(!inputs.turnConnected);
         turnEncoderDisconnectedAlert.set(!inputs.turnEncoderConnected);
-
-        // update pid values if in tuning mode
-        if (RobotConstants.TUNING_MODE) {
-            io.setFF(
-                    sEntry.getDouble(kSVAs[0]),
-                    vEntry.getDouble(kSVAs[1]),
-                    aEntry.getDouble(kSVAs[2]));
-
-            io.setPID(
-                    pEntry.getDouble(kPIDs[0]),
-                    iEntry.getDouble(kPIDs[1]),
-                    dEntry.getDouble(kPIDs[2]));
-        }
     }
 
     /**
@@ -196,7 +174,12 @@ public class SwerveModule {
     /**
      * 
      */
-    private void setShuffleboard() {
+    protected void setShuffleboard() {
+        kSVAs = SwerveDriveConstants.getDriveSVAs();
+        kPIDs = SwerveDriveConstants.getDrivePIDs();
+    }
+
+    protected void setShuffleboardTab() {
         tab = Shuffleboard.getTab("SwerveDrive/SwerveModule[" + Integer.toString(index) + "]");
 
         sEntry = tab.add("SET S", kSVAs[0]).getEntry();
@@ -214,5 +197,17 @@ public class SwerveModule {
         pEntry.setDouble(kPIDs[0]);
         iEntry.setDouble(kPIDs[1]);
         dEntry.setDouble(kPIDs[2]);
+    }
+
+    protected void setShuffleboardEntries() {
+        io.setFF(
+                sEntry.getDouble(kSVAs[0]),
+                vEntry.getDouble(kSVAs[1]),
+                aEntry.getDouble(kSVAs[2]));
+
+        io.setPID(
+                pEntry.getDouble(kPIDs[0]),
+                iEntry.getDouble(kPIDs[1]),
+                dEntry.getDouble(kPIDs[2]));
     }
 }

@@ -30,6 +30,10 @@ public interface TurretModuleIO {
         return 0.0;
     }
 
+    default double getFFCharacterizationVelocity() {
+        return 0.0;
+    }
+
     default boolean getHallEffectValue() {
         return false;
     }
@@ -44,6 +48,9 @@ public interface TurretModuleIO {
 
     default boolean isRunning() {
         return false;
+    }
+
+    default void runCharacterization(double voltage) {
     }
 
     default void set(double speed) {

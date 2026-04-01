@@ -29,6 +29,10 @@ public interface ArmModuleIO {
         return 0.0;
     }
 
+    default double getFFCharacterizationVelocity() {
+        return 0.0;
+    }
+
     default double getPosition() {
         return 0.0;
     }
@@ -43,6 +47,9 @@ public interface ArmModuleIO {
 
     default boolean isRetracted() {
         return true;
+    }
+
+    default void runCharacterization(double voltage) {
     }
 
     default void setAngle(double degrees) {

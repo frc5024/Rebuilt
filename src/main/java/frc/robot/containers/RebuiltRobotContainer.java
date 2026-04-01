@@ -74,21 +74,22 @@ public class RebuiltRobotContainer extends RobotContainer {
                 new VisionIOLimelight(VisionConstants.frontCamera, swerveDriveSubsystem::getRotation),
                 new VisionIOLimelight(VisionConstants.rearCamera, swerveDriveSubsystem::getRotation));
 
-        this.m_climb = new ClimbSubsystem(new ClimbModuleIOTalonFX());
-        this.m_feeder = new FeederSubsystem(new FeederModuleIOSparkFlexRelativeEncoder());
-        this.m_hopper = new HopperSubsystem(new HopperModuleIOSparkMaxRelativeEncoder());
-        this.m_intake = new IntakeSubsystem(new ArmModuleIOSparkMaxRelativeEncoder(),
+        this.climbSubsystem = new ClimbSubsystem(new ClimbModuleIOTalonFX());
+        this.feederSubsystem = new FeederSubsystem(new FeederModuleIOSparkFlexRelativeEncoder());
+        this.hopperSubsystem = new HopperSubsystem(new HopperModuleIOSparkMaxRelativeEncoder());
+        this.intakeSubsystem = new IntakeSubsystem(new ArmModuleIOSparkMaxRelativeEncoder(),
                 new RollerModuleIOSparkFlexClosedLoopController());
-        this.m_shooter = new ShooterSubsystem(new ShooterModuleIOSparkFlexClosedLoopController());
-        this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxRelativeEncoder());
+        this.shooterSubsystem = new ShooterSubsystem(new ShooterModuleIOSparkFlexClosedLoopController());
+        this.turretSubsystem = new TurretSubsystem(new TurretModuleIOSparkMaxRelativeEncoder());
 
         if (!RobotConstants.TUNING_MODE) {
-            m_turret.setDefaultCommand(new SpinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
-                    () -> swerveDriveSubsystem.getChassisSpeeds(), () -> m_shooter.getTangentialVelocity(),
-                    m_shooter::addDistanceMeasurement));
+            turretSubsystem.setDefaultCommand(new SpinToHubCommand(turretSubsystem,
+                    () -> swerveDriveSubsystem.getPose(),
+                    () -> swerveDriveSubsystem.getChassisSpeeds(), () -> shooterSubsystem.getTangentialVelocity(),
+                    shooterSubsystem::addDistanceMeasurement));
         }
 
-        m_turret.zeroEncoder();
+        turretSubsystem.zeroEncoder();
         configureNamedCommands();
         configureAutoChooser();
         configureButtonBindings();
@@ -109,7 +110,7 @@ public class RebuiltRobotContainer extends RobotContainer {
                     TuningCommandsDrive.wheelRadiusCharacterization(this.swerveDriveSubsystem));
             this.autoChooser.addOption(
                     "Drive Simple FF Characterization",
-                    TuningCommandsDrive.feedforwardCharacterization(this.swerveDriveSubsystem));
+                    this.swerveDriveSubsystem.feedforwardCharacterization());
             this.autoChooser.addOption(
                     "Drive SysId (Quasistatic Forward)",
                     this.swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
@@ -124,22 +125,20 @@ public class RebuiltRobotContainer extends RobotContainer {
                     this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
             this.autoChooser.addOption(
                     "Intake Roller Simple FF Characterization",
-                    TuningCommandsIntake.feedforwardCharacterization(m_intake));
+                    TuningCommandsIntake.feedforwardCharacterization(intakeSubsystem));
         }
     }
 
     @Override
     protected void configureNamedCommands() {
         // Creates the commands for using non-drive subsystems in autonomous
-        new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmCommand());
-        new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
-        new EventTrigger("RetractIntake").onTrue(m_intake.RetractArmCommand());
-        new EventTrigger("AimTurret").whileTrue(Commands.runOnce(() -> m_turret.setAngle(0), m_turret));
-        new EventTrigger("Climb").whileTrue(m_climb.contractclimb());
-        new EventTrigger("Declimb").whileTrue(m_climb.extendclimb());
+        new EventTrigger("ExtendIntake").onTrue(intakeSubsystem.ExtendArmCommand());
+        new EventTrigger("Intake").whileTrue(intakeSubsystem.IntakeCommand());
+        new EventTrigger("RetractIntake").onTrue(intakeSubsystem.RetractArmCommand());
+        new EventTrigger("AimTurret").whileTrue(Commands.runOnce(() -> turretSubsystem.setAngle(0), turretSubsystem));
 
         NamedCommands.registerCommand("RunEverything",
-                new ShootForFiveSecondsCommand(m_shooter, m_hopper, m_feeder, m_intake,
+                new ShootForFiveSecondsCommand(shooterSubsystem, hopperSubsystem, feederSubsystem, intakeSubsystem,
                         () -> swerveDriveSubsystem.getPose()));
     }
 
@@ -164,26 +163,26 @@ public class RebuiltRobotContainer extends RobotContainer {
                 new Rotation3d(
                         0.0,
                         Units.degreesToRadians(-180.0 + TurretConstants.verticalLaunchAngle), // launch angle
-                        robotPose.getRotation().getRadians() + Math.toRadians(m_turret.getPosition())));
+                        robotPose.getRotation().getRadians() + Math.toRadians(turretSubsystem.getPosition())));
         Pose3d turretPose = new Pose3d(robotPose).transformBy(transform3d);
 
         mechanismVisualizer.update(
-                m_intake.getPosition(),
-                m_hopper.getPosition(),
-                m_turret.getPosition(),
-                m_climb.getPosition(),
-                m_feeder.getPosition(),
+                intakeSubsystem.getPosition(),
+                hopperSubsystem.getPosition(),
+                turretSubsystem.getPosition(),
+                climbSubsystem.getPosition(),
+                feederSubsystem.getPosition(),
                 turretPose,
-                m_shooter.getTangentialVelocity(),
+                shooterSubsystem.getTangentialVelocity(),
                 swerveDriveSubsystem.getModuleAngles());
 
-        Logger.recordOutput("Current Draw/Climb", m_climb.getCurrentDrawAmps());
-        Logger.recordOutput("Current Draw/Feeder", m_feeder.getCurrentDrawAmps());
-        Logger.recordOutput("Current Draw/Hopper", m_hopper.getCurrentDrawAmps());
-        Logger.recordOutput("Current Draw/Intake", m_intake.getCurrentDrawAmps());
-        Logger.recordOutput("Current Draw/Shooter", m_shooter.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Climb", climbSubsystem.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Feeder", feederSubsystem.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Hopper", hopperSubsystem.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Intake", intakeSubsystem.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Shooter", shooterSubsystem.getCurrentDrawAmps());
         Logger.recordOutput("Current Draw/Swerve", swerveDriveSubsystem.getCurrentDrawAmps());
-        Logger.recordOutput("Current Draw/Turret", m_turret.getCurrentDrawAmps());
+        Logger.recordOutput("Current Draw/Turret", turretSubsystem.getCurrentDrawAmps());
 
         Logger.recordOutput("Turret/Pose", turretPose);
     }

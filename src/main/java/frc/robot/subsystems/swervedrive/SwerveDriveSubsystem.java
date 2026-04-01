@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swervedrive;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.Consumer;
 
@@ -33,8 +32,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.lib.statemachine.StateMachineSubsystem;
 import frc.robot.Constants.AutoBuilderConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.SwerveDriveConstants;
@@ -45,12 +43,11 @@ import frc.robot.util.PhoenixOdometryThread;
 /**
  * 
  */
-public class SwerveDriveSubsystem extends SubsystemBase {
+public class SwerveDriveSubsystem extends StateMachineSubsystem {
     // TunerConstants doesn't include these constants, so they are declared locally
     private final GyroModuleIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     private final SwerveModule[] modules = new SwerveModule[4]; // FL, FR, BL, BR
-    private final SysIdRoutine sysId;
     private final Alert gyroDisconnectedAlert = new Alert("Disconnected gyro, using kinematics as fallback.",
             AlertType.kError);
 
@@ -85,6 +82,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public SwerveDriveSubsystem(GyroModuleIO gyroIO, SwerveModuleIO flModuleIO, SwerveModuleIO frModuleIO,
             SwerveModuleIO blModuleIO, SwerveModuleIO brModuleIO,
             Consumer<Pose2d> resetSimulationPoseCallBack) {
+        super("SwerveDrive");
+
         this.gyroIO = gyroIO;
         this.resetSimulationPoseCallBack = resetSimulationPoseCallBack;
         modules[0] = new SwerveModule(flModuleIO, 0, TunerConstants.FrontLeft);
@@ -135,16 +134,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                     Logger.recordOutput("PathPlanner/TargetHeading", targetHeadingDegrees);
                     Logger.recordOutput("PathPlanner/TargetHeadingRadians", targetHeadingRadians);
                 });
-
-        // Configure SysId
-        sysId = new SysIdRoutine(
-                new SysIdRoutine.Config(
-                        null,
-                        null,
-                        null,
-                        (state) -> Logger.recordOutput("SwerveDrive/SysIdState", state.toString())),
-                new SysIdRoutine.Mechanism(
-                        (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
 
         // Set initial simulated yaw
         this.simulatedYaw = 0.0;
@@ -259,13 +248,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         Logger.recordOutput("SwerveDrive/SwerveStates/SetpointsOptimized", setpointStates);
     }
 
-    /** Runs the drive in a straight line with the specified drive output. */
-    public void runCharacterization(double output) {
-        for (int i = 0; i < 4; i++) {
-            modules[i].runCharacterization(output);
-        }
-    }
-
     public void setSlowMode(boolean slowMode) {
         this.slowMode = slowMode;
     }
@@ -288,18 +270,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         }
         kinematics.resetHeadings(headings);
         stop();
-    }
-
-    /** Returns a command to run a quasistatic test in the specified direction. */
-    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-        return run(() -> runCharacterization(0.0))
-                .withTimeout(1.0)
-                .andThen(sysId.quasistatic(direction));
-    }
-
-    /** Returns a command to run a dynamic test in the specified direction. */
-    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
     }
 
     /** Returns a command that aligns all wheels forward and stops */
@@ -369,18 +339,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             values[i] = modules[i].getWheelRadiusCharacterizationPosition();
         }
         return values;
-    }
-
-    /**
-     * Returns the average velocity of the modules in rotations/sec (Phoenix native
-     * units).
-     */
-    public double getFFCharacterizationVelocity() {
-        double output = 0.0;
-        for (int i = 0; i < 4; i++) {
-            output += modules[i].getFFCharacterizationVelocity() / 4.0;
-        }
-        return output;
     }
 
     /** Returns the current odometry pose. */
@@ -462,6 +420,50 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         if (gyroIO instanceof GyroModuleIOSim gyroModuleIOSim) {
             gyroModuleIOSim.setRawYaw(angleIncrease);
+        }
+    }
+
+    /**
+     * 
+     */
+    @Override
+    protected void setShuffleboard() {
+        for (int i = 0; i < 4; i++) {
+            modules[i].setShuffleboard();
+        }
+    }
+
+    @Override
+    protected void setShuffleboardTab() {
+        for (int i = 0; i < 4; i++) {
+            modules[i].setShuffleboardTab();
+        }
+    }
+
+    @Override
+    protected void setShuffleboardEntries() {
+        for (int i = 0; i < 4; i++) {
+            modules[i].setShuffleboardEntries();
+        }
+    }
+
+    /**
+     * Overrides for SysId routines
+     */
+
+    @Override
+    public double getFFCharacterizationVelocity() {
+        double output = 0.0;
+        for (int i = 0; i < 4; i++) {
+            output += modules[i].getFFCharacterizationVelocity() / 4.0;
+        }
+        return output;
+    }
+
+    @Override
+    public void runCharacterization(double output) {
+        for (int i = 0; i < 4; i++) {
+            modules[i].runCharacterization(output);
         }
     }
 }

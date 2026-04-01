@@ -92,6 +92,11 @@ public class HopperModuleIOSparkMaxRelativeEncoder implements HopperModuleIO {
     }
 
     @Override
+    public double getFFCharacterizationVelocity() {
+        return encoder.getVelocity();
+    }
+
+    @Override
     public double getPosition() {
         return encoder.getPosition();
     }
@@ -104,6 +109,12 @@ public class HopperModuleIOSparkMaxRelativeEncoder implements HopperModuleIO {
     @Override
     public boolean isRunning() {
         return hopperMotor.getAppliedOutput() != 0.0;
+    }
+
+    @Override
+    public void runCharacterization(double voltage) {
+        double voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        hopperMotor.setVoltage(voltageRequest);
     }
 
     @Override

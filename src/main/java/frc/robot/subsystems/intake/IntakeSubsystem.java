@@ -7,15 +7,14 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.statemachine.StateMachineSubsystem;
 import frc.robot.Constants.IntakeConstants.ArmConstants;
 import frc.robot.Constants.IntakeConstants.RollerConstants;
-import frc.robot.Constants.RobotConstants;
 
 /**
  * 
  */
-public class IntakeSubsystem extends SubsystemBase {
+public class IntakeSubsystem extends StateMachineSubsystem {
     // Advantagekit logging
     private final ArmModuleIO armModuleIO;
     private final RollerModuleIO rollerModuleIO;
@@ -26,23 +25,10 @@ public class IntakeSubsystem extends SubsystemBase {
     private double targetAngle;
     private double targetRPM;
 
-    private double[] kArmSVAs;
-    private double[] kArmPIDs;
     private double[] kRollerSVAs;
     private double[] kRollerPIDs;
 
     // Shuffleboard entries
-    private ShuffleboardTab armTab;
-
-    private GenericEntry armSEntry;
-    private GenericEntry armVEntry;
-    private GenericEntry armAEntry;
-
-    private GenericEntry armPEntry;
-    private GenericEntry armIEntry;
-    private GenericEntry armDEntry;
-
-    private GenericEntry armAngleEntry;
     private GenericEntry armExtendEntry;
 
     private ShuffleboardTab rollerTab;
@@ -55,12 +41,12 @@ public class IntakeSubsystem extends SubsystemBase {
     private GenericEntry rollerIEntry;
     private GenericEntry rollerDEntry;
 
-    private GenericEntry rollerRpmEntry;
-
     /**
      * 
      */
     public IntakeSubsystem(ArmModuleIO armModuleIO, RollerModuleIO rollerModuleIO) {
+        super("Intake");
+
         // set advantage kit IO logging
         this.armModuleIO = armModuleIO;
         this.rollerModuleIO = rollerModuleIO;
@@ -68,21 +54,12 @@ public class IntakeSubsystem extends SubsystemBase {
         this.rollerInputs = new RollerModuleIOInputsAutoLogged();
         this.targetAngle = 0.0;
         this.targetRPM = 0.0;
-
-        // set shuffleboard entries if in tuning mode
-        if (RobotConstants.TUNING_MODE) {
-            kArmSVAs = ArmConstants.getSVAs();
-            kArmPIDs = ArmConstants.getPIDs();
-
-            kRollerSVAs = RollerConstants.getSVAs();
-            kRollerPIDs = RollerConstants.getPIDs();
-
-            setShuffleboard();
-        }
     }
 
     @Override
     public void periodic() {
+        super.periodic();
+
         // process hardware inputs
         armModuleIO.updateInputs(armInputs);
         rollerModuleIO.updateInputs(rollerInputs);
@@ -96,38 +73,6 @@ public class IntakeSubsystem extends SubsystemBase {
         // reset the relative encoder if retracted
         if (armModuleIO.isRetracted()) {
             armModuleIO.setPosition(0.0);
-        }
-
-        // update pid values if in tuning mode
-        if (RobotConstants.TUNING_MODE) {
-            armModuleIO.setFF(
-                    armSEntry.getDouble(kArmSVAs[0]),
-                    armVEntry.getDouble(kArmSVAs[1]),
-                    armAEntry.getDouble(kArmSVAs[2]));
-
-            armModuleIO.setPID(
-                    armPEntry.getDouble(kArmPIDs[0]),
-                    armIEntry.getDouble(kArmPIDs[1]),
-                    armDEntry.getDouble(kArmPIDs[2]));
-
-            armModuleIO.setAngle(armAngleEntry.getDouble(0.0));
-
-            if (armExtendEntry.getBoolean(false)) {
-                armModuleIO.setAngle(ArmConstants.EXTENDED_ANGLE);
-            }
-
-            rollerModuleIO.setFF(
-                    rollerSEntry.getDouble(kRollerSVAs[0]),
-                    rollerVEntry.getDouble(kRollerSVAs[1]),
-                    rollerAEntry.getDouble(kRollerSVAs[2]));
-
-            rollerModuleIO.setPID(
-                    rollerPEntry.getDouble(kRollerPIDs[0]),
-                    rollerIEntry.getDouble(kRollerPIDs[1]),
-                    rollerDEntry.getDouble(kRollerPIDs[2]));
-
-            rollerModuleIO.setVelocity(rollerRpmEntry.getDouble(0.0));
-
         }
 
         Logger.recordOutput("Intake/Arm/IsExetended", armModuleIO.isExtended());
@@ -144,13 +89,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public double getCurrentDrawAmps() {
         return armModuleIO.getCurrentDrawAmps();
-    }
-
-    /**
-     * Returns the average velocity in rotations/sec
-     */
-    public double getFFCharacterizationVelocity() {
-        return rollerModuleIO.getFFCharacterizationVelocity();
     }
 
     public double getPosition() {
@@ -177,13 +115,6 @@ public class IntakeSubsystem extends SubsystemBase {
         return armModuleIO.isExtended();
     }
 
-    /**
-     * Runs the roller with the specified output.
-     */
-    public void runCharacterization(double output) {
-        rollerModuleIO.runCharacterization(output);
-    }
-
     public void stopRoller() {
         targetRPM = 0.0;
         rollerModuleIO.stop();
@@ -192,28 +123,20 @@ public class IntakeSubsystem extends SubsystemBase {
     /**
      * 
      */
-    private void setShuffleboard() {
-        armTab = Shuffleboard.getTab("Intake/Arm");
-        armSEntry = armTab.add("SET S", kArmSVAs[0]).getEntry();
-        armVEntry = armTab.add("SET V", kArmSVAs[1]).getEntry();
-        armAEntry = armTab.add("SET A", kArmSVAs[2]).getEntry();
+    @Override
+    protected void setShuffleboard() {
+        this.kSVAs = ArmConstants.getSVAs();
+        this.kPIDs = ArmConstants.getPIDs();
 
-        armSEntry.setDouble(kArmSVAs[0]);
-        armVEntry.setDouble(kArmSVAs[1]);
-        armAEntry.setDouble(kArmSVAs[2]);
+        this.kRollerSVAs = RollerConstants.getSVAs();
+        this.kRollerPIDs = RollerConstants.getPIDs();
+    }
 
-        armPEntry = armTab.add("SET P", kArmPIDs[0]).getEntry();
-        armIEntry = armTab.add("SET I", kArmPIDs[1]).getEntry();
-        armDEntry = armTab.add("SET D", kArmPIDs[2]).getEntry();
+    @Override
+    protected void setShuffleboardTab() {
+        super.setShuffleboardTab();
 
-        armPEntry.setDouble(kArmPIDs[0]);
-        armIEntry.setDouble(kArmPIDs[1]);
-        armDEntry.setDouble(kArmPIDs[2]);
-
-        armAngleEntry = armTab.add("SET ANGLE", 0.0).getEntry();
-        armAngleEntry.setDouble(0.0);
-
-        armExtendEntry = armTab.add("EXTEND", false)
+        armExtendEntry = tab.add("EXTEND", false)
                 .withWidget("Toggle Button")
                 .getEntry();
 
@@ -233,9 +156,50 @@ public class IntakeSubsystem extends SubsystemBase {
         rollerPEntry.setDouble(kRollerPIDs[0]);
         rollerIEntry.setDouble(kRollerPIDs[1]);
         rollerDEntry.setDouble(kRollerPIDs[2]);
+    }
 
-        rollerRpmEntry = rollerTab.add("SET RPM", 0.0).getEntry();
-        rollerRpmEntry.setDouble(0.0);
+    @Override
+    protected void setShuffleboardEntries() {
+        armModuleIO.setFF(
+                sEntry.getDouble(kSVAs[0]),
+                vEntry.getDouble(kSVAs[1]),
+                aEntry.getDouble(kSVAs[2]));
+
+        armModuleIO.setPID(
+                pEntry.getDouble(kPIDs[0]),
+                iEntry.getDouble(kPIDs[1]),
+                dEntry.getDouble(kPIDs[2]));
+
+        armModuleIO.setAngle(angleEntry.getDouble(0.0));
+
+        if (armExtendEntry.getBoolean(false)) {
+            armModuleIO.setAngle(ArmConstants.EXTENDED_ANGLE);
+        }
+
+        rollerModuleIO.setFF(
+                rollerSEntry.getDouble(kRollerSVAs[0]),
+                rollerVEntry.getDouble(kRollerSVAs[1]),
+                rollerAEntry.getDouble(kRollerSVAs[2]));
+
+        rollerModuleIO.setPID(
+                rollerPEntry.getDouble(kRollerPIDs[0]),
+                rollerIEntry.getDouble(kRollerPIDs[1]),
+                rollerDEntry.getDouble(kRollerPIDs[2]));
+
+        rollerModuleIO.setVelocity(rpmEntry.getDouble(0.0));
+    }
+
+    /**
+     * Overrides for SysId routines
+     */
+    @Override
+    public double getFFCharacterizationVelocity() {
+        return rollerModuleIO.getFFCharacterizationVelocity();
+    }
+
+    @Override
+    public void runCharacterization(double voltage) {
+        rollerModuleIO.runCharacterization(voltage);
     }
 
     /**

@@ -6,6 +6,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -82,25 +83,18 @@ public class ClimbModuleIOTalonFX implements ClimbModuleIO {
     }
 
     @Override
+    public double getFFCharacterizationVelocity() {
+        return velocity.getValueAsDouble();
+    }
+
+    @Override
     public double getPosition() {
         return position.getValueAsDouble();
     }
 
     @Override
-    public void zeroPosition() {
-        climbMotor.setPosition(0);
-    }
-
-    @Override
-    public void set(double speed) {
-        climbMotor.set(speed);
-    }
-
-    /**
-     * 
-     * @return The angle of the motor
-     */
-    public Angle value() {
-        return this.climbMotor.getPosition().getValue();
+    public void runCharacterization(double voltage) {
+        double voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        climbMotor.setVoltage(voltageRequest);
     }
 }

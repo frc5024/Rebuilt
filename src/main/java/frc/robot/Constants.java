@@ -127,6 +127,38 @@ public final class Constants {
         // Maximum and minimum positions for the climb, in radians.
         public static final double maxPos = 780.0;
         public static final double minPos = 10.0;
+
+        public static final double kS = 0.0;
+        public static final double kV = 0.0;
+        public static final double kA = 0.0;
+
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+        public static final double sim_kS = 0.01;
+        public static final double sim_kV = 0.0187;
+        public static final double sim_kA = 0.0;
+
+        public static final double sim_kP = 0.0;
+        public static final double sim_kI = 0.0;
+        public static final double sim_kD = 0.0;
+
+        public static double[] getPIDs() {
+            if (Robot.isReal()) {
+                return new double[] { kP, kI, kD };
+            } else {
+                return new double[] { sim_kP, sim_kI, sim_kD };
+            }
+        }
+
+        public static double[] getSVAs() {
+            if (Robot.isReal()) {
+                return new double[] { kS, kV, kA };
+            } else {
+                return new double[] { sim_kS, sim_kV, sim_kA };
+            }
+        }
     }
 
     /**
@@ -413,8 +445,8 @@ public final class Constants {
         public static final double kI = 0.0;
         public static final double kD = 0.0;
 
-        public static final double sim_kS = 0.001;
-        public static final double sim_kV = 0.0017;
+        public static final double sim_kS = 0.015;
+        public static final double sim_kV = 0.002;
         public static final double sim_kA = 0.0;
 
         public static final double sim_kP = 0.001;

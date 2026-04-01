@@ -2,80 +2,42 @@ package frc.robot.subsystems.shooter;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.RobotConstants;
+import frc.lib.statemachine.StateMachineSubsystem;
 import frc.robot.Constants.ShooterConstants;
 
 /**
  * 
  */
-public class ShooterSubsystem extends SubsystemBase {
+public class ShooterSubsystem extends StateMachineSubsystem {
     // Advantagekit logging
     private final ShooterModuleIO shooterModuleIO;
     protected final ShooterModuleIOInputsAutoLogged inputs;
 
     // Variables
     private double targetRPM;
-    private double[] kSVAs;
-    private double[] kPIDs;
-
-    // Shuffleboard entries
-    private ShuffleboardTab tab;
-
-    private GenericEntry sEntry;
-    private GenericEntry vEntry;
-    private GenericEntry aEntry;
-
-    private GenericEntry pEntry;
-    private GenericEntry iEntry;
-    private GenericEntry dEntry;
-
-    private GenericEntry rpmEntry;
 
     /**
      * 
      */
     public ShooterSubsystem(ShooterModuleIO shooterModuleIO) {
+        super("Shooter");
+
         // set advantage kit IO logging
         this.shooterModuleIO = shooterModuleIO;
         this.inputs = new ShooterModuleIOInputsAutoLogged();
         this.targetRPM = 0.0;
-
-        // set shuffleboard entries if in tuning mode
-        if (RobotConstants.TUNING_MODE) {
-            kSVAs = ShooterConstants.getSVAs();
-            kPIDs = ShooterConstants.getPIDs();
-
-            setShuffleboard();
-        }
     }
 
     @Override
     public void periodic() {
+        super.periodic();
+
         // process hardware inputs
         shooterModuleIO.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
 
         shooterModuleIO.setVelocity(targetRPM);
-
-        // update pid values if in tuning mode
-        if (RobotConstants.TUNING_MODE) {
-            shooterModuleIO.setFF(
-                    sEntry.getDouble(kSVAs[0]),
-                    vEntry.getDouble(kSVAs[1]),
-                    aEntry.getDouble(kSVAs[2]));
-
-            shooterModuleIO.setPID(
-                    pEntry.getDouble(kPIDs[0]),
-                    iEntry.getDouble(kPIDs[1]),
-                    dEntry.getDouble(kPIDs[2]));
-
-            shooterModuleIO.setVelocity(rpmEntry.getDouble(0.0));
-        }
 
         Logger.recordOutput("Shooter/AtSetpoint", shooterModuleIO.isAtSetpoint());
         Logger.recordOutput("Shooter/CurrentVelocityRPM", getVelocity());
@@ -124,26 +86,37 @@ public class ShooterSubsystem extends SubsystemBase {
     /**
      * 
      */
-    private void setShuffleboard() {
-        tab = Shuffleboard.getTab("Shooter");
+    @Override
+    protected void setShuffleboard() {
+        this.kSVAs = ShooterConstants.getSVAs();
+        this.kPIDs = ShooterConstants.getPIDs();
+    }
 
-        sEntry = tab.add("SET S", kSVAs[0]).getEntry();
-        vEntry = tab.add("SET V", kSVAs[1]).getEntry();
-        aEntry = tab.add("SET A", kSVAs[2]).getEntry();
+    @Override
+    protected void setShuffleboardEntries() {
+        shooterModuleIO.setFF(
+                sEntry.getDouble(kSVAs[0]),
+                vEntry.getDouble(kSVAs[1]),
+                aEntry.getDouble(kSVAs[2]));
 
-        sEntry.setDouble(kSVAs[0]);
-        vEntry.setDouble(kSVAs[1]);
-        aEntry.setDouble(kSVAs[2]);
+        shooterModuleIO.setPID(
+                pEntry.getDouble(kPIDs[0]),
+                iEntry.getDouble(kPIDs[1]),
+                dEntry.getDouble(kPIDs[2]));
 
-        pEntry = tab.add("SET P", kPIDs[0]).getEntry();
-        iEntry = tab.add("SET I", kPIDs[1]).getEntry();
-        dEntry = tab.add("SET D", kPIDs[2]).getEntry();
+        shooterModuleIO.setVelocity(rpmEntry.getDouble(0.0));
+    }
 
-        pEntry.setDouble(kPIDs[0]);
-        iEntry.setDouble(kPIDs[1]);
-        dEntry.setDouble(kPIDs[2]);
+    /**
+     * Overrides for SysId routines
+     */
+    @Override
+    public double getFFCharacterizationVelocity() {
+        return shooterModuleIO.getFFCharacterizationVelocity();
+    }
 
-        rpmEntry = tab.add("SET RPM", 0.0).getEntry();
-        rpmEntry.setDouble(0.0);
+    @Override
+    public void runCharacterization(double voltage) {
+        shooterModuleIO.runCharacterization(voltage);
     }
 }

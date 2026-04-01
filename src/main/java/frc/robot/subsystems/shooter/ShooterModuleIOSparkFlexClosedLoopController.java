@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.ShooterConstants;
@@ -107,6 +108,11 @@ public class ShooterModuleIOSparkFlexClosedLoopController implements ShooterModu
     }
 
     @Override
+    public double getFFCharacterizationVelocity() {
+        return encoder.getVelocity();
+    }
+
+    @Override
     public double getGoalVelocity() {
         return pidController.getSetpoint();
     }
@@ -124,6 +130,12 @@ public class ShooterModuleIOSparkFlexClosedLoopController implements ShooterModu
     @Override
     public boolean isAtSetpoint() {
         return Math.abs(getVelocity() - pidController.getSetpoint()) < RPM_TOLERANCE;
+    }
+
+    @Override
+    public void runCharacterization(double voltage) {
+        double voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        leadMotor.setVoltage(voltageRequest);
     }
 
     @Override

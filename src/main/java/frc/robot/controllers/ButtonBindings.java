@@ -104,9 +104,6 @@ public class ButtonBindings {
                 .whileTrue(new InstantCommand(() -> swerveDriveSubsystem.setSlowMode(true)));
         commandXboxController.rightTrigger().onFalse(new InstantCommand(() -> swerveDriveSubsystem.setSlowMode(false)));
 
-        commandXboxController.povUp().whileTrue(m_climb.extendclimb());
-        commandXboxController.povDown().whileTrue(m_climb.contractclimb());
-
         commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
         commandXboxController.rightBumper().whileTrue(m_intake.IntakeCommand());
 
@@ -121,8 +118,6 @@ public class ButtonBindings {
     private CommandXboxController setOperatorBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(OPERATOR_PORT);
 
-        // Reset climb on X button
-        commandXboxController.x().whileTrue(m_climb.resetClimb());
         return commandXboxController;
     }
 

@@ -28,12 +28,12 @@ abstract public class RobotContainer {
     /* Subsystems */
     protected SwerveDriveSubsystem swerveDriveSubsystem;
     protected VisionSubsystem visionSubsystem;
-    protected ClimbSubsystem m_climb;
-    protected FeederSubsystem m_feeder;
-    protected HopperSubsystem m_hopper;
-    protected IntakeSubsystem m_intake;
-    protected ShooterSubsystem m_shooter;
-    protected TurretSubsystem m_turret;
+    protected ClimbSubsystem climbSubsystem;
+    protected FeederSubsystem feederSubsystem;
+    protected HopperSubsystem hopperSubsystem;
+    protected IntakeSubsystem intakeSubsystem;
+    protected ShooterSubsystem shooterSubsystem;
+    protected TurretSubsystem turretSubsystem;
 
     /* Mechanisms */
     protected MechanismVisualizer mechanismVisualizer;
@@ -67,16 +67,18 @@ abstract public class RobotContainer {
      */
     protected void configureButtonBindings() {
         if (Robot.isReal()) {
-            ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, m_climb, m_feeder, m_hopper,
-                    m_intake, m_shooter, m_turret);
+            ButtonBindings buttonBindings = new ButtonBindings(swerveDriveSubsystem, climbSubsystem, feederSubsystem,
+                    hopperSubsystem,
+                    intakeSubsystem, shooterSubsystem, turretSubsystem);
 
             driverController = buttonBindings.getDriverController();
             operatorController = buttonBindings.getOperatorController();
             tuningController = buttonBindings.getTuningController();
         } else {
-            ButtonsBindingsSim buttonBindings = new ButtonsBindingsSim(swerveDriveSubsystem, m_climb, m_feeder,
-                    m_hopper,
-                    m_intake, m_shooter, m_turret);
+            ButtonsBindingsSim buttonBindings = new ButtonsBindingsSim(swerveDriveSubsystem, climbSubsystem,
+                    feederSubsystem,
+                    hopperSubsystem,
+                    intakeSubsystem, shooterSubsystem, turretSubsystem);
 
             driverController = buttonBindings.getDriverController();
             operatorController = buttonBindings.getOperatorController();
@@ -100,18 +102,14 @@ abstract public class RobotContainer {
 
     /** This function is called once when autonomous is enabled. */
     public void autonomousInit() {
-        m_climb.zeroPosition();
-
         // Idle the shooter to prevent current spikes
-        m_shooter.setVelocity(ShooterConstants.IDLE_SPEED_RPM);
+        shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM);
     }
 
     /** This function is called once when teleop is enabled. */
     public void teleopInit() {
-        m_climb.zeroPosition();
-
         // Idle the shooter to prevent current spikes
-        m_shooter.setVelocity(ShooterConstants.IDLE_SPEED_RPM);
+        shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM);
     }
 
     public abstract void updateVisualizer();

@@ -113,6 +113,11 @@ public class TurretModuleIOSparkMaxRelativeEncoder implements TurretModuleIO {
     }
 
     @Override
+    public double getFFCharacterizationVelocity() {
+        return encoder.getVelocity();
+    }
+
+    @Override
     public boolean getHallEffectValue() {
         return hallEffectSensor.get();
     }
@@ -125,6 +130,12 @@ public class TurretModuleIOSparkMaxRelativeEncoder implements TurretModuleIO {
     @Override
     public double getVelocity() {
         return encoder.getVelocity();
+    }
+
+    @Override
+    public void runCharacterization(double voltage) {
+        double voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        turretMotor.setVoltage(voltageRequest);
     }
 
     @Override

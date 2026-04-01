@@ -92,6 +92,11 @@ public class FeederModuleIOSparkFlexRelativeEncoder implements FeederModuleIO {
     }
 
     @Override
+    public double getFFCharacterizationVelocity() {
+        return encoder.getVelocity();
+    }
+
+    @Override
     public double getPosition() {
         return encoder.getPosition();
     }
@@ -104,6 +109,12 @@ public class FeederModuleIOSparkFlexRelativeEncoder implements FeederModuleIO {
     @Override
     public boolean isRunning() {
         return feederMotor.getAppliedOutput() != 0.0;
+    }
+
+    @Override
+    public void runCharacterization(double voltage) {
+        double voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        feederMotor.setVoltage(voltageRequest);
     }
 
     @Override

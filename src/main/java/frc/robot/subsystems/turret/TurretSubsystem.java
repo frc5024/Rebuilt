@@ -8,17 +8,14 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.statemachine.StateMachineSubsystem;
 import frc.robot.Constants;
-import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.TurretConstants;
 
 /**
  * 
  */
-public class TurretSubsystem extends SubsystemBase {
+public class TurretSubsystem extends StateMachineSubsystem {
     // Advantagekit logging
     private final TurretModuleIO turretModuleIO;
     protected final TurretModuleIOInputsAutoLogged inputs;
@@ -27,46 +24,28 @@ public class TurretSubsystem extends SubsystemBase {
     private double targetAngle;
     private boolean pidEnabled;
 
-    private double[] kSVAs;
-    private double[] kPIDs;
-
     // Shuffleboard entries
-    private ShuffleboardTab tab;
-    private GenericEntry pEntry;
-    private GenericEntry dEntry;
-    private GenericEntry iEntry;
-
-    private GenericEntry sEntry;
-    private GenericEntry vEntry;
-    private GenericEntry aEntry;
-
     private GenericEntry maxSpeedEntry;
     private GenericEntry maxAccelEntry;
     private GenericEntry toleranceEntry;
-
-    private GenericEntry angleEntry;
 
     /**
      * 
      */
     public TurretSubsystem(TurretModuleIO turretModuleIO) {
+        super("Turret");
+
         // set advantage kit IO logging
         this.turretModuleIO = turretModuleIO;
         this.inputs = new TurretModuleIOInputsAutoLogged();
         this.targetAngle = 0.0;
         this.pidEnabled = false;
-
-        // set shuffleboard entries if in tuning mode
-        if (RobotConstants.TUNING_MODE) {
-            kSVAs = TurretConstants.getSVAs();
-            kPIDs = TurretConstants.getPIDs();
-
-            setShuffleboard();
-        }
     }
 
     @Override
     public void periodic() {
+        super.periodic();
+
         // process hardware inputs
         turretModuleIO.updateInputs(inputs);
         Logger.processInputs("Turret", inputs);
@@ -79,25 +58,6 @@ public class TurretSubsystem extends SubsystemBase {
         // update relative encoder if hall effect is triggered
         if (!turretModuleIO.getHallEffectValue()) {
             turretModuleIO.setPosition(TurretConstants.ANGLE_LIMIT);
-        }
-
-        // update pid values if in tuning mode
-        if (RobotConstants.TUNING_MODE) {
-            turretModuleIO.setFF(
-                    sEntry.getDouble(kSVAs[0]),
-                    vEntry.getDouble(kSVAs[1]),
-                    aEntry.getDouble(kSVAs[2]));
-
-            turretModuleIO.setPID(
-                    pEntry.getDouble(kPIDs[0]),
-                    iEntry.getDouble(kPIDs[1]),
-                    dEntry.getDouble(kPIDs[2]));
-
-            turretModuleIO.setConstraints(maxSpeedEntry.getDouble(TurretConstants.MAX_SPEED),
-                    maxAccelEntry.getDouble(TurretConstants.MAX_ACCEL),
-                    toleranceEntry.getDouble(TurretConstants.TOLERANCE));
-
-            setAngle(angleEntry.getDouble(0.0));
         }
 
         Logger.recordOutput("Turret/CurrentAngle", getPosition());
@@ -182,24 +142,15 @@ public class TurretSubsystem extends SubsystemBase {
     /**
      * 
      */
-    private void setShuffleboard() {
-        tab = Shuffleboard.getTab("Turret");
+    @Override
+    protected void setShuffleboard() {
+        kSVAs = TurretConstants.getSVAs();
+        kPIDs = TurretConstants.getPIDs();
+    }
 
-        sEntry = tab.add("SET S", kSVAs[0]).getEntry();
-        vEntry = tab.add("SET V", kSVAs[1]).getEntry();
-        aEntry = tab.add("SET A", kSVAs[2]).getEntry();
-
-        sEntry.setDouble(kSVAs[0]);
-        vEntry.setDouble(kSVAs[1]);
-        aEntry.setDouble(kSVAs[2]);
-
-        pEntry = tab.add("SET P", kPIDs[0]).getEntry();
-        iEntry = tab.add("SET I", kPIDs[1]).getEntry();
-        dEntry = tab.add("SET D", kPIDs[2]).getEntry();
-
-        pEntry.setDouble(kPIDs[0]);
-        iEntry.setDouble(kPIDs[1]);
-        dEntry.setDouble(kPIDs[2]);
+    @Override
+    protected void setShuffleboardTab() {
+        super.setShuffleboardTab();
 
         maxSpeedEntry = tab.add("SET MAXSPEED", TurretConstants.MAX_SPEED).getEntry();
         maxAccelEntry = tab.add("SET MAXACCEL", TurretConstants.MAX_ACCEL).getEntry();
@@ -209,9 +160,38 @@ public class TurretSubsystem extends SubsystemBase {
         maxAccelEntry.setDouble(Constants.TurretConstants.MAX_ACCEL);
         toleranceEntry.setDouble(Constants.TurretConstants.TOLERANCE);
 
-        angleEntry = tab.add("SET ANGLE", 0.0).getEntry();
-        angleEntry.setDouble(0.0);
-
         enablePID();
+    }
+
+    @Override
+    protected void setShuffleboardEntries() {
+        turretModuleIO.setFF(
+                sEntry.getDouble(kSVAs[0]),
+                vEntry.getDouble(kSVAs[1]),
+                aEntry.getDouble(kSVAs[2]));
+
+        turretModuleIO.setPID(
+                pEntry.getDouble(kPIDs[0]),
+                iEntry.getDouble(kPIDs[1]),
+                dEntry.getDouble(kPIDs[2]));
+
+        turretModuleIO.setConstraints(maxSpeedEntry.getDouble(TurretConstants.MAX_SPEED),
+                maxAccelEntry.getDouble(TurretConstants.MAX_ACCEL),
+                toleranceEntry.getDouble(TurretConstants.TOLERANCE));
+
+        setAngle(angleEntry.getDouble(0.0));
+    }
+
+    /**
+     * Overrides for SysId routines
+     */
+    @Override
+    public double getFFCharacterizationVelocity() {
+        return turretModuleIO.getFFCharacterizationVelocity();
+    }
+
+    @Override
+    public void runCharacterization(double voltage) {
+        turretModuleIO.runCharacterization(voltage);
     }
 }

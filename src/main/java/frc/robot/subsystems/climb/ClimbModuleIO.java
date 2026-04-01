@@ -25,20 +25,34 @@ public interface ClimbModuleIO {
         return 0.0;
     }
 
+    default double getFFCharacterizationVelocity() {
+        return 0.0;
+    }
+
     default double getPosition() {
         return 0.0;
     }
 
-    default public void zeroPosition() {
+    default double getVelocity() {
+        return 0.0;
     }
 
     default boolean isRunning() {
         return false;
     }
 
-    // TODO: remove after refactoring - speed is a constant so set it in the
-    // hardware module
-    default void set(double speed) {
+    default void runCharacterization(double voltage) {
+    }
+
+    // used in tuning mode
+    default void setFF(double kS, double kV, double kA) {
+    }
+
+    // used in tuning mode
+    default void setPID(double kP, double kI, double kD) {
+    }
+
+    default void setVoltage(double targetRPM) {
     }
 
     default void start() {

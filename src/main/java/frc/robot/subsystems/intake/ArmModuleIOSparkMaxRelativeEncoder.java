@@ -109,6 +109,11 @@ public class ArmModuleIOSparkMaxRelativeEncoder implements ArmModuleIO {
     }
 
     @Override
+    public double getFFCharacterizationVelocity() {
+        return encoder.getVelocity();
+    }
+
+    @Override
     public double getGoalPosition() {
         return pidController.getGoal().position;
     }
@@ -131,6 +136,12 @@ public class ArmModuleIOSparkMaxRelativeEncoder implements ArmModuleIO {
     @Override
     public boolean isRetracted() {
         return !retractedLimit.get();
+    }
+
+    @Override
+    public void runCharacterization(double voltage) {
+        double voltageRequest = MathUtil.clamp(voltage * 12, -12.0, 12.0);
+        armMotor.setVoltage(voltageRequest);
     }
 
     @Override

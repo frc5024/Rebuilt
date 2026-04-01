@@ -25,6 +25,10 @@ public interface HopperModuleIO {
         return 0.0;
     }
 
+    default double getFFCharacterizationVelocity() {
+        return 0.0;
+    }
+
     default double getPosition() {
         return 0.0;
     }
@@ -35,6 +39,9 @@ public interface HopperModuleIO {
 
     default boolean isRunning() {
         return false;
+    }
+
+    default void runCharacterization(double voltage) {
     }
 
     // used in tuning mode

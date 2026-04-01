@@ -1,10 +1,8 @@
 package frc.robot.controllers;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.HopperConstants;
@@ -12,8 +10,6 @@ import frc.robot.commands.ClearTheWallCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveNearestTrenchCommand;
 import frc.robot.commands.ShootCommand;
-import frc.robot.commands.StickRotationCommand;
-import frc.robot.commands.turretSweepCommand;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -95,59 +91,56 @@ public class ButtonsBindingsSim {
                         () -> -commandXboxController.getLeftX(),
                         () -> {
                             Pose2d robotPose = swerveDriveSubsystem.getPose();
-                            double robotX = robotPose.getX();
-                            double robotY = robotPose.getY();
-
-                            Pose2d hubPose = GameUtil.getHubPose();
-                            double hubX = hubPose.getX();
-                            double hubY = hubPose.getY();
-
-                            double angleToHub = Math.atan2(hubY - robotY, hubX - robotX);
-                            return Rotation2d.fromRadians(angleToHub);
+                            Pose2d targetPose = GameUtil.getTargetPose(robotPose);
+                            return targetPose.getTranslation().minus(robotPose.getTranslation())
+                                    .getAngle();
                         }));
 
-        commandXboxController.x().whileTrue(
-                new DriveNearestTrenchCommand(() -> swerveDriveSubsystem.getPose()));
+        commandXboxController.x()
+                .whileTrue(
+                        new DriveNearestTrenchCommand(() -> swerveDriveSubsystem.getPose()));
 
-        commandXboxController.y().whileTrue(
-                new ClearTheWallCommand(swerveDriveSubsystem, intakeSubsystem, shooterSubsystem, hopperSubsystem,
-                        feederSubsystem));
+        commandXboxController.y()
+                .whileTrue(
+                        new ClearTheWallCommand(swerveDriveSubsystem, intakeSubsystem, shooterSubsystem,
+                                hopperSubsystem,
+                                feederSubsystem));
 
-        commandXboxController.rightBumper().onTrue(intakeSubsystem.ExtendArmCommand());
-        commandXboxController.leftBumper().onTrue(intakeSubsystem.RetractArmCommand());
-        // commandXboxController.rightBumper().whileTrue(m_intake.IntakeCommand());
-        commandXboxController.back().onTrue(
-                Commands.runOnce(() -> {
-                    if (!intakeToggleState) {
-                        CommandScheduler.getInstance().schedule(intakeSubsystem.OuttakeCommand());
-                    } else {
-                        CommandScheduler.getInstance().schedule(intakeSubsystem.IntakeCommand());
-                    }
+        commandXboxController.rightBumper()
+                .onTrue(
+                        Commands.sequence(
+                                Commands.runOnce(() -> intakeSubsystem.intakeRoller(), intakeSubsystem),
+                                Commands.runOnce(() -> intakeSubsystem.extendArm(), intakeSubsystem)));
 
-                    intakeToggleState = !intakeToggleState;
-                }, intakeSubsystem));
+        commandXboxController.leftBumper()
+                .onTrue(
+                        Commands.sequence(
+                                Commands.runOnce(() -> intakeSubsystem.stopRoller(), intakeSubsystem),
+                                Commands.runOnce(() -> intakeSubsystem.retractArm(), intakeSubsystem)));
 
-        // commandXboxController.leftTrigger()
-        // .whileTrue(
-        // Commands.parallel(
-        // new runEverything(m_feeder, m_shooter, m_hopper),
-        // new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
-        commandXboxController.leftTrigger()
-                .whileTrue(new ShootCommand(swerveDriveSubsystem, shooterSubsystem, hopperSubsystem, feederSubsystem,
-                        () -> swerveDriveSubsystem.getPose()));
+        commandXboxController.back()
+                .onTrue(
+                        Commands.runOnce(() -> {
+                            if (!intakeToggleState) {
+                                CommandScheduler.getInstance().schedule(intakeSubsystem.OuttakeCommand());
+                            } else {
+                                CommandScheduler.getInstance().schedule(intakeSubsystem.IntakeCommand());
+                            }
+
+                            intakeToggleState = !intakeToggleState;
+                        }, intakeSubsystem));
 
         commandXboxController.rightTrigger()
                 .whileTrue(
-                        new InstantCommand(() -> swerveDriveSubsystem.setSlowMode(true)));
+                        Commands.runOnce(() -> swerveDriveSubsystem.setSlowMode(true)));
         commandXboxController.rightTrigger()
                 .onFalse(
-                        new InstantCommand(() -> swerveDriveSubsystem.setSlowMode(false)));
+                        Commands.runOnce(() -> swerveDriveSubsystem.setSlowMode(false)));
 
-        commandXboxController.povUp().whileTrue(climbSubsystem.extendclimb());
-        commandXboxController.povDown().whileTrue(climbSubsystem.contractclimb());
-
-        commandXboxController.povLeft().onTrue(new turretSweepCommand(turretSubsystem));
-        commandXboxController.povRight().whileTrue(new StickRotationCommand(turretSubsystem, -0.1));
+        commandXboxController.leftTrigger()
+                .whileTrue(
+                        new ShootCommand(swerveDriveSubsystem, shooterSubsystem, hopperSubsystem, feederSubsystem,
+                                () -> swerveDriveSubsystem.getPose()));
 
         return commandXboxController;
     }
