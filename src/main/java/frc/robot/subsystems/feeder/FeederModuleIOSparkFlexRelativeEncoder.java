@@ -145,8 +145,8 @@ public class FeederModuleIOSparkFlexRelativeEncoder implements FeederModuleIO {
             feederMotor.setVoltage(voltageRequest);
         }
 
-        Logger.recordOutput("Feeder/ffVoltage", ffVoltage);
-        Logger.recordOutput("Feeder/pidVoltage", pidVoltage);
+        Logger.recordOutput("Subsystems/Feeder/ffVoltage", ffVoltage);
+        Logger.recordOutput("Subsystems/Feeder/pidVoltage", pidVoltage);
     }
 
     @Override

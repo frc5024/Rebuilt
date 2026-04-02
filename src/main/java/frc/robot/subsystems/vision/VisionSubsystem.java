@@ -64,11 +64,6 @@ public class VisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // Disable vision during autonomous to prevent interference with PathPlanner
-        if (DriverStation.isAutonomous()) {
-            return;
-        }
-
         for (int i = 0; i < this.visionIO.length; i++) {
             this.visionIO[i].updateInputs(this.inputs[i]);
             Logger.processInputs("Vision/" + this.visionIO[i].getName(), this.inputs[i]);
@@ -168,16 +163,16 @@ public class VisionSubsystem extends SubsystemBase {
 
             // Log camera datadata
             Logger.recordOutput(
-                    "Vision/" + this.visionIO[cameraIndex].getName() + "/TagPoses",
+                    "Subsystems/Vision/" + this.visionIO[cameraIndex].getName() + "/TagPoses",
                     tagPoses.toArray(new Pose3d[tagPoses.size()]));
             Logger.recordOutput(
-                    "Vision/" + this.visionIO[cameraIndex].getName() + "/RobotPoses",
+                    "Subsystems/Vision/" + this.visionIO[cameraIndex].getName() + "/RobotPoses",
                     robotPoses.toArray(new Pose3d[robotPoses.size()]));
             Logger.recordOutput(
-                    "Vision/" + this.visionIO[cameraIndex].getName() + "/RobotPosesAccepted",
+                    "Subsystems/Vision/" + this.visionIO[cameraIndex].getName() + "/RobotPosesAccepted",
                     robotPosesAccepted.toArray(new Pose3d[robotPosesAccepted.size()]));
             Logger.recordOutput(
-                    "Vision/" + this.visionIO[cameraIndex].getName() + "/RobotPosesRejected",
+                    "Subsystems/Vision/" + this.visionIO[cameraIndex].getName() + "/RobotPosesRejected",
                     robotPosesRejected.toArray(new Pose3d[robotPosesRejected.size()]));
 
             allTagPoses.addAll(tagPoses);
@@ -187,11 +182,12 @@ public class VisionSubsystem extends SubsystemBase {
         }
 
         // Log summary data
-        Logger.recordOutput("Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
-        Logger.recordOutput("Vision/Summary/RobotPoses", allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
-        Logger.recordOutput("Vision/Summary/RobotPosesAccepted",
+        Logger.recordOutput("Subsystems/Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
+        Logger.recordOutput("Subsystems/Vision/Summary/RobotPoses",
+                allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
+        Logger.recordOutput("Subsystems/Vision/Summary/RobotPosesAccepted",
                 allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
-        Logger.recordOutput("Vision/Summary/RobotPosesRejected",
+        Logger.recordOutput("Subsystems/Vision/Summary/RobotPosesRejected",
                 allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
     }
 

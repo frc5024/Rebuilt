@@ -64,7 +64,7 @@ public class ShootForFiveSecondsCommand extends Command {
         // set the shooter RPM
         shooterSubsystem.setVelocity(rpm);
 
-        Logger.recordOutput("Shooter/DistanceToTarget", distance);
+        Logger.recordOutput("Subsystems/Shooter/DistanceToTarget", distance);
     }
 
     @Override
@@ -78,8 +78,6 @@ public class ShootForFiveSecondsCommand extends Command {
         if (runTimer.hasElapsed(3)) {
             intakeSubsystem.retractArm();
         }
-
-        Logger.recordOutput("Shooter/Active Command", this.getName());
     }
 
     @Override
@@ -88,8 +86,6 @@ public class ShootForFiveSecondsCommand extends Command {
         feederSubsystem.setVelocity(0.0);
         hopperSubsystem.setVelocity(0.0);
         shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM);
-
-        Logger.recordOutput("Shooter/Active Command", "");
     }
 
     @Override

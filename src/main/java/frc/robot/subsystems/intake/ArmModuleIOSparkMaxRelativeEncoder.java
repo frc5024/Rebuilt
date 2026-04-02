@@ -161,8 +161,8 @@ public class ArmModuleIOSparkMaxRelativeEncoder implements ArmModuleIO {
             armMotor.setVoltage(voltageRequest);
         }
 
-        Logger.recordOutput("Intake/Arm/ffVoltage", ffVoltage);
-        Logger.recordOutput("Intake/Arm/pidVoltage", pidVoltage);
+        Logger.recordOutput("Subsystems/Intake/Arm/ffVoltage", ffVoltage);
+        Logger.recordOutput("Subsystems/Intake/Arm/pidVoltage", pidVoltage);
     }
 
     @Override

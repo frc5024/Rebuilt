@@ -39,10 +39,10 @@ public class ShooterSubsystem extends StateMachineSubsystem {
 
         shooterModuleIO.setVelocity(targetRPM);
 
-        Logger.recordOutput("Shooter/AtSetpoint", shooterModuleIO.isAtSetpoint());
-        Logger.recordOutput("Shooter/CurrentVelocityRPM", getVelocity());
-        Logger.recordOutput("Shooter/SetpointRPM", shooterModuleIO.getGoalVelocity());
-        Logger.recordOutput("Shooter/VelocityTangential", getTangentialVelocity());
+        Logger.recordOutput("Subsystems/Shooter/AtSetpoint", shooterModuleIO.isAtSetpoint());
+        Logger.recordOutput("Subsystems/Shooter/CurrentRPM", getVelocity());
+        Logger.recordOutput("Subsystems/Shooter/TartgetRPM", shooterModuleIO.getGoalVelocity());
+        Logger.recordOutput("Subsystems/Shooter/VelocityTangential", getTangentialVelocity());
     }
 
     /**
@@ -52,7 +52,7 @@ public class ShooterSubsystem extends StateMachineSubsystem {
         Command currentCommand = getCurrentCommand();
 
         if (currentCommand != null && currentCommand.getName().equalsIgnoreCase("ShootCommand")) {
-            targetRPM = ShooterConstants.velocityToRPMMap.get(distanceToTarget);
+            setVelocity(ShooterConstants.velocityToRPMMap.get(distanceToTarget));
         }
     }
 

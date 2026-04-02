@@ -99,6 +99,7 @@ abstract public class StateMachineSubsystem extends SubsystemBase {
         // set shuffleboard entries if in tuning mode
         if (RobotConstants.TUNING_MODE) {
             setShuffleboard();
+            setShuffleboardTab();
         }
     }
 

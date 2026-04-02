@@ -2,8 +2,6 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FeederConstants;
@@ -55,22 +53,13 @@ public class ShootCommand extends Command {
         Pose2d robotPose = robotPoseSupplier.get();
         targetPose = GameUtil.getTargetPose(robotPose);
 
-        // get distance to target and cooresponding RPM
-        // double distance =
-        // robotPose.getTranslation().getDistance(targetPose.getTranslation());
-        // double rpm = ShooterConstants.velocityToRPMMap.get(distance);
-
-        // set the shooter RPM
-        // shooterSubsystem.setVelocity(rpm);
+        // SpinToHub and ShooterSubsystem handle setting shooter RPM
 
         // spin up hooper and feeder if shooter is ready
         if (shooterSubsystem.isAtSetpoint()) {
             feederSubsystem.setVelocity(FeederConstants.RPM);
             hopperSubsystem.setVelocity(HopperConstants.RPM);
         }
-
-        Logger.recordOutput("Shooter/Active Command", this.getName());
-        // Logger.recordOutput("Shooter/DistanceToTarget", distance);
     }
 
     @Override
@@ -79,8 +68,6 @@ public class ShootCommand extends Command {
         hopperSubsystem.setVelocity(0.0);
         shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM);
         swerveDriveSubsystem.setSlowMode(false);
-
-        Logger.recordOutput("Shooter/Active Command", "");
     }
 
     @Override

@@ -20,11 +20,11 @@
         "y": 6.625013966591235
       },
       "prevControl": {
-        "x": 0.45070659556788295,
+        "x": 0.450706595567883,
         "y": 7.097633366351344
       },
       "nextControl": {
-        "x": 0.45070659556788295,
+        "x": 0.450706595567883,
         "y": 6.043603710180978
       },
       "isLocked": false,
@@ -61,14 +61,20 @@
     },
     {
       "name": "CTW-Shoot",
-      "waypointRelativePos": 0.6034482758620758,
-      "endWaypointRelativePos": 1.4880636604774433,
+      "waypointRelativePos": 0.4416445623342181,
+      "endWaypointRelativePos": 1.405835543766574,
       "command": null
     },
     {
       "name": "CTW-Shoot",
-      "waypointRelativePos": 1.763925729442982,
+      "waypointRelativePos": 1.584880636604765,
       "endWaypointRelativePos": 2.0,
+      "command": null
+    },
+    {
+      "name": "CTW-Retract",
+      "waypointRelativePos": 1.9031830238726788,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],

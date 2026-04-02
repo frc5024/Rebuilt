@@ -128,6 +128,10 @@ public final class Constants {
         public static final double maxPos = 780.0;
         public static final double minPos = 10.0;
 
+        public static final double ZERO_LENGTH_INCHES = 0.0;
+        public static final double EXTEND_LENGTH_INCHES = 8.0; // slightly higher than L1 bar
+        public static final double RETRACT_LENGTH_INCHES = 2.0; // should be 6" off the ground
+
         public static final double kS = 0.0;
         public static final double kV = 0.0;
         public static final double kA = 0.0;
@@ -137,10 +141,10 @@ public final class Constants {
         public static final double kD = 0.0;
 
         public static final double sim_kS = 0.01;
-        public static final double sim_kV = 0.0187;
+        public static final double sim_kV = 0.01;
         public static final double sim_kA = 0.0;
 
-        public static final double sim_kP = 0.0;
+        public static final double sim_kP = 0.01;
         public static final double sim_kI = 0.0;
         public static final double sim_kD = 0.0;
 

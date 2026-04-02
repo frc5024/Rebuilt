@@ -60,10 +60,10 @@ public class TurretSubsystem extends StateMachineSubsystem {
             turretModuleIO.setPosition(TurretConstants.ANGLE_LIMIT);
         }
 
-        Logger.recordOutput("Turret/CurrentAngle", getPosition());
-        Logger.recordOutput("Turret/TargetAngle", targetAngle);
-        Logger.recordOutput("Turret/AtTarget", isAtTarget());
-        Logger.recordOutput("Turret/PIDEnabled", isPIDEnabled());
+        Logger.recordOutput("Subsystems/Turret/CurrentAngle", getPosition());
+        Logger.recordOutput("Subsystems/Turret/TargetAngle", targetAngle);
+        Logger.recordOutput("Subsystems/Turret/AtTarget", isAtTarget());
+        Logger.recordOutput("Subsystems/Turret/PIDEnabled", isPIDEnabled());
     }
 
     public boolean atGoal() {
@@ -100,6 +100,8 @@ public class TurretSubsystem extends StateMachineSubsystem {
 
         Pose3d robotPose3d = new Pose3d(robotPose);
         Pose3d turretPose = robotPose3d.plus(robotToTurret);
+
+        Logger.recordOutput("Subsystems/Turret/Pose", turretPose);
 
         return turretPose;
     }

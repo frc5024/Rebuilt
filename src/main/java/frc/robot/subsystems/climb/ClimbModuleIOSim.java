@@ -5,30 +5,29 @@ import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import frc.robot.Constants.ClimbConstants;
 
 /**
  * 
  */
 public class ClimbModuleIOSim extends ClimbModuleIOTalonFX {
     private final DCMotor dcMotor;
-    private final DCMotorSim dcMotorSim;
+    private final ElevatorSim elevatorSim;
     private final TalonFXSimState talonFXSimState;
-
-    private double voltageRequest;
 
     /**
      * 
      */
     public ClimbModuleIOSim() {
         this.dcMotor = DCMotor.getFalcon500(1);
-        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.001, GEAR_RATIO), dcMotor);
+        this.elevatorSim = new ElevatorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, GEAR_RATIO), dcMotor, 0.0,
+                Units.inchesToMeters(ClimbConstants.EXTEND_LENGTH_INCHES), false, 0.0);
         this.talonFXSimState = this.climbMotor.getSimState();
         this.talonFXSimState.Orientation = ChassisReference.CounterClockwise_Positive;
-
-        this.voltageRequest = 0.0;
     }
 
     @Override
@@ -37,17 +36,22 @@ public class ClimbModuleIOSim extends ClimbModuleIOTalonFX {
             stop();
         }
 
-        if (climbMotor.getPosition().getValueAsDouble() >= 0.0
-                || climbMotor.getPosition().getValueAsDouble() <= -0.25) {
-            stop();
+        elevatorSim.setInput(talonFXSimState.getMotorVoltage());
+        elevatorSim.update(0.02);
+
+        double mechanismRotations = elevatorSim.getPositionMeters() / (2.0 * DRUM_RADIUS * Math.PI);
+        double motorRotations = mechanismRotations * GEAR_RATIO;
+        double motorVelocityRPS = (elevatorSim.getVelocityMetersPerSecond() / (2.0 * DRUM_RADIUS * Math.PI))
+                * GEAR_RATIO;
+
+        double currentPosition = getPosition();
+        if (motorRotations < 0.0) {
+            motorRotations = 0.0;
+            motorVelocityRPS = 0.0;
         }
 
-        double motorVoltage = talonFXSimState.getMotorVoltage();
-        dcMotorSim.setInputVoltage(motorVoltage);
-        dcMotorSim.update(0.02);
-
-        talonFXSimState.setRawRotorPosition(dcMotorSim.getAngularPositionRotations());
-        talonFXSimState.setRotorVelocity(dcMotorSim.getAngularVelocityRPM() / 60.0);
+        talonFXSimState.setRawRotorPosition(motorRotations);
+        talonFXSimState.setRotorVelocity(motorVelocityRPS);
         talonFXSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
 
         inputs.data = new ClimbModuleIOData(
@@ -63,10 +67,5 @@ public class ClimbModuleIOSim extends ClimbModuleIOTalonFX {
     @Override
     public double getCurrentDrawAmps() {
         return talonFXSimState.getSupplyCurrent();
-    }
-
-    @Override
-    public double getPosition() {
-        return climbMotor.getPosition().getValueAsDouble();
     }
 }

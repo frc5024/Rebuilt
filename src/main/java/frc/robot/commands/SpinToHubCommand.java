@@ -76,8 +76,8 @@ public class SpinToHubCommand extends Command {
 
         turretSubsystem.setAngle(turretAngle.getDegrees());
 
-        Logger.recordOutput("Turret/DistanceToTarget", distanceToTarget);
-        Logger.recordOutput("Turret/ShootDistance", shootDistance);
+        Logger.recordOutput("Subsystems/Turret/DistanceToTarget", distanceToTarget);
+        Logger.recordOutput("Subsystems/Turret/ShootDistance", shootDistance);
     }
 
     @Override
@@ -90,6 +90,9 @@ public class SpinToHubCommand extends Command {
         turretSubsystem.disablePID();
     }
 
+    /**
+     * Used by the shooter subsystem to set RPM
+     */
     @FunctionalInterface
     public static interface DistanceConsumer {
         public void accept(double distanceToTarget);

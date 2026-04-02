@@ -30,7 +30,6 @@ public class HopperSubsystem extends StateMachineSubsystem {
     private boolean isUnjamming;
 
     // Shuffleboard entries
-    private GenericEntry rpmEntry;
     private GenericEntry simulateJamEntry;
 
     /**
@@ -66,8 +65,8 @@ public class HopperSubsystem extends StateMachineSubsystem {
         // check for ball jam
         checkAndHandleJam();
 
-        Logger.recordOutput("Hopper/CurrentVelocityRPM", hopperModuleIO.getVelocity());
-        Logger.recordOutput("Hopper/TargetRPM", targetRPM);
+        Logger.recordOutput("Subsystems/Hopper/CurrentRPM", hopperModuleIO.getVelocity());
+        Logger.recordOutput("Subsystems/Hopper/TargetRPM", targetRPM);
     }
 
     public double getCurrentDrawAmps() {
@@ -142,9 +141,6 @@ public class HopperSubsystem extends StateMachineSubsystem {
     @Override
     protected void setShuffleboardTab() {
         super.setShuffleboardTab();
-
-        rpmEntry = tab.add("SET RPM", 0.0).getEntry();
-        rpmEntry.setDouble(0.0);
 
         simulateJamEntry = tab.add("SIMULATE JAM", false)
                 .withWidget("Toggle Switch")

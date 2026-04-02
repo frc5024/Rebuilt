@@ -13,8 +13,8 @@ public interface ClimbModuleIO {
 
     record ClimbModuleIOData(
             boolean connected,
-            double positionRads,
-            double velocityRadsPerSec,
+            double positionRots,
+            double velocityRotsPerSec,
             double appliedVoltage,
             double torqueCurrentAmps,
             double supplyCurrentAmps,
@@ -29,6 +29,10 @@ public interface ClimbModuleIO {
         return 0.0;
     }
 
+    default double getLinearDistanceInches() {
+        return 0.0;
+    }
+
     default double getPosition() {
         return 0.0;
     }
@@ -37,7 +41,10 @@ public interface ClimbModuleIO {
         return 0.0;
     }
 
-    default boolean isRunning() {
+    default void holdPosition() {
+    }
+
+    default boolean isSuspended() {
         return false;
     }
 
@@ -52,6 +59,9 @@ public interface ClimbModuleIO {
     default void setPID(double kP, double kI, double kD) {
     }
 
+    default void setPosition(double inches, boolean isHooked) {
+    }
+
     default void setVoltage(double targetRPM) {
     }
 
@@ -62,5 +72,8 @@ public interface ClimbModuleIO {
     }
 
     default void updateInputs(ClimbModuleIOInputs inputs) {
+    }
+
+    default public void zeroPosition() {
     }
 }

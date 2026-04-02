@@ -32,7 +32,6 @@ public class FeederSubsystem extends StateMachineSubsystem {
     private boolean isUnjamming;
 
     // Shuffleboard entries
-    private GenericEntry rpmEntry;
     private GenericEntry simulateJamEntry;
 
     /**
@@ -68,8 +67,8 @@ public class FeederSubsystem extends StateMachineSubsystem {
         // check for ball jam
         checkAndHandleJam();
 
-        Logger.recordOutput("Feeder/CurrentVelocityRPM", feederModuleIO.getVelocity());
-        Logger.recordOutput("Feeder/TargetRPM", targetRPM);
+        Logger.recordOutput("Subsystems/Feeder/CurrentRPM", feederModuleIO.getVelocity());
+        Logger.recordOutput("Subsystems/Feeder/TargetRPM", targetRPM);
     }
 
     public double getCurrentDrawAmps() {
@@ -144,9 +143,6 @@ public class FeederSubsystem extends StateMachineSubsystem {
     @Override
     protected void setShuffleboardTab() {
         super.setShuffleboardTab();
-
-        rpmEntry = tab.add("SET RPM", 0.0).getEntry();
-        rpmEntry.setDouble(0.0);
 
         simulateJamEntry = tab.add("SIMULATE JAM", false)
                 .withWidget("Toggle Switch")

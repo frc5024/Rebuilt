@@ -145,8 +145,8 @@ public class HopperModuleIOSparkMaxRelativeEncoder implements HopperModuleIO {
             hopperMotor.setVoltage(voltageRequest);
         }
 
-        Logger.recordOutput("Hopper/ffVoltage", ffVoltage);
-        Logger.recordOutput("Hopper/pidVoltage", pidVoltage);
+        Logger.recordOutput("Subsystems/Hopper/ffVoltage", ffVoltage);
+        Logger.recordOutput("Subsystems/Hopper/pidVoltage", pidVoltage);
     }
 
     @Override

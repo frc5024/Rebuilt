@@ -16,12 +16,14 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ShootForFiveSecondsCommand;
 import frc.robot.commands.SpinToHubCommand;
@@ -94,10 +96,15 @@ public class SimulatedRobotContainer extends RobotContainer {
                 fuelSimCount);
 
         if (!RobotConstants.TUNING_MODE) {
-            this.turretSubsystem.setDefaultCommand(new SpinToHubCommand(turretSubsystem,
-                    () -> swerveDriveSubsystem.getPose(),
-                    () -> swerveDriveSubsystem.getChassisSpeeds(), () -> shooterSubsystem.getTangentialVelocity(),
-                    shooterSubsystem::addDistanceMeasurement));
+            this.shooterSubsystem
+                    .setDefaultCommand(Commands.runOnce(
+                            () -> shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM), shooterSubsystem));
+            this.turretSubsystem
+                    .setDefaultCommand(new SpinToHubCommand(turretSubsystem,
+                            () -> swerveDriveSubsystem.getPose(),
+                            () -> swerveDriveSubsystem.getChassisSpeeds(),
+                            () -> shooterSubsystem.getTangentialVelocity(),
+                            shooterSubsystem::addDistanceMeasurement));
         }
 
         configureNamedCommands();
@@ -109,6 +116,12 @@ public class SimulatedRobotContainer extends RobotContainer {
         PathPlannerLogging.setLogActivePathCallback((List<Pose2d> poses) -> {
             Logger.recordOutput("PathPlanner/ActivePath", poses.toArray(new Pose2d[0]));
         });
+
+        CommandScheduler.getInstance().onCommandInterrupt(
+                (command, interrupter) -> {
+                    System.out.println("Command " + command.getName() +
+                            " was interrupted by " + (interrupter.isPresent() ? interrupter.get().getName() : "None"));
+                });
     }
 
     @Override
@@ -135,6 +148,13 @@ public class SimulatedRobotContainer extends RobotContainer {
             this.autoChooser.addOption(
                     "Drive SysId (Dynamic Reverse)",
                     swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+            this.autoChooser.addOption(
+                    "Climb Simple FF Characterization",
+                    climbSubsystem.feedforwardCharacterization());
+            this.autoChooser.addOption(
+                    "Climb SysId (Quasistatic Forward)",
+                    climbSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 
             this.autoChooser.addOption(
                     "Feeder Simple FF Characterization",
@@ -236,13 +256,11 @@ public class SimulatedRobotContainer extends RobotContainer {
                 intakeSubsystem.getPosition(),
                 hopperSubsystem.getPosition(),
                 turretSubsystem.getPosition(),
-                climbSubsystem.getPosition(),
+                climbSubsystem.getLinearDistanceInches(),
                 feederSubsystem.getPosition(),
                 turretPose,
                 shooterSubsystem.getTangentialVelocity(),
                 swerveDriveSubsystem.getModuleAngles());
-
-        Logger.recordOutput("Turret/Pose", turretPose);
     }
 
     @Override

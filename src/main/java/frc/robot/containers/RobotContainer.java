@@ -5,7 +5,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Robot;
 import frc.robot.controllers.ButtonBindings;
 import frc.robot.controllers.ButtonsBindingsSim;
@@ -102,14 +101,10 @@ abstract public class RobotContainer {
 
     /** This function is called once when autonomous is enabled. */
     public void autonomousInit() {
-        // Idle the shooter to prevent current spikes
-        shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM);
     }
 
     /** This function is called once when teleop is enabled. */
     public void teleopInit() {
-        // Idle the shooter to prevent current spikes
-        shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM);
     }
 
     public abstract void updateVisualizer();

@@ -177,13 +177,11 @@ public class ReplayingRobotContainer extends RobotContainer {
                 intakeSubsystem.getPosition(),
                 hopperSubsystem.getPosition(),
                 turretSubsystem.getPosition(),
-                climbSubsystem.getPosition(),
+                climbSubsystem.getLinearDistanceInches(),
                 feederSubsystem.getPosition(),
                 turretPose,
                 shooterSubsystem.getTangentialVelocity(),
                 swerveDriveSubsystem.getModuleAngles());
-
-        Logger.recordOutput("Turret/Pose", turretPose);
     }
 
     @Override

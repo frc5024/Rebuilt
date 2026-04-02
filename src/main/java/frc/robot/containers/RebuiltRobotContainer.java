@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FuelCellConstants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ShootForFiveSecondsCommand;
@@ -83,10 +84,17 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.turretSubsystem = new TurretSubsystem(new TurretModuleIOSparkMaxRelativeEncoder());
 
         if (!RobotConstants.TUNING_MODE) {
-            turretSubsystem.setDefaultCommand(new SpinToHubCommand(turretSubsystem,
-                    () -> swerveDriveSubsystem.getPose(),
-                    () -> swerveDriveSubsystem.getChassisSpeeds(), () -> shooterSubsystem.getTangentialVelocity(),
-                    shooterSubsystem::addDistanceMeasurement));
+            this.climbSubsystem
+                    .setDefaultCommand(Commands.runOnce(() -> climbSubsystem.holdPosition(), climbSubsystem));
+            this.shooterSubsystem
+                    .setDefaultCommand(Commands.runOnce(
+                            () -> shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM), shooterSubsystem));
+            this.turretSubsystem
+                    .setDefaultCommand(new SpinToHubCommand(turretSubsystem,
+                            () -> swerveDriveSubsystem.getPose(),
+                            () -> swerveDriveSubsystem.getChassisSpeeds(),
+                            () -> shooterSubsystem.getTangentialVelocity(),
+                            shooterSubsystem::addDistanceMeasurement));
         }
 
         turretSubsystem.zeroEncoder();
@@ -170,7 +178,7 @@ public class RebuiltRobotContainer extends RobotContainer {
                 intakeSubsystem.getPosition(),
                 hopperSubsystem.getPosition(),
                 turretSubsystem.getPosition(),
-                climbSubsystem.getPosition(),
+                climbSubsystem.getLinearDistanceInches(),
                 feederSubsystem.getPosition(),
                 turretPose,
                 shooterSubsystem.getTangentialVelocity(),
@@ -183,8 +191,6 @@ public class RebuiltRobotContainer extends RobotContainer {
         Logger.recordOutput("Current Draw/Shooter", shooterSubsystem.getCurrentDrawAmps());
         Logger.recordOutput("Current Draw/Swerve", swerveDriveSubsystem.getCurrentDrawAmps());
         Logger.recordOutput("Current Draw/Turret", turretSubsystem.getCurrentDrawAmps());
-
-        Logger.recordOutput("Turret/Pose", turretPose);
     }
 
     @Override

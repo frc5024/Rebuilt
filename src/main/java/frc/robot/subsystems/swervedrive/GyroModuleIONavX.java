@@ -23,14 +23,22 @@ public class GyroModuleIONavX implements GyroModuleIO {
 
     @Override
     public void updateInputs(GyroIOInputs inputs) {
-        inputs.connected = navX.isConnected();
-        inputs.yawPosition = Rotation2d.fromDegrees(-navX.getYaw());
-        inputs.yawVelocityRadPerSec = Units.degreesToRadians(-navX.getRawGyroZ());
+        inputs.data = new GyroModuleIOData(
+                navX.isConnected(),
+                Rotation2d.fromDegrees(-navX.getPitch()),
+                -navX.getPitch(),
+                Units.degreesToRadians(-navX.getRawGyroY()),
+                Rotation2d.fromDegrees(-navX.getRoll()),
+                -navX.getRoll(),
+                Units.degreesToRadians(-navX.getRawGyroX()),
+                Rotation2d.fromDegrees(-navX.getYaw()),
+                -navX.getYaw(),
+                Units.degreesToRadians(-navX.getRawGyroZ()),
+                yawTimestampQueue.stream().mapToDouble((Double value) -> value).toArray(),
+                yawPositionQueue.stream()
+                        .map((Double value) -> Rotation2d.fromDegrees(-value))
+                        .toArray(Rotation2d[]::new));
 
-        inputs.odometryYawTimestamps = yawTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
-        inputs.odometryYawPositions = yawPositionQueue.stream()
-                .map((Double value) -> Rotation2d.fromDegrees(-value))
-                .toArray(Rotation2d[]::new);
         yawTimestampQueue.clear();
         yawPositionQueue.clear();
     }

@@ -4,9 +4,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.commands.ClearTheWallCommand;
+import frc.robot.commands.ClimbToBarCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveNearestTrenchCommand;
 import frc.robot.commands.ShootCommand;
@@ -117,6 +119,20 @@ public class ButtonsBindingsSim {
                         Commands.sequence(
                                 Commands.runOnce(() -> intakeSubsystem.stopRoller(), intakeSubsystem),
                                 Commands.runOnce(() -> intakeSubsystem.retractArm(), intakeSubsystem)));
+
+        commandXboxController.povUp()
+                .whileTrue(
+                        Commands.runOnce(() -> climbSubsystem.setPosition(ClimbConstants.EXTEND_LENGTH_INCHES, false),
+                                climbSubsystem));
+
+        commandXboxController.povDown()
+                .whileTrue(
+                        Commands.runOnce(() -> climbSubsystem.setPosition(ClimbConstants.ZERO_LENGTH_INCHES, false),
+                                climbSubsystem));
+
+        commandXboxController.povLeft()
+                .whileTrue(
+                        new ClimbToBarCommand(climbSubsystem, () -> swerveDriveSubsystem.getPose()));
 
         commandXboxController.back()
                 .onTrue(

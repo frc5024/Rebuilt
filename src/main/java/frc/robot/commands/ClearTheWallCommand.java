@@ -32,6 +32,7 @@ public class ClearTheWallCommand extends Command {
 
     // Event triggers
     private final EventTrigger extendAndIntakeTrigger;
+    private final EventTrigger retractTrigger;
     private final EventTrigger shootTrigger;
 
     // Variables
@@ -51,6 +52,7 @@ public class ClearTheWallCommand extends Command {
         this.feederSubsystem = feederSubsystem;
 
         this.extendAndIntakeTrigger = new EventTrigger("CTW-ExtendAndIntake");
+        this.retractTrigger = new EventTrigger("CTW-Retract");
         this.shootTrigger = new EventTrigger("CTW-Shoot");
 
         addRequirements(intakeSubsystem);
@@ -69,6 +71,11 @@ public class ClearTheWallCommand extends Command {
                             Commands.runOnce(() -> intakeSubsystem.intakeRoller()),
                             Commands.runOnce(() -> intakeSubsystem.extendArm())));
 
+            retractTrigger.onTrue(
+                    Commands.sequence(
+                            Commands.runOnce(() -> intakeSubsystem.stopRoller()),
+                            Commands.runOnce(() -> intakeSubsystem.retractArm())));
+
             shootTrigger.whileTrue(new ShootCommand(swerveDriveSubsystem, shooterSubsystem,
                     hopperSubsystem, feederSubsystem, () -> swerveDriveSubsystem.getPose()));
 
@@ -82,6 +89,7 @@ public class ClearTheWallCommand extends Command {
             followPathCommand.execute();
 
             Logger.recordOutput("PathPlanner/Events/ExtendAndIntakeMarker", extendAndIntakeTrigger.getAsBoolean());
+            Logger.recordOutput("PathPlanner/Events/RetractMarker", retractTrigger.getAsBoolean());
             Logger.recordOutput("PathPlanner/Events/ShootMarker", shootTrigger.getAsBoolean());
         }
     }

@@ -13,6 +13,10 @@ public class ClimbSubsystem extends StateMachineSubsystem {
     private final ClimbModuleIO climbModuleIO;
     protected final ClimbModuleIOInputsAutoLogged inputs;
 
+    // Variables
+    private double targetDistanceInches;
+    private boolean isHooked;
+
     /** 
     * 
     */
@@ -22,6 +26,9 @@ public class ClimbSubsystem extends StateMachineSubsystem {
         // set advantage kit IO logging
         this.climbModuleIO = climbModuleIO;
         this.inputs = new ClimbModuleIOInputsAutoLogged();
+
+        this.targetDistanceInches = 0.0;
+        this.isHooked = false;
     }
 
     @Override
@@ -31,14 +38,36 @@ public class ClimbSubsystem extends StateMachineSubsystem {
         // process hardware inputs
         climbModuleIO.updateInputs(inputs);
         Logger.processInputs("Climb", inputs);
+
+        climbModuleIO.setPosition(targetDistanceInches, isHooked);
+
+        Logger.recordOutput("Subsystems/Climb/CurrentDistance", climbModuleIO.getLinearDistanceInches());
+        Logger.recordOutput("Subsystems/Climb/TargetDistance", targetDistanceInches);
     }
 
     public double getCurrentDrawAmps() {
         return climbModuleIO.getCurrentDrawAmps();
     }
 
+    public double getLinearDistanceInches() {
+        return climbModuleIO.getLinearDistanceInches();
+    }
+
     public double getPosition() {
         return climbModuleIO.getPosition();
+    }
+
+    public void holdPosition() {
+        climbModuleIO.holdPosition();
+    }
+
+    public boolean isSuspended() {
+        return climbModuleIO.isSuspended();
+    }
+
+    public void setPosition(double inches, boolean isHooked) {
+        this.targetDistanceInches = inches;
+        this.isHooked = isHooked;
     }
 
     /**
@@ -75,5 +104,12 @@ public class ClimbSubsystem extends StateMachineSubsystem {
     @Override
     public void runCharacterization(double voltage) {
         climbModuleIO.runCharacterization(voltage);
+    }
+
+    /**
+     * 
+     */
+    public void zeroPosition() {
+        climbModuleIO.zeroPosition();
     }
 }
