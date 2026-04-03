@@ -108,16 +108,16 @@ public class RebuiltRobotContainer extends RobotContainer {
     @Override
     protected void configureAutoChooser() {
         this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+        this.autoChooser.addOption(
+                "Drive Wheel Radius Characterization",
+                TuningCommandsDrive.wheelRadiusCharacterization(this.swerveDriveSubsystem));
+        this.autoChooser.addOption(
+                "Drive Simple FF Characterization",
+                this.swerveDriveSubsystem.feedforwardCharacterization());
 
         // add tuning mode autos
         if (RobotConstants.TUNING_MODE) {
             // Set up SysId routines
-            this.autoChooser.addOption(
-                    "Drive Wheel Radius Characterization",
-                    TuningCommandsDrive.wheelRadiusCharacterization(this.swerveDriveSubsystem));
-            this.autoChooser.addOption(
-                    "Drive Simple FF Characterization",
-                    this.swerveDriveSubsystem.feedforwardCharacterization());
             this.autoChooser.addOption(
                     "Drive SysId (Quasistatic Forward)",
                     this.swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
@@ -130,9 +130,41 @@ public class RebuiltRobotContainer extends RobotContainer {
             this.autoChooser.addOption(
                     "Drive SysId (Dynamic Reverse)",
                     this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+            this.autoChooser.addOption(
+                    "Climb Simple FF Characterization",
+                    climbSubsystem.feedforwardCharacterization());
+            this.autoChooser.addOption(
+                    "Climb SysId (Quasistatic Forward)",
+                    climbSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+
+            this.autoChooser.addOption(
+                    "Feeder Simple FF Characterization",
+                    feederSubsystem.feedforwardCharacterization());
+            this.autoChooser.addOption(
+                    "Feeder SysId (Quasistatic Forward)",
+                    feederSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+
+            this.autoChooser.addOption(
+                    "Hopper Simple FF Characterization",
+                    hopperSubsystem.feedforwardCharacterization());
+            this.autoChooser.addOption(
+                    "Hopper SysId (Quasistatic Forward)",
+                    hopperSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+
             this.autoChooser.addOption(
                     "Intake Roller Simple FF Characterization",
-                    this.intakeSubsystem.feedforwardCharacterization());
+                    intakeSubsystem.feedforwardCharacterization());
+            this.autoChooser.addOption(
+                    "Intake Roller SysId (Quasistatic Forward)",
+                    intakeSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+
+            this.autoChooser.addOption(
+                    "Shooter Simple FF Characterization",
+                    shooterSubsystem.feedforwardCharacterization());
+            this.autoChooser.addOption(
+                    "Shooter SysId (Quasistatic Forward)",
+                    shooterSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         }
     }
 

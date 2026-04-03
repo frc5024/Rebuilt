@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.AutoBuilderConstants;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.climb.ClimbSubsystem;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.GameUtil;
 
 /**
@@ -108,6 +109,10 @@ public class ClimbToBarCommand extends Command {
         Pose2d robotPose = robotPoseSupplier.get();
         boolean isAboveMidline = GameUtil.isAboveMidLine(robotPose);
 
-        return isAboveMidline ? "Climb Right Bar Path" : "Climb Left Bar Path";
+        if (AllianceFlipUtil.shouldFlip()) {
+            return isAboveMidline ? "Climb Right Bar Path" : "Climb Left Bar Path";
+        } else {
+            return isAboveMidline ? "Climb Left Bar Path" : "Climb Right Bar Path";
+        }
     }
 }

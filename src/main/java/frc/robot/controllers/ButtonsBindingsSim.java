@@ -86,16 +86,7 @@ public class ButtonsBindingsSim {
 
         commandXboxController.a()
                 .whileTrue(
-                        DriveCommands.joystickDriveAtAngle(
-                                swerveDriveSubsystem,
-                                () -> -commandXboxController.getLeftY(),
-                                () -> -commandXboxController.getLeftX(),
-                                () -> {
-                                    Pose2d robotPose = swerveDriveSubsystem.getPose();
-                                    Pose2d targetPose = GameUtil.getTargetPose(robotPose);
-                                    return targetPose.getTranslation().minus(robotPose.getTranslation())
-                                            .getAngle();
-                                }));
+                        new ClimbToBarCommand(climbSubsystem, () -> swerveDriveSubsystem.getPose()));
 
         commandXboxController.b()
                 .whileTrue(
@@ -135,7 +126,16 @@ public class ButtonsBindingsSim {
 
         commandXboxController.povLeft()
                 .whileTrue(
-                        new ClimbToBarCommand(climbSubsystem, () -> swerveDriveSubsystem.getPose()));
+                        DriveCommands.joystickDriveAtAngle(
+                                swerveDriveSubsystem,
+                                () -> -commandXboxController.getLeftY(),
+                                () -> -commandXboxController.getLeftX(),
+                                () -> {
+                                    Pose2d robotPose = swerveDriveSubsystem.getPose();
+                                    Pose2d targetPose = GameUtil.getTargetPose(robotPose);
+                                    return targetPose.getTranslation().minus(robotPose.getTranslation())
+                                            .getAngle();
+                                }));
 
         commandXboxController.back()
                 .onTrue(

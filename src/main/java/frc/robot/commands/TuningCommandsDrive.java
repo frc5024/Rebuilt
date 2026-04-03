@@ -96,11 +96,14 @@ public class TuningCommandsDrive {
                                                     * SwerveDriveConstants.DRIVE_BASE_RADIUS) / wheelDelta;
 
                                             // Log wheel radius characterization results
-                                            Logger.recordOutput("Drive/Wheel_Radius_Characterization/wheelDelta",
+                                            Logger.recordOutput(
+                                                    "Subsystems/SwerveDrive/WheelRadiusCharacterization/wheelDelta",
                                                     wheelDelta);
-                                            Logger.recordOutput("Drive/Wheel_Radius_Characterization/gyroDelta",
+                                            Logger.recordOutput(
+                                                    "Subsystems/SwerveDrive/WheelRadiusCharacterization/gyroDelta",
                                                     state.gyroDelta);
-                                            Logger.recordOutput("Drive/Wheel_Radius_Characterization/wheelRadius",
+                                            Logger.recordOutput(
+                                                    "Subsystems/SwerveDrive/WheelRadiusCharacterization/wheelRadius",
                                                     wheelRadius);
                                         })));
     }

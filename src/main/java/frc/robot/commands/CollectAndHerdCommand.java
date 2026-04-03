@@ -118,11 +118,11 @@ public class CollectAndHerdCommand extends Command {
         double rightTrenchDistance = robotPose.getTranslation().getDistance(rightTrenchPose.getTranslation());
 
         if (AllianceFlipUtil.shouldFlip()) {
-            return leftTrenchDistance < rightTrenchDistance ? "Collect And Herd Left Path"
-                    : "Collect And Herd Right Path";
-        } else {
             return leftTrenchDistance < rightTrenchDistance ? "Collect And Herd Right Path"
                     : "Collect And Herd Left Path";
+        } else {
+            return leftTrenchDistance < rightTrenchDistance ? "Collect And Herd Left Path"
+                    : "Collect And Herd Right Path";
         }
     }
 }

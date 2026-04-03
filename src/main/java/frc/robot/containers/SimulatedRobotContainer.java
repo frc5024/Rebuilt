@@ -127,15 +127,15 @@ public class SimulatedRobotContainer extends RobotContainer {
     @Override
     protected void configureAutoChooser() {
         this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+        this.autoChooser.addOption(
+                "Drive Wheel Radius Characterization",
+                TuningCommandsDrive.wheelRadiusCharacterization(swerveDriveSubsystem));
+        this.autoChooser.addOption(
+                "Drive Simple FF Characterization",
+                swerveDriveSubsystem.feedforwardCharacterization());
 
         if (RobotConstants.TUNING_MODE) {
             // Set up SysId routines
-            this.autoChooser.addOption(
-                    "Drive Wheel Radius Characterization",
-                    TuningCommandsDrive.wheelRadiusCharacterization(swerveDriveSubsystem));
-            this.autoChooser.addOption(
-                    "Drive Simple FF Characterization",
-                    swerveDriveSubsystem.feedforwardCharacterization());
             this.autoChooser.addOption(
                     "Drive SysId (Quasistatic Forward)",
                     swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
