@@ -27,7 +27,7 @@ import frc.robot.Constants.ClimbConstants;
  */
 public class ClimbModuleIOTalonFX implements ClimbModuleIO {
     // Constants
-    protected final int MOTOR_ID = 3;
+    protected final int MOTOR_ID = 33;
     protected final double GEAR_RATIO = 40.0;
     protected final double DRUM_RADIUS = Units.inchesToMeters(0.75); // 1.5" diameter
     protected final double INCHES_PER_ROTATION = Units.metersToInches(2.0 * DRUM_RADIUS * Math.PI); // Circumference of

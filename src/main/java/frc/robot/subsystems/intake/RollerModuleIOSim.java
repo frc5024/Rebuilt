@@ -4,7 +4,6 @@ import com.revrobotics.sim.SparkFlexSim;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
@@ -23,8 +22,7 @@ public class RollerModuleIOSim extends RollerModuleIOSparkFlexClosedLoopControll
      */
     public RollerModuleIOSim() {
         this.dcMotor = DCMotor.getNeoVortex(1);
-        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, GEAR_RATIO),
-                dcMotor);
+        this.dcMotorSim = new DCMotorSim(LinearSystemId.createDCMotorSystem(dcMotor, 0.01, GEAR_RATIO), dcMotor);
         this.sparkFlexSim = new SparkFlexSim(this.rollerMotor, this.dcMotor);
     }
 
@@ -38,10 +36,7 @@ public class RollerModuleIOSim extends RollerModuleIOSparkFlexClosedLoopControll
         dcMotorSim.setInput(appliedVoltage);
         dcMotorSim.update(0.02);
 
-        double velocityRPM = Units.radiansPerSecondToRotationsPerMinute(dcMotorSim.getAngularVelocityRadPerSec());
-        sparkFlexSim.iterate(velocityRPM, RobotController.getBatteryVoltage(), 0.020);
-
-        // rollerEncoderSim.setVelocity(velocityRPM);
+        sparkFlexSim.iterate(dcMotorSim.getAngularVelocityRPM(), RobotController.getBatteryVoltage(), 0.020);
 
         sparkFlexSim.setMotorCurrent(dcMotorSim.getCurrentDrawAmps());
         sparkFlexSim.setBusVoltage(appliedVoltage);

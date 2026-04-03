@@ -147,6 +147,8 @@ public class SwerveDriveSubsystem extends StateMachineSubsystem {
 
     @Override
     public void periodic() {
+        super.periodic();
+
         SwerveDriveConstants.odometryLock.lock(); // Prevents odometry updates while reading data
         gyroIO.updateInputs(gyroInputs);
         Logger.processInputs("SwerveDrive/Gyro", gyroInputs);

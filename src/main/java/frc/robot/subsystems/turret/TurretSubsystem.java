@@ -22,7 +22,6 @@ public class TurretSubsystem extends StateMachineSubsystem {
 
     // Variables
     private double targetAngle;
-    private boolean pidEnabled;
 
     // Shuffleboard entries
     private GenericEntry maxSpeedEntry;
@@ -39,7 +38,6 @@ public class TurretSubsystem extends StateMachineSubsystem {
         this.turretModuleIO = turretModuleIO;
         this.inputs = new TurretModuleIOInputsAutoLogged();
         this.targetAngle = 0.0;
-        this.pidEnabled = false;
     }
 
     @Override
@@ -50,10 +48,8 @@ public class TurretSubsystem extends StateMachineSubsystem {
         turretModuleIO.updateInputs(inputs);
         Logger.processInputs("Turret", inputs);
 
-        if (pidEnabled) {
-            // update the turret voltage from pid controller & feedforward
-            turretModuleIO.setAngle(targetAngle);
-        }
+        // update the turret voltage from pid controller & feedforward
+        turretModuleIO.setAngle(targetAngle);
 
         // update relative encoder if hall effect is triggered
         if (!turretModuleIO.getHallEffectValue()) {
@@ -63,20 +59,10 @@ public class TurretSubsystem extends StateMachineSubsystem {
         Logger.recordOutput("Subsystems/Turret/CurrentAngle", getPosition());
         Logger.recordOutput("Subsystems/Turret/TargetAngle", targetAngle);
         Logger.recordOutput("Subsystems/Turret/AtTarget", isAtTarget());
-        Logger.recordOutput("Subsystems/Turret/PIDEnabled", isPIDEnabled());
     }
 
     public boolean atGoal() {
         return turretModuleIO.atGoal();
-    }
-
-    public void disablePID() {
-        pidEnabled = false;
-        turretModuleIO.stop();
-    }
-
-    public void enablePID() {
-        pidEnabled = true;
     }
 
     public double getCurrentDrawAmps() {
@@ -110,22 +96,8 @@ public class TurretSubsystem extends StateMachineSubsystem {
         return turretModuleIO.getPosition();
     }
 
-    public boolean isPIDEnabled() {
-        return pidEnabled;
-    }
-
-    public void runTurret(double speed) {
-        disablePID();
-        turretModuleIO.set(speed);
-    }
-
     public void setAngle(double targetAngle) {
         this.targetAngle = targetAngle;
-        enablePID();
-    }
-
-    public void setPosition(double position) {
-        turretModuleIO.setPosition(position);
     }
 
     public void zeroEncoder() {
@@ -161,8 +133,6 @@ public class TurretSubsystem extends StateMachineSubsystem {
         maxSpeedEntry.setDouble(Constants.TurretConstants.MAX_SPEED);
         maxAccelEntry.setDouble(Constants.TurretConstants.MAX_ACCEL);
         toleranceEntry.setDouble(Constants.TurretConstants.TOLERANCE);
-
-        enablePID();
     }
 
     @Override

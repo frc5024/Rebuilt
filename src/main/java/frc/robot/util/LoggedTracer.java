@@ -8,10 +8,15 @@ import edu.wpi.first.wpilibj.Timer;
  * Utility class for logging code execution times.
  */
 public class LoggedTracer {
+    // Variables
+    private static final StringBuilder sb = new StringBuilder();
+    private static double startTime = -1.0;
+
+    /**
+     * 
+     */
     private LoggedTracer() {
     }
-
-    private static double startTime = -1.0;
 
     /** Reset the clock. */
     public static void reset() {
@@ -21,7 +26,11 @@ public class LoggedTracer {
     /** Save the time elapsed since the last reset or record. */
     public static void record(String epochName) {
         double now = Timer.getFPGATimestamp();
-        Logger.recordOutput("LoggedTracer/" + epochName + "MS", (now - startTime) * 1000.0);
+
+        sb.setLength(0);
+        sb.append("LoggedTracer/").append(epochName).append("MS");
+        Logger.recordOutput(sb.toString(), (now - startTime) * 1000.0);
+
         startTime = now;
     }
 }

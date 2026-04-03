@@ -57,7 +57,7 @@ public class FeederModuleIOSparkFlexRelativeEncoder implements FeederModuleIO {
                 .positionConversionFactor(velocityConversionFactor)
                 .velocityConversionFactor(velocityConversionFactor);
 
-        feederMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        this.feederMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // get and set feedforward SVA constants
         double[] kSVAs = FeederConstants.getSVAs();

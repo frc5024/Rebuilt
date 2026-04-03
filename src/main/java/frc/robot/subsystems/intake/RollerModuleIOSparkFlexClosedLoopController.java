@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.MathUtil;
@@ -22,14 +23,15 @@ import frc.robot.Constants.IntakeConstants.RollerConstants;
 public class RollerModuleIOSparkFlexClosedLoopController implements RollerModuleIO {
     // Constants
     protected final int MOTOR_ID = 60;
-    protected final double GEAR_RATIO = 0.91;
+    protected final double GEAR_RATIO = 1.0;
 
     // Hardware
     protected final SparkFlex rollerMotor;
     protected final RelativeEncoder encoder;
-    private final SparkClosedLoopController pidController;
 
+    // SVA & PID
     private SparkFlexConfig config;
+    private final SparkClosedLoopController pidController;
 
     // Connection debouncers
     private final Debouncer connectedDebouncer;
@@ -44,7 +46,8 @@ public class RollerModuleIOSparkFlexClosedLoopController implements RollerModule
 
         this.config = new SparkFlexConfig();
         config
-                .idleMode(SparkFlexConfig.IdleMode.kCoast)
+                .idleMode(IdleMode.kCoast)
+                .inverted(true)
                 .smartCurrentLimit(60);
 
         // set velocity factor
@@ -116,15 +119,15 @@ public class RollerModuleIOSparkFlexClosedLoopController implements RollerModule
     }
 
     @Override
-    public void setPID(double kP, double kI, double kD) {
-        config.closedLoop.p(kP).i(kI).d(kD);
+    public void setFF(double kS, double kV, double kA) {
+        config.closedLoop.feedForward.kS(kS).kV(kV).kA(kA);
 
         rollerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override
-    public void setFF(double kS, double kV, double kA) {
-        config.closedLoop.feedForward.kS(kS).kV(kV).kA(kA);
+    public void setPID(double kP, double kI, double kD) {
+        config.closedLoop.p(kP).i(kI).d(kD);
 
         rollerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }

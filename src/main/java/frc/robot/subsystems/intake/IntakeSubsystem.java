@@ -25,10 +25,24 @@ public class IntakeSubsystem extends StateMachineSubsystem {
     private double targetAngle;
     private double targetRPM;
 
+    private double[] kArmSVAs;
+    private double[] kArmPIDs;
+
     private double[] kRollerSVAs;
     private double[] kRollerPIDs;
 
     // Shuffleboard entries
+    private ShuffleboardTab armTab;
+
+    private GenericEntry armSEntry;
+    private GenericEntry armVEntry;
+    private GenericEntry armAEntry;
+
+    private GenericEntry armPEntry;
+    private GenericEntry armIEntry;
+    private GenericEntry armDEntry;
+
+    private GenericEntry armAngleEntry;
     private GenericEntry armExtendEntry;
 
     private ShuffleboardTab rollerTab;
@@ -40,6 +54,8 @@ public class IntakeSubsystem extends StateMachineSubsystem {
     private GenericEntry rollerPEntry;
     private GenericEntry rollerIEntry;
     private GenericEntry rollerDEntry;
+
+    private GenericEntry rollerRpmEntry;
 
     /**
      * 
@@ -96,15 +112,15 @@ public class IntakeSubsystem extends StateMachineSubsystem {
     }
 
     public void intakeRoller() {
-        targetRPM = RollerConstants.INTAKE_RPM;
+        setVelocity(RollerConstants.INTAKE_RPM);
     }
 
     public void outtakeRoller() {
-        targetRPM = RollerConstants.OUTTAKE_RPM;
+        setVelocity(RollerConstants.OUTTAKE_RPM);
     }
 
     public void retractArm() {
-        targetAngle = ArmConstants.RETRACTED_ANGLE;
+        setAngle(ArmConstants.RETRACTED_ANGLE);
     }
 
     public boolean isRetracted() {
@@ -113,6 +129,14 @@ public class IntakeSubsystem extends StateMachineSubsystem {
 
     public boolean isExtended() {
         return armModuleIO.isExtended();
+    }
+
+    public void setAngle(double targetAngle) {
+        this.targetAngle = targetAngle;
+    }
+
+    public void setVelocity(double targetRPM) {
+        this.targetRPM = targetRPM;
     }
 
     public void stopRoller() {
@@ -125,8 +149,8 @@ public class IntakeSubsystem extends StateMachineSubsystem {
      */
     @Override
     protected void setShuffleboard() {
-        this.kSVAs = ArmConstants.getSVAs();
-        this.kPIDs = ArmConstants.getPIDs();
+        this.kArmSVAs = ArmConstants.getSVAs();
+        this.kArmPIDs = ArmConstants.getPIDs();
 
         this.kRollerSVAs = RollerConstants.getSVAs();
         this.kRollerPIDs = RollerConstants.getPIDs();
@@ -134,9 +158,27 @@ public class IntakeSubsystem extends StateMachineSubsystem {
 
     @Override
     protected void setShuffleboardTab() {
-        super.setShuffleboardTab();
+        armTab = Shuffleboard.getTab("Intake/Arm");
+        armSEntry = armTab.add("SET S", kArmSVAs[0]).getEntry();
+        armVEntry = armTab.add("SET V", kArmSVAs[1]).getEntry();
+        armAEntry = armTab.add("SET A", kArmSVAs[2]).getEntry();
 
-        armExtendEntry = tab.add("EXTEND", false)
+        armSEntry.setDouble(kArmSVAs[0]);
+        armVEntry.setDouble(kArmSVAs[1]);
+        armAEntry.setDouble(kArmSVAs[2]);
+
+        armPEntry = armTab.add("SET P", kArmPIDs[0]).getEntry();
+        armIEntry = armTab.add("SET I", kArmPIDs[1]).getEntry();
+        armDEntry = armTab.add("SET D", kArmPIDs[2]).getEntry();
+
+        armPEntry.setDouble(kArmPIDs[0]);
+        armIEntry.setDouble(kArmPIDs[1]);
+        armDEntry.setDouble(kArmPIDs[2]);
+
+        armAngleEntry = armTab.add("SET ANGLE", 0.0).getEntry();
+        armAngleEntry.setDouble(0.0);
+
+        armExtendEntry = armTab.add("EXTEND", false)
                 .withWidget("Toggle Button")
                 .getEntry();
 
@@ -156,21 +198,24 @@ public class IntakeSubsystem extends StateMachineSubsystem {
         rollerPEntry.setDouble(kRollerPIDs[0]);
         rollerIEntry.setDouble(kRollerPIDs[1]);
         rollerDEntry.setDouble(kRollerPIDs[2]);
+
+        rollerRpmEntry = rollerTab.add("SET RPM", 0.0).getEntry();
+        rollerRpmEntry.setDouble(0.0);
     }
 
     @Override
     protected void setShuffleboardEntries() {
         armModuleIO.setFF(
-                sEntry.getDouble(kSVAs[0]),
-                vEntry.getDouble(kSVAs[1]),
-                aEntry.getDouble(kSVAs[2]));
+                armSEntry.getDouble(kArmSVAs[0]),
+                armVEntry.getDouble(kArmSVAs[1]),
+                armAEntry.getDouble(kArmSVAs[2]));
 
         armModuleIO.setPID(
-                pEntry.getDouble(kPIDs[0]),
-                iEntry.getDouble(kPIDs[1]),
-                dEntry.getDouble(kPIDs[2]));
+                armPEntry.getDouble(kArmPIDs[0]),
+                armIEntry.getDouble(kArmPIDs[1]),
+                armDEntry.getDouble(kArmPIDs[2]));
 
-        armModuleIO.setAngle(angleEntry.getDouble(0.0));
+        setAngle(armAngleEntry.getDouble(0.0));
 
         if (armExtendEntry.getBoolean(false)) {
             armModuleIO.setAngle(ArmConstants.EXTENDED_ANGLE);
@@ -186,7 +231,7 @@ public class IntakeSubsystem extends StateMachineSubsystem {
                 rollerIEntry.getDouble(kRollerPIDs[1]),
                 rollerDEntry.getDouble(kRollerPIDs[2]));
 
-        rollerModuleIO.setVelocity(rpmEntry.getDouble(0.0));
+        setVelocity(rollerRpmEntry.getDouble(0.0));
     }
 
     /**

@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ClimbConstants;
-import frc.robot.Constants.FeederConstants;
-import frc.robot.Constants.HopperConstants;
 import frc.robot.commands.ClearTheWallCommand;
 import frc.robot.commands.ClimbToBarCommand;
 import frc.robot.commands.DriveCommands;
@@ -205,19 +203,21 @@ public class ButtonsBindingsSim {
         // m_feeder,
         // () -> swerveDriveSubsystem.getPose()));
 
-        commandXboxController.a().onTrue(Commands.runOnce(() -> hopperSubsystem.setVelocity(0.0),
-                hopperSubsystem));
-        commandXboxController.y()
-                .onTrue(Commands.runOnce(() -> hopperSubsystem.setVelocity(HopperConstants.RPM), hopperSubsystem));
-
-        commandXboxController.a().onTrue(Commands.runOnce(() -> feederSubsystem.setVelocity(0.0), feederSubsystem));
-        commandXboxController.y()
-                .onTrue(Commands.runOnce(() -> feederSubsystem.setVelocity(FeederConstants.RPM), feederSubsystem));
-
-        // commandXboxController.y().onTrue(Commands.runOnce(() ->
-        // m_intake.intakeRoller(), m_intake));
         // commandXboxController.a().onTrue(Commands.runOnce(() ->
-        // m_intake.stopRoller(), m_intake));
+        // hopperSubsystem.setVelocity(0.0),
+        // hopperSubsystem));
+        // commandXboxController.y()
+        // .onTrue(Commands.runOnce(() ->
+        // hopperSubsystem.setVelocity(HopperConstants.RPM), hopperSubsystem));
+
+        // commandXboxController.a().onTrue(Commands.runOnce(() ->
+        // feederSubsystem.setVelocity(0.0), feederSubsystem));
+        // commandXboxController.y()
+        // .onTrue(Commands.runOnce(() ->
+        // feederSubsystem.setVelocity(FeederConstants.RPM), feederSubsystem));
+
+        commandXboxController.y().onTrue(Commands.runOnce(() -> intakeSubsystem.intakeRoller(), intakeSubsystem));
+        commandXboxController.a().onTrue(Commands.runOnce(() -> intakeSubsystem.stopRoller(), intakeSubsystem));
 
         return commandXboxController;
     }

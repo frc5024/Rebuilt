@@ -104,7 +104,7 @@ public class ShooterSubsystem extends StateMachineSubsystem {
                 iEntry.getDouble(kPIDs[1]),
                 dEntry.getDouble(kPIDs[2]));
 
-        shooterModuleIO.setVelocity(rpmEntry.getDouble(0.0));
+        setVelocity(rpmEntry.getDouble(0.0));
     }
 
     /**

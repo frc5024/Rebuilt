@@ -43,6 +43,7 @@ abstract public class StateMachineSubsystem extends SubsystemBase {
     protected final StateMachine<Action> stateMachine;
     protected final LinkedList<Action> actionQueue;
     protected final Timer stateTimer;
+    protected final StringBuilder sb;
 
     // SysId
     protected final SysIdRoutine sysIdRoutine;
@@ -81,6 +82,7 @@ abstract public class StateMachineSubsystem extends SubsystemBase {
         this.actionQueue = new LinkedList<Action>();
 
         this.stateTimer = new Timer();
+        this.sb = new StringBuilder();
 
         // Configure SysId
         SysIdRoutine.Config config = new SysIdRoutine.Config(
@@ -188,15 +190,20 @@ abstract public class StateMachineSubsystem extends SubsystemBase {
             setShuffleboardEntries();
         }
 
-        Logger.recordOutput("Subsystems/" + name + "/Current State", stateMachine.getCurrentState());
-
         Command currentCommand = getCurrentCommand();
         Command defaultCommand = getDefaultCommand();
 
-        Logger.recordOutput("Subsystems/" + name + "/Current Command",
-                currentCommand != null ? currentCommand.getName() : "");
-        Logger.recordOutput("Subsystems/" + name + "/Default Command",
-                defaultCommand != null ? defaultCommand.getName() : "");
+        sb.setLength(0);
+        sb.append("Subsystems/").append(name).append("/CurrentState");
+        Logger.recordOutput(sb.toString(), stateMachine.getCurrentState());
+
+        sb.setLength(0);
+        sb.append("Subsystems/").append(name).append("/CurrentCommand");
+        Logger.recordOutput(sb.toString(), currentCommand != null ? currentCommand.getName() : "");
+
+        sb.setLength(0);
+        sb.append("Subsystems/").append(name).append("/DefaultCommand");
+        Logger.recordOutput(sb.toString(), defaultCommand != null ? defaultCommand.getName() : "");
 
         // Record cycle time
         LoggedTracer.record(name);

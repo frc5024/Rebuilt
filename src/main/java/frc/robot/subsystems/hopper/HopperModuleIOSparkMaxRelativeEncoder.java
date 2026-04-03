@@ -57,7 +57,7 @@ public class HopperModuleIOSparkMaxRelativeEncoder implements HopperModuleIO {
                 .positionConversionFactor(velocityConversionFactor)
                 .velocityConversionFactor(velocityConversionFactor);
 
-        hopperMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        this.hopperMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // get and set feedforward SVA constants
         double[] kSVAs = HopperConstants.getSVAs();

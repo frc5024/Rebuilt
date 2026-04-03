@@ -19,23 +19,43 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
+import frc.robot.util.LoggedTracer;
 
 /**
  * 
  */
 public class VisionSubsystem extends SubsystemBase {
-    private final VisionConsumer consumer;
+    // Advantagekit logging
     private final VisionIO[] visionIO;
     private final VisionIOInputsAutoLogged[] inputs;
+
+    // Subsystems
+    private final SwerveDriveSubsystem swerveDriveSubsystem;
+
+    // Variables
+    private final VisionConsumer consumer;
+    private final StringBuilder sb;
+
+    // Lists used to store the poses
+    private final List<Pose3d> allTagPoses;
+    private final List<Pose3d> allRobotPoses;
+    private final List<Pose3d> allRobotPosesAccepted;
+    private final List<Pose3d> allRobotPosesRejected;
+
+    private final List<Pose3d> tagPoses;
+    private final List<Pose3d> robotPoses;
+    private final List<Pose3d> robotPosesAccepted;
+    private final List<Pose3d> robotPosesRejected;
+
+    // Alerts
     private final Alert[] disconnectedAlerts;
-    private final SwerveDriveSubsystem drivetrain;
 
     /**
      * 
      */
     public VisionSubsystem(VisionConsumer consumer, SwerveDriveSubsystem drivetrain, VisionIO... visionIO) {
         this.consumer = consumer;
-        this.drivetrain = drivetrain;
+        this.swerveDriveSubsystem = drivetrain;
         this.visionIO = visionIO;
 
         // Initialize inputs
@@ -44,12 +64,25 @@ public class VisionSubsystem extends SubsystemBase {
             this.inputs[i] = new VisionIOInputsAutoLogged();
         }
 
+        // Initialize pose lists
+        this.allTagPoses = new LinkedList<>();
+        this.allRobotPoses = new LinkedList<>();
+        this.allRobotPosesAccepted = new LinkedList<>();
+        this.allRobotPosesRejected = new LinkedList<>();
+
+        this.tagPoses = new LinkedList<>();
+        this.robotPoses = new LinkedList<>();
+        this.robotPosesAccepted = new LinkedList<>();
+        this.robotPosesRejected = new LinkedList<>();
+
         // Initialize disconnected alerts
         this.disconnectedAlerts = new Alert[visionIO.length];
         for (int i = 0; i < this.inputs.length; i++) {
             this.disconnectedAlerts[i] = new Alert("Vision camera " + this.visionIO[i].getName() + " is disconnected.",
                     AlertType.kWarning);
         }
+
+        this.sb = new StringBuilder();
     }
 
     /**
@@ -69,22 +102,22 @@ public class VisionSubsystem extends SubsystemBase {
             Logger.processInputs("Vision/" + this.visionIO[i].getName(), this.inputs[i]);
         }
 
-        // Initialize logging values
-        List<Pose3d> allTagPoses = new LinkedList<>();
-        List<Pose3d> allRobotPoses = new LinkedList<>();
-        List<Pose3d> allRobotPosesAccepted = new LinkedList<>();
-        List<Pose3d> allRobotPosesRejected = new LinkedList<>();
+        // Clear logging values
+        allTagPoses.clear();
+        allRobotPoses.clear();
+        allRobotPosesAccepted.clear();
+        allRobotPosesRejected.clear();
 
         // Loop over cameras
         for (int cameraIndex = 0; cameraIndex < this.visionIO.length; cameraIndex++) {
             // Update disconnected alert
             this.disconnectedAlerts[cameraIndex].set(!this.inputs[cameraIndex].connected);
 
-            // Initialize logging values
-            List<Pose3d> tagPoses = new LinkedList<>();
-            List<Pose3d> robotPoses = new LinkedList<>();
-            List<Pose3d> robotPosesAccepted = new LinkedList<>();
-            List<Pose3d> robotPosesRejected = new LinkedList<>();
+            // Clear logging values
+            tagPoses.clear();
+            robotPoses.clear();
+            robotPosesAccepted.clear();
+            robotPosesRejected.clear();
 
             // Add tag poses
             for (int tagId : this.inputs[cameraIndex].tagIds) {
@@ -110,7 +143,7 @@ public class VisionSubsystem extends SubsystemBase {
                         || observation.pose().getY() > VisionConstants.aprilTagLayout.getFieldWidth();
 
                 // Reject if robot rotating fast
-                var chassisSpeeds = drivetrain.getChassisSpeeds();
+                var chassisSpeeds = swerveDriveSubsystem.getChassisSpeeds();
                 if (Math.abs(chassisSpeeds.omegaRadiansPerSecond) > Math.toRadians(120)) {
                     continue;
                 }
@@ -162,18 +195,21 @@ public class VisionSubsystem extends SubsystemBase {
             }
 
             // Log camera datadata
-            Logger.recordOutput(
-                    "Subsystems/Vision/" + this.visionIO[cameraIndex].getName() + "/TagPoses",
-                    tagPoses.toArray(new Pose3d[tagPoses.size()]));
-            Logger.recordOutput(
-                    "Subsystems/Vision/" + this.visionIO[cameraIndex].getName() + "/RobotPoses",
-                    robotPoses.toArray(new Pose3d[robotPoses.size()]));
-            Logger.recordOutput(
-                    "Subsystems/Vision/" + this.visionIO[cameraIndex].getName() + "/RobotPosesAccepted",
-                    robotPosesAccepted.toArray(new Pose3d[robotPosesAccepted.size()]));
-            Logger.recordOutput(
-                    "Subsystems/Vision/" + this.visionIO[cameraIndex].getName() + "/RobotPosesRejected",
-                    robotPosesRejected.toArray(new Pose3d[robotPosesRejected.size()]));
+            sb.setLength(0);
+            sb.append("Subsystems/Vision/").append(visionIO[cameraIndex].getName()).append("/TagPoses");
+            Logger.recordOutput(sb.toString(), tagPoses.toArray(new Pose3d[tagPoses.size()]));
+
+            sb.setLength(0);
+            sb.append("Subsystems/Vision/").append(visionIO[cameraIndex].getName()).append("/RobotPoses");
+            Logger.recordOutput(sb.toString(), robotPoses.toArray(new Pose3d[robotPoses.size()]));
+
+            sb.setLength(0);
+            sb.append("Subsystems/Vision/").append(visionIO[cameraIndex].getName()).append("/RobotPosesAccepted");
+            Logger.recordOutput(sb.toString(), robotPosesAccepted.toArray(new Pose3d[robotPosesAccepted.size()]));
+
+            sb.setLength(0);
+            sb.append("Subsystems/Vision/").append(visionIO[cameraIndex].getName()).append("/RobotPosesRejected");
+            Logger.recordOutput(sb.toString(), robotPosesRejected.toArray(new Pose3d[robotPosesRejected.size()]));
 
             allTagPoses.addAll(tagPoses);
             allRobotPoses.addAll(robotPoses);
@@ -182,13 +218,24 @@ public class VisionSubsystem extends SubsystemBase {
         }
 
         // Log summary data
-        Logger.recordOutput("Subsystems/Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
-        Logger.recordOutput("Subsystems/Vision/Summary/RobotPoses",
-                allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
-        Logger.recordOutput("Subsystems/Vision/Summary/RobotPosesAccepted",
-                allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
-        Logger.recordOutput("Subsystems/Vision/Summary/RobotPosesRejected",
-                allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
+        sb.setLength(0);
+        sb.append("Subsystems/Vision/Summary/TagPoses");
+        Logger.recordOutput(sb.toString(), allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
+
+        sb.setLength(0);
+        sb.append("Subsystems/Vision/Summary/RobotPoses");
+        Logger.recordOutput(sb.toString(), allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
+
+        sb.setLength(0);
+        sb.append("Subsystems/Vision/Summary/RobotPosesAccepted");
+        Logger.recordOutput(sb.toString(), allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
+
+        sb.setLength(0);
+        sb.append("Subsystems/Vision/Summary/RobotPosesRejected");
+        Logger.recordOutput(sb.toString(), allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
+
+        // Record cycle time
+        LoggedTracer.record("Vision");
     }
 
     @FunctionalInterface

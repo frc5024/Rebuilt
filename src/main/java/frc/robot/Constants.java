@@ -387,14 +387,14 @@ public final class Constants {
         }
 
         public static class RollerConstants {
-            public static final double INTAKE_RPM = 2500.0;
-            public static final double OUTTAKE_RPM = -1500.0;
+            public static final double INTAKE_RPM = 2000.0;
+            public static final double OUTTAKE_RPM = 1700.0;
 
             public static final double kS = 0.22;
-            public static final double kV = 0.00195;
+            public static final double kV = 0.00009;
             public static final double kA = 0.0;
 
-            public static final double kP = 0.0;
+            public static final double kP = 0.00004;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
 

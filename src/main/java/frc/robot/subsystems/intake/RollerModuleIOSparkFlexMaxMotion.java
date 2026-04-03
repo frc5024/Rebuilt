@@ -7,6 +7,7 @@ import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.MathUtil;
@@ -42,7 +43,10 @@ public class RollerModuleIOSparkFlexMaxMotion implements RollerModuleIO {
         this.pidController = this.rollerMotor.getClosedLoopController();
 
         this.config = new SparkFlexConfig();
-        config.idleMode(SparkFlexConfig.IdleMode.kBrake);
+        config
+                .idleMode(IdleMode.kCoast)
+                .inverted(true)
+                .smartCurrentLimit(60);
 
         // set Max Motion
         config.closedLoop.maxMotion

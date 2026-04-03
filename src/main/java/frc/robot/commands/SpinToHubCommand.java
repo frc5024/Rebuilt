@@ -41,7 +41,6 @@ public class SpinToHubCommand extends Command {
 
     @Override
     public void initialize() {
-        turretSubsystem.enablePID();
     }
 
     @Override
@@ -87,7 +86,6 @@ public class SpinToHubCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        turretSubsystem.disablePID();
     }
 
     /**
