@@ -25,8 +25,8 @@ import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.commands.LockTurretOnTarget;
 import frc.robot.commands.ShootForFiveSecondsCommand;
-import frc.robot.commands.SpinToHubCommand;
 import frc.robot.commands.TuningCommandsDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
@@ -100,7 +100,7 @@ public class SimulatedRobotContainer extends RobotContainer {
                     .setDefaultCommand(Commands.runOnce(
                             () -> shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM), shooterSubsystem));
             this.turretSubsystem
-                    .setDefaultCommand(new SpinToHubCommand(turretSubsystem,
+                    .setDefaultCommand(new LockTurretOnTarget(turretSubsystem,
                             () -> swerveDriveSubsystem.getPose(),
                             () -> swerveDriveSubsystem.getChassisSpeeds(),
                             () -> shooterSubsystem.getTangentialVelocity(),

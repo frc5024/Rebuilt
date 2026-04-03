@@ -35,8 +35,8 @@ public class DriveNearestTrenchCommand extends Command {
     public void initialize() {
         followPathCommand = getFollowPathCommand();
 
-        if (this.followPathCommand != null) {
-            this.followPathCommand.initialize();
+        if (followPathCommand != null) {
+            followPathCommand.initialize();
             Logger.recordOutput("Commands/Active Command", this.getName());
         }
     }

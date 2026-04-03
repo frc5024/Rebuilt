@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -12,48 +14,35 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.subsystems.feeder.FeederSubsystem;
-import frc.robot.subsystems.hopper.HopperSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.util.AllianceFlipUtil;
 
 /**
  * 
  */
-public class ClearTheWallCommand extends Command {
+public class CollectAndHerdCommand extends Command {
     // Subsystems
-    private final SwerveDriveSubsystem swerveDriveSubsystem;
     private final IntakeSubsystem intakeSubsystem;
-    private final ShooterSubsystem shooterSubsystem;
-    private final HopperSubsystem hopperSubsystem;
-    private final FeederSubsystem feederSubsystem;
+    private final Supplier<Pose2d> robotPoseSupplier;
 
     // Event triggers
     private final EventTrigger extendAndIntakeTrigger;
     private final EventTrigger retractTrigger;
-    private final EventTrigger shootTrigger;
 
     // Variables
-    private final PathConstraints CONSTRAINTS = new PathConstraints(0.5, 2.0, Units.degreesToRadians(540),
+    private final PathConstraints CONSTRAINTS = new PathConstraints(2.0, 4.0, Units.degreesToRadians(540),
             Units.degreesToRadians(720));
     private Command followPathCommand;
 
     /**
      * 
      */
-    public ClearTheWallCommand(SwerveDriveSubsystem swerveDriveSubsystem, IntakeSubsystem intakeSubsystem,
-            ShooterSubsystem shooterSubsystem, HopperSubsystem hopperSubsystem, FeederSubsystem feederSubsystem) {
-        this.swerveDriveSubsystem = swerveDriveSubsystem;
+    public CollectAndHerdCommand(IntakeSubsystem intakeSubsystem, Supplier<Pose2d> robotPoseSupplier) {
         this.intakeSubsystem = intakeSubsystem;
-        this.shooterSubsystem = shooterSubsystem;
-        this.hopperSubsystem = hopperSubsystem;
-        this.feederSubsystem = feederSubsystem;
+        this.robotPoseSupplier = robotPoseSupplier;
 
         this.extendAndIntakeTrigger = new EventTrigger("ExtendAndIntake");
         this.retractTrigger = new EventTrigger("Retract");
-        this.shootTrigger = new EventTrigger("Shoot");
 
         addRequirements(intakeSubsystem);
     }
@@ -76,9 +65,6 @@ public class ClearTheWallCommand extends Command {
                             Commands.runOnce(() -> intakeSubsystem.stopRoller()),
                             Commands.runOnce(() -> intakeSubsystem.retractArm())));
 
-            shootTrigger.whileTrue(new ShootCommand(swerveDriveSubsystem, shooterSubsystem,
-                    hopperSubsystem, feederSubsystem, () -> swerveDriveSubsystem.getPose()));
-
             Logger.recordOutput("Commands/Active Command", this.getName());
         }
     }
@@ -90,7 +76,6 @@ public class ClearTheWallCommand extends Command {
 
             Logger.recordOutput("PathPlanner/Events/ExtendAndIntakeMarker", extendAndIntakeTrigger.getAsBoolean());
             Logger.recordOutput("PathPlanner/Events/RetractMarker", retractTrigger.getAsBoolean());
-            Logger.recordOutput("PathPlanner/Events/ShootMarker", shootTrigger.getAsBoolean());
         }
     }
 
@@ -125,7 +110,7 @@ public class ClearTheWallCommand extends Command {
      * 
      */
     private String getNearestWallPath() {
-        Pose2d robotPose = swerveDriveSubsystem.getPose();
+        Pose2d robotPose = robotPoseSupplier.get();
         Pose2d leftTrenchPose = AllianceFlipUtil.apply(FieldConstants.TRENCH_POSES[0]);
         Pose2d rightTrenchPose = AllianceFlipUtil.apply(FieldConstants.TRENCH_POSES[1]);
 
@@ -133,9 +118,11 @@ public class ClearTheWallCommand extends Command {
         double rightTrenchDistance = robotPose.getTranslation().getDistance(rightTrenchPose.getTranslation());
 
         if (AllianceFlipUtil.shouldFlip()) {
-            return leftTrenchDistance < rightTrenchDistance ? "Clear The Wall Left Path" : "Clear The Wall Right Path";
+            return leftTrenchDistance < rightTrenchDistance ? "Collect And Herd Left Path"
+                    : "Collect And Herd Right Path";
         } else {
-            return leftTrenchDistance < rightTrenchDistance ? "Clear The Wall Right Path" : "Clear The Wall Left Path";
+            return leftTrenchDistance < rightTrenchDistance ? "Collect And Herd Right Path"
+                    : "Collect And Herd Left Path";
         }
     }
 }

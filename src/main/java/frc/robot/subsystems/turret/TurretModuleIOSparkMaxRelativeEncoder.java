@@ -155,8 +155,8 @@ public class TurretModuleIOSparkMaxRelativeEncoder implements TurretModuleIO {
             turretMotor.setVoltage(voltageRequest);
         }
 
-        Logger.recordOutput("Turret/ffVoltage", ffVoltage);
-        Logger.recordOutput("Turret/pidVoltage", pidVoltage);
+        Logger.recordOutput("Subsystems/Turret/ffVoltage", ffVoltage);
+        Logger.recordOutput("Subsystems/Turret/pidVoltage", pidVoltage);
     }
 
     @Override

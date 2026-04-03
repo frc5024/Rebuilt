@@ -54,25 +54,25 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "CTW-ExtendAndIntake",
+      "name": "ExtendAndIntake",
       "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "CTW-Shoot",
+      "name": "Shoot",
       "waypointRelativePos": 0.4416445623342181,
       "endWaypointRelativePos": 1.405835543766574,
       "command": null
     },
     {
-      "name": "CTW-Shoot",
+      "name": "Shoot",
       "waypointRelativePos": 1.584880636604765,
       "endWaypointRelativePos": 2.0,
       "command": null
     },
     {
-      "name": "CTW-Retract",
+      "name": "Retract",
       "waypointRelativePos": 1.9031830238726788,
       "endWaypointRelativePos": null,
       "command": null

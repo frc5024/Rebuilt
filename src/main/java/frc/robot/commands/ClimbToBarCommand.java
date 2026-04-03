@@ -48,8 +48,8 @@ public class ClimbToBarCommand extends Command {
     public void initialize() {
         followPathCommand = getFollowPathCommand();
 
-        if (this.followPathCommand != null) {
-            this.followPathCommand.initialize();
+        if (followPathCommand != null) {
+            followPathCommand.initialize();
 
             // define the event triggers
             climbExtend.onTrue(

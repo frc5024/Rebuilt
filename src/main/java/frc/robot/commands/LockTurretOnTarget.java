@@ -16,7 +16,7 @@ import frc.robot.util.GameUtil;
 /**
  * 
  */
-public class SpinToHubCommand extends Command {
+public class LockTurretOnTarget extends Command {
     // Subsystems
     private final TurretSubsystem turretSubsystem;
     private final Supplier<Pose2d> robotPoseSupplier;
@@ -27,7 +27,7 @@ public class SpinToHubCommand extends Command {
     /**
      * 
      */
-    public SpinToHubCommand(TurretSubsystem turretSubsystem, Supplier<Pose2d> robotPoseSupplier,
+    public LockTurretOnTarget(TurretSubsystem turretSubsystem, Supplier<Pose2d> robotPoseSupplier,
             Supplier<ChassisSpeeds> robotVelocitySupplier, DoubleSupplier ballVelocitySupplier,
             DistanceConsumer distanceConsumer) {
         this.turretSubsystem = turretSubsystem;

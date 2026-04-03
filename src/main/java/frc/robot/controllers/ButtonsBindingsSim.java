@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.commands.ClearTheWallCommand;
 import frc.robot.commands.ClimbToBarCommand;
+import frc.robot.commands.CollectAndHerdCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveNearestTrenchCommand;
 import frc.robot.commands.ShootCommand;
@@ -83,18 +84,22 @@ public class ButtonsBindingsSim {
                         () -> -commandXboxController.getLeftX(),
                         () -> -commandXboxController.getRightX()));
 
-        // commandXboxController.a().whileTrue(m_hopper.SpinCommand());
-        commandXboxController.a().whileTrue(
-                DriveCommands.joystickDriveAtAngle(
-                        swerveDriveSubsystem,
-                        () -> -commandXboxController.getLeftY(),
-                        () -> -commandXboxController.getLeftX(),
-                        () -> {
-                            Pose2d robotPose = swerveDriveSubsystem.getPose();
-                            Pose2d targetPose = GameUtil.getTargetPose(robotPose);
-                            return targetPose.getTranslation().minus(robotPose.getTranslation())
-                                    .getAngle();
-                        }));
+        commandXboxController.a()
+                .whileTrue(
+                        DriveCommands.joystickDriveAtAngle(
+                                swerveDriveSubsystem,
+                                () -> -commandXboxController.getLeftY(),
+                                () -> -commandXboxController.getLeftX(),
+                                () -> {
+                                    Pose2d robotPose = swerveDriveSubsystem.getPose();
+                                    Pose2d targetPose = GameUtil.getTargetPose(robotPose);
+                                    return targetPose.getTranslation().minus(robotPose.getTranslation())
+                                            .getAngle();
+                                }));
+
+        commandXboxController.b()
+                .whileTrue(
+                        new CollectAndHerdCommand(intakeSubsystem, swerveDriveSubsystem::getPose));
 
         commandXboxController.x()
                 .whileTrue(

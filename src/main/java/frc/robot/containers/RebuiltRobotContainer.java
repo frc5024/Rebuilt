@@ -21,10 +21,9 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.commands.LockTurretOnTarget;
 import frc.robot.commands.ShootForFiveSecondsCommand;
-import frc.robot.commands.SpinToHubCommand;
 import frc.robot.commands.TuningCommandsDrive;
-import frc.robot.commands.TuningCommandsIntake;
 import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.subsystems.climb.ClimbModuleIOTalonFX;
@@ -90,7 +89,7 @@ public class RebuiltRobotContainer extends RobotContainer {
                     .setDefaultCommand(Commands.runOnce(
                             () -> shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM), shooterSubsystem));
             this.turretSubsystem
-                    .setDefaultCommand(new SpinToHubCommand(turretSubsystem,
+                    .setDefaultCommand(new LockTurretOnTarget(turretSubsystem,
                             () -> swerveDriveSubsystem.getPose(),
                             () -> swerveDriveSubsystem.getChassisSpeeds(),
                             () -> shooterSubsystem.getTangentialVelocity(),
@@ -133,7 +132,7 @@ public class RebuiltRobotContainer extends RobotContainer {
                     this.swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
             this.autoChooser.addOption(
                     "Intake Roller Simple FF Characterization",
-                    TuningCommandsIntake.feedforwardCharacterization(intakeSubsystem));
+                    this.intakeSubsystem.feedforwardCharacterization());
         }
     }
 
