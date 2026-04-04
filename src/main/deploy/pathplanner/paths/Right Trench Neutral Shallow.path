@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.9053667262969585,
-        "y": 0.4572987477638639
+        "x": 4.085431818181818,
+        "y": 0.4717857142857145
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.400483310294357,
-        "y": 0.5677289425690593
+        "x": 7.298061514067327,
+        "y": 0.58536353181702
       },
       "isLocked": false,
       "linkedName": "Right Trench No Rotate Stop"
     },
     {
       "anchor": {
-        "x": 6.322951699463328,
-        "y": 4.367620751341681
+        "x": 7.783237924865832,
+        "y": 4.351395348837209
       },
       "prevControl": {
-        "x": 6.306726296958854,
-        "y": 0.4897495527728073
+        "x": 7.767012522361358,
+        "y": 0.4735241502683336
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,8 +48,8 @@
   "globalConstraints": {
     "maxVelocity": 2.5,
     "maxAcceleration": 2.5,
-    "maxAngularVelocity": 180.0,
-    "maxAngularAcceleration": 270.0,
+    "maxAngularVelocity": 600.0,
+    "maxAngularAcceleration": 1700.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },

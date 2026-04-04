@@ -13,8 +13,8 @@ public interface TurretModuleIO {
 
     record TurretModuleIOData(
             boolean connected,
-            double positionRads,
-            double velocityRadsPerSec,
+            double positionRots,
+            double velocityRPM,
             double appliedVoltage,
             double torqueCurrentAmps,
             double supplyCurrentAmps,

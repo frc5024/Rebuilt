@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.SOTM;
@@ -68,7 +69,6 @@ public class ButtonBindings {
     /**
      * 
      */
-
     private CommandXboxController setDriverBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(DRIVER_PORT);
         // Default command, normal field-relative drive
@@ -83,11 +83,23 @@ public class ButtonBindings {
                 .whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter, m_hopper),
                         new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
                         Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
-        commandXboxController.leftBumper().whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter, m_hopper),
-                new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
+        // commandXboxController.leftTrigger()
+        // .whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter,
+        // m_hopper),
+        // new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
+
+        // slow mode
+        commandXboxController.leftTrigger()
+                .whileTrue(
+                        new StartEndCommand(() -> swerveDriveSubsystem.isSlowMode = true,
+                                () -> swerveDriveSubsystem.isSlowMode = false));
+
         commandXboxController.rightTrigger()
-                .whileTrue(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = true));
-        commandXboxController.rightTrigger().onFalse(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = false));
+                .whileTrue(
+                        new StartEndCommand(() -> swerveDriveSubsystem.isSlowMode = true,
+                                () -> swerveDriveSubsystem.isSlowMode = false));
+
+        // aim to hub
         commandXboxController.a().whileTrue(
                 DriveCommands.joystickDriveAtAngle(
                         swerveDriveSubsystem,
@@ -123,10 +135,9 @@ public class ButtonBindings {
 
         commandXboxController.y().onTrue(m_intake.RetractArmCommand());
         commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
-        commandXboxController.rightBumper()
-                .whileTrue(m_intake.IntakeCommand());
+        commandXboxController.rightBumper().whileTrue(m_intake.intakePIDCommand());
 
-        commandXboxController.back().whileTrue(m_intake.OuttakeCommand());
+        commandXboxController.back().whileTrue(m_intake.outtakePIDCommand());
 
         return commandXboxController;
     }

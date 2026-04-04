@@ -37,6 +37,9 @@ public final class Constants {
         // used to show/hide shuffleboard entries for PID tuning
         public static final boolean TUNING_MODE = false;
 
+        // set to true if turret can only shoot straight
+        public static final boolean TURRET_BROKEN = false;
+
         public static final double LOOP_PERIOD_SECS = 0.02;
 
         public static final double frameWidth = Units.inchesToMeters(27);
@@ -47,7 +50,12 @@ public final class Constants {
         private static final double MASS_KG = 74.088;
         private static final double MOI = 6.883;
         private static final double WHEEL_COF = 1.2;
-        public static final RobotConfig PP_CONFIG = new RobotConfig(MASS_KG, MOI, new ModuleConfig(TunerConstants.FrontLeft.WheelRadius, TunerConstants.kSpeedAt12Volts.in(MetersPerSecond), WHEEL_COF, DCMotor.getKrakenX60Foc(1).withReduction(TunerConstants.FrontLeft.DriveMotorGearRatio), TunerConstants.FrontLeft.SlipCurrent, 1), SwerveDriveConstants.getModuleTranslations());
+        public static final RobotConfig PP_CONFIG = new RobotConfig(MASS_KG, MOI,
+                new ModuleConfig(TunerConstants.FrontLeft.WheelRadius,
+                        TunerConstants.kSpeedAt12Volts.in(MetersPerSecond), WHEEL_COF,
+                        DCMotor.getKrakenX60Foc(1).withReduction(TunerConstants.FrontLeft.DriveMotorGearRatio),
+                        TunerConstants.FrontLeft.SlipCurrent, 1),
+                SwerveDriveConstants.getModuleTranslations());
 
         // AdvantageKit simulation
         public static enum Mode {
@@ -82,44 +90,60 @@ public final class Constants {
      * Field Constants
      */
     public static class FieldConstants {
+        public static final double LENGTH_METERS = Units.inchesToMeters(651.22);
+        public static final double WIDTH_METERS = Units.inchesToMeters(317.69);
+
         public static final Pose2d[][] SIMULATION_START_POSES = new Pose2d[][] {
-            // Blue Alliance
-            {
-                new Pose2d(3.500, 5.900, Rotation2d.fromDegrees(0.0)), new Pose2d(3.500, 4.000, Rotation2d.fromDegrees(0.0)), new Pose2d(3.500, 0.600, Rotation2d.fromDegrees(0.0))
-            },
-            // Red Alliance
-            {
-                new Pose2d(13.000, 2.100, Rotation2d.fromDegrees(180.0)), new Pose2d(14.3538, 4.0345, Rotation2d.fromDegrees(180.0)), new Pose2d(13.000, 7.400, Rotation2d.fromDegrees(180.0))
-            }
+                // Blue Alliance
+                {
+                        new Pose2d(3.500, 5.900, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(3.500, 4.000, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(3.500, 0.600, Rotation2d.fromDegrees(0.0))
+                },
+                // Red Alliance
+                {
+                        new Pose2d(13.000, 2.100, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(14.3538, 4.0345, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(13.000, 7.400, Rotation2d.fromDegrees(180.0))
+                }
         };
 
         public static final Pose2d[] HUB_POSES = new Pose2d[] {
-            new Pose2d(4.6256, 4.0345, Rotation2d.fromDegrees(0.0)), new Pose2d(11.9154, 4.0345, Rotation2d.fromDegrees(0.0))
+                new Pose2d(4.6256, 4.0345, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(11.9154, 4.0345, Rotation2d.fromDegrees(0.0))
         };
 
         public static final Pose2d[] BLUE_ZONE = new Pose2d[] {
-            new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)), new Pose2d(4.6256, 8.0693, Rotation2d.fromDegrees(0.0))
+                new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(4.6256, 8.0693, Rotation2d.fromDegrees(0.0))
         };
 
         public static final Pose2d[] NEUTRAL_ZONE = new Pose2d[] {
-            new Pose2d(4.6256, 0.0, Rotation2d.fromDegrees(0.0)), new Pose2d(11.9154, 8.0693, Rotation2d.fromDegrees(0.0))
+                new Pose2d(4.6256, 0.0, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(11.9154, 8.0693, Rotation2d.fromDegrees(0.0))
         };
 
         public static final Pose2d[] RED_ZONE = new Pose2d[] {
-            new Pose2d(11.9154, 0.0, Rotation2d.fromDegrees(0.0)), new Pose2d(16.541, 8.0693, Rotation2d.fromDegrees(0.0))
+                new Pose2d(11.9154, 0.0, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(16.541, 8.0693, Rotation2d.fromDegrees(0.0))
+        };
+
+        public static final Pose2d[] TRENCH_POSES = new Pose2d[] {
+                new Pose2d(4.972, 7.564, Rotation2d.fromDegrees(0.0)),
+                new Pose2d(4.972, 0.621, Rotation2d.fromDegrees(0.0))
         };
 
         public static final Pose2d[][] MULE_POSES = new Pose2d[][] {
-            // Blue Alliance
-            {
-                new Pose2d(2.0, 2.0, Rotation2d.fromDegrees(180.0)), new Pose2d(2.04, 6.0, Rotation2d.fromDegrees(180.0))
-
-            },
-            // Red Alliance
-            {
-                new Pose2d(14.5, 2.0, Rotation2d.fromDegrees(0.0)), new Pose2d(14.5, 6.0, Rotation2d.fromDegrees(0.0))
-
-            }
+                // Blue Alliance
+                {
+                        new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(0.0, WIDTH_METERS, Rotation2d.fromDegrees(180.0))
+                },
+                // Red Alliance
+                {
+                        new Pose2d(LENGTH_METERS, 0.0, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(LENGTH_METERS, WIDTH_METERS, Rotation2d.fromDegrees(0.0))
+                }
         };
     }
 
@@ -144,10 +168,13 @@ public final class Constants {
      * 
      */
     public static class intakeConstants {
-        public static final double INTAKE_SPEED = 0.55;
+        public static final double INTAKE_SPEED = 0.60;
         public static final double OUTTAKE_SPEED = -0.4;
         public static final double EXTENDING_SPEED = -0.15;
         public static final double RETRACTING_SPEED = 0.45;
+
+        public static final double INTAKE_RPM = 2000;
+        public static final double OUTTAKE_RPM = 1700;
 
         public static final double driveCoefficient = 0.1;
 
@@ -156,17 +183,17 @@ public final class Constants {
         public static final double kArmD = 0.0;
 
         public static final double kArmS = 0.0;
+        public static final double kArmV = 0.0;
         public static final double kArmG = 0.0;
         public static final double kArmA = 0.0;
-        public static final double kArmV = 0.0;
 
-        public static final double kRollP = 0.0;
+        public static final double kRollP = 0.00004;
         public static final double kRollI = 0.0;
         public static final double kRollD = 0.0;
 
-        public static final double kRollS = 0.0;
+        public static final double kRollS = 0.22;
+        public static final double kRollV = 0.00009;
         public static final double kRollA = 0.0;
-        public static final double kRollV = 0.0;
     }
 
     /**
@@ -191,8 +218,8 @@ public final class Constants {
         static {
             velocityToRPMMap.put(2.4384, 2800.0);
             velocityToRPMMap.put(3.048, 3100.0);
-            velocityToRPMMap.put(4.2672, 3650.0);
-            velocityToRPMMap.put(5.4864, 4200.0);
+            velocityToRPMMap.put(4.2672, 3660.0);
+            velocityToRPMMap.put(5.4864, 4200.0); // 4450
             velocityToRPMMap.put(6.7056, 4575.0);
             velocityToRPMMap.put(7.9248, 5100.0);
         }
@@ -207,15 +234,23 @@ public final class Constants {
         public static final double maxAngularAcceleration = 20.0;
         public static final double maxAngularSpeed = 8.0; // 4.69 / driveBaseRadius;
 
-        public static final double ODOMETRY_FREQUENCY = new CANBus(TunerConstants.DrivetrainConstants.CANBusName).isNetworkFD() ? 250.0 : 100.0;
-        public static final double DRIVE_BASE_RADIUS = Math.max(Math.max(Math.hypot(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY), Math.hypot(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY)), Math.max(Math.hypot(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY), Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
+        public static final double ODOMETRY_FREQUENCY = new CANBus(TunerConstants.DrivetrainConstants.CANBusName)
+                .isNetworkFD() ? 250.0 : 100.0;
+        public static final double DRIVE_BASE_RADIUS = Math.max(
+                Math.max(Math.hypot(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
+                        Math.hypot(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY)),
+                Math.max(Math.hypot(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
+                        Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
 
         public static final Lock odometryLock = new ReentrantLock();
 
         /** Returns an array of module translations. */
         public static Translation2d[] getModuleTranslations() {
             return new Translation2d[] {
-                new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY), new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY), new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY), new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
+                    new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
+                    new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY),
+                    new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
+                    new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
             };
         }
 
@@ -225,11 +260,15 @@ public final class Constants {
      * 
      */
     public static class TeleopConstants {
-        public static final PathConstraints CONSTRAINTS = new PathConstraints(4.5, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+        public static final PathConstraints CONSTRAINTS = new PathConstraints(4.5, 4.0, Units.degreesToRadians(540),
+                Units.degreesToRadians(720));
 
-        public static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(SwerveDriveConstants.maxLinearSpeed, SwerveDriveConstants.maxLinearAcceleration);
-        public static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(SwerveDriveConstants.maxLinearSpeed, SwerveDriveConstants.maxLinearAcceleration);
-        public static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(SwerveDriveConstants.maxAngularSpeed, SwerveDriveConstants.maxLinearAcceleration);
+        public static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(
+                SwerveDriveConstants.maxLinearSpeed, SwerveDriveConstants.maxLinearAcceleration);
+        public static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(
+                SwerveDriveConstants.maxLinearSpeed, SwerveDriveConstants.maxLinearAcceleration);
+        public static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(
+                SwerveDriveConstants.maxAngularSpeed, SwerveDriveConstants.maxLinearAcceleration);
 
     }
 
@@ -242,6 +281,11 @@ public final class Constants {
         public static final int turretMotorChannel = 3;
         public static final double turretTolerance = 0.5;
 
+        // offsets from center of robot in meters
+        public static final double OFFSET_X = -0.15;
+        public static final double OFFSET_Y = 0.1778;
+        public static final double OFFSET_Z = 0.40;
+
         public static final double kP = 0.12;
         public static final double kI = 0.0;
         public static final double kD = 0.0012;
@@ -250,23 +294,31 @@ public final class Constants {
         public static final double kV = 0.0;
         public static final double kA = 0.0;
 
-        public static final double sim_kP = 0.09;
-        public static final double sim_kI = 0.0;
-        public static final double sim_kD = 0.009;
-
-        public static final double sim_kS = 0.0;
-        public static final double sim_kV = 0.0;
+        public static final double sim_kS = 0.01;
+        public static final double sim_kV = 0.0285;
         public static final double sim_kA = 0.0;
+
+        public static final double sim_kP = 0.1;
+        public static final double sim_kI = 0.0;
+        public static final double sim_kD = 0.0;
 
         public static double[] getPIDs() {
             if (Robot.isReal()) {
                 return new double[] {
-                    kP, kI, kD
+                        kP, kI, kD
                 };
             } else {
                 return new double[] {
-                    sim_kP, sim_kI, sim_kD
+                        sim_kP, sim_kI, sim_kD
                 };
+            }
+        }
+
+        public static double[] getSVAs() {
+            if (Robot.isReal()) {
+                return new double[] { kS, kV, kA };
+            } else {
+                return new double[] { sim_kS, sim_kV, sim_kA };
             }
         }
 
@@ -276,7 +328,7 @@ public final class Constants {
         public static final double turretMaxSpeed = 720; // degpersec
         public static final double turretMaxAccel = 1440;
 
-        public static final double verticalLaunchAngle = 65;
+        public static final double verticalLaunchAngle = -65.0;
     }
 
     /**
@@ -287,8 +339,12 @@ public final class Constants {
         public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
         // Camera names and positions, must match names configured on coprocessor
-        public static Camera frontCamera = new Camera("FrontCam", "limelight-four", new Transform3d(-Units.inchesToMeters(4.0), -Units.inchesToMeters(11.75), Units.inchesToMeters(19.25), new Rotation3d(0.0, -Units.degreesToRadians(15.0), 0.0)));
-        public static Camera rearCamera = new Camera("RearCam", "limelight-three", new Transform3d(-Units.inchesToMeters(6.75), -Units.inchesToMeters(11.75), Units.inchesToMeters(19.25), new Rotation3d(0.0, -Units.degreesToRadians(15.0), Math.PI)));
+        public static Camera frontCamera = new Camera("FrontCam", "limelight-four",
+                new Transform3d(-Units.inchesToMeters(4.0), -Units.inchesToMeters(11.75), Units.inchesToMeters(19.25),
+                        new Rotation3d(0.0, -Units.degreesToRadians(15.0), 0.0)));
+        public static Camera rearCamera = new Camera("RearCam", "limelight-three",
+                new Transform3d(-Units.inchesToMeters(6.75), -Units.inchesToMeters(11.75), Units.inchesToMeters(19.25),
+                        new Rotation3d(0.0, -Units.degreesToRadians(15.0), Math.PI)));
 
         // Basic filtering thresholds
         public static double maxAmbiguity = 0.3;
@@ -302,8 +358,8 @@ public final class Constants {
         // Standard deviation multipliers for each camera
         // (Adjust to trust some cameras more than others)
         public static double[] cameraStdDevFactors = new double[] {
-            1.0, // Camera 0
-            1.0 // Camera 1
+                1.0, // Camera 0
+                1.0 // Camera 1
         };
 
         // Multipliers to apply for MegaTag 2 observations

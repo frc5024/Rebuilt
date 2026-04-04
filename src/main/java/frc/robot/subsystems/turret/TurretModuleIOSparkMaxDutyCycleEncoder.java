@@ -2,9 +2,9 @@ package frc.robot.subsystems.turret;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -80,8 +80,8 @@ public class TurretModuleIOSparkMaxDutyCycleEncoder implements TurretModuleIO {
 
         inputs.data = new TurretModuleIOData(
                 connectedDebouncer.calculate(true), // TODO: add spark utility to test for connection
-                getPosition(),
-                getVelocity(),
+                internalEncoder.getPosition(),
+                internalEncoder.getVelocity(),
                 turretMotor.getAppliedOutput(),
                 0.0,
                 turretMotor.getOutputCurrent(),

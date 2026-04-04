@@ -19,8 +19,10 @@ import frc.robot.Constants.RobotConstants;
  * constants from Phoenix. Simulation is always based on voltage control.
  */
 public class SwerveModuleIOSim implements SwerveModuleIO {
-    private static final double[] DRIVE_PIDs = { 0.1, 0.0, 0.0, 0.0, 0.0, 0.0 };
-    private static final double[] TURN_PIDs = { 10.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+    private static final double[] DRIVE_SVAs = { 0.002932, 0.14489, 0.0 };
+    private static final double[] DRIVE_PIDs = { 0.1, 0.0, 0.0 };
+    private static final double[] TURN_SVA = { 0.0, 0.0, 0.0 };
+    private static final double[] TURN_PIDs = { 8.0, 0.0, 0.0 };
 
     private static final DCMotor DRIVE_GEARBOX = DCMotor.getKrakenX60Foc(1);
     private static final DCMotor TURN_GEARBOX = DCMotor.getKrakenX60Foc(1);
@@ -119,7 +121,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
     @Override
     public void setDriveVelocity(double velocityRadPerSec) {
         this.driveClosedLoop = true;
-        this.driveFFVolts = DRIVE_PIDs[3] * Math.signum(velocityRadPerSec) + DRIVE_PIDs[4] * velocityRadPerSec;
+        this.driveFFVolts = DRIVE_SVAs[0] * Math.signum(velocityRadPerSec) + DRIVE_SVAs[1] * velocityRadPerSec;
         this.driveController.setSetpoint(velocityRadPerSec);
     }
 

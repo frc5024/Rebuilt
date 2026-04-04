@@ -87,7 +87,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public double getSpeedModifier() {
         if (isSlowMode) {
-            return speedModifier * 0.3;
+            return speedModifier * 0.2;
         } else {
             return speedModifier;
         }
@@ -118,7 +118,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Lower P and add D damping to reduce oscillations during direction changes
         driveController = new PPHolonomicDriveController(
                 new PIDConstants(0.45, 0.0, 0.05),
-                new PIDConstants(0.0, 0.0, 0.00));
+                new PIDConstants(4.5, 0.0, 0.1));
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configure(
@@ -160,6 +160,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+        Logger.recordOutput("SwerveDrive/slowmode", isSlowMode);
+
         SwerveDriveConstants.odometryLock.lock(); // Prevents odometry updates while reading data
         gyroIO.updateInputs(gyroInputs);
         Logger.processInputs("SwerveDrive/Gyro", gyroInputs);
