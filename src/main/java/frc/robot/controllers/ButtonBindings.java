@@ -95,8 +95,7 @@ public class ButtonBindings {
 
         commandXboxController.leftTrigger()
                 .whileTrue(Commands.parallel(
-                        new ShootCommand(swerveDriveSubsystem, m_shooter, m_hopper, m_feeder,
-                                () -> swerveDriveSubsystem.getPose()),
+                        new ShootCommand(swerveDriveSubsystem, m_shooter, m_hopper, m_feeder),
                         Commands.waitSeconds(2)
                                 .andThen(m_intake.RetractArmCommand())));
 

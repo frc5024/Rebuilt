@@ -76,8 +76,8 @@ public class ClearTheWallCommand extends Command {
                             Commands.runOnce(() -> intakeSubsystem.stopRoller()),
                             Commands.runOnce(() -> intakeSubsystem.retractArm())));
 
-            shootTrigger.whileTrue(new ShootCommand(swerveDriveSubsystem, shooterSubsystem,
-                    hopperSubsystem, feederSubsystem, () -> swerveDriveSubsystem.getPose()));
+            shootTrigger.whileTrue(
+                    new ShootCommand(swerveDriveSubsystem, shooterSubsystem, hopperSubsystem, feederSubsystem));
 
             Logger.recordOutput("Commands/Active Command", this.getName());
         }

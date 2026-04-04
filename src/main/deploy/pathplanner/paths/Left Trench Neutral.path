@@ -50,13 +50,13 @@
   "eventMarkers": [
     {
       "name": "ExtendIntake",
-      "waypointRelativePos": 0.3016157989228007,
+      "waypointRelativePos": 0.11273209549071575,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "Intake",
-      "waypointRelativePos": 0.39497307001795334,
+      "waypointRelativePos": 0.2281167108753294,
       "endWaypointRelativePos": 2.0,
       "command": null
     }

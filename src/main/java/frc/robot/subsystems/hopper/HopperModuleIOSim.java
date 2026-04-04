@@ -17,8 +17,6 @@ public class HopperModuleIOSim extends HopperModuleIOSparkMaxRelativeEncoder {
     private final DCMotorSim dcMotorSim;
     private final SparkMaxSim sparkMaxSim;
 
-    private double voltageRequest;
-
     /**
      * 
      */

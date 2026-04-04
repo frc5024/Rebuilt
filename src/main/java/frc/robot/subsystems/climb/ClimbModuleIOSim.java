@@ -44,7 +44,6 @@ public class ClimbModuleIOSim extends ClimbModuleIOTalonFX {
         double motorVelocityRPS = (elevatorSim.getVelocityMetersPerSecond() / (2.0 * DRUM_RADIUS * Math.PI))
                 * GEAR_RATIO;
 
-        double currentPosition = getPosition();
         if (motorRotations < 0.0) {
             motorRotations = 0.0;
             motorVelocityRPS = 0.0;

@@ -54,7 +54,7 @@ public class TurretModuleIOSparkMaxRelativeEncoder implements TurretModuleIO {
         config
                 .idleMode(IdleMode.kBrake)
                 .inverted(false)
-                .smartCurrentLimit(40);
+                .smartCurrentLimit(20);
 
         // limit turn angle due to wiring
         config.softLimit

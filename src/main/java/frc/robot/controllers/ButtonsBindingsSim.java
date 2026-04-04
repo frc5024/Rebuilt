@@ -158,8 +158,7 @@ public class ButtonsBindingsSim {
 
         commandXboxController.leftTrigger()
                 .whileTrue(
-                        new ShootCommand(swerveDriveSubsystem, shooterSubsystem, hopperSubsystem, feederSubsystem,
-                                () -> swerveDriveSubsystem.getPose()));
+                        new ShootCommand(swerveDriveSubsystem, shooterSubsystem, hopperSubsystem, feederSubsystem));
 
         return commandXboxController;
     }

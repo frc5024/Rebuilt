@@ -1,8 +1,5 @@
 package frc.robot.commands;
 
-import java.util.function.Supplier;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.HopperConstants;
@@ -11,7 +8,6 @@ import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
-import frc.robot.util.GameUtil;
 
 /**
  * 
@@ -22,21 +18,16 @@ public class ShootCommand extends Command {
     private final ShooterSubsystem shooterSubsystem;
     private final HopperSubsystem hopperSubsystem;
     private final FeederSubsystem feederSubsystem;
-    private final Supplier<Pose2d> robotPoseSupplier;
-
-    // Variables
-    private Pose2d targetPose;
 
     /**
      * 
      */
     public ShootCommand(SwerveDriveSubsystem swerveDriveSubsystem, ShooterSubsystem shooterSubsystem,
-            HopperSubsystem hopperSubsystem, FeederSubsystem feederSubsystem, Supplier<Pose2d> robotPoseSupplier) {
+            HopperSubsystem hopperSubsystem, FeederSubsystem feederSubsystem) {
         this.swerveDriveSubsystem = swerveDriveSubsystem;
         this.shooterSubsystem = shooterSubsystem;
         this.hopperSubsystem = hopperSubsystem;
         this.feederSubsystem = feederSubsystem;
-        this.robotPoseSupplier = robotPoseSupplier;
 
         addRequirements(shooterSubsystem, hopperSubsystem, feederSubsystem);
     }
@@ -49,11 +40,7 @@ public class ShootCommand extends Command {
 
     @Override
     public void execute() {
-        // get the target we want to shoot at
-        Pose2d robotPose = robotPoseSupplier.get();
-        targetPose = GameUtil.getTargetPose(robotPose);
-
-        // SpinToHub and ShooterSubsystem handle setting shooter RPM
+        // LockTurretOnTarget and ShooterSubsystem handle aiming and setting shooter RPM
 
         // spin up hooper and feeder if shooter is ready
         if (shooterSubsystem.isAtSetpoint()) {
