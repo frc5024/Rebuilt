@@ -48,6 +48,7 @@ public class GameUtil {
 
         // For now, just return true - the actual phase timing needs to match simulator
         return true;
+
     }
 
     /**
@@ -75,6 +76,33 @@ public class GameUtil {
      * @return time remaining in current phase (duration down to 0), or 0 if not in
      *         match
      */
+
+    public static boolean wonAuto() {
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+        String gameData = DriverStation.getGameSpecificMessage();
+
+        if (alliance.isEmpty() || gameData.isEmpty()) {
+            // Dashboard should see 'false', until we know for sure who won auto
+            return false;
+        }
+
+        // Shift was is active for blue if red won auto, or red if blue won auto.
+        boolean redInactiveFirst;
+        switch (gameData.charAt(0)) {
+            case 'R' -> redInactiveFirst = true;
+            case 'B' -> redInactiveFirst = false;
+            default -> {
+                return false;
+            }
+        }
+
+        if (alliance.get() == Alliance.Red) {
+            return !redInactiveFirst;
+        } else {
+            return redInactiveFirst;
+        }
+    }
+
     public static double getTimeRemainingInPhase() {
         // In autonomous - count down from 20 to 0
         if (DriverStation.isAutonomousEnabled()) {
@@ -88,24 +116,40 @@ public class GameUtil {
 
             // Match time values: 2:20 = 140, 2:10 = 130, 1:45 = 105, 1:20 = 80, 0:55 = 55,
             // 0:30 = 30
-            if (matchTime > 130) {
-                // Transition Shift (140 to 130) - 10 seconds
-                return Math.round(matchTime - 130.0);
-            } else if (matchTime > 105) {
-                // Shift 1 (130 to 105) - 25 seconds
-                return Math.round(matchTime - 105.0);
-            } else if (matchTime > 80) {
-                // Shift 2 (105 to 80) - 25 seconds
-                return Math.round(matchTime - 80.0);
-            } else if (matchTime > 55) {
-                // Shift 3 (80 to 55) - 25 seconds
-                return Math.round(matchTime - 55.0);
-            } else if (matchTime > 30) {
-                // Shift 4 (55 to 30) - 25 seconds
-                return Math.round(matchTime - 30.0);
+            if (!wonAuto()) {
+                if (matchTime > 105) {
+                    // Transition Shift and Shift 1 (140 to 105) - 35 seconds
+                    return Math.round(matchTime - 105.0);
+                } else if (matchTime > 80) {
+                    // Shift 2 (105 to 80) - 25 seconds
+                    return Math.round(matchTime - 80.0);
+                } else if (matchTime > 55) {
+                    // Shift 3 (80 to 55) - 25 seconds
+                    return Math.round(matchTime - 55.0);
+                } else if (matchTime > 30) {
+                    // Shift 4 (55 to 30) - 25 seconds
+                    return Math.round(matchTime - 30.0);
+                } else {
+                    // End Game (30 to 0) - 30 seconds
+                    return Math.round(matchTime);
+                }
             } else {
-                // End Game (30 to 0) - 30 seconds
-                return Math.round(matchTime);
+                if (matchTime > 130) {
+                    // Transition Shift (140 to 130) - 10 seconds
+                    return Math.round(matchTime - 130.0);
+                } else if (matchTime > 105) {
+                    // Shift 1 (130 to 105) - 25 seconds
+                    return Math.round(matchTime - 105.0);
+                } else if (matchTime > 80) {
+                    // Shift 2 (105 to 80) - 25 seconds
+                    return Math.round(matchTime - 80.0);
+                } else if (matchTime > 55) {
+                    // Shift 3 (80 to 55) - 25 seconds
+                    return Math.round(matchTime - 55.0);
+                } else {
+                    // Shift 4 and End Game (55 to 0) - 55 seconds
+                    return Math.round(matchTime);
+                }
             }
         }
 

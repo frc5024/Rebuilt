@@ -28,8 +28,7 @@ public class spinToHubCommand extends Command {
     /**
      * 
      */
-    public spinToHubCommand(TurretSubsystem turretSubsystem, Supplier<Pose2d> robotPoseSupplier,
-            Supplier<ChassisSpeeds> chassisSpeedSupplier) {
+    public spinToHubCommand(TurretSubsystem turretSubsystem, Supplier<Pose2d> robotPoseSupplier, Supplier<ChassisSpeeds> chassisSpeedSupplier) {
         this.turretSubsystem = turretSubsystem;
         this.robotPoseSupplier = robotPoseSupplier;
         this.chassisSpeedSupplier = chassisSpeedSupplier;

@@ -100,7 +100,7 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO {
         driveConfig.Feedback.SensorToMechanismRatio = constants.DriveMotorGearRatio;
         driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = constants.SlipCurrent;
         driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -constants.SlipCurrent;
-        driveConfig.CurrentLimits.StatorCurrentLimit = constants.SlipCurrent;
+        driveConfig.CurrentLimits.StatorCurrentLimit = 80; // 80 amp limit for drive motors
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         driveConfig.MotorOutput.Inverted = constants.DriveMotorInverted
                 ? InvertedValue.Clockwise_Positive
@@ -129,6 +129,8 @@ public class SwerveModuleIOTalonFX implements SwerveModuleIO {
         turnConfig.MotorOutput.Inverted = constants.SteerMotorInverted
                 ? InvertedValue.Clockwise_Positive
                 : InvertedValue.CounterClockwise_Positive;
+        turnConfig.CurrentLimits.StatorCurrentLimit = 40; // 40 amp limit for steering motors
+        turnConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         tryUntilOk(5, () -> turnTalon.getConfigurator().apply(turnConfig, 0.25));
 
         // Configure CANCoder

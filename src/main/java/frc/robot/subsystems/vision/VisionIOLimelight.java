@@ -1,5 +1,11 @@
 package frc.robot.subsystems.vision;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -11,12 +17,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.lib.camera.Camera;
-
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
 
 /** 
  * 
@@ -42,7 +42,7 @@ public class VisionIOLimelight implements VisionIO {
     public VisionIOLimelight(Camera camera, Supplier<Rotation2d> rotationSupplier) {
         this.camera = camera;
         this.rotationSupplier = rotationSupplier;
-        
+
         NetworkTable table = NetworkTableInstance.getDefault().getTable(camera.getNtName());
         this.orientationPublisher = table.getDoubleArrayTopic("robot_orientation_set").publish();
         this.latencySubscriber = table.getDoubleTopic("tl").subscribe(0.0);
@@ -98,32 +98,32 @@ public class VisionIOLimelight implements VisionIO {
                             // Observation type
                             PoseObservationType.MEGATAG_1));
         }
-        for (var rawSample : this.megatag2Subscriber.readQueue()) {
-            if (rawSample.value.length == 0)
-                continue;
-            for (int i = 11; i < rawSample.value.length; i += 7) {
-                tagIds.add((int) rawSample.value[i]);
-            }
-            poseObservations.add(
-                    new PoseObservation(
-                            // Timestamp, based on server timestamp of publish and latency
-                            rawSample.timestamp * 1.0e-6 - rawSample.value[6] * 1.0e-3,
+        // for (var rawSample : this.megatag2Subscriber.readQueue()) {
+        // if (rawSample.value.length == 0)
+        // continue;
+        // for (int i = 11; i < rawSample.value.length; i += 7) {
+        // tagIds.add((int) rawSample.value[i]);
+        // }
+        // poseObservations.add(
+        // new PoseObservation(
+        // // Timestamp, based on server timestamp of publish and latency
+        // rawSample.timestamp * 1.0e-6 - rawSample.value[6] * 1.0e-3,
 
-                            // 3D pose estimate
-                            parsePose(rawSample.value),
+        // // 3D pose estimate
+        // parsePose(rawSample.value),
 
-                            // Ambiguity, zeroed because the pose is already disambiguated
-                            0.0,
+        // // Ambiguity, zeroed because the pose is already disambiguated
+        // 0.0,
 
-                            // Tag count
-                            (int) rawSample.value[7],
+        // // Tag count
+        // (int) rawSample.value[7],
 
-                            // Average tag distance
-                            rawSample.value[9],
+        // // Average tag distance
+        // rawSample.value[9],
 
-                            // Observation type
-                            PoseObservationType.MEGATAG_2));
-        }
+        // // Observation type
+        // PoseObservationType.MEGATAG_2));
+        // }
 
         // Save pose observations to inputs object
         inputs.poseObservations = new PoseObservation[poseObservations.size()];

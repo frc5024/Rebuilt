@@ -8,7 +8,7 @@ import frc.robot.subsystems.turret.TurretSubsystem;
 /**
  * 
  */
-public class turretSweepCommand extends Command {
+public class zeroTurret extends Command {
     // Subsystems
     private final TurretSubsystem turretSubsystem;
 
@@ -18,7 +18,7 @@ public class turretSweepCommand extends Command {
     /**
      * 
      */
-    public turretSweepCommand(TurretSubsystem turretSubsystem) {
+    public zeroTurret(TurretSubsystem turretSubsystem) {
         this.turretSubsystem = turretSubsystem;
 
         addRequirements(turretSubsystem);
@@ -26,7 +26,8 @@ public class turretSweepCommand extends Command {
 
     @Override
     public void initialize() {
-        // hitHallEffect = false;
+        turretSubsystem.setAngle(0);
+        turretSubsystem.enablePID();
     }
 
     @Override
@@ -42,18 +43,19 @@ public class turretSweepCommand extends Command {
         // hitHallEffect = true;
         // }
 
-        if (!turretSubsystem.getHallEffectValue()) {
-            turretSubsystem.setPosition(135);
-            turretSubsystem.setAngle(0);
-            turretSubsystem.enablePID();
-        } else if (turretSubsystem.getHallEffectValue() && !turretSubsystem.isPIDEnabled()) {
-            turretSubsystem.runTurret(0.5);
-            // turretSubsystem.setAngle(0);
-            // turretSubsystem.enablePID();
-            // hitHallEffect = true;
-        }
+        // if (!turretSubsystem.getHallEffectValue()) {
+        // turretSubsystem.setPosition(135);
+        // turretSubsystem.setAngle(0);
+        // turretSubsystem.enablePID();
+        // } else if (turretSubsystem.getHallEffectValue() &&
+        // !turretSubsystem.isPIDEnabled()) {
+        // turretSubsystem.runTurret(0.5);
+        // // turretSubsystem.setAngle(0);
+        // // turretSubsystem.enablePID();
+        // // hitHallEffect = true;
+        // }
 
-        Logger.recordOutput("Turret/Active Command", this.getName());
+        // Logger.recordOutput("Turret/Active Command", this.getName());
     }
 
     @Override

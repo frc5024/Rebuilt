@@ -15,8 +15,8 @@ import frc.robot.Constants.intakeConstants;
 import frc.robot.commands.Intake.IntakeExtendArm;
 import frc.robot.commands.Intake.IntakeRetractArm;
 import frc.robot.commands.Intake.IntakeSpinMotor;
+import frc.robot.commands.Intake.OuttakeSpinMotor;
 import frc.robot.commands.Intake.PIDExtendArm;
-import frc.robot.commands.Intake.PIDOuttakeSpin;
 import frc.robot.commands.Intake.PIDRetractArm;
 
 /**
@@ -99,11 +99,11 @@ public class IntakeSubsystem extends SubsystemBase {
             armFeedforward.setKv(armVEntry.getDouble(intakeConstants.kArmV));
             armFeedforward.setKa(armAEntry.getDouble(intakeConstants.kArmA));
 
-            rollerPIDController.setPID(armPEntry.getDouble(intakeConstants.kRollP),
-                    armIEntry.getDouble(intakeConstants.kRollI), armDEntry.getDouble(intakeConstants.kRollD));
-            rollerFeedforward.setKs(armSEntry.getDouble(intakeConstants.kArmS));
-            rollerFeedforward.setKv(armVEntry.getDouble(intakeConstants.kArmV));
-            rollerFeedforward.setKa(armAEntry.getDouble(intakeConstants.kArmA));
+            rollerPIDController.setPID(rollerPEntry.getDouble(intakeConstants.kRollP),
+                    rollerIEntry.getDouble(intakeConstants.kRollI), rollerDEntry.getDouble(intakeConstants.kRollD));
+            rollerFeedforward.setKs(rollerSEntry.getDouble(intakeConstants.kRollS));
+            rollerFeedforward.setKv(rollerVEntry.getDouble(intakeConstants.kRollV));
+            rollerFeedforward.setKa(rollerAEntry.getDouble(intakeConstants.kRollA));
         }
 
         if (armPIDEnabled) {
@@ -161,7 +161,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command OuttakeCommand() {
-        return new PIDOuttakeSpin(this);
+        return new OuttakeSpinMotor(this);
     }
 
     public Command ExtendArmCommand() {

@@ -13,7 +13,26 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Neutral Trench"
+            "pathName": "Right Neutral Trench (No Rotation)"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunEverything"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.5
+                }
+              }
+            ]
           }
         },
         {
@@ -26,6 +45,12 @@
           "type": "path",
           "data": {
             "pathName": "Right Neutral Shallow Trench"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunEverything"
           }
         }
       ]

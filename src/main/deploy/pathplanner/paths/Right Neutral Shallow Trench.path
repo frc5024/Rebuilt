@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.407410714285715,
-        "y": 3.4357321428571423
+        "x": 6.322951699463328,
+        "y": 4.367620751341681
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.407410714285715,
-        "y": 0.5630936856397875
+        "x": 6.241824686940967,
+        "y": 0.684454382826476
       },
       "isLocked": false,
       "linkedName": "Right Intake Stop Shallow"
     },
     {
       "anchor": {
-        "x": 3.848375,
-        "y": 0.568964285714286
+        "x": 3.9053667262969585,
+        "y": 0.4572987477638639
       },
       "prevControl": {
-        "x": 5.98992645039893,
-        "y": 0.6082588077399544
+        "x": 6.3798696739307195,
+        "y": 0.5265016698417866
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Trench Stop"
+      "linkedName": "Right Trench No Rotate Stop"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.5,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 180.0,
     "maxAngularAcceleration": 270.0,
     "nominalVoltage": 12.0,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Right Trench Paths",

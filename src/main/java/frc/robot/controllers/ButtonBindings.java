@@ -12,7 +12,7 @@ import frc.robot.commands.SOTM;
 import frc.robot.commands.StickRotationCommand;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
-import frc.robot.commands.turretSweepCommand;
+import frc.robot.commands.zeroTurret;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -83,6 +83,8 @@ public class ButtonBindings {
                 .whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter, m_hopper),
                         new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
                         Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
+        commandXboxController.leftBumper().whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter, m_hopper),
+                new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
         commandXboxController.rightTrigger()
                 .whileTrue(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = true));
         commandXboxController.rightTrigger().onFalse(new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = false));
@@ -114,7 +116,7 @@ public class ButtonBindings {
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
 
-        commandXboxController.povLeft().onTrue(new turretSweepCommand(m_turret));
+        commandXboxController.povLeft().whileTrue(new zeroTurret(m_turret));
         commandXboxController.povRight().whileTrue(new StickRotationCommand(m_turret, -0.1));
         // commandXboxController.y().onTrue(new InstantCommand(() ->
         // m_turret.zeroEncoder()));
@@ -123,6 +125,8 @@ public class ButtonBindings {
         commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
         commandXboxController.rightBumper()
                 .whileTrue(m_intake.IntakeCommand());
+
+        commandXboxController.back().whileTrue(m_intake.OuttakeCommand());
 
         return commandXboxController;
     }
@@ -135,7 +139,6 @@ public class ButtonBindings {
 
         // Reset climb on X button
         commandXboxController.x().whileTrue(m_climb.resetClimb());
-
         return commandXboxController;
     }
 
