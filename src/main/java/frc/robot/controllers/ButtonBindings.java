@@ -118,8 +118,9 @@ public class ButtonBindings {
                             return Rotation2d.fromRadians(angleToHub);
                         }));
 
-        commandXboxController.x().whileTrue(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
-                () -> swerveDriveSubsystem.getChassisSpeeds()));
+        commandXboxController.x()
+                .whileTrue(new spinToHubCommand(m_turret, m_shooter, () -> swerveDriveSubsystem.getPose(),
+                        () -> swerveDriveSubsystem.getChassisSpeeds()));
 
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
