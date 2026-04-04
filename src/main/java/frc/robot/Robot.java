@@ -46,6 +46,16 @@ public class Robot extends LoggedRobot {
      * 
      */
     public Robot() {
+
+        // String path = Filesystem.getDeployDirectory() + "fmap.json";
+
+        // try {
+        // Constants.VisionConstants.aprilTagLayout = new AprilTagFieldLayout(path);
+        // } catch (IOException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+
         // Record metadata
         Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
         Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);

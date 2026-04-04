@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.SOTM;
 import frc.robot.commands.StickRotationCommand;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
-import frc.robot.commands.spinToHubCommand;
 import frc.robot.commands.turretSweepCommand;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
@@ -104,8 +104,12 @@ public class ButtonBindings {
                             return Rotation2d.fromRadians(angleToHub);
                         }));
 
-        commandXboxController.x().whileTrue(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
-                () -> swerveDriveSubsystem.getChassisSpeeds()));
+        commandXboxController.x()
+                .whileTrue(Commands.parallel(new SOTM(m_turret, () -> swerveDriveSubsystem.getPose(),
+                        () -> swerveDriveSubsystem.getChassisSpeeds()),
+                        new InstantCommand(() -> swerveDriveSubsystem.isSlowMode = true),
+                        new runEverything(m_feeder, m_shooter, m_hopper),
+                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
 
         commandXboxController.povUp().whileTrue(m_climb.extendclimb());
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());

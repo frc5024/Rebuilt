@@ -68,6 +68,7 @@ public class spinToHubCommand extends Command {
         Logger.recordOutput("Turret/TargetAngleRad", turretAngle);
         Logger.recordOutput("Turret/TargetAngleDeg", turretAngle.getDegrees());
         Logger.recordOutput("Turret/TargetPose", new Pose3d(targetPose));
+        Logger.recordOutput("Turret/FieldPose", new Pose3d(turretPose));
     }
 
     @Override
