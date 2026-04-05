@@ -67,8 +67,8 @@ public class ClimbToBarCommand extends Command {
         if (followPathCommand != null) {
             followPathCommand.execute();
 
-            Logger.recordOutput("PathPlanner/Events/ExtendMarkder", climbExtend.getAsBoolean());
-            Logger.recordOutput("PathPlanner/Events/RetractMarker", climbRetract.getAsBoolean());
+            Logger.recordOutput("PathPlanner/Events/ClimbExtendMarker", climbExtend.getAsBoolean());
+            Logger.recordOutput("PathPlanner/Events/ClimbRetractMarker", climbRetract.getAsBoolean());
         }
     }
 

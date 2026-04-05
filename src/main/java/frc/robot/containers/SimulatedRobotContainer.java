@@ -220,14 +220,10 @@ public class SimulatedRobotContainer extends RobotContainer {
     public void configureNamedCommands() {
         new EventTrigger("ExtendIntake").onTrue(intakeSubsystem.ExtendArmCommand());
         new EventTrigger("Intake").whileTrue(intakeSubsystem.IntakeCommand());
-        new EventTrigger("RunEverything").whileTrue(
+
+        NamedCommands.registerCommand("RunEverything",
                 new ShootForFiveSecondsCommand(shooterSubsystem, hopperSubsystem, feederSubsystem, intakeSubsystem,
                         () -> swerveDriveSubsystem.getPose()));
-
-        new EventTrigger("TFS-ExtendAndIntake").onTrue(
-                Commands.sequence(
-                        Commands.runOnce(() -> intakeSubsystem.intakeRoller()),
-                        Commands.runOnce(() -> intakeSubsystem.extendArm())));
 
         NamedCommands.registerCommand("ShootFor5Seconds",
                 new ShootForFiveSecondsCommand(shooterSubsystem, hopperSubsystem, feederSubsystem, intakeSubsystem,

@@ -88,8 +88,8 @@ public class ClearTheWallCommand extends Command {
         if (followPathCommand != null) {
             followPathCommand.execute();
 
-            Logger.recordOutput("PathPlanner/Events/ExtendAndIntakeMarker", extendAndIntakeTrigger.getAsBoolean());
-            Logger.recordOutput("PathPlanner/Events/RetractMarker", retractTrigger.getAsBoolean());
+            Logger.recordOutput("PathPlanner/Events/IntakeExtendAndRollMarker", extendAndIntakeTrigger.getAsBoolean());
+            Logger.recordOutput("PathPlanner/Events/IntakeRetractMarker", retractTrigger.getAsBoolean());
             Logger.recordOutput("PathPlanner/Events/ShootMarker", shootTrigger.getAsBoolean());
         }
     }
