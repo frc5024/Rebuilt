@@ -29,6 +29,9 @@ public interface GyroModuleIO {
             Rotation2d[] odometryYawPositions) {
     }
 
+    default void setYaw(double degrees) {
+    }
+
     default void updateInputs(GyroIOInputs inputs) {
     }
 }

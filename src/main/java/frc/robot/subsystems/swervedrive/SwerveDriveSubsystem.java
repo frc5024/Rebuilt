@@ -383,7 +383,9 @@ public class SwerveDriveSubsystem extends StateMachineSubsystem {
     /** Resets the current odometry pose. */
     public void setPose(Pose2d pose) {
         resetSimulationPoseCallBack.accept(pose);
-        poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+        gyroIO.setYaw(pose.getRotation().getDegrees());
+        simulatedYaw = pose.getRotation().getRadians();
+        poseEstimator.resetPosition(pose.getRotation(), getModulePositions(), pose);
     }
 
     @Override

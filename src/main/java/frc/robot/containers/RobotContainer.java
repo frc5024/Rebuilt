@@ -2,6 +2,7 @@ package frc.robot.containers;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -19,6 +20,7 @@ import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.util.FuelSim;
 import frc.robot.util.FuelSimCount;
+import frc.robot.util.GameUtil;
 
 /**
  * 
@@ -101,6 +103,10 @@ abstract public class RobotContainer {
 
     /** This function is called once when autonomous is enabled. */
     public void autonomousInit() {
+        // Reset the pose based on alliance and selected autonmous
+        Pose2d startPose = GameUtil.getPoseFromAuto(getAutonomousCommand().getName());
+
+        swerveDriveSubsystem.setPose(startPose);
     }
 
     /** This function is called once when teleop is enabled. */

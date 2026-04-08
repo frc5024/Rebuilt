@@ -22,6 +22,11 @@ public class GyroModuleIONavX implements GyroModuleIO {
     }
 
     @Override
+    public void setYaw(double degrees) {
+        navX.setAngleAdjustment(degrees - navX.getYaw());
+    }
+
+    @Override
     public void updateInputs(GyroIOInputs inputs) {
         inputs.data = new GyroModuleIOData(
                 navX.isConnected(),

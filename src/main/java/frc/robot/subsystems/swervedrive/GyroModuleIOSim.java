@@ -30,6 +30,11 @@ public class GyroModuleIOSim extends GyroModuleIOPigeon2 {
     }
 
     @Override
+    public void setYaw(double degrees) {
+        setRawYaw(Math.toRadians(degrees));
+    }
+
+    @Override
     public void updateInputs(GyroIOInputs inputs) {
         inputs.data = new GyroModuleIOData(
                 true,

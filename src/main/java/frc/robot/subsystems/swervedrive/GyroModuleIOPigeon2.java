@@ -68,6 +68,11 @@ public class GyroModuleIOPigeon2 implements GyroModuleIO {
     }
 
     @Override
+    public void setYaw(double degrees) {
+        pigeon.setYaw(degrees);
+    }
+
+    @Override
     public void updateInputs(GyroIOInputs inputs) {
         inputs.data = new GyroModuleIOData(
                 BaseStatusSignal.refreshAll(pitch, pitchVelocity, roll, rollVelocity, yaw, yawVelocity)
