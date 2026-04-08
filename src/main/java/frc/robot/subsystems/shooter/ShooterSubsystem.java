@@ -51,7 +51,8 @@ public class ShooterSubsystem extends StateMachineSubsystem {
     public void addDistanceMeasurement(double distanceToTarget) {
         Command currentCommand = getCurrentCommand();
 
-        if (currentCommand != null && currentCommand.getName().equalsIgnoreCase("ShootCommand")) {
+        if (currentCommand != null && (currentCommand.getName().equalsIgnoreCase("ShootCommand")
+                || currentCommand.getName().equalsIgnoreCase("2KFiveSix"))) {
             setVelocity(ShooterConstants.velocityToRPMMap.get(distanceToTarget));
         }
     }

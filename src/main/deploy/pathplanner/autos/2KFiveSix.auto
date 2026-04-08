@@ -1,0 +1,75 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2KFiveSix 1 Path"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2KFiveSix 2 Path"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2KFiveSix 3 Path"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootFor5Seconds"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2KFiveSix 4 Path"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2KFiveSix 5 Path"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2KFiveSix 6 Path"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootFor5Seconds"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Test Autos",
+  "choreoAuto": false
+}

@@ -31,25 +31,27 @@ public class ButtonBindings {
 
     /* Subsystems */
     private final SwerveDriveSubsystem swerveDriveSubsystem;
-    private ClimbSubsystem m_climb;
-    private FeederSubsystem m_feeder;
-    private HopperSubsystem m_hopper;
-    private IntakeSubsystem m_intake;
-    private ShooterSubsystem m_shooter;
-    private TurretSubsystem m_turret;
+    private ClimbSubsystem climbSubsystem;
+    private FeederSubsystem feederSubsystem;
+    private HopperSubsystem hopperSubsystem;
+    private IntakeSubsystem intakeSubsystem;
+    private ShooterSubsystem shooterSubsystem;
+    private TurretSubsystem turretSubsystem;
 
     /**
      * 
      */
-    public ButtonBindings(SwerveDriveSubsystem swerveDriveSubsystem, ClimbSubsystem m_climb, FeederSubsystem m_feeder,
-            HopperSubsystem m_hopper, IntakeSubsystem m_intake, ShooterSubsystem m_shooter, TurretSubsystem m_turret) {
+    public ButtonBindings(SwerveDriveSubsystem swerveDriveSubsystem, ClimbSubsystem climbSubsystem,
+            FeederSubsystem feederSubsystem,
+            HopperSubsystem hopperSubsystem, IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
+            TurretSubsystem turretSubsystem) {
         this.swerveDriveSubsystem = swerveDriveSubsystem;
-        this.m_climb = m_climb;
-        this.m_feeder = m_feeder;
-        this.m_hopper = m_hopper;
-        this.m_intake = m_intake;
-        this.m_shooter = m_shooter;
-        this.m_turret = m_turret;
+        this.climbSubsystem = climbSubsystem;
+        this.feederSubsystem = feederSubsystem;
+        this.hopperSubsystem = hopperSubsystem;
+        this.intakeSubsystem = intakeSubsystem;
+        this.shooterSubsystem = shooterSubsystem;
+        this.turretSubsystem = turretSubsystem;
 
         this.driverController = setDriverBindingsController();
         this.operatorController = setOperatorBindingsController();
@@ -91,22 +93,21 @@ public class ButtonBindings {
                             return Rotation2d.fromRadians(angleToHub);
                         }));
 
-        commandXboxController.y().onTrue(m_intake.RetractArmCommand());
+        commandXboxController.y().onTrue(intakeSubsystem.RetractArmCommand());
 
         commandXboxController.leftTrigger()
-                .whileTrue(Commands.parallel(
-                        new ShootCommand(swerveDriveSubsystem, m_shooter, m_hopper, m_feeder),
-                        Commands.waitSeconds(2)
-                                .andThen(m_intake.RetractArmCommand())));
+                .whileTrue(
+                        new ShootCommand(swerveDriveSubsystem, hopperSubsystem, feederSubsystem, shooterSubsystem,
+                                0.0));
 
         commandXboxController.rightTrigger()
                 .whileTrue(new InstantCommand(() -> swerveDriveSubsystem.setSlowMode(true)));
         commandXboxController.rightTrigger().onFalse(new InstantCommand(() -> swerveDriveSubsystem.setSlowMode(false)));
 
-        commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
-        commandXboxController.rightBumper().whileTrue(m_intake.IntakeCommand());
+        commandXboxController.rightBumper().onTrue((intakeSubsystem.ExtendArmCommand()));
+        commandXboxController.rightBumper().whileTrue(intakeSubsystem.IntakeCommand());
 
-        commandXboxController.back().whileTrue(m_intake.OuttakeCommand());
+        commandXboxController.back().whileTrue(intakeSubsystem.OuttakeCommand());
 
         return commandXboxController;
     }
@@ -135,8 +136,10 @@ public class ButtonBindings {
     private CommandXboxController setTuningBindings() {
         CommandXboxController commandXboxController = new CommandXboxController(TEST_PORT);
 
-        commandXboxController.rightBumper().onTrue(Commands.runOnce(() -> m_turret.setAngle(30.0), m_turret));
-        commandXboxController.leftBumper().onTrue(Commands.runOnce(() -> m_turret.setAngle(-30.0), m_turret));
+        commandXboxController.rightBumper()
+                .onTrue(Commands.runOnce(() -> turretSubsystem.setAngle(30.0), turretSubsystem));
+        commandXboxController.leftBumper()
+                .onTrue(Commands.runOnce(() -> turretSubsystem.setAngle(-30.0), turretSubsystem));
 
         return commandXboxController;
     }

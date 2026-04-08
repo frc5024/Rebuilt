@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.HopperConstants;
@@ -15,27 +16,39 @@ import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 public class ShootCommand extends Command {
     // Subsystems
     private final SwerveDriveSubsystem swerveDriveSubsystem;
-    private final ShooterSubsystem shooterSubsystem;
     private final HopperSubsystem hopperSubsystem;
     private final FeederSubsystem feederSubsystem;
+    private final ShooterSubsystem shooterSubsystem;
+    private final double timeLimitSeconds;
+
+    // Variables
+    private Timer runTimer;
 
     /**
      * 
      */
-    public ShootCommand(SwerveDriveSubsystem swerveDriveSubsystem, ShooterSubsystem shooterSubsystem,
-            HopperSubsystem hopperSubsystem, FeederSubsystem feederSubsystem) {
+    public ShootCommand(SwerveDriveSubsystem swerveDriveSubsystem, HopperSubsystem hopperSubsystem,
+            FeederSubsystem feederSubsystem, ShooterSubsystem shooterSubsystem,
+            double timeLimitSeconds) {
         this.swerveDriveSubsystem = swerveDriveSubsystem;
-        this.shooterSubsystem = shooterSubsystem;
         this.hopperSubsystem = hopperSubsystem;
         this.feederSubsystem = feederSubsystem;
+        this.shooterSubsystem = shooterSubsystem;
+        this.timeLimitSeconds = timeLimitSeconds;
 
-        addRequirements(shooterSubsystem, hopperSubsystem, feederSubsystem);
+        this.runTimer = new Timer();
+
+        addRequirements(hopperSubsystem, feederSubsystem, shooterSubsystem);
     }
 
     @Override
     public void initialize() {
         // Only allow slow driving
         swerveDriveSubsystem.setSlowMode(true);
+
+        // reset and start timer
+        runTimer.reset();
+        runTimer.start();
     }
 
     @Override
@@ -51,6 +64,7 @@ public class ShootCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        runTimer.stop();
         feederSubsystem.setVelocity(0.0);
         hopperSubsystem.setVelocity(0.0);
         shooterSubsystem.setVelocity(ShooterConstants.IDLE_SPEED_RPM);
@@ -59,7 +73,7 @@ public class ShootCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        // run until the trigger is released
-        return false;
+        // run until the time limit reached or the trigger is released
+        return timeLimitSeconds > 0.0 ? runTimer.isRunning() && runTimer.hasElapsed(timeLimitSeconds) : false;
     }
 }

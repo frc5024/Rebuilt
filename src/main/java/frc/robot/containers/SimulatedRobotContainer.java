@@ -26,7 +26,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.LockTurretOnTarget;
-import frc.robot.commands.ShootForFiveSecondsCommand;
+import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TuningCommandsDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
@@ -218,16 +218,12 @@ public class SimulatedRobotContainer extends RobotContainer {
 
     @Override
     public void configureNamedCommands() {
-        new EventTrigger("ExtendIntake").onTrue(intakeSubsystem.ExtendArmCommand());
-        new EventTrigger("Intake").whileTrue(intakeSubsystem.IntakeCommand());
-
-        NamedCommands.registerCommand("RunEverything",
-                new ShootForFiveSecondsCommand(shooterSubsystem, hopperSubsystem, feederSubsystem, intakeSubsystem,
-                        () -> swerveDriveSubsystem.getPose()));
+        new EventTrigger("ExtendIntake").onTrue(Commands.runOnce(() -> intakeSubsystem.extendArm()));
+        new EventTrigger("Intake").whileTrue(Commands.runOnce(() -> intakeSubsystem.intakeRoller()));
+        new EventTrigger("Retract").whileTrue(Commands.runOnce(() -> intakeSubsystem.retractArm()));
 
         NamedCommands.registerCommand("ShootFor5Seconds",
-                new ShootForFiveSecondsCommand(shooterSubsystem, hopperSubsystem, feederSubsystem, intakeSubsystem,
-                        () -> swerveDriveSubsystem.getPose()));
+                new ShootCommand(swerveDriveSubsystem, hopperSubsystem, feederSubsystem, shooterSubsystem, 5.0));
     }
 
     @Override

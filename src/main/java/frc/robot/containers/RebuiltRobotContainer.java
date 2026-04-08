@@ -22,7 +22,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.LockTurretOnTarget;
-import frc.robot.commands.ShootForFiveSecondsCommand;
+import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TuningCommandsDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
@@ -177,8 +177,7 @@ public class RebuiltRobotContainer extends RobotContainer {
         new EventTrigger("AimTurret").whileTrue(Commands.runOnce(() -> turretSubsystem.setAngle(0), turretSubsystem));
 
         NamedCommands.registerCommand("RunEverything",
-                new ShootForFiveSecondsCommand(shooterSubsystem, hopperSubsystem, feederSubsystem, intakeSubsystem,
-                        () -> swerveDriveSubsystem.getPose()));
+                new ShootCommand(swerveDriveSubsystem, hopperSubsystem, feederSubsystem, shooterSubsystem, 5.0));
     }
 
     @Override

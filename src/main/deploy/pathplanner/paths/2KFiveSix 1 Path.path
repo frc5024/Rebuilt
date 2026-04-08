@@ -3,51 +3,48 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.765655515370705,
-        "y": 2.189837251356239
+        "x": 4.105282816957417,
+        "y": 0.4335863126501477
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.067191232831317,
-        "y": 1.2645486020751315
-      },
-      "isLocked": false,
-      "linkedName": "Right Intake Stop"
-    },
-    {
-      "anchor": {
-        "x": 6.148267857142858,
-        "y": 0.4717857142857145
-      },
-      "prevControl": {
-        "x": 6.39810477906625,
-        "y": 0.480814138502868
-      },
-      "nextControl": {
-        "x": 5.1358955033800955,
-        "y": 0.4352013415472001
+        "x": 8.028078661844484,
+        "y": 0.500488245931284
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.9053667262969585,
-        "y": 0.4572987477638639
+        "x": 8.09368444846293,
+        "y": 2.189837251356239
       },
       "prevControl": {
-        "x": 5.096596044392894,
-        "y": 0.4769542131636587
+        "x": 8.09368444846293,
+        "y": 0.6658616241949291
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Trench No Rotate Stop"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "ExtendIntake",
+      "waypointRelativePos": 0.0773993808049543,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.14963880288957782,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.54,
     "maxAcceleration": 8.0,
@@ -61,7 +58,7 @@
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Right Trench Paths",
+  "folder": "Test Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0
