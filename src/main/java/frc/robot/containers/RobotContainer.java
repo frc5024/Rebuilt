@@ -103,10 +103,12 @@ abstract public class RobotContainer {
 
     /** This function is called once when autonomous is enabled. */
     public void autonomousInit() {
-        // Reset the pose based on alliance and selected autonmous
-        Pose2d startPose = GameUtil.getPoseFromAuto(getAutonomousCommand().getName());
+        if (Robot.isReal()) {
+            // Reset the pose based on alliance and selected autonmous
+            Pose2d startPose = GameUtil.getPoseFromAuto(getAutonomousCommand().getName());
 
-        swerveDriveSubsystem.setPose(startPose);
+            swerveDriveSubsystem.setPose(startPose);
+        }
     }
 
     /** This function is called once when teleop is enabled. */
