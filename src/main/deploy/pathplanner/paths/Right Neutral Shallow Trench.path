@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.783237924865832,
-        "y": 4.351395348837209
+        "x": 6.4398035714293345,
+        "y": 3.516714285721645
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.7994633273703045,
-        "y": 1.0738640429338102
+        "x": 6.456028973933807,
+        "y": 0.2391829798182461
       },
       "isLocked": false,
       "linkedName": "Right Intake Stop Shallow"
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.5,
-    "maxAcceleration": 2.5,
+    "maxVelocity": 3.7,
+    "maxAcceleration": 2.7,
     "maxAngularVelocity": 600.0,
     "maxAngularAcceleration": 1700.0,
     "nominalVoltage": 12.0,

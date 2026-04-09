@@ -13,19 +13,32 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Neutral Trench"
+            "pathName": "Right Neutral Trench (No Rotation)"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunEverything"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 6.0
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Right Trench Climb"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Climb"
           }
         }
       ]
