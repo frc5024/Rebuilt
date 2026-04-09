@@ -13,6 +13,7 @@ import frc.robot.commands.StickRotationCommand;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
 import frc.robot.commands.spinToHubCommand;
+import frc.robot.commands.turretToggle;
 import frc.robot.commands.zeroTurret;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
@@ -83,11 +84,12 @@ public class ButtonBindings {
                 .whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter, m_hopper),
                         new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
                         Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
-        // commandXboxController.leftTrigger()
-        // .whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter,
-        // m_hopper),
-        // new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
+        commandXboxController.leftBumper()
+                .whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter,
+                        m_hopper),
+                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
 
+        commandXboxController.start().onTrue(new turretToggle(m_turret));
         // slow mode
         commandXboxController.leftTrigger()
                 .whileTrue(
