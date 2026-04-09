@@ -78,7 +78,7 @@ public class ReplayingRobotContainer extends RobotContainer {
 
         this.visionSubsystem = new VisionSubsystem(
                 this.swerveDriveSubsystem::addVisionMeasurement,
-                this.swerveDriveSubsystem,
+                this.swerveDriveSubsystem::getChassisSpeeds,
                 new VisionIO() {
                 },
                 new VisionIO() {

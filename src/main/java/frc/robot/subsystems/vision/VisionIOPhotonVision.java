@@ -1,16 +1,17 @@
 package frc.robot.subsystems.vision;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.lib.camera.Camera;
 import frc.robot.Constants.VisionConstants;
-
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import org.photonvision.PhotonCamera;
 
 /** 
  * 
@@ -34,19 +35,19 @@ public class VisionIOPhotonVision implements VisionIO {
 
     @Override
     public void updateInputs(VisionIOInputs inputs) {
-        inputs.connected = this.photonCamera.isConnected();
+        inputs.connected = photonCamera.isConnected();
 
         // Read new camera observations
         Set<Short> tagIds = new HashSet<>();
         List<PoseObservation> poseObservations = new LinkedList<>();
-        for (var result : this.photonCamera.getAllUnreadResults()) {
+        for (var result : photonCamera.getAllUnreadResults()) {
             // Update latest target observation
             if (result.hasTargets()) {
                 inputs.latestTargetObservation = new TargetObservation(
                         Rotation2d.fromDegrees(result.getBestTarget().getYaw()),
                         Rotation2d.fromDegrees(result.getBestTarget().getPitch()));
             } else {
-                inputs.latestTargetObservation = new TargetObservation(new Rotation2d(), new Rotation2d());
+                inputs.latestTargetObservation = new TargetObservation(Rotation2d.kZero, Rotation2d.kZero);
             }
 
             // Add pose observation
@@ -122,6 +123,6 @@ public class VisionIOPhotonVision implements VisionIO {
 
     @Override
     public String getName() {
-        return this.camera.getName();
+        return camera.getName();
     }
 }

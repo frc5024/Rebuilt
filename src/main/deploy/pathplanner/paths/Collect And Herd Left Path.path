@@ -110,12 +110,6 @@
       "waypointRelativePos": 0.1458885941644565,
       "endWaypointRelativePos": null,
       "command": null
-    },
-    {
-      "name": "Retract",
-      "waypointRelativePos": 2.984084880636624,
-      "endWaypointRelativePos": null,
-      "command": null
     }
   ],
   "globalConstraints": {

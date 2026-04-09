@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -7,6 +9,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -17,19 +20,28 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.SwerveDriveConstants;
+import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 
 /**
  * 
  */
 public class DriveCommands {
+    // Constants
     private static final double DEADBAND = 0.1;
     private static final double ANGLE_KP = 5.0;
     private static final double ANGLE_KD = 0.4;
     private static final double ANGLE_MAX_VELOCITY = 8.0;
     private static final double ANGLE_MAX_ACCELERATION = 20.0;
-    // private static double driveSpeedModifier =
-    // SwerveDriveSubsystem.getSpeedModifier();
+
+    // Slew Rate Limiters
+    private static final SlewRateLimiter xLimiter = new SlewRateLimiter(
+            TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) / 0.5);
+    private static final SlewRateLimiter yLimiter = new SlewRateLimiter(
+            TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) / 0.5);
+    private static final SlewRateLimiter rotLimiter = new SlewRateLimiter(
+            (TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) / SwerveDriveConstants.DRIVE_BASE_RADIUS) / 0.5);
 
     /**
      * 
@@ -75,13 +87,18 @@ public class DriveCommands {
                     // Square rotation value for more precise control
                     omega = Math.copySign(omega * omega, omega);
 
+                    // Apply slew rate limits
+                    double limitedX = xLimiter.calculate(
+                            linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec() * drive.getSpeedModifier());
+                    double limitedY = yLimiter.calculate(
+                            linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec() * drive.getSpeedModifier());
+                    double limitedRot = rotLimiter.calculate(omega * drive.getMaxAngularSpeedRadPerSec());
+
                     // Convert to field relative speeds & send command
-                    ChassisSpeeds speeds = new ChassisSpeeds(
-                            linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec() * drive.getSpeedModifier(),
-                            linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec() * drive.getSpeedModifier(),
-                            omega * drive.getMaxAngularSpeedRadPerSec());
+                    ChassisSpeeds speeds = new ChassisSpeeds(limitedX, limitedY, limitedRot);
                     boolean isFlipped = DriverStation.getAlliance().isPresent()
                             && DriverStation.getAlliance().get() == Alliance.Red;
+
                     drive.runVelocity(
                             ChassisSpeeds.fromFieldRelativeSpeeds(
                                     speeds,

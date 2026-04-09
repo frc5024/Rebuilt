@@ -64,7 +64,6 @@ public class SwerveDriveSubsystem extends StateMachineSubsystem {
             lastModulePositions, new Pose2d());
     private final Consumer<Pose2d> resetSimulationPoseCallBack;
 
-    private double speedModifier = 1.0;
     private boolean slowMode = false;
 
     // Maximum angular velocity robot can reach (rad/s)
@@ -74,7 +73,7 @@ public class SwerveDriveSubsystem extends StateMachineSubsystem {
     double kVTheta = 12.0 / maxAngularVelocity;
 
     // used to track robot rotation in simulated gyro
-    private double simulatedYaw;
+    private Rotation2d simulatedRotation;
 
     /**
      * 
@@ -136,7 +135,7 @@ public class SwerveDriveSubsystem extends StateMachineSubsystem {
                 });
 
         // Set initial simulated yaw
-        this.simulatedYaw = 0.0;
+        this.simulatedRotation = new Rotation2d();
 
         // set shuffleboard entries if in tuning mode
         if (RobotConstants.TUNING_MODE) {
@@ -312,7 +311,7 @@ public class SwerveDriveSubsystem extends StateMachineSubsystem {
      * 
      */
     public double getSpeedModifier() {
-        return speedModifier * (slowMode ? 0.1 : 1.0);
+        return slowMode ? 0.1 : 1.0;
     }
 
     /** Returns the position of each module in radians. */
@@ -383,20 +382,19 @@ public class SwerveDriveSubsystem extends StateMachineSubsystem {
     /** Resets the current odometry pose. */
     public void setPose(Pose2d pose) {
         resetSimulationPoseCallBack.accept(pose);
-        gyroIO.setYaw(pose.getRotation().getDegrees());
-        simulatedYaw = pose.getRotation().getRadians();
+        // gyroIO.setYaw(pose.getRotation().getDegrees());
+        simulatedRotation = pose.getRotation();
         poseEstimator.resetPosition(pose.getRotation(), getModulePositions(), pose);
     }
 
     @Override
     public void simulationPeriodic() {
-        ChassisSpeeds robotRelativeSpeeds = getChassisSpeeds();
+        double angularVelocity = getChassisSpeeds().omegaRadiansPerSecond;
 
-        double angleIncrease = robotRelativeSpeeds.omegaRadiansPerSecond * 0.2;
-        simulatedYaw += angleIncrease;
+        simulatedRotation = simulatedRotation.plus(new Rotation2d(angularVelocity * 0.2));
 
         if (gyroIO instanceof GyroModuleIOSim gyroModuleIOSim) {
-            gyroModuleIOSim.setRawYaw(angleIncrease);
+            gyroModuleIOSim.setRawYaw(simulatedRotation.getRadians());
             // double rawYawRadians = getRotation().getRadians();
             // gyroModuleIOSim.setRawYaw(rawYawRadians);
         }

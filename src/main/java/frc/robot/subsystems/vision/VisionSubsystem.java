@@ -2,6 +2,7 @@ package frc.robot.subsystems.vision;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -10,6 +11,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
@@ -17,7 +19,6 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import frc.robot.util.LoggedTracer;
 
@@ -29,11 +30,11 @@ public class VisionSubsystem extends SubsystemBase {
     private final VisionIO[] visionIO;
     private final VisionIOInputsAutoLogged[] inputs;
 
-    // Subsystems
-    private final SwerveDriveSubsystem swerveDriveSubsystem;
+    // Parameters
+    private final VisionConsumer consumer;
+    private final Supplier<ChassisSpeeds> chassisSpeedsSupplier;
 
     // Variables
-    private final VisionConsumer consumer;
     private final StringBuilder sb;
 
     // Lists used to store the poses
@@ -53,9 +54,10 @@ public class VisionSubsystem extends SubsystemBase {
     /**
      * 
      */
-    public VisionSubsystem(VisionConsumer consumer, SwerveDriveSubsystem drivetrain, VisionIO... visionIO) {
+    public VisionSubsystem(VisionConsumer consumer, Supplier<ChassisSpeeds> chassisSpeedsSupplier,
+            VisionIO... visionIO) {
         this.consumer = consumer;
-        this.swerveDriveSubsystem = drivetrain;
+        this.chassisSpeedsSupplier = chassisSpeedsSupplier;
         this.visionIO = visionIO;
 
         // Initialize inputs
@@ -130,28 +132,26 @@ public class VisionSubsystem extends SubsystemBase {
             // Loop over pose observations
             for (var observation : this.inputs[cameraIndex].poseObservations) {
                 // Check whether to reject pose
-                boolean rejectPose = observation.tagCount() == 0 // Must have at least one tag
-                        || (observation.tagCount() == 1
-                                && observation.ambiguity() > VisionConstants.maxAmbiguity) // Cannot be high ambiguity
-                        || Math.abs(observation.pose().getZ()) > VisionConstants.maxZError // Must have realistic Z
-                                                                                           // coordinate
-
-                        // Must be within the field boundaries
+                // Must have at least one tag, cannot be high ambiguity, must have realistic Z
+                // coordinate, must be within the field boundaries
+                boolean rejectPose = observation.tagCount() == 0
+                        || (observation.tagCount() == 1 && observation.ambiguity() > VisionConstants.maxAmbiguity)
+                        || Math.abs(observation.pose().getZ()) > VisionConstants.maxZError
                         || observation.pose().getX() < 0.0
                         || observation.pose().getX() > VisionConstants.aprilTagLayout.getFieldLength()
                         || observation.pose().getY() < 0.0
                         || observation.pose().getY() > VisionConstants.aprilTagLayout.getFieldWidth();
 
                 // Reject if robot rotating fast
-                var chassisSpeeds = swerveDriveSubsystem.getChassisSpeeds();
+                var chassisSpeeds = chassisSpeedsSupplier.get();
                 if (Math.abs(chassisSpeeds.omegaRadiansPerSecond) > Math.toRadians(120)) {
-                    continue;
+                    rejectPose = true;
                 }
 
                 // Reject if robot moving fast
                 double linearSpeed = Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
                 if (linearSpeed > 3.0) {
-                    continue;
+                    rejectPose = true;
                 }
 
                 // Add pose to log

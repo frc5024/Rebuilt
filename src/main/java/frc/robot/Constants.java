@@ -215,15 +215,15 @@ public final class Constants {
         public static final Pose2d[][] SIMULATION_START_POSES = new Pose2d[][] {
                 // Blue Alliance
                 {
-                        new Pose2d(3.600, 7.500, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(3.600, 4.000, Rotation2d.fromDegrees(0.0)),
-                        new Pose2d(3.600, 0.600, Rotation2d.fromDegrees(0.0))
+                        new Pose2d(3.600, 7.4000, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(3.600, 4.0345, Rotation2d.fromDegrees(0.0)),
+                        new Pose2d(3.600, 0.6858, Rotation2d.fromDegrees(0.0))
                 },
                 // Red Alliance
                 {
-                        new Pose2d(13.000, 2.100, Rotation2d.fromDegrees(180.0)),
-                        new Pose2d(14.3538, 4.0345, Rotation2d.fromDegrees(180.0)),
-                        new Pose2d(13.000, 7.400, Rotation2d.fromDegrees(180.0))
+                        new Pose2d(13.000, 0.6858, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(13.000, 4.0345, Rotation2d.fromDegrees(180.0)),
+                        new Pose2d(13.000, 7.4000, Rotation2d.fromDegrees(180.0))
                 }
         };
 

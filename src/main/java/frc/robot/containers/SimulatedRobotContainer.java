@@ -41,7 +41,7 @@ import frc.robot.subsystems.intake.ArmModuleIOSim;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.intake.RollerModuleIOSim;
 import frc.robot.subsystems.shooter.ShooterModuleIOSim;
-import frc.robot.subsystems.swervedrive.GyroModuleIO;
+import frc.robot.subsystems.swervedrive.GyroModuleIOSim;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveModuleIOSim;
 import frc.robot.subsystems.turret.TurretModuleIOSim;
@@ -70,9 +70,9 @@ public class SimulatedRobotContainer extends RobotContainer {
 
         // simulated subsystems
         this.swerveDriveSubsystem = new SwerveDriveSubsystem(
-                // new GyroModuleIOSim(),
-                new GyroModuleIO() {
-                },
+                new GyroModuleIOSim(),
+                // new GyroModuleIO() {
+                // },
                 new SwerveModuleIOSim(TunerConstants.FrontLeft),
                 new SwerveModuleIOSim(TunerConstants.FrontRight),
                 new SwerveModuleIOSim(TunerConstants.BackLeft),
@@ -82,7 +82,7 @@ public class SimulatedRobotContainer extends RobotContainer {
 
         this.visionSubsystem = new VisionSubsystem(
                 this.swerveDriveSubsystem::addVisionMeasurement,
-                this.swerveDriveSubsystem,
+                this.swerveDriveSubsystem::getChassisSpeeds,
                 new VisionIOPhotonVisionSim(VisionConstants.frontCamera, this.swerveDriveSubsystem::getPose),
                 new VisionIOPhotonVisionSim(VisionConstants.rearCamera, this.swerveDriveSubsystem::getPose));
 
