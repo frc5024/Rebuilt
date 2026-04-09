@@ -135,6 +135,9 @@ public class ButtonBindings {
         commandXboxController.rightBumper().whileTrue(m_intake.intakePIDCommand());
 
         commandXboxController.back().whileTrue(m_intake.outtakePIDCommand());
+        // TODO: Turn off turret being default command and turn it on here, then turn it
+        // off in the other commands that use the turret
+        // commandXboxController.start().onTrue()
 
         return commandXboxController;
     }
