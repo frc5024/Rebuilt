@@ -12,8 +12,8 @@
     "Drive Back Autos",
     "Right Trench Autos"
   ],
-  "defaultMaxVel": 4.3,
-  "defaultMaxAccel": 3.0,
+  "defaultMaxVel": 3.7,
+  "defaultMaxAccel": 2.7,
   "defaultMaxAngVel": 600.0,
   "defaultMaxAngAccel": 1700.0,
   "defaultNominalVoltage": 12.0,
