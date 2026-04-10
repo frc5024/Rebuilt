@@ -547,7 +547,7 @@ public final class Constants {
      */
     public static final class TurretConstants {
         public static final double OFFSET_X = -0.165; // -0.254
-        public static final double OFFSET_Y = 0.165; // 0.1778
+        public static final double OFFSET_Y = 0.1778;
         public static final double OFFSET_Z = 0.40;
         public static final double ANGLE_LIMIT = 135.0;
 

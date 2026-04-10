@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.util.GameUtil;
 
@@ -51,7 +52,7 @@ public class LockTurretOnTarget extends Command {
         double ballVelocity = ballVelocitySupplier.getAsDouble();
 
         // Turret's offset from the robot's center and turret's position on the field
-        Translation2d turretOffset = new Translation2d(-0.15, 0.1778);
+        Translation2d turretOffset = new Translation2d(TurretConstants.OFFSET_X, TurretConstants.OFFSET_Y);
         Translation2d turretFieldPos = robotPose.getTranslation().plus(turretOffset.rotateBy(robotPose.getRotation()));
 
         double distanceToTarget = turretFieldPos.getDistance(targetPose.getTranslation());
