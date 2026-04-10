@@ -30,7 +30,7 @@
                 },
                 {
                     "axis": "y",
-                    "degrees": 15
+                    "degrees": -15
                 },
                 {
                     "axis": "z",
@@ -46,7 +46,7 @@
                 960,
                 720
             ],
-            "fov": 70
+            "fov": 82
         },
         {
             "name": "RearCam",
@@ -73,7 +73,7 @@
                 960,
                 720
             ],
-            "fov": 70
+            "fov": 82
         }
     ],
     "components": [

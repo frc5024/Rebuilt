@@ -192,6 +192,13 @@ public class VisionSubsystem extends SubsystemBase {
                         observation.pose().toPose2d(),
                         observation.timestamp(),
                         VecBuilder.fill(linearStdDev, linearStdDev, angularStdDev));
+
+                sb.setLength(0);
+                sb.append("Subsystems/Vision/").append(visionIO[cameraIndex].getName()).append("/LinearStdDev");
+                Logger.recordOutput(sb.toString(), linearStdDev);
+                sb.setLength(0);
+                sb.append("Subsystems/Vision/").append(visionIO[cameraIndex].getName()).append("/AngulareStdDev");
+                Logger.recordOutput(sb.toString(), angularStdDev);
             }
 
             // Log camera datadata

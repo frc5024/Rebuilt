@@ -81,20 +81,15 @@ public class VisionIOLimelight implements VisionIO {
                     new PoseObservation(
                             // Timestamp, based on server timestamp of publish and latency
                             rawSample.timestamp * 1.0e-6 - rawSample.value[6] * 1.0e-3,
-
                             // 3D pose estimate
                             parsePose(rawSample.value),
-
                             // Ambiguity, using only the first tag because ambiguity isn't applicable for
                             // multitag
                             rawSample.value.length >= 18 ? rawSample.value[17] : 0.0,
-
                             // Tag count
                             (int) rawSample.value[7],
-
                             // Average tag distance
                             rawSample.value[9],
-
                             // Observation type
                             PoseObservationType.MEGATAG_1));
         }
@@ -108,19 +103,14 @@ public class VisionIOLimelight implements VisionIO {
                     new PoseObservation(
                             // Timestamp, based on server timestamp of publish and latency
                             rawSample.timestamp * 1.0e-6 - rawSample.value[6] * 1.0e-3,
-
                             // 3D pose estimate
                             parsePose(rawSample.value),
-
                             // Ambiguity, zeroed because the pose is already disambiguated
                             0.0,
-
                             // Tag count
                             (int) rawSample.value[7],
-
                             // Average tag distance
                             rawSample.value[9],
-
                             // Observation type
                             PoseObservationType.MEGATAG_2));
         }
