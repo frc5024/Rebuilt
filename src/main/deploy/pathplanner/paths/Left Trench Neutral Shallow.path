@@ -8,36 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.443982142857157,
-        "y": 7.662999999996666
+        "x": 6.693056818181819,
+        "y": 7.601159090909091
       },
       "isLocked": false,
       "linkedName": "left trench stop"
     },
     {
       "anchor": {
-        "x": 6.067285714285728,
-        "y": 4.261749999996666
+        "x": 5.889124999999999,
+        "y": 5.003840909090909
       },
       "prevControl": {
-        "x": 6.4721964285714435,
-        "y": 5.881392857139523
+        "x": 5.731577922077907,
+        "y": 6.601397727276061
       },
       "nextControl": {
-        "x": 5.917703898628442,
-        "y": 3.663422737367524
+        "x": 5.949652907065911,
+        "y": 4.390076617813849
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.622142857142856,
-        "y": 3.322357142857143
+        "x": 7.569136363636364,
+        "y": 4.4575795454545455
       },
       "prevControl": {
-        "x": 6.310232142857156,
-        "y": 3.484321428568094
+        "x": 6.257225649350664,
+        "y": 4.619543831165497
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,16 +46,30 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.2406417112299475,
+      "waypointRelativePos": 0.8553459119496856,
       "rotationDegrees": -90.0
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.3842010771992825,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 1.5,
+        "maxAngularVelocity": 600.0,
+        "maxAngularAcceleration": 1700.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "ExtendIntake",
-      "waypointRelativePos": 0.305084745762712,
+      "waypointRelativePos": 0.4201077199281868,
       "endWaypointRelativePos": null,
       "command": null
     },
@@ -67,8 +81,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.7,
-    "maxAcceleration": 2.7,
+    "maxVelocity": 4.3,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 600.0,
     "maxAngularAcceleration": 1700.0,
     "nominalVoltage": 12.0,
