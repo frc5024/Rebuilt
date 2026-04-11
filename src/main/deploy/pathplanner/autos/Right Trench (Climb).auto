@@ -29,7 +29,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 6.0
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -39,6 +39,24 @@
           "type": "path",
           "data": {
             "pathName": "Right Trench Climb"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Rotate On Spot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Climb"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Climb"
           }
         }
       ]

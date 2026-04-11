@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.4398035714293345,
-        "y": 3.516714285721645
+        "x": 1.045,
+        "y": 4.923897721740112
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.456028973933807,
-        "y": 0.2391829798182461
+        "x": 1.295,
+        "y": 4.923897721740112
       },
       "isLocked": false,
-      "linkedName": "Right Intake Stop Shallow"
+      "linkedName": "Left Climb"
     },
     {
       "anchor": {
-        "x": 4.085431818181818,
-        "y": 0.4717857142857145
+        "x": 1.045,
+        "y": 4.923897721740112
       },
       "prevControl": {
-        "x": 6.559934765815579,
-        "y": 0.5409886363636371
+        "x": 0.7949999999999999,
+        "y": 4.923897721740112
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Trench No Rotate Stop"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -45,10 +45,10 @@
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Right Trench Paths",
+  "folder": "Left Trench Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

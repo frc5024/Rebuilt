@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Trench Neutral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Neutral Trench (No Rotation)"
+            "pathName": "Left Trench Neutral"
           }
         },
         {
@@ -29,7 +23,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 7.0
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -38,13 +32,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Trench Neutral Shallow"
+            "pathName": "Left Neutral Trench (No Rotation)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Trench Climb"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": " Left Rotate On Spot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Climb Line Up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Climb"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Right Trench Autos",
+  "folder": "Left Trench Autos",
   "choreoAuto": false
 }

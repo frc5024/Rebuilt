@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.848375,
-        "y": 0.568964285714286
+        "x": 4.085431818181818,
+        "y": 0.4717857142857145
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.03876345326636388,
-        "y": 0.963020032114433
+        "x": 1.9828409090909087,
+        "y": 0.4379204545454544
       },
       "isLocked": false,
-      "linkedName": "Right Trench Stop"
+      "linkedName": "Right Trench No Rotate Stop"
     },
     {
       "anchor": {
@@ -20,12 +20,12 @@
         "y": 2.440329879366967
       },
       "prevControl": {
-        "x": 1.075,
-        "y": 1.9938026743623767
+        "x": 1.0036931818181816,
+        "y": 1.746886363636364
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Climb"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Right Trench Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.693056818181819,
-        "y": 7.601159090909091
+        "x": 7.661897727272727,
+        "y": 7.796988636363636
       },
       "isLocked": false,
       "linkedName": "left trench stop"
@@ -69,13 +69,13 @@
   "eventMarkers": [
     {
       "name": "ExtendIntake",
-      "waypointRelativePos": 0.4201077199281868,
+      "waypointRelativePos": 0.21184919210053796,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "Intake",
-      "waypointRelativePos": 0.48135593220339007,
+      "waypointRelativePos": 0.23339317773788135,
       "endWaypointRelativePos": null,
       "command": null
     }

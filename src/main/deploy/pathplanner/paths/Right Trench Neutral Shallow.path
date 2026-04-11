@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.218943181818181,
-        "y": 0.6749772727272727
+        "x": 6.754897727272727,
+        "y": 0.4997613636363645
       },
       "isLocked": false,
       "linkedName": "Right Trench No Rotate Stop"
@@ -45,6 +45,10 @@
     }
   ],
   "rotationTargets": [
+    {
+      "waypointRelativePos": 0.32389937106918243,
+      "rotationDegrees": 90.0
+    },
     {
       "waypointRelativePos": 1.0754716981132044,
       "rotationDegrees": 90.0
