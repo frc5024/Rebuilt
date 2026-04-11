@@ -223,7 +223,8 @@ public class SimulatedRobotContainer extends RobotContainer {
         new EventTrigger("Retract").whileTrue(Commands.runOnce(() -> intakeSubsystem.retractArm()));
 
         NamedCommands.registerCommand("ShootFor5Seconds",
-                new ShootCommand(swerveDriveSubsystem, hopperSubsystem, feederSubsystem, shooterSubsystem, 5.0));
+                new ShootCommand(swerveDriveSubsystem, hopperSubsystem, feederSubsystem, shooterSubsystem,
+                        intakeSubsystem.isIntaking(), 5.0));
     }
 
     @Override

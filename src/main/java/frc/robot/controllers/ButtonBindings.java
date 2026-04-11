@@ -98,7 +98,7 @@ public class ButtonBindings {
         commandXboxController.leftTrigger()
                 .whileTrue(
                         new ShootCommand(swerveDriveSubsystem, hopperSubsystem, feederSubsystem, shooterSubsystem,
-                                0.0));
+                                intakeSubsystem.isIntaking(), 0.0));
 
         commandXboxController.rightTrigger()
                 .whileTrue(new InstantCommand(() -> swerveDriveSubsystem.setSlowMode(true)));

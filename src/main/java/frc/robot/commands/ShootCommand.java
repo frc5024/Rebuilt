@@ -14,11 +14,12 @@ import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
  * 
  */
 public class ShootCommand extends Command {
-    // Subsystems
+    // Parameters
     private final SwerveDriveSubsystem swerveDriveSubsystem;
     private final HopperSubsystem hopperSubsystem;
     private final FeederSubsystem feederSubsystem;
     private final ShooterSubsystem shooterSubsystem;
+    private final boolean isIntaking;
     private final double timeLimitSeconds;
 
     // Variables
@@ -28,12 +29,13 @@ public class ShootCommand extends Command {
      * 
      */
     public ShootCommand(SwerveDriveSubsystem swerveDriveSubsystem, HopperSubsystem hopperSubsystem,
-            FeederSubsystem feederSubsystem, ShooterSubsystem shooterSubsystem,
+            FeederSubsystem feederSubsystem, ShooterSubsystem shooterSubsystem, boolean isIntaking,
             double timeLimitSeconds) {
         this.swerveDriveSubsystem = swerveDriveSubsystem;
         this.hopperSubsystem = hopperSubsystem;
         this.feederSubsystem = feederSubsystem;
         this.shooterSubsystem = shooterSubsystem;
+        this.isIntaking = isIntaking;
         this.timeLimitSeconds = timeLimitSeconds;
 
         this.runTimer = new Timer();
@@ -58,7 +60,7 @@ public class ShootCommand extends Command {
         // spin up hooper and feeder if shooter is ready
         if (shooterSubsystem.isAtSetpoint()) {
             feederSubsystem.setVelocity(FeederConstants.RPM);
-            hopperSubsystem.setVelocity(HopperConstants.RPM);
+            hopperSubsystem.setVelocity(isIntaking ? HopperConstants.SLOW_RPM : HopperConstants.RPM);
         }
     }
 

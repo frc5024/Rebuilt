@@ -159,7 +159,7 @@ public class ButtonsBindingsSim {
         commandXboxController.leftTrigger()
                 .whileTrue(
                         new ShootCommand(swerveDriveSubsystem, hopperSubsystem, feederSubsystem, shooterSubsystem,
-                                0.0));
+                                intakeSubsystem.isIntaking(), 0.0));
 
         return commandXboxController;
     }

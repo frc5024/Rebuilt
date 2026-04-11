@@ -177,7 +177,8 @@ public class RebuiltRobotContainer extends RobotContainer {
         new EventTrigger("AimTurret").whileTrue(Commands.runOnce(() -> turretSubsystem.setAngle(0), turretSubsystem));
 
         NamedCommands.registerCommand("RunEverything",
-                new ShootCommand(swerveDriveSubsystem, hopperSubsystem, feederSubsystem, shooterSubsystem, 5.0));
+                new ShootCommand(swerveDriveSubsystem, hopperSubsystem, feederSubsystem, shooterSubsystem,
+                        intakeSubsystem.isIntaking(), 5.0));
     }
 
     @Override

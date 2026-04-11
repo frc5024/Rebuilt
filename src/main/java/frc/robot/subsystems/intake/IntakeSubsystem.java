@@ -127,6 +127,10 @@ public class IntakeSubsystem extends StateMachineSubsystem {
         return armModuleIO.isRetracted();
     }
 
+    public boolean isIntaking() {
+        return rollerModuleIO.getGoalVelocity() != 0.0;
+    }
+
     public boolean isExtended() {
         return armModuleIO.isExtended();
     }

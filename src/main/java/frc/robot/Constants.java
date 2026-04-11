@@ -282,6 +282,7 @@ public final class Constants {
     public static class HopperConstants {
         public static final int CAPACITY = 25;
         public static final double RPM = 533.33;
+        public static final double SLOW_RPM = 150.0;
         public static final double UNJAM_RPM = -222.22;
 
         public static final double kS = 0.0;

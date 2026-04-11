@@ -151,7 +151,8 @@ public class ReplayingRobotContainer extends RobotContainer {
         new EventTrigger("ExtendIntake").onTrue(intakeSubsystem.ExtendArmCommand());
 
         NamedCommands.registerCommand("RunEverything",
-                new ShootCommand(swerveDriveSubsystem, hopperSubsystem, feederSubsystem, shooterSubsystem, 5.0));
+                new ShootCommand(swerveDriveSubsystem, hopperSubsystem, feederSubsystem, shooterSubsystem,
+                        intakeSubsystem.isIntaking(), 5.0));
     }
 
     @Override
