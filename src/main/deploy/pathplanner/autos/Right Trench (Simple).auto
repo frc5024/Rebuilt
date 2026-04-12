@@ -17,9 +17,28 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "RunEverything"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunEverything"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 7.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Trench Neutral Shallow"
           }
         }
       ]

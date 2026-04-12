@@ -174,7 +174,7 @@ public final class Constants {
         public static final double RETRACTING_SPEED = 0.45;
 
         public static final double INTAKE_RPM = 2000;
-        public static final double OUTTAKE_RPM = 1700;
+        public static final double OUTTAKE_RPM = -1700;
 
         public static final double driveCoefficient = 0.1;
 
