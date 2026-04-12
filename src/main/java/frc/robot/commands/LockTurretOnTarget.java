@@ -66,7 +66,6 @@ public class LockTurretOnTarget extends Command {
 
         // Calculate the vector from the turret to the target
         Translation2d turretToVirtualTarget = virtualTarget.minus(turretFieldPos);
-        // double shootDistance = turretToVirtualTarget.getDistance(virtualTarget);
         double shootDistance = turretFieldPos.getDistance(virtualTarget);
         distanceConsumer.accept(shootDistance);
 
