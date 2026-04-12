@@ -36,7 +36,7 @@ public class ClearTheWallCommand extends Command {
     private final EventTrigger shootTrigger;
 
     // Variables
-    private final PathConstraints CONSTRAINTS = new PathConstraints(0.5, 2.0, Units.degreesToRadians(540),
+    private final PathConstraints CONSTRAINTS = new PathConstraints(3.0, 4.0, Units.degreesToRadians(540),
             Units.degreesToRadians(720));
     private Command followPathCommand;
 
