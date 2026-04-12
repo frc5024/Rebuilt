@@ -225,7 +225,7 @@ public class spinToHubCommand extends Command {
             while (delta < -180.0) {
                 delta += 360.0;
             }
-            double smoothedDeg = prevAngleDeg + ANGLE_SMOOTH_ALPHA * delta;
+            double smoothedDeg = newAngleDeg + ANGLE_SMOOTH_ALPHA * delta;
             turretAngleVar = Rotation2d.fromDegrees(smoothedDeg);
             prevAngleDeg = smoothedDeg;
         } else {
