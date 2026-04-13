@@ -1,10 +1,13 @@
 package frc.robot.subsystems.intake;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -13,9 +16,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.intakeConstants;
+import frc.robot.commands.Intake.AdaptiveIntakeCommand;
 import frc.robot.commands.Intake.IntakeExtendArm;
 import frc.robot.commands.Intake.IntakeRetractArm;
 import frc.robot.commands.Intake.IntakeSpinMotor;
+import frc.robot.commands.Intake.JostleArmCommand;
 import frc.robot.commands.Intake.OuttakeSpinMotor;
 import frc.robot.commands.Intake.PIDExtendArm;
 import frc.robot.commands.Intake.PIDIntakeSpin;
@@ -283,5 +288,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command outtakePIDCommand() {
         return new PIDOuttakeSpin(this);
+    }
+
+    public Command jostleArmCommand() {
+        return new JostleArmCommand(this);
+    }
+
+    public Command adaptiveIntakeCommand(Supplier<ChassisSpeeds> chassisSpeeds) {
+        return new AdaptiveIntakeCommand(this, chassisSpeeds);
     }
 }
