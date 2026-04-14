@@ -1,0 +1,25 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MESS UP AUTo"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunEverything"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Right Trench Autos",
+  "choreoAuto": false
+}

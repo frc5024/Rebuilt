@@ -135,7 +135,7 @@ public class RebuiltRobotContainer extends RobotContainer {
         NamedCommands.registerCommand("RunEverything",
                 Commands.parallel(new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
                         new runEverything(m_feeder, m_shooter, m_hopper),
-                        Commands.waitSeconds(6).andThen(m_intake.RetractArmCommand())));
+                        Commands.waitSeconds(4).andThen(m_intake.RetractArmCommand())));
         NamedCommands.registerCommand("RunEverythingNoArm",
                 Commands.parallel(new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
                         new runEverything(m_feeder, m_shooter, m_hopper)));
