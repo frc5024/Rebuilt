@@ -173,8 +173,8 @@ public final class Constants {
         public static final double EXTENDING_SPEED = -0.15;
         public static final double RETRACTING_SPEED = 0.45;
 
-        public static final double INTAKE_RPM = 2000;
-        public static final double OUTTAKE_RPM = -1700;
+        public static final double INTAKE_RPM = 700;
+        public static final double OUTTAKE_RPM = 1700;
 
         public static final double driveCoefficient = 0.1;
 
@@ -212,16 +212,28 @@ public final class Constants {
         public static final double speed = 0.1;
         public static final double feederspeed = -0.85;
 
+        public static final double coeff = 1.1;
+
         public static final double WHEEL_DIAMETER_METERS = 0.1016;
 
         public static InterpolatingDoubleTreeMap velocityToRPMMap = new InterpolatingDoubleTreeMap();
         static {
+            // NEW RPMS WITH NEW FEEDER MOTOR ***
             velocityToRPMMap.put(2.4384, 2800.0);
-            velocityToRPMMap.put(3.048, 3100.0);
-            velocityToRPMMap.put(4.2672, 3660.0);
-            velocityToRPMMap.put(5.4864, 4200.0); // 4450
-            velocityToRPMMap.put(6.7056, 4575.0);
-            velocityToRPMMap.put(7.9248, 5100.0);
+            velocityToRPMMap.put(3.048, 3200.0); // 3200 previous
+            velocityToRPMMap.put(4.2672, 4000.0); // 3660 (previous)
+            velocityToRPMMap.put(5.4864, 4450.0); // 4450, 4200 previous
+            velocityToRPMMap.put(6.7056, 5100.0); // 4575 prev
+            velocityToRPMMap.put(7.9248, 5750.0); // 5100 prev
+        }
+
+        public static InterpolatingDoubleTreeMap distanceToTOFMap = new InterpolatingDoubleTreeMap();
+        static {
+            distanceToTOFMap.put(2.4384, 0.886);
+            distanceToTOFMap.put(3.048, 1.066);
+            distanceToTOFMap.put(4.2672, 1.376);
+            distanceToTOFMap.put(5.4864, 1.546);
+            distanceToTOFMap.put(6.7056, 1.66);
         }
     }
 
