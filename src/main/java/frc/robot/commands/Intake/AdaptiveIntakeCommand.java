@@ -16,7 +16,7 @@ public class AdaptiveIntakeCommand extends Command {
     private final IntakeSubsystem m_intake;
     private final Supplier<ChassisSpeeds> m_chassisSpeeds;
 
-    private static final double MIN_INTAKE_RPM = 1500;
+    private static final double MIN_INTAKE_RPM = 700;
     private static final double MAX_INTAKE_RPM = 3000;
     private static final double MAX_ROBOT_SPEED = 4.5; // m/s
 
