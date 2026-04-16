@@ -426,6 +426,16 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         return getPose().getRotation();
     }
 
+    /** Returns the robot's pitch angle in degrees. */
+    public double getPitchDegrees() {
+        return gyroInputs.pitchDegrees;
+    }
+
+    /** Returns the robot's roll angle in degrees. */
+    public double getRollDegrees() {
+        return gyroInputs.rollDegrees;
+    }
+
     /** Resets the current odometry pose. */
     public void setPose(Pose2d pose) {
         resetSimulationPoseCallBack.accept(pose);

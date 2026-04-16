@@ -30,6 +30,10 @@ public class VisionSubsystem extends SubsystemBase {
     private final Alert[] disconnectedAlerts;
     private final SwerveDriveSubsystem drivetrain;
 
+    // Robot flatness tolerance (degrees)
+    private static final double MAX_PITCH_DEGREES = 5.0;
+    private static final double MAX_ROLL_DEGREES = 5.0;
+
     /**
      * 
      */
@@ -60,6 +64,17 @@ public class VisionSubsystem extends SubsystemBase {
      */
     public Rotation2d getTargetX(int cameraIndex) {
         return this.inputs[cameraIndex].latestTargetObservation.tx();
+    }
+
+    /**
+     * Checks if the robot is approximately flat on the ground.
+     * Returns true if pitch and roll are within tolerance.
+     */
+    private boolean isRobotFlat() {
+        double pitchDegrees = Math.abs(drivetrain.getPitchDegrees());
+        double rollDegrees = Math.abs(drivetrain.getRollDegrees());
+
+        return pitchDegrees < MAX_PITCH_DEGREES && rollDegrees < MAX_ROLL_DEGREES;
     }
 
     @Override
@@ -112,7 +127,10 @@ public class VisionSubsystem extends SubsystemBase {
                         || observation.pose().getX() < 0.0
                         || observation.pose().getX() > VisionConstants.aprilTagLayout.getFieldLength()
                         || observation.pose().getY() < 0.0
-                        || observation.pose().getY() > VisionConstants.aprilTagLayout.getFieldWidth();
+                        || observation.pose().getY() > VisionConstants.aprilTagLayout.getFieldWidth()
+
+                        // Robot must be flat on the ground
+                        || !isRobotFlat();
 
                 // Reject if robot rotating fast
                 var chassisSpeeds = drivetrain.getChassisSpeeds();
