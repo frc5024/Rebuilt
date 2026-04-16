@@ -9,12 +9,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.StickRotationCommand;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
-import frc.robot.commands.spinToHubCommand;
 import frc.robot.commands.turretToggle;
-import frc.robot.commands.zeroTurret;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hopper.HopperSubsystem;
@@ -68,45 +65,50 @@ public class ButtonBindings {
     }
 
     /**
-     * 
+     * Driver Controller Button Bindings
      */
     private CommandXboxController setDriverBindingsController() {
-        CommandXboxController commandXboxController = new CommandXboxController(DRIVER_PORT);
-        // Default command, normal field-relative drive
+        CommandXboxController controller = new CommandXboxController(DRIVER_PORT);
+
+        // ========== DEFAULT COMMAND ==========
         swerveDriveSubsystem.setDefaultCommand(
                 DriveCommands.joystickDrive(
                         swerveDriveSubsystem,
-                        () -> -commandXboxController.getLeftY(),
-                        () -> -commandXboxController.getLeftX(),
-                        () -> -commandXboxController.getRightX()));
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
+                        () -> -controller.getRightX()));
 
-        commandXboxController.leftTrigger()
-                .whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter, m_hopper),
+        // ========== SHOOTING (TRIGGERS) ==========
+        // Left Trigger: Shoot with arm jostling (settles fuel)
+        controller.leftTrigger()
+                .whileTrue(Commands.parallel(
+                        new runEverything(m_feeder, m_shooter, m_hopper),
+                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
+                        m_intake.jostleArmCommand()));
+
+        // Left Bumper: Shoot without arm jostling (for static shots)
+        controller.leftBumper()
+                .whileTrue(Commands.parallel(
+                        new runEverything(m_feeder, m_shooter, m_hopper),
                         new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
-        // Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
-        // commandXboxController.leftTrigger()
-        // .whileTrue(Commands.parallel(new runEverything(m_feeder, m_shooter,
-        // m_hopper),
-        // new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
 
-        commandXboxController.start().onTrue(new turretToggle(m_turret));
-        // slow mode
-        commandXboxController.leftTrigger()
-                .whileTrue(
-                        new StartEndCommand(() -> swerveDriveSubsystem.isSlowMode = true,
-                                () -> swerveDriveSubsystem.isSlowMode = false));
+        // ========== DRIVE MODE (RIGHT TRIGGERS + START) ==========
+        // Right Trigger: Enable slow mode
+        controller.rightTrigger()
+                .whileTrue(new StartEndCommand(
+                        () -> swerveDriveSubsystem.isSlowMode = true,
+                        () -> swerveDriveSubsystem.isSlowMode = false));
 
-        commandXboxController.rightTrigger()
-                .whileTrue(
-                        new StartEndCommand(() -> swerveDriveSubsystem.isSlowMode = true,
-                                () -> swerveDriveSubsystem.isSlowMode = false));
+        // Start Button: Toggle turret on/off
+        controller.start().onTrue(new turretToggle(m_turret));
 
-        // aim to hub
-        commandXboxController.a().whileTrue(
+        // ========== FACE BUTTONS (DRIVE DIRECTION) ==========
+        // A Button: Aim robot toward hub
+        controller.a().whileTrue(
                 DriveCommands.joystickDriveAtAngle(
                         swerveDriveSubsystem,
-                        () -> -commandXboxController.getLeftY(),
-                        () -> -commandXboxController.getLeftX(),
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
                         () -> {
                             Pose2d robotPose = swerveDriveSubsystem.getPose();
                             double robotX = robotPose.getX();
@@ -120,32 +122,37 @@ public class ButtonBindings {
                             return Rotation2d.fromRadians(angleToHub);
                         }));
 
-        commandXboxController.x()
-                .whileTrue(new spinToHubCommand(m_turret, m_shooter, () -> swerveDriveSubsystem.getPose(),
-                        () -> swerveDriveSubsystem.getChassisSpeeds()));
+        // X Button: Spin turret to aim at hub (with ballistic lead)
+        // controller.x().whileTrue(
+        // new spinToHubCommand(m_turret,
+        // () -> swerveDriveSubsystem.getPose(),
+        // () -> swerveDriveSubsystem.getChassisSpeeds()));
 
-        commandXboxController.povUp().whileTrue(m_climb.extendclimb());
-        commandXboxController.povDown().whileTrue(m_climb.contractclimb());
+        // Y Button: Retract intake arm
+        controller.y().onTrue(m_intake.RetractArmCommand());
 
-        commandXboxController.povLeft().whileTrue(new zeroTurret(m_turret));
-        commandXboxController.povRight().whileTrue(new StickRotationCommand(m_turret, -0.1));
-        // commandXboxController.y().onTrue(new InstantCommand(() ->
-        // m_turret.zeroEncoder()));
+        // ========== INTAKE (RIGHT BUMPER + BACK) ==========
+        // Right Bumper: Extend arm and run adaptive intake (speed-based RPM)
+        controller.rightBumper().onTrue(m_intake.ExtendArmCommand());
+        controller.rightBumper().whileTrue(
+                m_intake.adaptiveIntakeCommand(() -> swerveDriveSubsystem.getChassisSpeeds()));
 
-        commandXboxController.y().onTrue(m_intake.RetractArmCommand());
-        commandXboxController.rightBumper().onTrue((m_intake.ExtendArmCommand()));
-        commandXboxController.rightBumper().whileTrue(m_intake.intakePIDCommand());
+        // Back Button: Outtake (reverse intake)
+        controller.back().whileTrue(m_intake.outtakePIDCommand());
 
-        commandXboxController.back().whileTrue(m_intake.outtakePIDCommand());
-        // TODO: Turn off turret being default command and turn it on here, then turn it
-        // off in the other commands that use the turret
-        // commandXboxController.start().onTrue()
+        // ========== CLIMB (D-PAD UP/DOWN) ==========
+        controller.povUp().whileTrue(m_climb.extendclimb());
+        controller.povDown().whileTrue(m_climb.contractclimb());
 
-        return commandXboxController;
+        // ========== TURRET TUNING (D-PAD LEFT/RIGHT) ==========
+        // controller.povLeft().whileTrue(new zeroTurret(m_turret));
+        // controller.povRight().whileTrue(new StickRotationCommand(m_turret, -0.1));
+
+        return controller;
     }
 
     /**
-     * 
+     * Operator Controller Button Bindings
      */
     private CommandXboxController setOperatorBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(OPERATOR_PORT);
