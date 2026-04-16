@@ -87,7 +87,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public double getSpeedModifier() {
         if (isSlowMode) {
-            return speedModifier * 0.1;
+            return speedModifier * 0.2;
         } else {
             return speedModifier;
         }

@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.turret.TurretSubsystem;
@@ -61,8 +62,17 @@ public class spinToHubCommand extends Command {
         // Turret's offset from the robot's center
         Translation2d turretOffset = new Translation2d(-0.15, 0.1778);
 
+        double rotatedOffsetX = turretOffset.getX() * Math.cos(robotPose.getRotation().getRadians())
+                - turretOffset.getY() * Math.sin(robotPose.getRotation().getRadians());
+        double rotatedOffsetY = turretOffset.getX() * Math.sin(robotPose.getRotation().getRadians())
+                + turretOffset.getY() * Math.cos(robotPose.getRotation().getRadians());
+
+        // Calculate turret center position
+        double turretX = robotPose.getX() + rotatedOffsetX;
+        double turretY = robotPose.getY() + rotatedOffsetY;
+
         // Calculate the turret's position on the field
-        Translation2d turretFieldPos = robotPose.getTranslation().plus(turretOffset.rotateBy(robotPose.getRotation()));
+        Translation2d turretFieldPos = new Translation2d(turretX, turretY);
 
         // Calculate the vector from the turret to the target
         Translation2d turretToTarget = targetPose.getTranslation().minus(turretFieldPos);
@@ -72,7 +82,6 @@ public class spinToHubCommand extends Command {
 
         // Debug/diagnostic variables (wider scope so logs are safe)
         double projectileSpeed = Double.NaN;
-        double tof = Double.NaN;
         ChassisSpeeds chassis = null;
         double turretVx = Double.NaN;
         double turretVy = Double.NaN;
@@ -80,7 +89,8 @@ public class spinToHubCommand extends Command {
         double predY = Double.NaN;
         double chosenVxGlobal = Double.NaN;
         double chosenVyGlobal = Double.NaN;
-        boolean haveChosenMuzzle = false;
+        double lastTof = Double.NaN;
+        boolean haveChosenMuzzle = true;
 
         try {
             // If we have a shooter, compute a simple lead based on current chassis
@@ -110,40 +120,26 @@ public class spinToHubCommand extends Command {
                     turretVy = vyField + offX * omega;
 
                     // Distance from turret to target
-                    double distance = turretToTarget.getNorm();
+                    double distance = (robotPose.getTranslation().getDistance(targetPose.getTranslation()));
+                    double tof = Constants.shooterConstants.distanceToTOFMap.get(distance);
 
                     // Estimate TOF simply as distance / muzzle speed
-                    tof = distance / projectileSpeed;
                     if (Double.isFinite(tof) && tof > 0.0) {
                         // Compute required projectile velocity (field frame) using the
                         // physically-correct relation: muzzleVel = (target - turretPos)/tof - turretVel
                         // Also compute the alternate sign candidate (historical confusion)
+                        // Use the physically-correct muzzle relation: muzzleVel = (target -
+                        // turretPos)/tof - turretVel
+                        // (always subtract turret linear velocity). This avoids sign confusion where
+                        // the
+                        // alternate "add" candidate produces lead in the wrong direction.
                         double reqVx_sub = turretToTarget.getX() / tof - turretVx;
                         double reqVy_sub = turretToTarget.getY() / tof - turretVy;
 
-                        double reqVx_add = turretToTarget.getX() / tof + turretVx;
-                        double reqVy_add = turretToTarget.getY() / tof + turretVy;
-
-                        double mag_sub = Math.hypot(reqVx_sub, reqVy_sub);
-                        double mag_add = Math.hypot(reqVx_add, reqVy_add);
-
-                        // Compare which candidate's magnitude is closer to the measured projectile
-                        // speed
-                        double err_sub = Math.abs(mag_sub - projectileSpeed);
-                        double err_add = Math.abs(mag_add - projectileSpeed);
-
-                        // Hysteresis: prefer previous choice unless there's a clear improvement
-                        boolean chooseSub;
-                        if (Math.abs(err_sub - err_add) < CANDIDATE_SWITCH_THRESHOLD) {
-                            chooseSub = lastUsedSub;
-                        } else {
-                            chooseSub = err_sub <= err_add;
-                        }
-
-                        double chosenVx = chooseSub ? reqVx_sub : reqVx_add;
-                        double chosenVy = chooseSub ? reqVy_sub : reqVy_add;
-                        boolean usedSub = chooseSub;
-                        lastUsedSub = chooseSub;
+                        double chosenVx = reqVx_sub;
+                        double chosenVy = reqVy_sub;
+                        boolean usedSub = true;
+                        lastUsedSub = true;
 
                         // Construct a compensated target point consistent with the chosen muzzle
                         // velocity
@@ -164,13 +160,30 @@ public class spinToHubCommand extends Command {
                         chosenVxGlobal = chosenVx;
                         chosenVyGlobal = chosenVy;
                         haveChosenMuzzle = true;
+                        lastTof = tof;
 
-                        // Log which candidate was chosen and the errors
+                        // Log chosen candidate (we always use the subtract candidate)
                         Logger.recordOutput("Turret/Lead/ChosenIsSub", usedSub);
-                        Logger.recordOutput("Turret/Lead/MagSub", mag_sub);
-                        Logger.recordOutput("Turret/Lead/MagAdd", mag_add);
-                        Logger.recordOutput("Turret/Lead/ErrSub", err_sub);
-                        Logger.recordOutput("Turret/Lead/ErrAdd", err_add);
+                        Logger.recordOutput("Turret/Lead/MagSub", Math.hypot(chosenVx, chosenVy));
+
+                        Logger.recordOutput("Turret/Lead/ProjectileSpeed", projectileSpeed);
+                        Logger.recordOutput("Turret/Lead/ChassisVx",
+                                chassis == null ? Double.NaN : chassis.vxMetersPerSecond);
+                        Logger.recordOutput("Turret/Lead/ChassisVy",
+                                chassis == null ? Double.NaN : chassis.vyMetersPerSecond);
+                        Logger.recordOutput("Turret/Lead/TurretVx", turretVx);
+                        Logger.recordOutput("Turret/Lead/TurretVy", turretVy);
+                        Logger.recordOutput("Turret/Lead/PredX", predX);
+                        Logger.recordOutput("Turret/Lead/PredY", predY);
+
+                        // Additional diagnostics: shift applied (turretVel * tof) and vector from
+                        // raw target -> predicted target
+                        Logger.recordOutput("Turret/Lead/ShiftX", turretVx * tof);
+                        Logger.recordOutput("Turret/Lead/ShiftY", turretVy * tof);
+                        double targetToPredX = predX - targetPose.getTranslation().getX();
+                        double targetToPredY = predY - targetPose.getTranslation().getY();
+                        Logger.recordOutput("Turret/Lead/TargetToPredX", targetToPredX);
+                        Logger.recordOutput("Turret/Lead/TargetToPredY", targetToPredY);
                     }
                 }
             }
@@ -179,14 +192,6 @@ public class spinToHubCommand extends Command {
         }
 
         // Debug logging to help tune/verify sign and values
-        Logger.recordOutput("Turret/Lead/Tof", tof);
-        Logger.recordOutput("Turret/Lead/ProjectileSpeed", projectileSpeed);
-        Logger.recordOutput("Turret/Lead/ChassisVx", chassis == null ? Double.NaN : chassis.vxMetersPerSecond);
-        Logger.recordOutput("Turret/Lead/ChassisVy", chassis == null ? Double.NaN : chassis.vyMetersPerSecond);
-        Logger.recordOutput("Turret/Lead/TurretVx", turretVx);
-        Logger.recordOutput("Turret/Lead/TurretVy", turretVy);
-        Logger.recordOutput("Turret/Lead/PredX", predX);
-        Logger.recordOutput("Turret/Lead/PredY", predY);
 
         // Compute desired turret angle. If we computed a muzzle velocity that fits the
         // shooter speed, use its bearing directly (more robust). Otherwise fall back to
@@ -194,24 +199,20 @@ public class spinToHubCommand extends Command {
         Rotation2d turretAngleVar = new Rotation2d();
         Pose2d turretPoseVar = new Pose2d(turretFieldPos, turretAngleVar);
 
-        if (haveChosenMuzzle && Double.isFinite(chosenVxGlobal) && Double.isFinite(chosenVyGlobal)) {
-            // Use the chosen muzzle vector directly (no sign flip)
-            double muzzleAngle = Math.atan2(chosenVyGlobal, chosenVxGlobal); // field-frame angle of muzzle velocity
-            Rotation2d muzzleRot = new Rotation2d(muzzleAngle);
-            // Robot is CCW+ / Turret is CW+
-            turretAngleVar = muzzleRot.minus(robotPose.getRotation()).unaryMinus();
-            turretPoseVar = new Pose2d(turretFieldPos, muzzleRot);
-            Logger.recordOutput("Turret/UsingMuzzleVector", true);
-            Logger.recordOutput("Turret/MuzzleAngleRad", muzzleAngle);
-        } else {
-            // The turret's desired pose (aiming at compensated target)
+        if (haveChosenMuzzle) {
+            // Aim at the compensated/predicted target when available
             Translation2d turretToComp = compensatedTarget.minus(turretFieldPos);
             turretPoseVar = new Pose2d(turretFieldPos, turretToComp.getAngle());
 
-            // Calculate the desired turret angle
-            // Robot is CCW+ / Turret is CW+
+            // Calculate the desired turret angle (Robot CCW+, Turret CW+)
             turretAngleVar = turretPoseVar.getRotation().minus(robotPose.getRotation()).unaryMinus();
-            Logger.recordOutput("Turret/UsingMuzzleVector", false);
+            Logger.recordOutput("Turret/UsingCompensatedTarget", true);
+        } else {
+            // Fallback: aim at hub center (compensatedTarget == hub center)
+            Translation2d turretToComp = compensatedTarget.minus(turretFieldPos);
+            turretPoseVar = new Pose2d(turretFieldPos, turretToComp.getAngle());
+            turretAngleVar = turretPoseVar.getRotation().minus(robotPose.getRotation()).unaryMinus();
+            Logger.recordOutput("Turret/UsingCompensatedTarget", false);
         }
 
         // Smooth the commanded turret angle to remove abrupt jumps
