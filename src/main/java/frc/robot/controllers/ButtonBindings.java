@@ -99,6 +99,16 @@ public class ButtonBindings {
                         () -> swerveDriveSubsystem.isSlowMode = true,
                         () -> swerveDriveSubsystem.isSlowMode = false));
 
+        controller.leftTrigger()
+                .whileTrue(new StartEndCommand(
+                        () -> swerveDriveSubsystem.isSlowMode = true,
+                        () -> swerveDriveSubsystem.isSlowMode = false));
+
+        controller.leftBumper()
+                .whileTrue(new StartEndCommand(
+                        () -> swerveDriveSubsystem.isSlowMode = true,
+                        () -> swerveDriveSubsystem.isSlowMode = false));
+
         // Start Button: Toggle turret on/off
         controller.start().onTrue(new turretToggle(m_turret));
 
