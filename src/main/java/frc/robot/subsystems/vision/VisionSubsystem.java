@@ -14,7 +14,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
@@ -173,9 +172,10 @@ public class VisionSubsystem extends SubsystemBase {
                 // During autonomous, heavily weight toward position and away from rotation
                 // This lets vision correct X,Y position but not interfere with PathPlanner's
                 // heading
-                if (DriverStation.isAutonomous()) {
-                    angularStdDev = 10000.0; // Extremely high = ignore rotation, only use position during auto
-                }
+                // if (DriverStation.isAutonomous()) {
+                // angularStdDev = 10000.0; // Extremely high = ignore rotation, only use
+                // position during auto
+                // }
 
                 // Send vision observation
                 this.consumer.accept(
