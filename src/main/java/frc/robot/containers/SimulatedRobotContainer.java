@@ -86,8 +86,9 @@ public class SimulatedRobotContainer extends RobotContainer {
         this.m_shooter = new ShooterSubsystemSim(new ShooterModuleIOSim(), () -> m_turret.getCurrentAngle(), fuelSim,
                 fuelSimCount);
         this.m_turret = new TurretSubsystem(new TurretModuleIOSim());
-        this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
-                () -> swerveDriveSubsystem.getChassisSpeeds()));
+        this.m_turret
+                .setDefaultCommand(new spinToHubCommand(m_turret, m_shooter, () -> swerveDriveSubsystem.getPose(),
+                        () -> swerveDriveSubsystem.getChassisSpeeds()));
 
         configureNamedCommands();
         configureAutoChooser();
