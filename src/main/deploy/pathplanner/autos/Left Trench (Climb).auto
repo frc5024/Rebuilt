@@ -11,15 +11,52 @@
           }
         },
         {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunEverything"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.0
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Left Neutral Climb"
+            "pathName": "Left Neutral Trench (No Rotation)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Trench Climb"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": " Left Rotate On Spot"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Left Climb Line Up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Climb"
           }
         }
       ]

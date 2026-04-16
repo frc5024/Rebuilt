@@ -73,9 +73,8 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxDutyCycleEncoder());
 
         if (!RobotConstants.TUNING_MODE && !RobotConstants.TURRET_BROKEN) {
-            this.m_turret
-                    .setDefaultCommand(new spinToHubCommand(m_turret, m_shooter, () -> swerveDriveSubsystem.getPose(),
-                            () -> swerveDriveSubsystem.getChassisSpeeds()));
+            this.m_turret.setDefaultCommand(new spinToHubCommand(m_turret, () -> swerveDriveSubsystem.getPose(),
+                    () -> swerveDriveSubsystem.getChassisSpeeds()));
         }
 
         m_turret.zeroEncoder();
@@ -136,7 +135,7 @@ public class RebuiltRobotContainer extends RobotContainer {
         NamedCommands.registerCommand("RunEverything",
                 Commands.parallel(new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
                         new runEverything(m_feeder, m_shooter, m_hopper),
-                        Commands.waitSeconds(2).andThen(m_intake.RetractArmCommand())));
+                        Commands.waitSeconds(6).andThen(m_intake.RetractArmCommand())));
         NamedCommands.registerCommand("RunEverythingNoArm",
                 Commands.parallel(new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
                         new runEverything(m_feeder, m_shooter, m_hopper)));
