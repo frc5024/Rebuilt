@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.775272727272727,
-        "y": 5.075988636363636
+        "x": 7.579443181818181,
+        "y": 3.519659090909091
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.385230792537554,
-        "y": 6.31419355801447
+        "x": 7.523631484794276,
+        "y": 1.1712164579606439
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Middle End"
     },
     {
       "anchor": {
-        "x": 6.9719677996422185,
-        "y": 7.28819320214669
+        "x": 3.4510554561717353,
+        "y": 0.4735241502683357
       },
       "prevControl": {
-        "x": 7.210112048257515,
-        "y": 7.212118785609618
-      },
-      "nextControl": {
-        "x": 5.814697599354465,
-        "y": 7.657879456484294
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.9131607142857137,
-        "y": 7.582017857142857
-      },
-      "prevControl": {
-        "x": 4.15427007675624,
-        "y": 7.515940059592873
+        "x": 6.712361359570662,
+        "y": 0.5384257602862249
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "left trench stop"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -58,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Left Trench Paths",
+  "folder": "Right Trench Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
