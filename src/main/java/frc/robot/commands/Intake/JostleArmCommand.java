@@ -38,19 +38,19 @@ public class JostleArmCommand extends Command {
 
     @Override
     public void execute() {
-        double retractTime = retractTimeEntry.getDouble(300) / 1000.0; // Convert ms to seconds
-        double extendTime = extendTimeEntry.getDouble(400) / 1000.0; // Convert ms to seconds
+        double retractTime = retractTimeEntry.getDouble(200) / 1000.0; // Convert ms to seconds
+        double extendTime = extendTimeEntry.getDouble(2000) / 1000.0; // Convert ms to seconds
 
         double cycleTime = retractTime + extendTime;
         double elapsedInCycle = cycleTimer.get() % cycleTime;
 
         if (elapsedInCycle < retractTime) {
             // Retracting phase - use the normal retracting voltage
-            s_Intake.setArmSpeed(intakeConstants.RETRACTING_SPEED);
+            s_Intake.setArmSpeed(intakeConstants.RETRACTING_SPEED_JOSTLE);
         } else {
             // Extending phase - use the normal extending voltage
             // Stops automatically when limit switch (extended) is hit
-            s_Intake.setArmSpeed(intakeConstants.EXTENDING_SPEED);
+            s_Intake.setArmSpeed(0.0);
         }
     }
 
@@ -63,6 +63,6 @@ public class JostleArmCommand extends Command {
     @Override
     public boolean isFinished() {
         // This command runs until manually cancelled (trigger released)
-        return false;
+        return s_Intake.isIntakeRetracted();
     }
 }

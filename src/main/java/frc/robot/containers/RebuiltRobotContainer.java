@@ -112,7 +112,7 @@ public class RebuiltRobotContainer extends RobotContainer {
     @Override
     protected void configureNamedCommands() {
         // Creates the commands for using non-drive subsystems in autonomous
-        new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmCommand());
+        new EventTrigger("ExtendIntake").onTrue(m_intake.ExtendArmAutoCommand());
         new EventTrigger("Intake").whileTrue(m_intake.IntakeCommand());
         new EventTrigger("RetractIntake").onTrue(m_intake.RetractArmCommand());
         new EventTrigger("AimTurret").whileTrue(Commands.runOnce(() -> m_turret.setAngle(0), m_turret));
@@ -133,10 +133,16 @@ public class RebuiltRobotContainer extends RobotContainer {
         NamedCommands.registerCommand("ExtendClimb", m_climb.extendclimb());
         NamedCommands.registerCommand("ContractClimb", m_climb.contractclimb());
         NamedCommands.registerCommand("SpinHopper", m_hopper.SpinCommand());
+        // NamedCommands.registerCommand("RunEverything",
+        // Commands.parallel(new distanceShooterCommand(m_shooter,
+        // swerveDriveSubsystem),
+        // new runEverything(m_feeder, m_shooter, m_hopper),
+        // Commands.waitSeconds(4).andThen(m_intake.RetractArmCommand())));
+
         NamedCommands.registerCommand("RunEverything",
-                Commands.parallel(new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
-                        new runEverything(m_feeder, m_shooter, m_hopper),
-                        Commands.waitSeconds(4).andThen(m_intake.RetractArmCommand())));
+                Commands.parallel(new runEverything(m_feeder, m_shooter, m_hopper),
+                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
+                        m_intake.jostleArmCommand()));
         NamedCommands.registerCommand("RunEverythingNoArm",
                 Commands.parallel(new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
                         new runEverything(m_feeder, m_shooter, m_hopper)));

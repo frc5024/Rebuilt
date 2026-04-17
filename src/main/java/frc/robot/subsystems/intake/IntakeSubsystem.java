@@ -18,6 +18,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.intakeConstants;
 import frc.robot.commands.Intake.AdaptiveIntakeCommand;
 import frc.robot.commands.Intake.IntakeExtendArm;
+import frc.robot.commands.Intake.IntakeExtendArmAuto;
 import frc.robot.commands.Intake.IntakeRetractArm;
 import frc.robot.commands.Intake.IntakeSpinMotor;
 import frc.robot.commands.Intake.JostleArmCommand;
@@ -268,6 +269,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command ExtendArmCommand() {
         return new IntakeExtendArm(this);
+    }
+
+    public Command ExtendArmAutoCommand() {
+        return new IntakeExtendArmAuto(this);
     }
 
     public Command RetractArmCommand() {

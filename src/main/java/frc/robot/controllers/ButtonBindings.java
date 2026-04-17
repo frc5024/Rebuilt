@@ -86,6 +86,8 @@ public class ButtonBindings {
                         new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
                         m_intake.jostleArmCommand()));
 
+        // controller.leftTrigger().whileTrue(m_intake.jostleArmCommand());
+
         // Left Bumper: Shoot without arm jostling (for static shots)
         controller.leftBumper()
                 .whileTrue(Commands.parallel(
