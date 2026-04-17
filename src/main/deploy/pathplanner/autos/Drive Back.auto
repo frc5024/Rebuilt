@@ -9,11 +9,17 @@
           "data": {
             "pathName": "Drive Back"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunEverything"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Drive Back Autos",
+  "folder": "3rd Autos",
   "choreoAuto": false
 }

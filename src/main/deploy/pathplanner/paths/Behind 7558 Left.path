@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.783237924865832,
-        "y": 3.069588550983899
+        "x": 3.5700909090909088,
+        "y": 7.601159090909091
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.084773642326444,
-        "y": 2.1442999017027913
-      },
-      "isLocked": false,
-      "linkedName": "Right Intake Stop"
-    },
-    {
-      "anchor": {
-        "x": 6.148267857142858,
-        "y": 0.4717857142857145
-      },
-      "prevControl": {
-        "x": 6.39810477906625,
-        "y": 0.480814138502868
-      },
-      "nextControl": {
-        "x": 5.1358955033800955,
-        "y": 0.4352013415472001
+        "x": 4.5700909090909105,
+        "y": 7.601159090909091
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.085431818181818,
-        "y": 0.4717857142857145
+        "x": 5.816977272727272,
+        "y": 7.601159090909091
       },
       "prevControl": {
-        "x": 5.276661136277753,
-        "y": 0.49144117968550927
+        "x": 4.816977272727272,
+        "y": 7.601159090909091
+      },
+      "nextControl": {
+        "x": 6.816977272727272,
+        "y": 7.601159090909091
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.9612727272727275,
+        "y": 2.354988636363637
+      },
+      "prevControl": {
+        "x": 5.713909090909091,
+        "y": 4.890465909090906
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Trench No Rotate Stop"
+      "linkedName": "End 7558"
     }
   ],
   "rotationTargets": [],
@@ -57,14 +57,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 90.0
+    "velocity": 0.0,
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Right Trench Paths",
+  "folder": "3rd Auto",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 90.0
+    "velocity": 0.0,
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

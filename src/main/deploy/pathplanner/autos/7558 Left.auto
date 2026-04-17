@@ -5,18 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Left Trench Neutral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left Neutral Trench (No Rotation)"
-          }
-        },
-        {
           "type": "race",
           "data": {
             "commands": [
@@ -29,7 +17,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 6.0
                 }
               }
             ]
@@ -38,25 +26,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Trench Neutral Shallow"
+            "pathName": "Behind 7558 Left"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left Middle Bump"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RunEverything"
+            "pathName": "Across Bump 7558 Left"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Left Trench Autos",
+  "folder": "3rd Autos",
   "choreoAuto": false
 }
