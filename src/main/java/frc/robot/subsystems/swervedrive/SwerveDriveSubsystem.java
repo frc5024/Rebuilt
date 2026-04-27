@@ -86,11 +86,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private PPHolonomicDriveController driveController;
 
     public double getSpeedModifier() {
-        if (isSlowMode) {
-            return speedModifier * 0.2;
-        } else {
-            return speedModifier;
-        }
+        return speedModifier * 0.6;
     }
 
     /**
@@ -424,16 +420,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     /** Returns the current odometry rotation. */
     public Rotation2d getRotation() {
         return getPose().getRotation();
-    }
-
-    /** Returns the robot's pitch angle in degrees. */
-    public double getPitchDegrees() {
-        return gyroInputs.pitchDegrees;
-    }
-
-    /** Returns the robot's roll angle in degrees. */
-    public double getRollDegrees() {
-        return gyroInputs.rollDegrees;
     }
 
     /** Resets the current odometry pose. */
