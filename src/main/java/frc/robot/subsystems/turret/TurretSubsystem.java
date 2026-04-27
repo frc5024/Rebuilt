@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,6 +40,8 @@ public class TurretSubsystem extends SubsystemBase {
     private GenericEntry maxSpeedEntry;
     private GenericEntry maxAccelEntry;
     private GenericEntry toleranceEntry;
+
+    public final int rotationAxis = XboxController.Axis.kRightX.value;
 
     /**
      * 

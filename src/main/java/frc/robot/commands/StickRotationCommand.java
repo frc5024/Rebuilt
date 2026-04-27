@@ -1,46 +1,30 @@
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
+//import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.containers.RebuiltRobotContainer;
 import frc.robot.subsystems.turret.TurretSubsystem;
 
-/**
- * 
- */
 public class StickRotationCommand extends Command {
-    // Subsystems
+
     private final TurretSubsystem turretSubsystem;
 
-    // Variables
-    public double speed;
+    CommandXboxController operator = RebuiltRobotContainer.operatorController;
 
-    /**
-     * 
-     */
-    public StickRotationCommand(TurretSubsystem turretSubsystem, double speed) {
+    public StickRotationCommand(TurretSubsystem turretSubsystem) {
         this.turretSubsystem = turretSubsystem;
-        this.speed = speed;
 
         addRequirements(turretSubsystem);
     }
 
-    @Override
     public void initialize() {
-        turretSubsystem.disablePID();
+        turretSubsystem.runTurret(0);
     }
 
-    @Override
     public void execute() {
-        turretSubsystem.runTurret(speed);
-
-        Logger.recordOutput("Turret/Active Command", this.getName());
+        double rightX = operator.getRawAxis(turretSubsystem.rotationAxis);
+        turretSubsystem.runTurret(rightX * 0.1);
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        turretSubsystem.disablePID();
-
-        Logger.recordOutput("Turret/Active Command", "");
-    }
 }

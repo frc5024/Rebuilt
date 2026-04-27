@@ -18,7 +18,6 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.TuningCommands;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
-import frc.robot.commands.spinToHubCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.mechanisms.MechanismVisualizer;
 import frc.robot.subsystems.climb.ClimbModuleIOTalonFX;
@@ -73,9 +72,7 @@ public class RebuiltRobotContainer extends RobotContainer {
         this.m_turret = new TurretSubsystem(new TurretModuleIOSparkMaxDutyCycleEncoder());
 
         if (!RobotConstants.TUNING_MODE && !RobotConstants.TURRET_BROKEN) {
-            this.m_turret
-                    .setDefaultCommand(new spinToHubCommand(m_turret, m_shooter, () -> swerveDriveSubsystem.getPose(),
-                            () -> swerveDriveSubsystem.getChassisSpeeds()));
+            
         }
 
         m_turret.zeroEncoder();
