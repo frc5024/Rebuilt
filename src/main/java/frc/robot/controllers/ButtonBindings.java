@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.distanceShooterCommand;
 import frc.robot.commands.runEverything;
+import frc.robot.commands.shooterCommand;
 import frc.robot.commands.turretToggle;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
@@ -171,6 +172,31 @@ public class ButtonBindings {
 
         // Reset climb on X button
         commandXboxController.x().whileTrue(m_climb.resetClimb());
+
+        commandXboxController.povUp()
+                .whileTrue(Commands.parallel(
+                        new runEverything(m_feeder, m_shooter, m_hopper),
+                        new shooterCommand(m_shooter, 2800),
+                        m_intake.jostleArmCommand()));
+
+        commandXboxController.povRight()
+                .whileTrue(Commands.parallel(
+                        new runEverything(m_feeder, m_shooter, m_hopper),
+                        new shooterCommand(m_shooter, 3700),
+                        m_intake.jostleArmCommand()));
+
+        commandXboxController.povDown()
+                .whileTrue(Commands.parallel(
+                        new runEverything(m_feeder, m_shooter, m_hopper),
+                        new shooterCommand(m_shooter, 4755),
+                        m_intake.jostleArmCommand()));
+
+        commandXboxController.povLeft()
+                .whileTrue(Commands.parallel(
+                        new runEverything(m_feeder, m_shooter, m_hopper),
+                        new shooterCommand(m_shooter, 5805),
+                        m_intake.jostleArmCommand()));
+
         return commandXboxController;
 
     }

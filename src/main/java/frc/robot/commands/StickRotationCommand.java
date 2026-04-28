@@ -25,6 +25,12 @@ public class StickRotationCommand extends Command {
     public void execute() {
         double rightX = operator.getRawAxis(turretSubsystem.rotationAxis);
         turretSubsystem.runTurret(rightX * 0.1);
+
+        if (turretSubsystem.getCurrentAngle() == 135) {
+            turretSubsystem.runTurret(0);
+        } else if (turretSubsystem.getCurrentAngle() == -135) {
+            turretSubsystem.runTurret(0);
+        }
     }
 
 }
