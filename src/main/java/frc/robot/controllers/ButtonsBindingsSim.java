@@ -126,7 +126,7 @@ public class ButtonsBindingsSim {
         commandXboxController.povDown().whileTrue(m_climb.contractclimb());
 
         commandXboxController.povLeft().onTrue(new turretSweepCommand(m_turret));
-        commandXboxController.povRight().whileTrue(new StickRotationCommand(m_turret, -0.1));
+        commandXboxController.povRight().whileTrue(new StickRotationCommand(m_turret));
 
         return commandXboxController;
     }
