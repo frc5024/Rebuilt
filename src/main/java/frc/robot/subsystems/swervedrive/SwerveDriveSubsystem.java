@@ -447,6 +447,16 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         return getMaxLinearSpeedMetersPerSec() / SwerveDriveConstants.DRIVE_BASE_RADIUS;
     }
 
+    /** Returns the robot's pitch angle in degrees. */
+    public double getPitchDegrees() {
+        return gyroInputs.pitchDegrees;
+    }
+
+    /** Returns the robot's roll angle in degrees. */
+    public double getRollDegrees() {
+        return gyroInputs.rollDegrees;
+    }
+
     /** Logs the current actual heading and target heading from PathPlanner */
     public void logHeadingDebug() {
         Rotation2d actualHeading = getRotation();
