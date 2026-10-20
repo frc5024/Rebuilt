@@ -86,6 +86,7 @@ public class TurretSubsystem extends SubsystemBase {
         Logger.recordOutput("Turret/SetPointAngle", turretModuleIO.getGoalPosition());
         Logger.recordOutput("Turret/AtTarget", isAtTarget());
         Logger.recordOutput("Turret/PIDEnabled", isPIDEnabled());
+        Logger.recordOutput("Turret/TurretIsAimed", turretIsAimed());
     }
 
     public boolean atGoal() {
@@ -148,6 +149,12 @@ public class TurretSubsystem extends SubsystemBase {
         double tolerance = turretConstants.turretTolerance;
 
         return Math.abs(currentAngle - goalAngle) <= tolerance;
+    }
+
+    public boolean turretIsAimed() {
+        double goalAngle = turretModuleIO.getGoalPosition();
+        double tolerance = turretConstants.turretTolerance;
+        return isAtTarget() && Math.abs(goalAngle) - turretConstants.ANGLE_LIMIT <= tolerance;
     }
 
     /**
