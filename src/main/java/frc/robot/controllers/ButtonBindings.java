@@ -78,42 +78,6 @@ public class ButtonBindings {
                         () -> -controller.getLeftX(),
                         () -> -controller.getRightX()));
 
-        // ========== SHOOTING (TRIGGERS) ==========
-        // Left Trigger: Shoot with arm jostling (settles fuel)
-        controller.leftTrigger()
-                .whileTrue(Commands.parallel(
-                        new runEverything(m_feeder, m_shooter, m_hopper),
-                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
-                        m_intake.jostleArmCommand()));
-
-        // controller.leftTrigger().whileTrue(m_intake.jostleArmCommand());
-
-        // Left Bumper: Shoot without arm jostling (for static shots)
-        controller.leftBumper()
-                .whileTrue(Commands.parallel(
-                        new runEverything(m_feeder, m_shooter, m_hopper),
-                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
-
-        // ========== DRIVE MODE (RIGHT TRIGGERS + START) ==========
-        // Right Trigger: Enable slow mode
-        controller.rightTrigger()
-                .whileTrue(new StartEndCommand(
-                        () -> swerveDriveSubsystem.isSlowMode = true,
-                        () -> swerveDriveSubsystem.isSlowMode = false));
-
-        controller.leftTrigger()
-                .whileTrue(new StartEndCommand(
-                        () -> swerveDriveSubsystem.isSlowMode = true,
-                        () -> swerveDriveSubsystem.isSlowMode = false));
-
-        controller.leftBumper()
-                .whileTrue(new StartEndCommand(
-                        () -> swerveDriveSubsystem.isSlowMode = true,
-                        () -> swerveDriveSubsystem.isSlowMode = false));
-
-        // Start Button: Toggle turret on/off
-        controller.start().onTrue(new turretToggle(m_turret));
-
         // ========== FACE BUTTONS (DRIVE DIRECTION) ==========
         // A Button: Aim robot toward hub
         controller.a().whileTrue(
@@ -141,20 +105,25 @@ public class ButtonBindings {
         // () -> swerveDriveSubsystem.getChassisSpeeds()));
 
         // Y Button: Retract intake arm
-        controller.y().onTrue(m_intake.RetractArmCommand());
+        controller.leftBumper().onTrue(m_intake.RetractArmCommand());
 
         // ========== INTAKE (RIGHT BUMPER + BACK) ==========
         // Right Bumper: Extend arm and run adaptive intake (speed-based RPM)
         controller.rightBumper().onTrue(m_intake.ExtendArmCommand());
-        controller.rightBumper().whileTrue(
-                m_intake.adaptiveIntakeCommand(() -> swerveDriveSubsystem.getChassisSpeeds()));
+        controller.rightBumper()
+                .whileTrue(m_intake.adaptiveIntakeCommand(() -> swerveDriveSubsystem.getChassisSpeeds()));
 
         // Back Button: Outtake (reverse intake)
-        controller.back().whileTrue(m_intake.outtakePIDCommand());
+        controller.y().whileTrue(m_intake.outtakePIDCommand());
 
         // ========== CLIMB (D-PAD UP/DOWN) ==========
         controller.povUp().whileTrue(m_climb.extendclimb());
         controller.povDown().whileTrue(m_climb.contractclimb());
+
+        controller.b()
+                .whileTrue(new StartEndCommand(
+                        () -> swerveDriveSubsystem.isSlowMode = true,
+                        () -> swerveDriveSubsystem.isSlowMode = false));
 
         // ========== TURRET TUNING (D-PAD LEFT/RIGHT) ==========
         // controller.povLeft().whileTrue(new zeroTurret(m_turret));
@@ -168,6 +137,40 @@ public class ButtonBindings {
      */
     private CommandXboxController setOperatorBindingsController() {
         CommandXboxController commandXboxController = new CommandXboxController(OPERATOR_PORT);
+        // ========== SHOOTING (TRIGGERS) ==========
+        // Left Trigger: Shoot with arm jostling (settles fuel)
+        commandXboxController.rightTrigger()
+                .whileTrue(Commands.parallel(
+                        new runEverything(m_feeder, m_shooter, m_hopper),
+                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
+                        m_intake.jostleArmCommand(),
+                        new StartEndCommand(
+                                () -> swerveDriveSubsystem.isSlowMode = true,
+                                () -> swerveDriveSubsystem.isSlowMode = false)));
+
+        // Left Bumper: Shoot without arm jostling (for static shots)
+        commandXboxController.leftTrigger()
+                .whileTrue(Commands.parallel(
+                        new runEverything(m_feeder, m_shooter, m_hopper),
+                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
+                        new StartEndCommand(
+                                () -> swerveDriveSubsystem.isSlowMode = true,
+                                () -> swerveDriveSubsystem.isSlowMode = false)));
+
+        // Start Button: Toggle turret on/off
+        commandXboxController.start().onTrue(new turretToggle(m_turret));
+
+        // commandXboxController.leftTrigger()
+        // .whileTrue(new StartEndCommand(
+        // () -> swerveDriveSubsystem.isSlowMode = true,
+        // () -> swerveDriveSubsystem.isSlowMode = false));
+
+        // // ========== DRIVE MODE (RIGHT TRIGGERS + START) ==========
+        // // Right Trigger: Enable slow mode
+        // commandXboxController.rightTrigger()
+        // .whileTrue(new StartEndCommand(
+        // () -> swerveDriveSubsystem.isSlowMode = true,
+        // () -> swerveDriveSubsystem.isSlowMode = false));
 
         // Reset climb on X button
         commandXboxController.x().whileTrue(m_climb.resetClimb());
