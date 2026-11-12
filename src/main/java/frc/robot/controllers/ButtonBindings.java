@@ -84,9 +84,8 @@ public class ButtonBindings {
         controller.leftTrigger()
                 .whileTrue(Commands.parallel(
                         new runEverything(m_feeder, m_shooter, m_hopper),
-                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem)));
-        // m_intake.jostleArmCommand()));
-        // Commented out arm jostling due to motor issues
+                        new distanceShooterCommand(m_shooter, swerveDriveSubsystem),
+                        m_intake.jostleArmCommand()));
 
         // controller.leftTrigger().whileTrue(m_intake.jostleArmCommand());
 
@@ -143,18 +142,18 @@ public class ButtonBindings {
         // () -> swerveDriveSubsystem.getChassisSpeeds()));
 
         // Y Button: Retract intake arm
-        // Commented out for now while arm motor is being fixed
-        // controller.y().onTrue(m_intake.RetractArmCommand());
+        controller.y().onTrue(m_intake.RetractArmCommand());
 
         // ========== INTAKE (RIGHT BUMPER + BACK) ==========
         // Right Bumper: Extend arm and run adaptive intake (speed-based RPM)
-        // controller.rightBumper().onTrue(m_intake.ExtendArmCommand());
-        // Commented out for now while arm motor is being fixed
-        controller.rightBumper().whileTrue(
-                m_intake.adaptiveIntakeCommand(() -> swerveDriveSubsystem.getChassisSpeeds()));
+        controller.rightBumper().onTrue(m_intake.ExtendArmCommand());
+        // controller.rightBumper().whileTrue(
+        // m_intake.adaptiveIntakeCommand(() ->
+        // swerveDriveSubsystem.getChassisSpeeds()));
+        // Commented out due to intake bar being bent
 
         // Back Button: Outtake (reverse intake)
-        controller.back().whileTrue(m_intake.outtakePIDCommand());
+        // controller.back().whileTrue(m_intake.outtakePIDCommand());
 
         // ========== CLIMB (D-PAD UP/DOWN) ==========
         controller.povUp().whileTrue(m_climb.extendclimb());
@@ -180,26 +179,26 @@ public class ButtonBindings {
         commandXboxController.povUp()
                 .whileTrue(Commands.parallel(
                         new runEverything(m_feeder, m_shooter, m_hopper),
-                        new shooterCommand(m_shooter, 2800)));
-        // ,m_intake.jostleArmCommand()));
+                        new shooterCommand(m_shooter, 2800),
+                        m_intake.jostleArmCommand()));
 
         commandXboxController.povRight()
                 .whileTrue(Commands.parallel(
                         new runEverything(m_feeder, m_shooter, m_hopper),
-                        new shooterCommand(m_shooter, 3700)));
-        // ,m_intake.jostleArmCommand()));
+                        new shooterCommand(m_shooter, 3700),
+                        m_intake.jostleArmCommand()));
 
         commandXboxController.povDown()
                 .whileTrue(Commands.parallel(
                         new runEverything(m_feeder, m_shooter, m_hopper),
-                        new shooterCommand(m_shooter, 4755)));
-        // ,m_intake.jostleArmCommand()));
+                        new shooterCommand(m_shooter, 4755),
+                        m_intake.jostleArmCommand()));
 
         commandXboxController.povLeft()
                 .whileTrue(Commands.parallel(
                         new runEverything(m_feeder, m_shooter, m_hopper),
-                        new shooterCommand(m_shooter, 5805)));
-        // ,m_intake.jostleArmCommand()));
+                        new shooterCommand(m_shooter, 5805),
+                        m_intake.jostleArmCommand()));
 
         return commandXboxController;
 
