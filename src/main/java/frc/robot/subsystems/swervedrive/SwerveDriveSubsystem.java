@@ -86,7 +86,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private PPHolonomicDriveController driveController;
 
     public double getSpeedModifier() {
-        return speedModifier * 0.6;
+        return speedModifier * 0.3;
     }
 
     /**
