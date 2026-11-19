@@ -1,3 +1,6 @@
+// Intake subsystem for handling intake mechanisms
+//Todo: pid implementation for arm motor, add limit switches to intake arm, add intake motor speed control, add intake arm speed control
+
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;

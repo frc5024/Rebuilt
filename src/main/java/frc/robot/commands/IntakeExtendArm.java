@@ -16,12 +16,12 @@ public class IntakeExtendArm extends Command {
 
     public IntakeExtendArm(Intake s_Intake) {
         this.s_Intake = s_Intake;
-        addRequirements (s_Intake);
+        addRequirements (s_Intake); // add the intake subsystem as a requirement for this command
     }
 
     @Override
     public void initialize() {
-        s_Intake.setArmSpeed(pEntry.getDouble(0.1));
+        s_Intake.setArmSpeed(pEntry.getDouble(0.1)); //set the arm speed to the value from Shuffleboard when the command starts
     }
 
     @Override
@@ -31,7 +31,7 @@ public class IntakeExtendArm extends Command {
 
     @Override
     public boolean isFinished() {
-    return s_Intake.isIntakeExtended();
+    return s_Intake.isIntakeExtended(); // return true when the intake is fully extended
   }
 
 

@@ -51,11 +51,15 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
+//spin intake motor while "A" button is held down
     operatorController.a().whileTrue(Intake.getInstance().IntakeSpin());
+//spin outtake motor while "B" button is held down
     operatorController.b().whileTrue(Intake.getInstance().OuttakeSpin());
+//extend intake arm while "Left Bumper" is held down
     operatorController.leftBumper().onTrue(Intake.getInstance().ExtendSpin());
+//retract intake arm while "Right Bumper" is held down
     operatorController.rightBumper().onTrue(Intake.getInstance().RetractSpin());
+//stop intake arm when "X" button is pressed
     operatorController.x().onTrue(Intake.getInstance().StopArm());
   }
 
