@@ -147,12 +147,13 @@ public class ButtonBindings {
         // ========== INTAKE (RIGHT BUMPER + BACK) ==========
         // Right Bumper: Extend arm and run adaptive intake (speed-based RPM)
         controller.rightBumper().onTrue(m_intake.ExtendArmCommand());
-        controller.rightBumper().whileTrue(
-                m_intake.adaptiveIntakeCommand(() -> swerveDriveSubsystem.getChassisSpeeds()));
-        // Intake bar is bent, uncommented to see if moving the churro works
+        // controller.rightBumper().whileTrue(
+        // m_intake.adaptiveIntakeCommand(() ->
+        // swerveDriveSubsystem.getChassisSpeeds()));
+        // // Intake bar is bent, uncommented to see if moving the churro works
 
-        // Back Button: Outtake (reverse intake)
-        controller.back().whileTrue(m_intake.outtakePIDCommand());
+        // // Back Button: Outtake (reverse intake)
+        // controller.back().whileTrue(m_intake.outtakePIDCommand());
 
         // ========== CLIMB (D-PAD UP/DOWN) ==========
         controller.povUp().whileTrue(m_climb.extendclimb());
